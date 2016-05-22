@@ -1,0 +1,17 @@
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+d901cc69 00000000 // EngSetCoolantPacket
+07000000          // system = aft shields
+03000000          // coolant = 3
+
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+d901cc69 00000000 // EngSetCoolantPacket
+00000000          // system = beams
+00000000          // coolant = 0

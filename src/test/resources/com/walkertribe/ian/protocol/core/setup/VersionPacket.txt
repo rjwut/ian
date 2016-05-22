@@ -1,0 +1,24 @@
+// Legacy version (2.0)
+efbeadde	// header
+20000000    // packet length = 32
+01000000	// origin = server
+00000000	// padding
+0c000000    // remaining length = 12
+4ae748e5	// VersionPacket
+
+00000000	// unknown
+00000040	// version = 2.0
+
+// Modern version (2.1.1)
+efbeadde	// header
+2c000000    // packet length = 44
+01000000	// origin = server
+00000000	// padding
+18000000    // remaining length = 24
+4ae748e5	// VersionPacket
+
+00000000	// unknown
+00000040	// version = 2.0 (legacy)
+02000000	// major = 2
+01000000	// minor = 1
+01000000	// patch = 1

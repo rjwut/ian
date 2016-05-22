@@ -1,0 +1,17 @@
+efbeadde // header
+20000000 // packet length = 32
+02000000 // origin = client
+00000000 // padding
+0c000000 // remaining length = 12
+7fc5ad6a // AudioCommandPacket
+00000000 // ID = 0
+00000000 // command = play
+
+efbeadde // header
+20000000 // packet length = 32
+02000000 // origin = client
+00000000 // padding
+0c000000 // remaining length = 12
+7fc5ad6a // AudioCommandPacket
+01000000 // ID = 1
+01000000 // command = delete

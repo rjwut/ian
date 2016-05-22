@@ -1,0 +1,47 @@
+efbeadde // header
+2c000000 // packet length = 44
+02000000 // origin = client
+00000000 // padding
+18000000 // remaining length = 24
+4b4c4c57 // CommsOutgoingPacket
+00000000 // recipient type = player
+00000000 // recipient ID = 0
+04000000 // message = Die!
+78007300 // [no argument]
+5e004f00 // [unknown]
+
+efbeadde // header
+2c000000 // packet length = 44
+02000000 // origin = client
+00000000 // padding
+18000000 // remaining length = 24
+4b4c4c57 // CommsOutgoingPacket
+01000000 // recipient type = enemy
+01000000 // recipient ID = 1
+00000000 // message = Will you surrender?
+78007300 // [no argument]
+5e004f00 // [unknown]
+
+efbeadde // header
+2c000000 // packet length = 44
+02000000 // origin = client
+00000000 // padding
+18000000 // remaining length = 24
+4b4c4c57 // CommsOutgoingPacket
+02000000 // recipient type = base
+02000000 // recipient ID = 2
+03000000 // message = Build nukes
+78007300 // [no argument]
+5e004f00 // [unknown]
+
+efbeadde // header
+2c000000 // packet length = 44
+02000000 // origin = client
+00000000 // padding
+18000000 // remaining length = 24
+4b4c4c57 // CommsOutgoingPacket
+03000000 // recipient type = other
+03000000 // recipient ID = 3
+09000000 // message = Go defend [target]
+2f000000 // target ID = 47
+5e004f00 // [unknown]

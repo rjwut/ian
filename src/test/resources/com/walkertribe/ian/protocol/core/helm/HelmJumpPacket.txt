@@ -1,0 +1,8 @@
+efbeadde          // header
+24000000          // packet size = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining size = 16
+aca55103 05000000 // HelmJumpPacket
+cdcc4c3e          // heading = 0.2 (72 degrees)
+3333333f          // distance = 0.7 (35 kls)

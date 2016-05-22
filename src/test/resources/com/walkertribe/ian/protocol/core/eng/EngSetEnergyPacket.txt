@@ -1,0 +1,26 @@
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+aca55103 04000000 // EngSetEnergyPacket
+abaaaa3e          // energy allocation = 100% (0.33333334)
+00000000          // beams
+
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+aca55103 04000000 // EngSetEnergyPacket
+00000000          // energy allocation = 0% (0.0)
+07000000          // aft shields
+
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+aca55103 04000000 // EngSetEnergyPacket
+0000803f          // energy allocation = 300% (1.0)
+05000000          // warp/jump drive

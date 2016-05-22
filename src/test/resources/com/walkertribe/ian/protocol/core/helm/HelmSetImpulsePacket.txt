@@ -1,0 +1,15 @@
+efbeadde          // header
+20000000          // packet length = 32 
+02000000          // origin = client
+00000000          // padding
+0c000000          // remaining length = 12
+aca55103 00000000 // HelmSetImpulsePacket
+00000000          // all stop (0.0f)
+
+efbeadde          // header
+20000000          // packet length = 32 
+02000000          // origin = client
+00000000          // padding
+0c000000          // remaining length = 12
+aca55103 00000000 // HelmSetImpulsePacket
+3333333f          // 70% (0.7f)

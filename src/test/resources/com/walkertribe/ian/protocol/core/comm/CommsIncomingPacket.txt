@@ -1,0 +1,14 @@
+efbeadde // header
+4e000000 // packet length = 76
+01000000 // origin = server
+00000000 // padding
+3a000000 // remaining length = 56
+5fc372d6 // CommsIncomingPacket
+
+00000000 // priority = 0 (high)
+
+// sender = DS1 
+04000000 4400 5300 3100 0000
+
+// message = Hi.^How are you?
+11000000 4800 6900 2e00 5e00 4800 6f00 7700 2000 6100 7200 6500 2000 7900 6f00 7500 3f00 0000

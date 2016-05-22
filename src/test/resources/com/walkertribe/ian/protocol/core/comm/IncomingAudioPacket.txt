@@ -1,0 +1,21 @@
+efbeadde // header
+48000000 // packet length = 72
+01000000 // origin = server
+00000000 // padding
+34000000 // remaining length = 52
+58e088ae // AudioCommandPacket
+00000000 // ID = 0
+02000000 // mode = incoming
+// title = Hello
+06000000 4800 6500 6c00 6c00 6f00 0000
+// filename = hello.ogg
+0a000000 6800 6500 6c00 6c00 6f00 2e00 6f00 6700 6700 0000
+
+efbeadde // header
+20000000 // packet length = 32
+01000000 // origin = server
+00000000 // padding
+0c000000 // remaining length = 12
+58e088ae // AudioCommandPacket
+01000000 // ID = 1
+01000000 // mode = playing

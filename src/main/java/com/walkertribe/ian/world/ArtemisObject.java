@@ -1,0 +1,139 @@
+package com.walkertribe.ian.world;
+
+import java.util.SortedMap;
+
+import com.walkertribe.ian.enums.ObjectType;
+import com.walkertribe.ian.model.Model;
+
+/**
+ * This interface represents information about an object in the game world. It
+ * may contain all the information known about that object, or just updates.
+ * Every object has the following properties:
+ * 
+ * - an ID
+ * - a type
+ * - a position (x, y, z)
+ * 
+ * Many objects also have a name, but not all of them do, and the name is not
+ * guaranteed to be unique. However, any one update is only guaranteed to
+ * specify the ID.
+ * 
+ * 
+ * Unspecified properties vs. unknown properties
+ * 
+ * A property is unspecified if no value has been given for it. Since object
+ * update packets typically contain values for properties which have changed,
+ * other properties will be unspecified. To avoid instantiating a lot of
+ * objects, special values are used to indicate whether a primitive property is
+ * unspecified. The documentation for each property's accessor method will tell
+ * you what that value is. The "unspecified" value depends on the property's
+ * type and what its permissible values are:
+ * 
+ * BoolState: BoolState.UNKNOWN
+ * Other Objects: null
+ * Numeric primitives: -1, or the type's MIN_VALUE if -1 is a permissible value
+ * 		for that property
+ * 
+ * An unknown property is one whose purpose is currently unknown. It may have a
+ * specified value, but we don't know what that value means. IAN is capable of
+ * tracking unknown property values, but this capability is really only useful
+ * for people who are trying to determine what these properties mean.
+ * 
+ * 
+ * Updating objects
+ *
+ * Most packets which update object information produce objects which implement
+ * this interface. These objects will contain only the property values that were
+ * updated by that packet; all other values will be unspecified. You can use the
+ * updateFrom() method to transfer all specified properties from one object to
+ * another; this allows you to keep around a single instance that always has the
+ * latest known state for that world object.
+ * 
+ * 
+ * Object positions
+ * 
+ * A sector is a three-dimentional rectangular prism. From the perspective of a
+ * ship with a heading of 0 degress, the X axis runs from port to starboard, the
+ * Y axis runs up and down, and the Z axis runs bow to stern. The boundaries of
+ * the sector are (0, 500, 0) [top northeast corner] to (100000, -500, 100000)
+ * [bottom southwest corner]. However, some objects, such as asteroids and
+ * nebulae, may lie outside these bounds.
+ * 
+ * @author dhleong
+ */
+public interface ArtemisObject {
+	/**
+	 * The object's unique identifier. This property should always be specified.
+	 */
+    public int getId();
+
+    /**
+     * The object's type.
+     * Unspecified: null
+     */
+    public ObjectType getType();
+
+    /**
+     * The object's name.
+     * Unspecified: null
+     */
+    public String getName();
+
+    /**
+	 * The object's position along the X-axis.
+	 * Unspecified: Float.MIN_VALUE
+	 */
+    public abstract float getX();
+    public abstract void setX(float x);
+
+    /**
+	 * The object's position along the Y-axis
+	 * Unspecified: Float.MIN_VALUE
+	 */
+    public abstract float getY();
+    public abstract void setY(float y);
+
+    /**
+	 * The object's position along the Z-axis
+	 * Unspecified: Float.MIN_VALUE
+	 */
+    public abstract float getZ();
+    public abstract void setZ(float z);
+
+    /**
+     * Returns the Model2D object for this ArtemisObject, or null if one cannot
+     * be provided. Note that you must invoke VesselData.setArtemisInstallPath()
+     * first, before calling this method.
+     */
+    public abstract Model getModel();
+
+    /**
+     * Returns the base scale factor for the model representing this object, or
+     * 0.0 if one cannot be provided. Note that you must invoke
+     * VesselData.setArtemisInstallPath() first, before calling this method.
+     */
+    public abstract float getScale();
+
+    /**
+     * Returns a SortedMap containing the values for properties whose purpose is
+     * currently unknown. This is useful for debugging.
+     */
+    public SortedMap<String, byte[]> getUnknownProps();
+    public void setUnknownProps(SortedMap<String, byte[]> unknownProps);
+
+    /**
+     * Updates this object's properties to match any updates provided by the
+     * given object. If any property of the given object is unspecified, this
+     * object's corresponding property will not be updated.
+     */
+    public void updateFrom(ArtemisObject other);
+
+    /**
+     * Returns a SortedMap containing this object's properties. If
+     * includeUnspecified is true, all properties will be included in the map,
+     * even if they're unspecified. Otherwise, only specified properties will be
+     * included. Note that unknown properties that have not been specified will
+     * never be included, even if includeUnspecified is true.
+     */
+    public SortedMap<String, Object> getProps(boolean includeUnspecified);
+}
