@@ -37,6 +37,7 @@ Daniel Leong ([@dhleong](https://github.com/dhleong)) created the original versi
 
 Various GitHub users have contributed to ArtClientLib by helping to discover and document the protocol, creating pull requests to implement features or bug fixes, or issuing bug reports. Their help is very much appreciated. They are, in alphabetical order:
 * [@briandurney](https://github.com/briandurney)
+* [@dthaler](https://github.com/dthaler)
 * [@huin](https://github.com/huin)
 * [@IvanSanchez](https://github.com/IvanSanchez)
 * [@karafelix](https://github.com/karafelix)
