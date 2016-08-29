@@ -12,7 +12,8 @@ import com.walkertribe.ian.protocol.RawPacket;
  */
 public interface Debugger {
 	/**
-	 * Invoked when a packet has been received, but before it is parsed.
+	 * Invoked when a packet has been received, but before it is parsed. This
+	 * allows you to see the raw payload bytes for each packet as it received.
 	 */
 	public void onRecvPacketBytes(ConnectionType connType, int pktType,
 			byte[] payload);
@@ -48,7 +49,8 @@ public interface Debugger {
 
 	/**
 	 * Invoked just after a packet is written to the PacketWriter and just
-	 * before it is flushed to the OutputStream.
+	 * before it is flushed to the OutputStream. This allows you to inspect the
+	 * raw payload bytes for each packet as it is sent.
 	 */
 	public void onSendPacketBytes(ConnectionType connType, int pktType,
 			byte[] payload);

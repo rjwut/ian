@@ -1,7 +1,7 @@
 package com.walkertribe.ian.enums;
 
 /**
- * The four possible torpedo tube states.
+ * The four possible ordnance tube states.
  * @author rjwut
  */
 public enum TubeState {

@@ -10,7 +10,8 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
 public interface PacketFactory {
 	/**
 	 * Returns the subclass of ArtemisPacket that this PacketFactory can
-	 * produce.
+	 * produce. Note: It is legal to have more than one factory producing the
+	 * same Class.
 	 */
 	public Class<? extends ArtemisPacket> getFactoryClass();
 

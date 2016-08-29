@@ -24,7 +24,7 @@ public enum OtherMessage implements CommsMessage {
 	};
 
 	/**
-	 * Returns the AllyMessage that corresponds to the given ID.
+	 * Returns the OtherMessage that corresponds to the given ID.
 	 */
 	public static OtherMessage fromId(int id) {
 		for (OtherMessage message : values()) {

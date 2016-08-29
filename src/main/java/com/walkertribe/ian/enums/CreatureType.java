@@ -3,6 +3,10 @@ package com.walkertribe.ian.enums;
 import com.walkertribe.ian.model.Model;
 import com.walkertribe.ian.vesseldata.VesselData;
 
+/**
+ * The types of creatures. Note: For some reason, wrecks count as creatures.
+ * @author rwalker
+ */
 public enum CreatureType {
 	CLASSIC(null),
 	WHALE("dat/whale.dxs"),
