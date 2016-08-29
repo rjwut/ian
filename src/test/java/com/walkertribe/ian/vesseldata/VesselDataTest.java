@@ -7,6 +7,7 @@ import java.io.File;
 import com.walkertribe.ian.enums.FactionAttribute;
 import com.walkertribe.ian.enums.VesselAttribute;
 
+import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -21,11 +22,16 @@ public class VesselDataTest {
 		String installPath = System.getProperty(PROPERTY_INSTALL_PATH);
 
 		if (installPath != null) {
-			VesselData.setArtemisInstallPath(new File(installPath));
+			VesselData.setPathResolver(new FilePathResolver(new File(installPath)));
 			vesselData = VesselData.get();
 			VesselData.preloadInternals();
 			VesselData.preloadModels();
 		}
+	}
+
+	@AfterClass
+	public static void afterClass() {
+		VesselData.setPathResolver(null);
 	}
 
 	@Before
@@ -47,13 +53,15 @@ public class VesselDataTest {
 		testFaction(vesselData.getFaction(4), "Torgoth", FactionAttribute.ENEMY,
 				FactionAttribute.SUPPORT, FactionAttribute.WHALEHATER);
 		testFaction(vesselData.getFaction(5), "Skaraan", FactionAttribute.ENEMY,
-				FactionAttribute.LONER, FactionAttribute.ELITE);
+				FactionAttribute.LONER, FactionAttribute.HASSPECIALS);
 		testFaction(vesselData.getFaction(6), "BioMech", FactionAttribute.ENEMY,
 				FactionAttribute.LONER, FactionAttribute.BIOMECH);
+		testFaction(vesselData.getFaction(7), "Ximni", FactionAttribute.PLAYER,
+				FactionAttribute.JUMPMASTER);
 	}
 
 	@Test
-	public void testVessels() {
+	public void testPlayerVessels() {
 		testVessel(vesselData.getVessel(0), "Light Cruiser", 0, 80, 80,
 				VesselAttribute.PLAYER);
 		testVessel(vesselData.getVessel(1), "Scout", 0, 60, 60,
@@ -63,10 +71,28 @@ public class VesselDataTest {
 		testVessel(vesselData.getVessel(3), "Missile Cruiser", 0, 110, 80,
 				VesselAttribute.PLAYER);
 		testVessel(vesselData.getVessel(4), "Dreadnought", 0, 200, 200,
-				VesselAttribute.PLAYER);
+				VesselAttribute.PLAYER, VesselAttribute.CARRIER);
 		testVessel(vesselData.getVessel(5), "Carrier", 0, 100, 100,
 				VesselAttribute.PLAYER, VesselAttribute.CARRIER);
-		testVessel(vesselData.getVessel(100), "Fighter XA", 0, 140, 0,
+		testVessel(vesselData.getVessel(6), "Mine Layer", 0, 150, 150,
+				VesselAttribute.PLAYER);
+		testVessel(vesselData.getVessel(7), "Juggernaut", 0, 300, 300,
+				VesselAttribute.PLAYER, VesselAttribute.CARRIER);
+		testVessel(vesselData.getVessel(8), "Light Cruiser", 7, 80, 80,
+				VesselAttribute.PLAYER);
+		testVessel(vesselData.getVessel(9), "Scout", 7, 60, 60,
+				VesselAttribute.PLAYER);
+		testVessel(vesselData.getVessel(10), "Missile Cruiser", 7, 110, 80,
+				VesselAttribute.PLAYER);
+		testVessel(vesselData.getVessel(11), "Battleship", 7, 250, 150,
+				VesselAttribute.PLAYER);
+		testVessel(vesselData.getVessel(12), "Carrier", 7, 80, 80,
+				VesselAttribute.PLAYER, VesselAttribute.CARRIER);
+		testVessel(vesselData.getVessel(13), "Dreadnought", 7, 200, 200,
+				VesselAttribute.PLAYER, VesselAttribute.CARRIER);
+		testVessel(vesselData.getVessel(100), "Fighter XA", 0, 15, 15,
+				VesselAttribute.PLAYER, VesselAttribute.FIGHTER);
+		testVessel(vesselData.getVessel(120), "Zim Fighter", 7, 15, 15,
 				VesselAttribute.PLAYER, VesselAttribute.FIGHTER);
 	}
 
@@ -80,7 +106,7 @@ public class VesselDataTest {
 	private static void testVessel(Vessel vessel, String name, int side,
 			int foreShield, int aftShield, VesselAttribute... attrs) {
 		assertEquals(name, vessel.getName());
-		assertEquals(0, vessel.getSide());
+		assertEquals(side, vessel.getSide());
 		assertEquals(foreShield, vessel.getForeShields());
 		assertEquals(aftShield, vessel.getAftShields());
 		assertEquals(attrs.length, vessel.getAttributes().length);

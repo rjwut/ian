@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A list of attributes for Factions. Corresponds to the <hullRace keys="">
- * attribute in vesselData.xml.
+ * A list of attributes for Factions. Corresponds to the &lt;hullRace
+ * keys=""&gt; attribute in vesselData.xml.
  * @author rjwut
  */
 public enum FactionAttribute {
@@ -20,12 +20,11 @@ public enum FactionAttribute {
 	SUPPORT,
 	LONER,
 
-	// whale behavior
+	// behavior
 	WHALELOVER,
 	WHALEHATER,
-
-	// elite
-	ELITE;
+	HASSPECIALS,
+	JUMPMASTER;
 
 	/**
 	 * Returns a Set containing the FactionAttributes that correspond to the
