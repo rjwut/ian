@@ -142,8 +142,8 @@ public class SystemManager {
                 //  updated ORIGINAL with the new ship number
                 ArtemisPlayer plr = (ArtemisPlayer) o;
 
-                if (plr.getShipNumber() >= 0) {
-                    mPlayers[plr.getShipNumber()] = (ArtemisPlayer) p;
+                if (plr.getShipNumber() != -1) {
+                    mPlayers[plr.getShipNumber() - 1] = (ArtemisPlayer) p;
                 }
             }
             
@@ -158,7 +158,7 @@ public class SystemManager {
             ArtemisPlayer plr = (ArtemisPlayer) o;
 
             if (plr.getShipNumber() >= 0) {
-                mPlayers[plr.getShipNumber()] = plr;
+                mPlayers[plr.getShipNumber() - 1] = plr;
             }
         }
 
@@ -223,20 +223,16 @@ public class SystemManager {
     }
     
     /**
-     * Get the player ship by index. Possible values
-     *  are the SetShipPacket#SHIP_* constants (that
-     *  is, ints in range [0,5]) and NOT the 
-     *  {@link ArtemisPlayer#getShipIndex()} value
-     *  
-     * @param shipIndex
+     * Get the player ship by number. Ship values range from 1 to 8.
+     * @param shipNumber
      * @return
      */
-    public ArtemisPlayer getPlayerShip(int shipIndex) {
-        if (shipIndex < 0 || shipIndex >= mPlayers.length) {
-            throw new IllegalArgumentException("Invalid ship index " + shipIndex);
+    public ArtemisPlayer getPlayerShip(int shipNumber) {
+        if (shipNumber < 1 || shipNumber > 8) {
+            throw new IllegalArgumentException("Invalid ship number: " + shipNumber);
         }
         
-        return mPlayers[shipIndex];
+        return mPlayers[shipNumber - 1];
     }
     
     /**
