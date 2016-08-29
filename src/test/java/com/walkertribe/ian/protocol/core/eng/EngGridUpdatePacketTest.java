@@ -11,8 +11,16 @@ import com.walkertribe.ian.util.GridCoord;
 
 public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdatePacket> {
 	@Test
-	public void test() {
+	public void testParse() {
 		execute("core/eng/EngGridUpdatePacket.txt", ConnectionType.SERVER, 1);
+	}
+
+	@Test
+	public void testConstruct() {
+		EngGridUpdatePacket pkt = new EngGridUpdatePacket();
+		pkt.toString();
+		pkt.addDamageUpdate(0, 0, 0, 0.5f);
+		pkt.addDamconUpdate(1, 3, 0, 0, 0, 0, 0, 0, 1.0f);
 	}
 
 	@Override

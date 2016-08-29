@@ -10,8 +10,13 @@ import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class EngAutoDamconUpdatePacketTest extends AbstractPacketTester<EngAutoDamconUpdatePacket> {
 	@Test
-	public void test() {
+	public void testParse() {
 		execute("core/eng/EngAutoDamconUpdatePacket.txt", ConnectionType.SERVER, 2);
+	}
+
+	@Test
+	public void testConstruct() {
+		new EngAutoDamconUpdatePacket(true);
 	}
 
 	@Override

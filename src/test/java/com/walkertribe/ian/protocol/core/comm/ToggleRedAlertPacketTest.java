@@ -11,8 +11,13 @@ import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class ToggleRedAlertPacketTest extends AbstractPacketTester<ToggleRedAlertPacket> {
 	@Test
-	public void test() {
+	public void testParse() {
 		execute("core/comm/ToggleRedAlertPacket.txt", ConnectionType.CLIENT, 1);
+	}
+
+	@Test
+	public void testConstruct() {
+		new ToggleRedAlertPacket();
 	}
 
 	@Override
