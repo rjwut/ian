@@ -45,6 +45,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private int mCaptainTarget = -1;
     private int mScanningId = -1;
     private final byte[] mUpgrades = new byte[Upgrade.STORABLE_UPGRADE_COUNT];
+    private int mCapitalShipId = -1;
+    private int mAccentColor = -1;
 
     public ArtemisPlayer(int objId) {
         super(objId);
@@ -80,7 +82,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * Get this ship's player ship number. Note that this value is one-based, so
      * the vessel that is named Artemis will have a ship number of 1.
      * Unspecified: -1
-     * @return int in [0,Artemis.SHIP_COUNT), or -1 if undefined
+     * @return int in [1,Artemis.SHIP_COUNT], or -1 if undefined
      */
     public int getShipNumber() {
         return mShipNumber == -1 ? -1 : mShipNumber;
@@ -443,6 +445,30 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	mUpgrades[upgrade.ordinal() - 2] = count;
     }
 
+    /**
+     * Returns this ship's accent color as an ARGB value.
+     * Unspecified: -1
+     */
+    public int getAccentColor() {
+    	return mAccentColor;
+    }
+
+    public void setAccentColor(int accentColor) {
+    	mAccentColor = accentColor;
+    }
+
+    /**
+     * Returns the ID of the capital ship with which this ship can dock. Only applies to fighters.
+     * Unspecified: -1
+     */
+    public int getCapitalShipId() {
+    	return mCapitalShipId;
+    }
+
+    public void setCapitalShipId(int capitalShipId) {
+    	mCapitalShipId = capitalShipId;
+    }
+
     @Override
     public void updateFrom(ArtemisObject eng) {
         super.updateFrom(eng);
@@ -570,6 +596,14 @@ public class ArtemisPlayer extends BaseArtemisShip {
             		mUpgrades[i] = upgrade;
             	}
             }
+
+            if (plr.mAccentColor != -1) {
+            	mAccentColor = plr.mAccentColor;
+            }
+
+            if (plr.mCapitalShipId != -1) {
+            	mCapitalShipId = plr.mCapitalShipId;
+            }
         }
     }
 
@@ -633,5 +667,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
     		Upgrade upgradeType = upgradeTypes[i];
         	putProp(props, "Upgrades: " + upgradeType, mUpgrades[i], -1, includeUnspecified);
         }
+
+    	putProp(props, "Capital ship ID", mCapitalShipId, -1, includeUnspecified);
+    	putProp(props, "Accent color", mAccentColor, -1, includeUnspecified);
     }
 }
