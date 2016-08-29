@@ -27,6 +27,7 @@ public class Vessel {
 	int pushRadius;
 	int foreShields;
 	int aftShields;
+	int playerShields;
 	float turnRate;
 	float topSpeed;
 	float efficiency;
@@ -174,6 +175,14 @@ public class Vessel {
 	 */
 	public int getAftShields() {
 		return aftShields;
+	}
+
+	/**
+	 * Returns the initial strength of this Vessel's "player" shields. (This
+	 * appears to only apply to fighters.)
+	 */
+	public int getPlayerShields() {
+		return playerShields;
 	}
 
 	/**

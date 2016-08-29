@@ -34,7 +34,6 @@ public class SAXVesselDataHandler extends DefaultHandler {
 	SAXVesselDataHandler() {
 		parsers.put("art", new ArtParser());
 		parsers.put("beam_port", new BeamPortParser());
-		parsers.put("carrier", new CarrierParser());
 		parsers.put("carrierload", new CarrierLoadParser());
 		parsers.put("drone_port", new DronePortParser());
 		parsers.put("engine_port", new EnginePortParser());
@@ -134,16 +133,6 @@ public class SAXVesselDataHandler extends DefaultHandler {
 			parseWeaponPort(port, attrs);
 			port.arcWidth = parseFloat(attrs, "arcwidth");
 			vessel.beamPorts.add(port);
-		}
-	}
-
-	/**
-	 * Parser for <carrier> elements.
-	 */
-	private class CarrierParser implements Parser {
-		@Override
-		public void parse(Attributes attrs) {
-			vessel.fighterCount = parseInt(attrs, "complement");
 		}
 	}
 
@@ -287,6 +276,11 @@ public class SAXVesselDataHandler extends DefaultHandler {
 		public void parse(Attributes attrs) {
 			vessel.foreShields = parseInt(attrs, "front");
 			vessel.aftShields = parseInt(attrs, "back");
+			String playerShields = attrs.getValue("player");
+
+			if (playerShields != null) {
+				vessel.playerShields = Integer.parseInt(playerShields);
+			}
 		}
 	}
 
