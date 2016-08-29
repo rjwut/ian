@@ -29,15 +29,16 @@ public abstract class ShipActionPacket extends BaseArtemisPacket {
     protected static final byte TYPE_READY              = 0x0f;
     protected static final byte TYPE_SCI_SELECT         = 0x10; 
     protected static final byte TYPE_CAPTAIN_SELECT     = 0x11;
-    protected static final byte TYPE_GAME_MASTER_SELECT = 0x12;
+    protected static final byte TYPE_GM_SELECT          = 0x12;
     protected static final byte TYPE_SCI_SCAN           = 0x13;
     protected static final byte TYPE_KEYSTROKE          = 0x14;
-
+    protected static final byte TYPE_GM_BUTTON_CLICK    = 0x15;
     protected static final byte TYPE_SHIP_SETUP         = 0x16;
 
     protected static final byte TYPE_REVERSE_ENGINES    = 0x18;
     protected static final byte TYPE_READY2             = 0x19;
     protected static final byte TYPE_TOGGLE_PERSPECTIVE = 0x1a;
+    protected static final byte TYPE_CLIMB_DIVE         = 0x1b;
 
     protected static final byte TYPE_LAUNCH_PACKET      = 0x1d;
 
