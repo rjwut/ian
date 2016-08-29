@@ -9,7 +9,6 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 import com.walkertribe.ian.protocol.core.ShipActionPacket;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.vesseldata.VesselData;
@@ -68,12 +67,7 @@ public class SetShipSettingsPacket extends ShipActionPacket {
 
 	private SetShipSettingsPacket(PacketReader reader) {
         super(TYPE_SHIP_SETUP);
-		int subtype = reader.readInt();
-
-		if (subtype != TYPE_SHIP_SETUP) {
-        	throw new UnexpectedTypeException(subtype, TYPE_SHIP_SETUP);
-		}
-
+        reader.skip(4); // subtype
 		mDrive = DriveType.values()[reader.readInt()];
 		mHullId = reader.readInt();
 		reader.skip(4); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)

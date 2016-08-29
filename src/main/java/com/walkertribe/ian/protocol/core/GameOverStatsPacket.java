@@ -12,7 +12,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 public class GameOverStatsPacket extends BaseArtemisPacket implements
 		Iterable<GameOverStatsPacket.Row> {
@@ -42,12 +41,7 @@ public class GameOverStatsPacket extends BaseArtemisPacket implements
 
 	private GameOverStatsPacket(PacketReader reader) {
     	super(ConnectionType.SERVER, TYPE);
-        int subtype = reader.readInt();
-
-        if (subtype != MSG_TYPE) {
-			throw new UnexpectedTypeException(subtype, MSG_TYPE);
-        }
-
+        reader.skip(4); // subtype
         columnIndex = reader.readByte();
 
         do {

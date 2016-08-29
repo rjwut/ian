@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 import com.walkertribe.ian.util.GridCoord;
 
 /**
@@ -46,6 +45,14 @@ public class EngSendDamconPacket extends BaseArtemisPacket {
      * @param z Destination Z-coordinate in the system grid
      */
     public EngSendDamconPacket(int teamNumber, int x, int y, int z) {
+    	this(teamNumber, GridCoord.getInstance(x, y, z));
+    }
+
+    /**
+     * @param teamNumber int [0, TEAMS) where TEAMS is probably 3
+     * @param coord Destination coordinates in the system grid
+     */
+    public EngSendDamconPacket(int teamNumber, GridCoord coord) {
         super(ConnectionType.CLIENT, TYPE);
 
         if (teamNumber < 0) {
@@ -55,25 +62,12 @@ public class EngSendDamconPacket extends BaseArtemisPacket {
         }
 
         mTeamNumber = teamNumber;
-        mCoord = GridCoord.getInstance(x, y, z);
-    }
-
-    /**
-     * @param teamNumber int [0, TEAMS) where TEAMS is probably 3
-     * @param coord Destination coordinates in the system grid
-     */
-    public EngSendDamconPacket(int teamNumber, GridCoord coord) {
-        this(teamNumber, coord.getX(), coord.getY(), coord.getZ());
+        mCoord = coord;
     }
 
     private EngSendDamconPacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
-        int subtype = reader.readInt();
-
-        if (subtype != SUBTYPE) {
-        	throw new UnexpectedTypeException(subtype, SUBTYPE);
-        }
-
+        reader.skip(4); // subtype
         mTeamNumber = reader.readInt();
         mCoord = GridCoord.getInstance(reader.readInt(), reader.readInt(), reader.readInt());
     }

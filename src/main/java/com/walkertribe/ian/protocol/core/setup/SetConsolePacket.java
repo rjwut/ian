@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 import com.walkertribe.ian.protocol.core.ShipActionPacket;
 
 /**
@@ -52,12 +51,7 @@ public class SetConsolePacket extends ShipActionPacket {
 
 	private SetConsolePacket(PacketReader reader) {
         super(TYPE_SET_CONSOLE);
-		int subtype = reader.readInt();
-
-		if (subtype != TYPE_SET_CONSOLE) {
-        	throw new UnexpectedTypeException(subtype, TYPE_SET_CONSOLE);
-		}
-
+        reader.skip(4); // subtype
 		mConsole = Console.values()[reader.readInt()];
 		mSelected = reader.readInt() == 1;
 	}

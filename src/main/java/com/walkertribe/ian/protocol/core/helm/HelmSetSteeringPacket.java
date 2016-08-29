@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Set steering amount. Just like the actual console, you need to send one
@@ -54,12 +53,7 @@ public class HelmSetSteeringPacket extends BaseArtemisPacket {
 
     private HelmSetSteeringPacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
-    	int subtype = reader.readInt();
-
-    	if (subtype != SUBTYPE) {
-        	throw new UnexpectedTypeException(subtype, SUBTYPE);
-    	}
-
+        reader.skip(4); // subtype
     	mSteering = reader.readFloat();
     }
 

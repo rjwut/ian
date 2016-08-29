@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Initiate a jump. There is no confirmation; that's all client-side.
@@ -60,12 +59,7 @@ public class HelmJumpPacket extends BaseArtemisPacket {
 
     private HelmJumpPacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
-        int subtype = reader.readInt();
-
-        if (subtype != SUBTYPE) {
-        	throw new UnexpectedTypeException(subtype, SUBTYPE);
-        }
-
+        reader.skip(4); // subtype
         mHeading = reader.readFloat();
         mDistance = reader.readFloat();
     }

@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Set impulse power.
@@ -50,12 +49,7 @@ public class HelmSetImpulsePacket extends BaseArtemisPacket {
 
     private HelmSetImpulsePacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
-    	int subtype = reader.readInt();
-
-    	if (subtype != SUBTYPE) {
-        	throw new UnexpectedTypeException(subtype, SUBTYPE);
-    	}
-
+        reader.skip(4); // subtype
     	mPower = reader.readFloat();
     }
 
