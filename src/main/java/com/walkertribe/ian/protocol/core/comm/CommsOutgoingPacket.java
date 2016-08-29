@@ -41,52 +41,27 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
     private int mArg;
 
     /**
-     * Use this constructor for messages which do not have an argument;
-     * otherwise, an IllegalArgumentException will be thrown.
-     * @param target The message recipient
-     * @param msg The message to be sent
+     * Creates an outgoing message with no argument. If you pass in a
+     * CommMessage which requires an argument, an IllegalArgumentException will
+     * be thrown.
      */
     public CommsOutgoingPacket(ArtemisObject target, CommsMessage msg) {
-        super(ConnectionType.CLIENT, TYPE);
-
-        if (msg.hasArgument()) {
-        	throw new IllegalArgumentException(
-        			"Message " + msg + " requires an argument"
-        	);
-        }
-
-        init(target, msg, NO_ARG);
+        this(target, msg, NO_ARG);
     }
     
     /**
-     * Use this constructor for messages which have an argument; otherwise, an
-     * IllegalArgumentException will be thrown. At this writing only the
+     * Creates an outgoing message with an argument. At this writing, only the
      * {@link com.walkertribe.ian.enums.OtherMessage#GO_DEFEND}
-     * message has an argument, which is the ID of the object to be defended.
+     * message takes an argument, which is the ID of the object to be defended.
+     * For messages with no argument, you can pass in {@link #NO_ARG}, but it's
+     * easier to just use the other constructor. An IllegalArgumentException
+     * will be thrown if you provide an argument to a message which doesn't
+     * accept one, or use NO_ARG with a message which requires one.
      */
     public CommsOutgoingPacket(ArtemisObject recipient, CommsMessage msg,
             int arg) {
         super(ConnectionType.CLIENT, TYPE);
 
-        if (!msg.hasArgument()) {
-        	throw new IllegalArgumentException(
-        			"Message " + msg + " does not accept an argument"
-        	);
-        }
-
-        init(recipient, msg, arg);
-    }
-
-    private CommsOutgoingPacket(PacketReader reader) {
-        super(ConnectionType.CLIENT, TYPE);
-        mRecipientType = CommsRecipientType.values()[reader.readInt()];
-        mRecipientId = reader.readInt();
-        mMsg = mRecipientType.messageFromId(reader.readInt());
-        mArg = reader.readInt();
-        reader.skip(4);	// arg 2 placeholder
-    }
-
-    private void init(ArtemisObject recipient, CommsMessage msg, int arg) {
         if (recipient == null) {
         	throw new IllegalArgumentException("You must provide a recipient");
         }
@@ -110,9 +85,30 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
     		);
     	}
 
+        if (msg.hasArgument() && arg == NO_ARG) {
+        	throw new IllegalArgumentException(
+        			"Message " + msg + " requires an argument"
+        	);
+        }
+
+        if (!msg.hasArgument() && arg != NO_ARG) {
+        	throw new IllegalArgumentException(
+        			"Message " + msg + " does not accept an argument"
+        	);
+        }
+
     	mRecipientId = recipient.getId();
     	mMsg = msg;
     	mArg = arg;
+    }
+
+    private CommsOutgoingPacket(PacketReader reader) {
+        super(ConnectionType.CLIENT, TYPE);
+        mRecipientType = CommsRecipientType.values()[reader.readInt()];
+        mRecipientId = reader.readInt();
+        mMsg = mRecipientType.messageFromId(reader.readInt());
+        mArg = reader.readInt();
+        reader.skip(4);	// arg 2 placeholder
     }
 
     public CommsRecipientType getRecipientType() {
