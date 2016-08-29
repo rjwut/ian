@@ -36,8 +36,8 @@ public class NpcShipParser extends AbstractObjectParser {
 		AFT_SHIELD_MAX,
 		UNK_3_5,
 		FLEET_NUMBER,
-		ELITE_ABILITIES,
-		ELITE_STATE,
+		SPECIAL_ABILITIES,
+		SPECIAL_STATE,
 
 		UNK_4_1,
 		UNK_4_2,
@@ -126,13 +126,13 @@ public class NpcShipParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_3_5, 2);
 
         obj.setFleetNumber(reader.readByte(Bit.FLEET_NUMBER, (byte) -1));
-        int elite = reader.readInt(Bit.ELITE_ABILITIES, -1);
-        int eliteState = reader.readInt(Bit.ELITE_STATE, -1);
+        int special = reader.readInt(Bit.SPECIAL_ABILITIES, -1);
+        int specialState = reader.readInt(Bit.SPECIAL_STATE, -1);
         Vessel vessel = obj.getVessel();
 
-        if (vessel != null && vessel.getFaction().is(FactionAttribute.ELITE)) {
-            obj.setEliteBits(elite);
-            obj.setEliteStateBits(eliteState);
+        if (vessel != null && vessel.getFaction().is(FactionAttribute.HASSPECIALS)) {
+            obj.setSpecialBits(special);
+            obj.setSpecialStateBits(specialState);
         }
 
         obj.setScanLevel((byte) reader.readInt(Bit.UNK_4_1));
@@ -191,8 +191,8 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeFloat(Bit.AFT_SHIELD_MAX, npc.getShieldsRearMax(), -1)
 				.writeUnknown(Bit.UNK_3_5)
 				.writeByte(Bit.FLEET_NUMBER, npc.getFleetNumber(), (byte) -1)
-				.writeInt(Bit.ELITE_ABILITIES, npc.getEliteBits(), -1)
-				.writeInt(Bit.ELITE_STATE, npc.getEliteStateBits(), -1)
+				.writeInt(Bit.SPECIAL_ABILITIES, npc.getSpecialBits(), -1)
+				.writeInt(Bit.SPECIAL_STATE, npc.getSpecialStateBits(), -1)
 				.writeInt(Bit.UNK_4_1, npc.getScanLevel(), -1)
 				.writeUnknown(Bit.UNK_4_2)
 				.writeUnknown(Bit.UNK_4_3)

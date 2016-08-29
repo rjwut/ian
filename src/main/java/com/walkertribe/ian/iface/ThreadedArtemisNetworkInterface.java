@@ -2,12 +2,15 @@ package com.walkertribe.ian.iface;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -17,25 +20,23 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.Protocol;
 import com.walkertribe.ian.protocol.core.setup.VersionPacket;
 import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
-import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
 import com.walkertribe.ian.util.Version;
-import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Default implementation of ArtemisNetworkInterface. Kicks off a thread for
  * each stream.
  */
 public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface {
-    private ConnectionType recvType;
+	private ConnectionType recvType;
     private ConnectionType sendType;
     private PacketFactoryRegistry factoryRegistry = new PacketFactoryRegistry();
     private ListenerRegistry mListeners = new ListenerRegistry();
     private ReceiverThread mReceiveThread;
     private SenderThread mSendThread;
-
     private DisconnectEvent.Cause disconnectCause = DisconnectEvent.Cause.LOCAL_DISCONNECT;
     private Exception exception;
     private Debugger mDebugger = new BaseDebugger();
+    private List<ArtemisNetworkInterface> proxyTargets = new LinkedList<ArtemisNetworkInterface>();
 
     /**
      * Prepares an outgoing client connection to an Artemis server. The send and
@@ -76,8 +77,6 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      * 
      * The send/receive streams won't actually be opened until start() is
      * called.
-     * 
-     * @param socket The ServerSocket that has received a connection
      */
     public ThreadedArtemisNetworkInterface(Socket skt, ConnectionType connType)
     		throws IOException {
@@ -90,7 +89,6 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     	skt.setKeepAlive(true);
         mSendThread = new SenderThread(this, skt);
         mReceiveThread = new ReceiverThread(this, skt);
-        addListener(mSendThread);
     }
 
     @Override
@@ -226,13 +224,11 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             mConnected = false;
             mInterface.stop();
             
-            // close the socket here; this will
-            //  allow us to send any closing
-            //  packets needed before shutting
-            //  down the pipes
+            // Close the socket here; this will allow us to send any closing
+            // packets needed before shutting down the pipes.
             try {
                 mSkt.close();
-            } catch (final IOException e) {
+            } catch (final IOException ex) {
             	// DON'T CARE
             }
 
@@ -242,11 +238,17 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             ));
         }
 
+        /**
+         * Stop sending packets after the current one.
+         */
         public void end() {
             mRunning = false;
         }
 
-        @Listener
+        /**
+         * Receiving a WelcomePacket is how we know we're connected to the
+         * server. Send a ConnectionSuccessEvent.
+         */
         public void onPacket(final WelcomePacket pkt) {
             final boolean wasConnected = mConnected;
             mConnected = true;
@@ -256,7 +258,10 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             }
         }
 
-        @Listener
+        /**
+         * Check the Version against our minimum required version and disconnect
+         * if we don't support it.
+         */
         public void onPacket(final VersionPacket pkt) {
             final Version version = pkt.getVersion();
 
@@ -289,6 +294,9 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             		factoryRegistry, mListeners);
         }
 
+        /**
+         * If set to false, we won't bother to parse any packets.
+         */
         private void setParsePackets(boolean parse) {
         	mReader.setParsePackets(parse);
         }
@@ -296,20 +304,32 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
         @Override
         public void run() {
             mStarted = true;
+            SenderThread sender = ThreadedArtemisNetworkInterface.this.mSendThread;
             
             while (mRunning) {
                 try {
                     // read packet
-                    final ArtemisPacket pkt = mReader.readPacket(mInterface.mDebugger);
+                	final ParseResult result = mReader.readPacket(mInterface.mDebugger);
+                    final ArtemisPacket pkt = result.getPacket();
 
                     if (mRunning) {
-                		mListeners.fire(pkt);
+                    	// Handle WelcomePacket and VersionPacket specially
+                    	if (pkt instanceof WelcomePacket) {
+                    		sender.onPacket((WelcomePacket) pkt);
+                    	} else if (pkt instanceof VersionPacket) {
+                    		sender.onPacket((VersionPacket) pkt);
+                    	}
 
-                		if (pkt instanceof ObjectUpdatePacket) {
-                			for (ArtemisObject obj : ((ObjectUpdatePacket) pkt).getObjects()) {
-                				mListeners.fire(obj);
-                			}
-                		}
+                    	// Notify listeners
+                    	result.fireListeners();
+
+                    	if (!result.isInterestingPacket()) {
+                    		// No listeners were interested in the packet
+                    		// itself, so pass it to any proxy targets.
+                    		for (ArtemisNetworkInterface target : proxyTargets) {
+                    			target.send(pkt);
+                    		}
+                    	}
                     }
                 } catch (final ArtemisPacketException ex) {
                 	mDebugger.onPacketParseException(ex);
@@ -317,10 +337,10 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                 	if (mRunning) {
                     	Throwable cause = ex.getCause();
 
-                    	if (cause instanceof SocketException) {
+                    	if (cause instanceof EOFException || cause instanceof SocketException) {
                     		// Parse failed because the connection was lost
                     		mInterface.disconnectCause = DisconnectEvent.Cause.REMOTE_DISCONNECT;
-                        	mInterface.exception = (SocketException) cause;
+                        	mInterface.exception = (Exception) cause;
                     	} else {
                         	mInterface.disconnectCause = DisconnectEvent.Cause.PACKET_PARSE_EXCEPTION;
                         	mInterface.exception = ex;
@@ -348,5 +368,16 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
 		}
 
 		mDebugger = debugger;
+	}
+
+	@Override
+	public void proxyTo(ArtemisNetworkInterface iface) {
+		if (!iface.getRecvType().equals(getSendType())) {
+			throw new IllegalArgumentException(
+					"Interfaces must be of opposite ConnectionTypes"
+			);
+		}
+
+		proxyTargets.add(iface);
 	}
 }

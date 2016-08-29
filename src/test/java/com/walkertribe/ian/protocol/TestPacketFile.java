@@ -23,6 +23,7 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.util.TextUtil;
+import com.walkertribe.ian.vesseldata.FilePathResolver;
 import com.walkertribe.ian.vesseldata.VesselData;
 
 /**
@@ -63,7 +64,7 @@ public class TestPacketFile {
 	 * - Connection type for the packets in the file (SERVER or CLIENT)
 	 */
 	public static void main(String[] args) {
-		VesselData.setArtemisInstallPath(new File(args[0]));
+		VesselData.setPathResolver(new FilePathResolver(new File(args[0])));
 		String fileName = args[1];
 		ConnectionType connType = ConnectionType.valueOf(args[2]);
 
@@ -189,11 +190,9 @@ public class TestPacketFile {
 
 		// Read until there's no more data
 		while (bais.available() > 0) {
-			ArtemisPacket pkt;
-
 			try {
 				// Parse a packet, then get the bytes from the Debugger
-				pkt = reader.readPacket(debugger);
+				ArtemisPacket pkt = reader.readPacket(debugger).getPacket();
 				System.out.println(pkt.getClass().getSimpleName());
 				byte[] in = debugger.in;
 

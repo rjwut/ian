@@ -255,8 +255,8 @@ public class PacketWriter {
 	 * and the terminating null character automatically. You must invoke start()
 	 * before calling this method.
 	 */
-	public PacketWriter writeUSASCIIString(String str) {
-		writeUSASCIIString(str, baos);
+	public PacketWriter writeUsAsciiString(String str) {
+		writeUsAsciiString(str, baos);
 		return this;
 	}
 
@@ -454,7 +454,7 @@ public class PacketWriter {
 	/**
 	 * Writes a US ASCII encoded String into the given ByteArrayOutputStream.
 	 */
-	private void writeUSASCIIString(String v, ByteArrayOutputStream outStream) {
+	private void writeUsAsciiString(String v, ByteArrayOutputStream outStream) {
 		int charCount = v.length();
 		writeInt(charCount, outStream);
 		byte[] charBytes = v.getBytes(Util.US_ASCII);
