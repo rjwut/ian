@@ -1,11 +1,27 @@
 package com.walkertribe.ian.vesseldata;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.InputStream;
 
-class ClasspathResolver implements PathResolver {
+/**
+ * An implementation of PathResolver that reads resources relative to a
+ * specified Class on the classpath. This allows you to bundle the required
+ * resources inside your project.
+ * @author rjwut
+ */
+public class ClasspathResolver implements PathResolver {
+	private Class<?> clazz;
+
+	public ClasspathResolver(Class<?> clazz) {
+		if (clazz == null) {
+			throw new IllegalArgumentException("Class cannot be null");
+		}
+
+		this.clazz = clazz;
+	}
+
 	@Override
-	public URI get(String path) throws URISyntaxException {
-		return getClass().getResource(path).toURI();
+	public InputStream get(String path) throws IOException {
+		return clazz.getResource(path).openStream();
 	}
 }

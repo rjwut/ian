@@ -1,8 +1,6 @@
 package com.walkertribe.ian.vesseldata;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -32,24 +31,12 @@ public class VesselData {
 	private static Map<String, Model> models;
 
 	/**
-	 * Sets the location of the Artemis installation directory. This will delete
-	 * the existing VesselData instance; another will be generated based on this
-	 * new installation path the next time it is required.
+	 * A PathResolver is an object that tells IAN where to look for files it
+	 * wants to read. A PathResolver must be set before you can invoke get() or
+	 * getModel().
 	 */
-	public static void setArtemisInstallPath(File artemisInstallPath) {
-		if (artemisInstallPath == null) {
-			throw new IllegalArgumentException("The Artemis install path is required");
-		}
-
-		if (!artemisInstallPath.exists()) {
-			throw new IllegalArgumentException("Path does not exist");
-		}
-
-		if (!artemisInstallPath.isDirectory()) {
-			throw new IllegalArgumentException("Path is not a directory");
-		}
-
-		pathResolver = new FilePathResolver(artemisInstallPath);
+	public static void setPathResolver(PathResolver resolver) {
+		pathResolver = resolver;
 		models = new HashMap<String, Model>();
 		instance = null;
 	}
@@ -57,12 +44,11 @@ public class VesselData {
 	/**
 	 * Returns the VesselData instance. If vesselData.xml has not yet been
 	 * parsed when get() is called, it will be parsed at that time. Note that
-	 * you must invoke setArtemisInstallPath() first, before calling this
-	 * method.
+	 * you must invoke setPathResolver() first, before calling this method.
 	 */
 	public static VesselData get() {
 		if (pathResolver == null) {
-			throw new IllegalStateException("Must invoke setArtemisInstallPath() first");
+			throw new IllegalStateException("Must invoke setPathResolver() first");
 		}
 
 		if (instance == null) {
@@ -72,10 +58,8 @@ public class VesselData {
 				XMLReader xmlReader = saxParser.getXMLReader();
 				SAXVesselDataHandler handler = new SAXVesselDataHandler();
 				xmlReader.setContentHandler(handler);
-				xmlReader.parse(pathResolver.get("dat/vesselData.xml").toString());
+				xmlReader.parse(new InputSource(pathResolver.get("dat/vesselData.xml")));
 				instance = handler.vesselData;
-			} catch (URISyntaxException ex) { // shouldn't happen
-				throw new VesselDataException(ex);
 			} catch (SAXException ex) {
 				throw new VesselDataException(ex);
 			} catch (ParserConfigurationException ex) {
@@ -89,8 +73,8 @@ public class VesselData {
 	}
 
 	/**
-	 * Preloads all of the Model2D objects into memory. If you do not call this
-	 * method, then each Model2D object will be loaded into memory on demand
+	 * Preloads all of the Model objects into memory. If you do not call this
+	 * method, then each Model object will be loaded into memory on demand
 	 * instead.
 	 */
 	public static void preloadModels() {
@@ -121,7 +105,7 @@ public class VesselData {
 	/**
 	 * Returns the Model2D object corresponding to the given comma-delimited
 	 * list of .dxs file paths. The model will only be loaded once; after that
-	 * it is cached in memory. Note that you must invoke setArtemisInstallPath()
+	 * it is cached in memory. Note that you must invoke setPathResolver()
 	 * first, before calling this method.
 	 */
 	public static Model getModel(String dxsPaths) {
