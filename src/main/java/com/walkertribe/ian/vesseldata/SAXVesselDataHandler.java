@@ -3,6 +3,7 @@ package com.walkertribe.ian.vesseldata;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.OrdnanceType;
 
 import org.xml.sax.Attributes;
@@ -27,11 +28,13 @@ public class SAXVesselDataHandler extends DefaultHandler {
 	}
 
 	VesselData vesselData;
+	private Context ctx;
 	private Map<String, Parser> parsers = new HashMap<String, Parser>();
 	private Faction faction;
 	private Vessel vessel;
 
-	SAXVesselDataHandler() {
+	SAXVesselDataHandler(Context ctx) {
+		this.ctx = ctx;
 		parsers.put("art", new ArtParser());
 		parsers.put("beam_port", new BeamPortParser());
 		parsers.put("carrierload", new CarrierLoadParser());
@@ -220,7 +223,7 @@ public class SAXVesselDataHandler extends DefaultHandler {
 	private class InternalDataParser implements Parser{
 		@Override
 		public void parse(Attributes attrs) {
-			vessel.internals = new VesselInternals(attrs.getValue("file"));
+			vessel.internalDataFile = attrs.getValue("file");
 		}
 	}
 
@@ -342,6 +345,7 @@ public class SAXVesselDataHandler extends DefaultHandler {
 		public void parse(Attributes attrs) {
 			Integer id = Integer.valueOf(attrs.getValue("uniqueID"));
 			vessel = new Vessel(
+					ctx,
 					id.intValue(),
 					parseInt(attrs, "side"),
 					attrs.getValue("classname"),
@@ -357,7 +361,7 @@ public class SAXVesselDataHandler extends DefaultHandler {
 	private class VesselDataParser implements Parser {
 		@Override
 		public void parse(Attributes attrs) {
-			vesselData = new VesselData(attrs.getValue("version"));
+			vesselData = new VesselData(ctx, attrs.getValue("version"));
 		}
 	}
 }

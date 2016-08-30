@@ -2,12 +2,10 @@ package com.walkertribe.ian.vesseldata;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
-
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.FactionAttribute;
 import com.walkertribe.ian.enums.VesselAttribute;
 
-import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -22,16 +20,11 @@ public class VesselDataTest {
 		String installPath = System.getProperty(PROPERTY_INSTALL_PATH);
 
 		if (installPath != null) {
-			VesselData.setPathResolver(new FilePathResolver(new File(installPath)));
-			vesselData = VesselData.get();
-			VesselData.preloadInternals();
-			VesselData.preloadModels();
+			Context ctx = new Context(new FilePathResolver(installPath));
+			vesselData = ctx.getVesselData();
+			vesselData.preloadInternals();
+			vesselData.preloadModels();
 		}
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		VesselData.setPathResolver(null);
 	}
 
 	@Before

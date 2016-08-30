@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.walkertribe.ian.util.Matrix;
-import com.walkertribe.ian.vesseldata.VesselData;
+import com.walkertribe.ian.vesseldata.PathResolver;
 
 /**
  * Contains data about the Vessel's model.
@@ -38,7 +38,7 @@ public class Model {
 	 * to avoid building the same Model over and over, use VesselData.getModel()
 	 * instead.
 	 */
-	public static Model build(String dxsPaths) {
+	public static Model build(PathResolver pathResolver, String dxsPaths) {
 		Model model = new Model(dxsPaths);
 		String[] pathsArr = dxsPaths.split(",");
 
@@ -50,7 +50,7 @@ public class Model {
 				XMLReader xmlReader = saxParser.getXMLReader();
 				SAXModelHandler handler = new SAXModelHandler(path);
 				xmlReader.setContentHandler(handler);
-				xmlReader.parse(new InputSource(VesselData.pathResolver.get(path)));
+				xmlReader.parse(new InputSource(pathResolver.get(path)));
 				model.add(handler.vertices, handler.polys);
 			} catch (SAXException ex) {
 				throw new RuntimeException(ex);

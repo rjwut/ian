@@ -1,7 +1,7 @@
 package com.walkertribe.ian.enums;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.model.Model;
-import com.walkertribe.ian.vesseldata.VesselData;
 import com.walkertribe.ian.world.ArtemisAnomaly;
 import com.walkertribe.ian.world.ArtemisBase;
 import com.walkertribe.ian.world.ArtemisCreature;
@@ -92,13 +92,12 @@ public enum ObjectType {
 	}
 
 	/**
-	 * Returns the Model2D object for this ObjectType, or null if this
-	 * ObjectType has no model or has more than one possible model. Note that
-	 * you must invoke VesselData.setArtemisInstallPath() first, before calling
-	 * this method.
+	 * Returns the Model object for this ObjectType, using the given Context.
+	 * The getModel() method will return null if this ObjectType has no model
+	 * or has more than one possible model.
 	 */
-	public Model getModel() {
-		return modelPath != null ? VesselData.getModel(modelPath) : null;
+	public Model getModel(Context ctx) {
+		return modelPath != null ? ctx.getModel(modelPath) : null;
 	}
 
 	/**

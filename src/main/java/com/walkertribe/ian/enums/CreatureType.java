@@ -1,7 +1,7 @@
 package com.walkertribe.ian.enums;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.model.Model;
-import com.walkertribe.ian.vesseldata.VesselData;
 
 /**
  * The types of creatures. Note: For some reason, wrecks count as creatures.
@@ -24,12 +24,12 @@ public enum CreatureType {
 	}
 
 	/**
-     * Returns the Model object for this creature, or null if it has no model.
-     * (The "classic" space monster is made of multiple rotating parts and is
-     * not a simple model, thus it will return null.) Note that you must invoke
-     * VesselData.setArtemisInstallPath() first, before calling this method.
+     * Returns the Model object for this creature, using the PathResolver from
+     * the given VesselData, or null if it has no model. (The "classic" space
+     * monster is made of multiple rotating parts and is not a simple model,
+     * thus it will return null.)
      */
-    public Model getModel() {
-    	return modelPaths != null ? VesselData.getModel(modelPaths) : null;
+    public Model getModel(Context ctx) {
+    	return modelPaths != null ? ctx.getModel(modelPaths) : null;
     }
 }

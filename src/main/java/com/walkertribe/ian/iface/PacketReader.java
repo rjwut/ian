@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.protocol.ArtemisPacket;
@@ -28,6 +29,7 @@ import com.walkertribe.ian.util.Version;
  * @author rjwut
  */
 public class PacketReader {
+	private Context ctx;
 	private ConnectionType connType;
 	private InputStream in;
 	private byte[] intBuffer = new byte[4];
@@ -45,13 +47,21 @@ public class PacketReader {
 	/**
 	 * Wraps the given InputStream with this PacketReader.
 	 */
-	public PacketReader(ConnectionType connType, InputStream in,
+	public PacketReader(Context ctx, ConnectionType connType, InputStream in,
 			PacketFactoryRegistry factoryRegistry,
 			ListenerRegistry listenerRegistry) {
+		this.ctx = ctx;
 		this.connType = connType;
 		this.in = in;
 		this.factoryRegistry = factoryRegistry;
 		this.listenerRegistry = listenerRegistry;
+	}
+
+	/**
+	 * Returns the Context associated with this PacketReader.
+	 */
+	public Context getContext() {
+		return ctx;
 	}
 
 	/**

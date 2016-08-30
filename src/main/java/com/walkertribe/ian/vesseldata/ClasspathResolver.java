@@ -22,6 +22,6 @@ public class ClasspathResolver implements PathResolver {
 
 	@Override
 	public InputStream get(String path) throws IOException {
-		return clazz.getResource(path).openStream();
+		return clazz.getResourceAsStream(path);
 	}
 }

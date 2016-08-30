@@ -1,5 +1,7 @@
 Interface for Artemis Networking (IAN)
 ======================================
+[![Build Status](https://secure.travis-ci.org/rjwut/ian.svg)](http://travis-ci.org/rjwut/ian)
+
 **IAN** is an unofficial Java library for communicating with
 [Artemis Spaceship Bridge Simulator](http://www.artemis.eochu.com/) servers and clients.
 
@@ -66,11 +68,11 @@ potentially include upstream contributions in the form of pull requests.
     - `dat/*.dxs` (loaded if you request a `Model` from a `Vessel`)
     - `dat/*.snt` (loaded if you request a `VesselInternals` from a `Vessel`)
 
-    In order to do this, IAN needs to know where these resources are located. There is an interface
-    called `PathResolver` which is for objects which can locate a resource from a given path
-    relative to an Artemis. The `VesselData.setPathResolver()` static method allows you to provide
-    IAN with a `PathResolver` to use to load resources. IAN comes with two implementations of
-    `PathResolver` out of the box:
+    In order to do this, IAN needs to know where these resources are located. The `Context` class
+    provides a way to tell IAN how to find resources, and to cache the data from those resources
+    once it's loaded. The Context constructor requires a `PathResolver`, which is an interface for
+    objects which can return an `InputStream` for a given path. IAN comes with two implementations
+    of `PathResolver` out of the box:
 
     - `FilePathResolver`: Loads resources from the file system relative to a particular directory
       (the Artemis install directory, most likely).
@@ -81,11 +83,14 @@ potentially include upstream contributions in the form of pull requests.
     `PathResolver` yourself. It should be noted that IAN does not require a full Artemis install; at
     most only the three types of files listed above are needed.
 
+    After constructing a `Context` object, you are ready to proceed.
+
 2.  **Construct a `ThreadedArtemisNetworkInterface` object.** This object is responsible for
-    managing the connection to the Artemis server. You must provide the constructor with the host/IP
-    address and port to which it should connect. (By default, Artemis servers listen for connections
-    on port 2010, but this can be changed in the artemis.ini file.) On construction, it will attempt
-    to connect, throwing an `IOException` if it fails.
+    managing the connection to the Artemis server. Along with the `Context` object you instantiated
+    earlier, you must provide the constructor with the host/IP address and port to which it should
+    connect. (By default, Artemis servers listen for connections on port 2010, but this can be
+    changed in the `artemis.ini` file.) On construction, it will attempt to connect, throwing an
+    `IOException` if it fails.
 
 3.  **Add event listeners.** Next, you must add one or more event listeners to the
     `ThreadedArtemisNetworkInterface` object via the `addListener()` method. Event listeners are
@@ -203,8 +208,8 @@ public class ClientDemo extends PlayerShipUpdateListener {
 			host = host.substring(0, colonPos);
 		}
 
-		VesselData.setPathResolver(new FilePathResolver(artemisInstallPath));
-		server = new ThreadedArtemisNetworkInterface(host, port);
+    Context ctx = new Context(new FilePathResolver(artemisInstallPath));
+		server = new ThreadedArtemisNetworkInterface(host, port, ctx);
 		server.addListener(this);
 		server.start();
 		System.out.println("Connected!");
@@ -295,8 +300,8 @@ public class ClientDemo extends PlayerShipUpdateListener {
 
 2.  **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.**
     `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and a
-    `ConnectionType` (`CLIENT` in this case). The resulting object will be responsible for managing
-    the connection to the client.
+    `ConnectionType` (`CLIENT` in this case), along with the `Context`. The resulting object will be
+    responsible for managing the connection to the client.
 
 3.  **Connect to the Artemis server.** This is done exactly the same way as you would for creating
     an Artemis client, as documented above. You now have two `ThreadedArtemisNetworkInterface`
@@ -395,12 +400,13 @@ public class ProxyDemo implements Runnable {
 			return;
 		}
 
-		VesselData.setPathResolver(new FilePathResolver(args[0]));
+    String artemisInstallPath = args[0];
 		String serverAddr = args[1];
 		int port = args.length > 1 ? Integer.parseInt(args[2]) : 2010;
-		new Thread(new ProxyDemo(port, serverAddr)).start();
+		new Thread(new ProxyDemo(artemisInstallPath, port, serverAddr)).start();
 	}
 
+  private Context ctx;
 	private int port;
 	private String serverAddr;
 	private int serverPort;
@@ -411,7 +417,8 @@ public class ProxyDemo implements Runnable {
 	 * After construction, you can start the proxy by spinning it up on a
 	 * thread.
 	 */
-	public ProxyDemo(int port, String serverAddr) {
+	public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
+    ctx = new Context(new FilePathResolver(artemisInstallPath));
 		this.port = port;
 		int colonPos = serverAddr.indexOf(':');
 
@@ -440,9 +447,9 @@ public class ProxyDemo implements Runnable {
 
 			// We've got a connection, build interfaces and listener
 			System.out.println("Received connection from " + skt.getRemoteSocketAddress());
-			ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, ConnectionType.CLIENT);
+			ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, ConnectionType.CLIENT, ctx);
 			System.out.println("Connecting to server at " + serverAddr + ":" + serverPort + "...");
-			ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000);
+			ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000, ctx);
 			new ProxyListener(server, client);
 			System.out.println("Connection established.");
 		} catch (IOException ex) {
@@ -526,13 +533,10 @@ various `get*()` methods to retrieve game state from the `SystemManager`.
 
 ### Reading `vesselData.xml` ###
 The `VesselData` class allows you to access the information about the vessels and factions in the
-game. Note that you must invoke `VesselData.setPathResolver()` as noted above before you attempt to
-access any data in the `VesselData` class or connect to other machines.
-
-Invoke the `VesselData.get()` static method to get the `VesselData` instance. This is a singleton
-that exposes the information in the `vesselData.xml` file. From there, you can invoke
-`getFaction(int)` or `getVessel(int)` to retrieve the `Faction` or `Vessel` with the corresponding
-ID, or use the `factionIterator()` or `vesselIterator()` methods to see all of them.
+game. You can get a reference to a `VesselData` by calling `Context.getVesselData()`. On the
+`VesselData` object itself, you can invoke `getFaction(int)` or `getVessel(int)` to retrieve the
+`Faction` or `Vessel` with the corresponding ID, or use the `factionIterator()` or
+`vesselIterator()` methods to see all of them.
 
 Resource files are loaded on demand (when you request a `Model` or `VesselInternals` object). If you
 wish to preload resources up front, you can do so with the `preloadModels()` and

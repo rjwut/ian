@@ -1,5 +1,6 @@
 package com.walkertribe.ian.protocol.core.comm;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.CommsMessage;
 import com.walkertribe.ian.enums.CommsRecipientType;
 import com.walkertribe.ian.enums.ConnectionType;
@@ -45,8 +46,9 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
      * CommMessage which requires an argument, an IllegalArgumentException will
      * be thrown.
      */
-    public CommsOutgoingPacket(ArtemisObject target, CommsMessage msg) {
-        this(target, msg, NO_ARG);
+    public CommsOutgoingPacket(ArtemisObject target, CommsMessage msg,
+    		Context ctx) {
+        this(target, msg, NO_ARG, ctx);
     }
     
     /**
@@ -59,7 +61,7 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
      * accept one, or use NO_ARG with a message which requires one.
      */
     public CommsOutgoingPacket(ArtemisObject recipient, CommsMessage msg,
-            int arg) {
+            int arg, Context ctx) {
         super(ConnectionType.CLIENT, TYPE);
 
         if (recipient == null) {
@@ -70,7 +72,7 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
         	throw new IllegalArgumentException("You must provide a message");
         }
 
-        mRecipientType = CommsRecipientType.fromObject(recipient);
+        mRecipientType = CommsRecipientType.fromObject(recipient, ctx);
 
     	if (mRecipientType == null) {
     		throw new IllegalArgumentException("Recipient cannot receive messages");

@@ -3,6 +3,7 @@ package com.walkertribe.ian.world;
 import java.util.Set;
 import java.util.SortedMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.SpecialAbility;
 import com.walkertribe.ian.enums.FactionAttribute;
 import com.walkertribe.ian.enums.ObjectType;
@@ -175,8 +176,8 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     @Override
-    public void updateFrom(ArtemisObject eng) {
-        super.updateFrom(eng);
+    public void updateFrom(ArtemisObject eng, Context ctx) {
+        super.updateFrom(eng, ctx);
         
         // it SHOULD be an ArtemisNpc
         if (eng instanceof ArtemisNpc) {
@@ -202,7 +203,7 @@ public class ArtemisNpc extends BaseArtemisShip {
             }
 
             boolean special = false;
-            Vessel vessel = getVessel();
+            Vessel vessel = getVessel(ctx);
 
         	if (vessel != null) {
         		Faction faction = vessel.getFaction();

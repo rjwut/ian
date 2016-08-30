@@ -128,7 +128,7 @@ public class NpcShipParser extends AbstractObjectParser {
         obj.setFleetNumber(reader.readByte(Bit.FLEET_NUMBER, (byte) -1));
         int special = reader.readInt(Bit.SPECIAL_ABILITIES, -1);
         int specialState = reader.readInt(Bit.SPECIAL_STATE, -1);
-        Vessel vessel = obj.getVessel();
+        Vessel vessel = obj.getVessel(reader.getContext());
 
         if (vessel != null && vessel.getFaction().is(FactionAttribute.HASSPECIALS)) {
             obj.setSpecialBits(special);

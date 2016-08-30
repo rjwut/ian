@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.OrdnanceType;
 import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.model.Model;
@@ -16,13 +17,15 @@ import com.walkertribe.ian.model.Model;
  * @author rjwut
  */
 public class Vessel {
+	private Context ctx;
 	private int id;
 	private int side;
 	private String name;
 	String description;
 	private Set<VesselAttribute> attributes;
 	List<Art> artList = new ArrayList<Art>();
-	VesselInternals internals;
+	private String dxsPaths;
+	String internalDataFile;
 	float scale;
 	int pushRadius;
 	int foreShields;
@@ -45,7 +48,8 @@ public class Vessel {
 	List<VesselPoint> impulsePoints = new ArrayList<VesselPoint>();
 	List<VesselPoint> maneuverPoints = new ArrayList<VesselPoint>();
 
-	Vessel(int uniqueID, int side, String className, String broadType) {
+	Vessel(Context ctx, int uniqueID, int side, String className, String broadType) {
+		this.ctx = ctx;
 		id = uniqueID;
 		this.side = side;
 		name = className;
@@ -74,7 +78,7 @@ public class Vessel {
 	 * Returns the Faction to which this Vessel belongs.
 	 */
 	public Faction getFaction() {
-		return VesselData.get().getFaction(side);
+		return ctx.getVesselData().getFaction(side);
 	}
 
 	/**
@@ -121,29 +125,43 @@ public class Vessel {
 	}
 
 	/**
-	 * Returns the Model for this Vessel.
+	 * Returns the Model for this Vessel. If the .dxs files have not already
+	 * been loaded and parsed, this will cause that to happen now, and cache
+	 * the data for later re-use.
 	 */
 	public Model getModel() {
-		StringBuilder b = new StringBuilder();
+		if (dxsPaths == null) {
+			StringBuilder b = new StringBuilder();
 
-		for (Art art : artList) {
-			if (b.length() != 0) {
-				b.append(',');
+			for (Art art : artList) {
+				if (b.length() != 0) {
+					b.append(',');
+				}
+
+				b.append(art.getMeshFile());
 			}
 
-			b.append(art.getMeshFile());
+			dxsPaths = b.toString();
 		}
 
-		return VesselData.getModel(b.toString());
+		return ctx.getModel(dxsPaths);
 	}
 
 	/**
-	 * Returns the VesselInternals object describing the system node structure
-	 * for this Vessel, or null if there is none. (Only player ships will have
-	 * a VesselInternals object.)
+	 * Returns the filename of the internal data (.snt) file for this Vessel,
+	 * if any.
+	 */
+	public String getInternalDataFile() {
+		return internalDataFile;
+	}
+
+	/**
+	 * Returns the VesselInternals for this Vessel. If the .snt file has not
+	 * already been loaded and parsed, this will cause that to happen onw, and
+	 * cache the data for later re-use.
 	 */
 	public VesselInternals getInternals() {
-		return internals;
+		return ctx.getInternals(internalDataFile);
 	}
 
 	/**

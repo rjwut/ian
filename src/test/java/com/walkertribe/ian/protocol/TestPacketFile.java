@@ -15,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.Listener;
@@ -24,7 +25,6 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.util.TextUtil;
 import com.walkertribe.ian.vesseldata.FilePathResolver;
-import com.walkertribe.ian.vesseldata.VesselData;
 
 /**
  * Class that can read and write test packet files, and perform various
@@ -64,17 +64,18 @@ public class TestPacketFile {
 	 * - Connection type for the packets in the file (SERVER or CLIENT)
 	 */
 	public static void main(String[] args) {
-		VesselData.setPathResolver(new FilePathResolver(new File(args[0])));
+		Context ctx = new Context(new FilePathResolver(args[0]));
 		String fileName = args[1];
 		ConnectionType connType = ConnectionType.valueOf(args[2]);
 
 		try {
-			new TestPacketFile(new File(fileName), Mode.READ).test(connType);
+			new TestPacketFile(new File(fileName), Mode.READ, ctx).test(connType);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
 
+	private Context ctx;
 	private Mode mode;
 	private byte[] bytes;               // bytes read in on read mode
 	private OutputStream os;            // destination stream for write mode
@@ -83,7 +84,9 @@ public class TestPacketFile {
 	/**
 	 * Reads test packet data from the given File.
 	 */
-	public TestPacketFile(File file, Mode mode) throws IOException {
+	public TestPacketFile(File file, Mode mode, Context ctx) throws IOException {
+		this.ctx = ctx;
+
 		if (mode == Mode.READ) {
 			initRead(new FileInputStream(file));
 		} else if (mode == Mode.WRITE) {
@@ -181,6 +184,7 @@ public class TestPacketFile {
 		listeners.register(this);
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		PacketReader reader = new PacketReader(
+				ctx,
 				connType,
 				bais,
 				new PacketFactoryRegistry(),
@@ -226,6 +230,7 @@ public class TestPacketFile {
 		ListenerRegistry listeners = new ListenerRegistry();
 		listeners.register(this);
 		return new PacketReader(
+				ctx,
 				type,
 				new ByteArrayInputStream(bytes),
 				new PacketFactoryRegistry(),

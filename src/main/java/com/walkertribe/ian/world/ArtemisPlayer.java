@@ -3,6 +3,7 @@ package com.walkertribe.ian.world;
 import java.util.Arrays;
 import java.util.SortedMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.AlertStatus;
 import com.walkertribe.ian.enums.BeamFrequency;
 import com.walkertribe.ian.enums.DriveType;
@@ -470,12 +471,12 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     @Override
-    public void updateFrom(ArtemisObject eng) {
-        super.updateFrom(eng);
+    public void updateFrom(ArtemisObject obj, Context ctx) {
+        super.updateFrom(obj, ctx);
         
         // it should be!
-        if (eng instanceof ArtemisPlayer) {
-            ArtemisPlayer plr = (ArtemisPlayer) eng;
+        if (obj instanceof ArtemisPlayer) {
+            ArtemisPlayer plr = (ArtemisPlayer) obj;
 
             if (mShipNumber == -1) {
                 mShipNumber = plr.mShipNumber;

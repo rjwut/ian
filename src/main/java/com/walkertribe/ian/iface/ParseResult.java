@@ -13,8 +13,8 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 public class ParseResult {
 	private ArtemisPacket packet;
-	private List<ListenerMethod> interestedPacketListeners = Collections.EMPTY_LIST;
-	private List<ListenerMethod> interestedObjectListeners = Collections.EMPTY_LIST;
+	private List<ListenerMethod> interestedPacketListeners = Collections.emptyList();
+	private List<ListenerMethod> interestedObjectListeners = Collections.emptyList();
 
 	ParseResult() {
 		// make constructor accessible only to the package

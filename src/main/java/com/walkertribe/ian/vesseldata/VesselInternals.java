@@ -27,11 +27,11 @@ public class VesselInternals {
 	private Set<VesselNodeConnection> connections = new HashSet<VesselNodeConnection>();
 	private byte[] buffer = new byte[VesselNode.BLOCK_SIZE];
 
-	public VesselInternals(String sntPath) {
+	public VesselInternals(PathResolver pathResolver, String sntPath) {
 		InputStream in = null;
 
 		try {
-			in = VesselData.pathResolver.get(sntPath);
+			in = pathResolver.get(sntPath);
 			load(new BufferedInputStream(in));
 		} catch (MalformedURLException ex) {
 			throw new RuntimeException(ex);

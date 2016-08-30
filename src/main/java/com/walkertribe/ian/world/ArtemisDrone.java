@@ -2,6 +2,7 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 
 public class ArtemisDrone extends BaseArtemisOrientable {
@@ -25,8 +26,8 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 	}
 
 	@Override
-	public void updateFrom(ArtemisObject other) {
-		super.updateFrom(other);
+	public void updateFrom(ArtemisObject other, Context ctx) {
+		super.updateFrom(other, ctx);
 
 		if (other instanceof ArtemisDrone) {
 			ArtemisDrone drone = (ArtemisDrone) other;

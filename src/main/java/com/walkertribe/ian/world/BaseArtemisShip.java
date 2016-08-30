@@ -2,6 +2,7 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.BeamFrequency;
 
 /**
@@ -116,11 +117,11 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     }
 
     @Override
-    public void updateFrom(ArtemisObject eng) {
-        super.updateFrom(eng);
+    public void updateFrom(ArtemisObject obj, Context ctx) {
+        super.updateFrom(obj, ctx);
         
-        if (eng instanceof BaseArtemisShip) {
-            BaseArtemisShip ship = (BaseArtemisShip) eng;
+        if (obj instanceof BaseArtemisShip) {
+            BaseArtemisShip ship = (BaseArtemisShip) obj;
             
             if (ship.mSteering != -1) {
                 mSteering = ship.mSteering;

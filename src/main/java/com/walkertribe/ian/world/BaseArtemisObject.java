@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.model.Model;
 import com.walkertribe.ian.util.BoolState;
@@ -92,13 +93,13 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
     @Override
-    public Model getModel() {
+    public Model getModel(Context ctx) {
     	ObjectType type = getType();
-    	return type != null ? type.getModel() : null;
+    	return type != null ? type.getModel(ctx) : null;
     }
 
     @Override
-    public float getScale() {
+    public float getScale(Context ctx) {
     	ObjectType type = getType();
     	return type != null ? type.getScale() : 0;
     }
@@ -143,7 +144,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
 	@Override
-    public void updateFrom(ArtemisObject eng) {
+    public void updateFrom(ArtemisObject eng, Context ctx) {
         if (eng.getName() != null) {
             mName = eng.getName();
         }
