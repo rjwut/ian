@@ -130,6 +130,7 @@ package com.walkertribe.ian.clientdemo;
 
 import java.io.IOException;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.AlertStatus;
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.iface.ArtemisNetworkInterface;
@@ -145,7 +146,6 @@ import com.walkertribe.ian.protocol.core.setup.SetShipPacket;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.PlayerShipUpdateListener;
 import com.walkertribe.ian.vesseldata.FilePathResolver;
-import com.walkertribe.ian.vesseldata.VesselData;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
 /**
@@ -161,129 +161,129 @@ import com.walkertribe.ian.world.ArtemisPlayer;
  * @author rjwut
  */
 public class ClientDemo extends PlayerShipUpdateListener {
-	private static final int DEFAULT_ARTEMIS_PORT = 2010;
+    private static final int DEFAULT_ARTEMIS_PORT = 2010;
 
-	/**
-	 * <p>
-	 * Usage:
-	 * </p>
-	 * <code>ClientDemo {ipOrHostname}\[:{port}] {artemisInstallPath} [shipNumber]</code>
-	 * <p>
-	 * If omitted, the port is assumed to be 2010 and the ship number is assumed
-	 * to be 1.
-	 * </p>
-	 */
-	public static void main(String[] args) {
-		if (args.length < 2 || args.length > 3) {
-			System.out.println(
-					"Usage: ClientDemo {ipOrHostname}\[:{port}] {artemisInstallPath} [shipNumber]"
-			);
-			return;
-		}
+    /**
+     * <p>
+     * Usage:
+     * </p>
+     * <code>ClientDemo {ipOrHostname}\[:{port}] {artemisInstallPath} [shipNumber]</code>
+     * <p>
+     * If omitted, the port is assumed to be 2010 and the ship number is assumed
+     * to be 1.
+     * </p>
+     */
+    public static void main(String[] args) {
+        if (args.length < 2 || args.length > 3) {
+            System.out.println(
+                    "Usage: ClientDemo {ipOrHostname}[:{port}] {artemisInstallPath} [shipNumber]"
+            );
+            return;
+        }
 
-		int shipNumber = args.length == 3 ? Integer.parseInt(args[2]) : 1;
+        int shipNumber = args.length == 3 ? Integer.parseInt(args[2]) : 1;
 
-		try {
-			new ClientDemo(args[0], args[1], shipNumber);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+        try {
+            new ClientDemo(args[0], args[1], shipNumber);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-	private ArtemisNetworkInterface server;
-	private boolean redAlert = false;
-	private boolean shieldsUp = false;
+    private ArtemisNetworkInterface server;
+    private boolean redAlert = false;
+    private boolean shieldsUp = false;
 
-	/**
-	 * Starts the client and connects to the server.
-	 */
-	public ClientDemo(String host, String artemisInstallPath, int shipNumber) throws IOException {
-		super(shipNumber);
-		System.out.println("Connecting to " + host + "...");
-		int port = DEFAULT_ARTEMIS_PORT;
-		int colonPos = host.indexOf(':');
+    /**
+     * Starts the client and connects to the server.
+     */
+    public ClientDemo(String host, String artemisInstallPath, int shipNumber) throws IOException {
+        super(shipNumber);
+        System.out.println("Connecting to " + host + "...");
+        int port = DEFAULT_ARTEMIS_PORT;
+        int colonPos = host.indexOf(':');
 
-		if (colonPos != -1) {
-			port = Integer.parseInt(host.substring(colonPos + 1));
-			host = host.substring(0, colonPos);
-		}
+        if (colonPos != -1) {
+            port = Integer.parseInt(host.substring(colonPos + 1));
+            host = host.substring(0, colonPos);
+        }
 
     Context ctx = new Context(new FilePathResolver(artemisInstallPath));
-		server = new ThreadedArtemisNetworkInterface(host, port, ctx);
-		server.addListener(this);
-		server.start();
-		System.out.println("Connected!");
-	}
+        server = new ThreadedArtemisNetworkInterface(host, port, ctx);
+        server.addListener(this);
+        server.start();
+        System.out.println("Connected!");
+    }
 
-	/**
-	 * We've successfully connected to the server. Select the observer console
-	 * on the desired ship and signal our readiness.
-	 */
-	@Listener
-	public void onConnectSuccess(ConnectionSuccessEvent event) {
-		server.send(new SetShipPacket(getNumber()));
-		server.send(new SetConsolePacket(Console.OBSERVER, true));
-		server.send(new ReadyPacket());
-		System.out.println("Selected observer console on ship #" + getNumber());
-	}
+    /**
+     * We've successfully connected to the server. Select the observer console
+     * on the desired ship and signal our readiness.
+     */
+    @Listener
+    public void onConnectSuccess(ConnectionSuccessEvent event) {
+        server.send(new SetShipPacket(getNumber()));
+        server.send(new SetConsolePacket(Console.OBSERVER, true));
+        server.send(new ReadyPacket());
+        System.out.println("Selected observer console on ship #" + getNumber());
+    }
 
-	/**
-	 * The connection to the server has been lost. Print a notification to the
-	 * console. If the disconnection appears to be abnormal and we have a stack
-	 * trace, print it out. Note that the Listener annotation is not needed
-	 * because it is inherited from the superclass.
-	 */
-	@Override
-	public void onDisconnect(DisconnectEvent event) {
-		super.onDisconnect(event);
-		System.out.println(event);
-		Exception ex = event.getException();
+    /**
+     * The connection to the server has been lost. Print a notification to the
+     * console. If the disconnection appears to be abnormal and we have a stack
+     * trace, print it out. Note that the Listener annotation is not needed
+     * because it is inherited from the superclass.
+     */
+    @Override
+    public void onDisconnect(DisconnectEvent event) {
+        super.onDisconnect(event);
+        System.out.println(event);
+        Exception ex = event.getException();
 
-		if (!event.isNormal() && ex != null) {
-			ex.printStackTrace();
-		}
-	}
+        if (!event.isNormal() && ex != null) {
+            ex.printStackTrace();
+        }
+    }
 
-	/**
-	 * Listens for updates to ArtemisPlayer objects. If it finds one, then it
-	 * will check the shield and alert status, then toggle red alert if needed.
-	 * Note that this method does not have a Listener annotation, because the
-	 * superclass has a listener method called
-	 * <code>onPlayerObjectUpdated(ArtemisPlayer)</code> that invokes this
-	 * method.
-	 */
-	@Override
-	public void onShipUpdate(ArtemisPlayer player) {
-		// Update the current alert status
-		AlertStatus alert = player.getAlertStatus();
+    /**
+     * Listens for updates to ArtemisPlayer objects. If it finds one, then it
+     * will check the shield and alert status, then toggle red alert if needed.
+     * Note that this method does not have a Listener annotation, because the
+     * superclass has a listener method called
+     * <code>onPlayerObjectUpdated(ArtemisPlayer)</code> that invokes this
+     * method.
+     */
+    @Override
+    public void onShipUpdate(ArtemisPlayer player) {
+        // Update the current alert status
+        AlertStatus alert = player.getAlertStatus();
 
-		if (alert != null) {
-			redAlert = AlertStatus.RED.equals(alert);
-		}
+        if (alert != null) {
+            redAlert = AlertStatus.RED.equals(alert);
+        }
 
-		// Update shield status
-		BoolState shields = player.getShieldsState();
+        // Update shield status
+        BoolState shields = player.getShieldsState();
 
-		if (BoolState.isKnown(shields)) {
-			shieldsUp = shields.getBooleanValue();
-		}
+        if (BoolState.isKnown(shields)) {
+            shieldsUp = shields.getBooleanValue();
+        }
 
-		// Toggle alert state if needed
-		if (shieldsUp && !redAlert || !shieldsUp && redAlert) {
-			server.send(new ToggleRedAlertPacket());
-		}
-	}
+        // Toggle alert state if needed
+        if (shieldsUp && !redAlert || !shieldsUp && redAlert) {
+            server.send(new ToggleRedAlertPacket());
+        }
+    }
 
-	/**
-	 * The game is over; reset the redAlert and shieldsUp flags. Note that the
-	 * Listener annotation is not needed because it is inherited from the
-	 * superclass.
-	 */
-	@Override
-	public void onGameOver(GameOverPacket pkt) {
-		redAlert = false;
-		shieldsUp = false;
-	}
+    /**
+     * The game is over; reset the redAlert and shieldsUp flags. Note that the
+     * Listener annotation is not needed because it is inherited from the
+     * superclass.
+     */
+    @Override
+    public void onGameOver(GameOverPacket pkt) {
+        redAlert = false;
+        shieldsUp = false;
+    }
 }
 ```
 
@@ -334,6 +334,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.ArtemisNetworkInterface;
 import com.walkertribe.ian.iface.DisconnectEvent;
@@ -341,7 +342,6 @@ import com.walkertribe.ian.iface.Listener;
 import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
 import com.walkertribe.ian.protocol.core.comm.ToggleRedAlertPacket;
 import com.walkertribe.ian.vesseldata.FilePathResolver;
-import com.walkertribe.ian.vesseldata.VesselData;
 
 /**
  * <p>
@@ -384,141 +384,141 @@ import com.walkertribe.ian.vesseldata.VesselData;
  * @author rjwut
  */
 public class ProxyDemo implements Runnable {
-	/**
-	 * <p>
-	 * Usage:
-	 * </p>
-	 * <code>ProxyDemo {artemisInstallPath} {serverIpOrHostname}\[:{port}] [listenerPort]</code>
-	 * <p>
-	 * The default Artemis port (2010) is assumed where unspecified.
-	 * </p>
-	 */
-	public static void main(String[] args) {
-		if (args.length < 2 || args.length > 3) {
-			System.out.println("Usage:");
-			System.out.println("\tProxyDemo {artemisInstallPath} {serverIpOrHostname}\[:{port}] [listenerPort]");
-			return;
-		}
+    /**
+     * <p>
+     * Usage:
+     * </p>
+     * <code>ProxyDemo {artemisInstallPath} {serverIpOrHostname}\[:{port}] [listenerPort]</code>
+     * <p>
+     * The default Artemis port (2010) is assumed where unspecified.
+     * </p>
+     */
+    public static void main(String[] args) {
+        if (args.length < 2 || args.length > 3) {
+            System.out.println("Usage:");
+            System.out.println("\tProxyDemo {artemisInstallPath} {serverIpOrHostname}[:{port}] [listenerPort]");
+            return;
+        }
 
     String artemisInstallPath = args[0];
-		String serverAddr = args[1];
-		int port = args.length > 1 ? Integer.parseInt(args[2]) : 2010;
-		new Thread(new ProxyDemo(artemisInstallPath, port, serverAddr)).start();
-	}
+        String serverAddr = args[1];
+        int port = args.length > 1 ? Integer.parseInt(args[2]) : 2010;
+        new Thread(new ProxyDemo(artemisInstallPath, port, serverAddr)).start();
+    }
 
-  private Context ctx;
-	private int port;
-	private String serverAddr;
-	private int serverPort;
+    private Context ctx;
+    private int port;
+    private String serverAddr;
+    private int serverPort;
 
-	/**
-	 * Creates a new proxy. It will listen on the given port, and connect to the
-	 * server at the indicated address when it receives a client connection.
-	 * After construction, you can start the proxy by spinning it up on a
-	 * thread.
-	 */
-	public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
+    /**
+     * Creates a new proxy. It will listen on the given port, and connect to the
+     * server at the indicated address when it receives a client connection.
+     * After construction, you can start the proxy by spinning it up on a
+     * thread.
+     */
+    public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
     ctx = new Context(new FilePathResolver(artemisInstallPath));
-		this.port = port;
-		int colonPos = serverAddr.indexOf(':');
+        this.port = port;
+        int colonPos = serverAddr.indexOf(':');
 
-		if (colonPos == -1) {
-			this.serverAddr = serverAddr;
-		} else {
-			this.serverAddr = serverAddr.substring(0, colonPos);
-			serverPort = Integer.parseInt(serverAddr.substring(colonPos + 1));
-		}
-	}
+        if (colonPos == -1) {
+            this.serverAddr = serverAddr;
+        } else {
+            this.serverAddr = serverAddr.substring(0, colonPos);
+            serverPort = Integer.parseInt(serverAddr.substring(colonPos + 1));
+        }
+    }
 
-	/**
-	 * Starts the proxy. The proxy will not begin listening for a client until
-	 * this method runs.
-	 */
-	@Override
-	public void run() {
-		ServerSocket listener = null;
+    /**
+     * Starts the proxy. The proxy will not begin listening for a client until
+     * this method runs.
+     */
+    @Override
+    public void run() {
+        ServerSocket listener = null;
 
-		try {
-			// Listen for a client connection
-			listener = new ServerSocket(this.port, 0);
-			listener.setSoTimeout(0);
-			System.out.println("Listening for connections on port " + this.port + "...");
-			Socket skt = listener.accept();
+        try {
+            // Listen for a client connection
+            listener = new ServerSocket(this.port, 0);
+            listener.setSoTimeout(0);
+            System.out.println("Listening for connections on port " + this.port + "...");
+            Socket skt = listener.accept();
 
-			// We've got a connection, build interfaces and listener
-			System.out.println("Received connection from " + skt.getRemoteSocketAddress());
-			ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, ConnectionType.CLIENT, ctx);
-			System.out.println("Connecting to server at " + serverAddr + ":" + serverPort + "...");
-			ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000, ctx);
-			new ProxyListener(server, client);
-			System.out.println("Connection established.");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			// Close connections if we get an exception
-			if (listener != null && !listener.isClosed()) {
-				try {
-					listener.close();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
+            // We've got a connection, build interfaces and listener
+            System.out.println("Received connection from " + skt.getRemoteSocketAddress());
+            ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, ConnectionType.CLIENT, ctx);
+            System.out.println("Connecting to server at " + serverAddr + ":" + serverPort + "...");
+            ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000, ctx);
+            new ProxyListener(server, client);
+            System.out.println("Connection established.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Close connections if we get an exception
+            if (listener != null && !listener.isClosed()) {
+                try {
+                    listener.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 
-	/**
-	 * Class which manages the bridge between the server and client and holds
-	 * listener methods.
-	 * @author rjwut
-	 */
-	public class ProxyListener {
-		private ArtemisNetworkInterface server;
-		private ArtemisNetworkInterface client;
+    /**
+     * Class which manages the bridge between the server and client and holds
+     * listener methods.
+     * @author rjwut
+     */
+    public class ProxyListener {
+        private ArtemisNetworkInterface server;
+        private ArtemisNetworkInterface client;
 
-		/**
-		 * Adds this object as a listener on both the client and the server,
-		 * then starts listening to both.
-		 */
-		private ProxyListener(ArtemisNetworkInterface server,
-				ArtemisNetworkInterface client) {
-			this.server = server;
-			this.client = client;
-			client.addListener(this); // we're only listening to client packets
-			server.proxyTo(client);
-			client.proxyTo(server);
-			server.start();
-			client.start();
-		}
+        /**
+         * Adds this object as a listener on both the client and the server,
+         * then starts listening to both.
+         */
+        private ProxyListener(ArtemisNetworkInterface server,
+                ArtemisNetworkInterface client) {
+            this.server = server;
+            this.client = client;
+            client.addListener(this); // we're only listening to client packets
+            server.proxyTo(client);
+            client.proxyTo(server);
+            server.start();
+            client.start();
+        }
 
-		/**
-		 * If one connection is closed, close the other. (Calling stop() on a
-		 * connection which is already closed has no effect, so it's easiest to
-		 * just call stop() on both.)
-		 */
-		@Listener
-		public void onDisconnect(DisconnectEvent event) {
-			server.stop();
-			client.stop();
-			System.out.println("Disconnect: " + event);
+        /**
+         * If one connection is closed, close the other. (Calling stop() on a
+         * connection which is already closed has no effect, so it's easiest to
+         * just call stop() on both.)
+         */
+        @Listener
+        public void onDisconnect(DisconnectEvent event) {
+            server.stop();
+            client.stop();
+            System.out.println("Disconnect: " + event);
 
-			if (!event.isNormal() && event.getException() != null) {
-				// Abnormal termination, print a stack trace
-				event.getException().printStackTrace();
-			}
-		}
+            if (!event.isNormal() && event.getException() != null) {
+                // Abnormal termination, print a stack trace
+                event.getException().printStackTrace();
+            }
+        }
 
-		/**
-		 * This method "swallows" ToggleRedAlertPackets. This works because IAN
-		 * will only automatically pass along packets which are not caught by
-		 * listener methods. Any listener method that wants the packet passed
-		 * along must do so manually. This method does not, so the packet is
-		 * intercepted by the proxy and the server never receives it.
-		 */
-		@Listener
-		public void onPacket(ToggleRedAlertPacket pkt) {
-			System.out.println("Intercepted red alert toggle!");
-		}
-	}
+        /**
+         * This method "swallows" ToggleRedAlertPackets. This works because IAN
+         * will only automatically pass along packets which are not caught by
+         * listener methods. Any listener method that wants the packet passed
+         * along must do so manually. This method does not, so the packet is
+         * intercepted by the proxy and the server never receives it.
+         */
+        @Listener
+        public void onPacket(ToggleRedAlertPacket pkt) {
+            System.out.println("Intercepted red alert toggle!");
+        }
+    }
 }
 ```
 
