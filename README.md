@@ -9,6 +9,7 @@ IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/Art
 currently supports Artemis version 2.4.0. If you need Java library support for previous versions of
 Artemis, please see the list below:
 
+* Artemis v2.3.0: [IAN v3.0.0](https://github.com/rjwut/ian/releases/tag/v3.0.0)
 * Artemis v2.1.1: [ArtClientLib v2.6.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.6.0)
 * Artemis v2.1: [ArtClientLib v2.4.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.4.0)
 * Artemis v2.0: [ArtClientLib v2.3.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.3.0)
