@@ -1,7 +1,7 @@
 package com.walkertribe.ian.enums;
 
 /**
- * The bridge conoles.
+ * The bridge consoles.
  * @author rjwut
  */
 public enum Console {

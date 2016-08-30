@@ -11,8 +11,19 @@ import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class AudioCommandPacketTest extends AbstractPacketTester<AudioCommandPacket> {
 	@Test
-	public void test() {
+	public void testParse() {
 		execute("core/comm/AudioCommandPacket.txt", ConnectionType.CLIENT, 2);
+	}
+
+	@Test
+	public void testConstruct() {
+		new AudioCommandPacket(1, AudioCommand.PLAY);
+		new AudioCommandPacket(1, AudioCommand.DISMISS);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testNullCommand() {
+		new AudioCommandPacket(1, null);
 	}
 
 	@Override

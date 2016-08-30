@@ -11,12 +11,6 @@ public class Util {
 	public static final Charset US_ASCII = Charset.forName("US-ASCII");
 	public static final Charset UTF16LE = Charset.forName("UTF-16LE");
 
-	private static final float EPSILON = 0.00000001f; // for float equality tests
-
-	public static boolean withinEpsilon(double val1, double val2) {
-		return Math.abs(val1 - val2) <= EPSILON;
-	}
-
 	public static final String enumSetToString(Set<? extends Enum<?>> set) {
     	if (set.isEmpty()) {
     		return "";

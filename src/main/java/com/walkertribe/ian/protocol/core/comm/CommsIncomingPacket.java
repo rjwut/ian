@@ -13,7 +13,10 @@ import com.walkertribe.ian.protocol.BaseArtemisPacket;
  * Received when an incoming COMMs message arrives.
  */
 public class CommsIncomingPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xD672C35F;
+	public static final int MIN_PRIORITY_VALUE = 0;
+	public static final int MAX_PRIORITY_VALUE = 8;
+
+	private static final int TYPE = 0xD672C35F;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
@@ -44,15 +47,15 @@ public class CommsIncomingPacket extends BaseArtemisPacket {
     public CommsIncomingPacket(int priority, String from, String message) {
     	super(ConnectionType.SERVER, TYPE);
 
-    	if (priority < 0 || priority > 8) {
+    	if (priority < MIN_PRIORITY_VALUE || priority > MAX_PRIORITY_VALUE) {
     		throw new IllegalArgumentException("Invalid priority: " + priority);
     	}
 
-    	if (from == null) {
+    	if (from == null || from.length() == 0) {
     		throw new IllegalArgumentException("You must provide a sender name");
     	}
 
-    	if (message == null) {
+    	if (message == null || message.length() == 0) {
     		throw new IllegalArgumentException("You must provide a message");
     	}
 

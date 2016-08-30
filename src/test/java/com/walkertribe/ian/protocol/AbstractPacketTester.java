@@ -61,7 +61,8 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	
 			for (int i = 0; i < packetCount; i++) {
 				@SuppressWarnings("unchecked")
-				T pkt = (T) reader.readPacket(debugger);
+				T pkt = (T) reader.readPacket(debugger).getPacket();
+				Assert.assertEquals(type, pkt.getConnectionType());
 				Assert.assertNotNull(pkt);
 				list.add(pkt);
 				Assert.assertFalse(reader.hasMore()); // Any bytes left over?

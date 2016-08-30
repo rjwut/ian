@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.world.ArtemisObject;
 
@@ -15,10 +16,16 @@ import com.walkertribe.ian.world.ArtemisObject;
  * @author rjwut
  */
 public class DefaultModelRenderer implements ModelRenderer<RenderParams> {
+	private Context ctx;
+
+	public DefaultModelRenderer(Context ctx) {
+		this.ctx = ctx;
+	}
+
 	@Override
 	public void render(Graphics2D g, ArtemisObject object,
 			RenderParams params) {
-		Model model = object.getModel();
+		Model model = object.getModel(ctx);
 
 		if (model != null) {
 			render(g, model, params);

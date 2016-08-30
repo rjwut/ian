@@ -1,4 +1,4 @@
-package com.walkertribe.ian.protocol.core;
+package com.walkertribe.ian.protocol.core.gm;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.Console;

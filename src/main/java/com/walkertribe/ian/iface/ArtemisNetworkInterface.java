@@ -11,7 +11,7 @@ import com.walkertribe.ian.util.Version;
  * receive packets.
  */
 public interface ArtemisNetworkInterface {
-	public static final Version MIN_VERSION = new Version("2.3");
+	public static final Version MIN_VERSION = new Version("2.4");
 
 	/**
      * Returns the ConnectionType of the packets this interface can receive. An
@@ -66,4 +66,15 @@ public interface ArtemisNetworkInterface {
      * is removed, with no new debugger attached.
      */
     public void attachDebugger(Debugger debugger);
+
+    /**
+     * Adds a target interface for this interface to act as proxy. All packets
+     * that aren't caught by any listener methods registered with this interface
+     * will be passed automatically to the interfaces that have been passed to
+     * this method. Other packets will need to be passed on by your listener
+     * objects. This allows you to intercept packets and either block them or
+     * modify them as desired, without having to handle all the other packet
+     * types.
+     */
+    public void proxyTo(ArtemisNetworkInterface iface);
 }

@@ -16,7 +16,7 @@ import com.walkertribe.ian.util.Version;
  * @author rjwut
  */
 public class VersionPacket extends BaseArtemisPacket {
-	private static final int TYPE = 0xe548e74a;
+	public static final int TYPE = 0xe548e74a;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {

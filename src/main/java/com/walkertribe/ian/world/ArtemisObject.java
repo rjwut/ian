@@ -2,6 +2,7 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.model.Model;
 
@@ -101,18 +102,16 @@ public interface ArtemisObject {
     public abstract void setZ(float z);
 
     /**
-     * Returns the Model2D object for this ArtemisObject, or null if one cannot
-     * be provided. Note that you must invoke VesselData.setArtemisInstallPath()
-     * first, before calling this method.
+     * Returns the Model object for this ArtemisObject, using the given
+     * Context, or null if one cannot be provided.
      */
-    public abstract Model getModel();
+    public abstract Model getModel(Context ctx);
 
     /**
-     * Returns the base scale factor for the model representing this object, or
-     * 0.0 if one cannot be provided. Note that you must invoke
-     * VesselData.setArtemisInstallPath() first, before calling this method.
+     * Returns the base scale factor for the model representing this object (as
+     * returned by getModel()), or 0.0 if one cannot be provided.
      */
-    public abstract float getScale();
+    public abstract float getScale(Context ctx);
 
     /**
      * Returns a SortedMap containing the values for properties whose purpose is
@@ -126,7 +125,7 @@ public interface ArtemisObject {
      * given object. If any property of the given object is unspecified, this
      * object's corresponding property will not be updated.
      */
-    public void updateFrom(ArtemisObject other);
+    public void updateFrom(ArtemisObject other, Context ctx);
 
     /**
      * Returns a SortedMap containing this object's properties. If

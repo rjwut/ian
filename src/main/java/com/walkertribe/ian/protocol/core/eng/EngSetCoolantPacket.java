@@ -9,7 +9,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Set the amount of coolant in a system.
@@ -61,12 +60,7 @@ public class EngSetCoolantPacket extends BaseArtemisPacket {
 
     private EngSetCoolantPacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
-    	int subtype = reader.readInt();
-
-    	if (subtype != SUBTYPE) {
-        	throw new UnexpectedTypeException(subtype, SUBTYPE);
-    	}
-
+        reader.skip(4); // subtype
     	mSystem = ShipSystem.values()[reader.readInt()];
     	mCoolant = reader.readInt();
     }

@@ -2,6 +2,7 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.CreatureType;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.model.Model;
@@ -22,13 +23,13 @@ public class ArtemisCreature extends BaseArtemisOrientable {
 	}
 
 	@Override
-	public Model getModel() {
-		return mCreatureType != null ? mCreatureType.getModel() : null;
+	public Model getModel(Context ctx) {
+		return mCreatureType != null ? mCreatureType.getModel(ctx) : null;
 	}
 
     @Override
-    public void updateFrom(ArtemisObject obj) {
-        super.updateFrom(obj);
+    public void updateFrom(ArtemisObject obj, Context ctx) {
+        super.updateFrom(obj, ctx);
         
         if (obj instanceof ArtemisCreature) {
             ArtemisCreature cast = (ArtemisCreature) obj;

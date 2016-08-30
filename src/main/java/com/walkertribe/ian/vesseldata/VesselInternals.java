@@ -4,8 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -29,19 +27,11 @@ public class VesselInternals {
 	private Set<VesselNodeConnection> connections = new HashSet<VesselNodeConnection>();
 	private byte[] buffer = new byte[VesselNode.BLOCK_SIZE];
 
-	public VesselInternals(String sntPath) {
-		URI uri;
-
-		try {
-			uri = VesselData.pathResolver.get(sntPath);
-		} catch (URISyntaxException ex) {
-			throw new RuntimeException(ex);
-		}
-
+	public VesselInternals(PathResolver pathResolver, String sntPath) {
 		InputStream in = null;
 
 		try {
-			in = uri.toURL().openStream();
+			in = pathResolver.get(sntPath);
 			load(new BufferedInputStream(in));
 		} catch (MalformedURLException ex) {
 			throw new RuntimeException(ex);

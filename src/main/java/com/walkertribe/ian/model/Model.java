@@ -1,7 +1,6 @@
 package com.walkertribe.ian.model;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,24 +11,34 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.walkertribe.ian.util.Matrix;
-import com.walkertribe.ian.util.Util;
-import com.walkertribe.ian.vesseldata.VesselData;
+import com.walkertribe.ian.vesseldata.PathResolver;
 
 /**
  * Contains data about the Vessel's model.
  * @author rjwut
  */
 public class Model {
+	private static final float EPSILON = 0.00000001f;
+
+	/**
+	 * Returns true if the given double values are close enough to each other to
+	 * be considered equivalent (due to rounding errors).
+	 */
+	private static boolean withinEpsilon(double val1, double val2) {
+		return Math.abs(val1 - val2) <= EPSILON;
+	}
+
 	/**
 	 * Constructs a Model described by the given .dxs files. This is not cached;
 	 * to avoid building the same Model over and over, use VesselData.getModel()
 	 * instead.
 	 */
-	public static Model build(String dxsPaths) {
+	public static Model build(PathResolver pathResolver, String dxsPaths) {
 		Model model = new Model(dxsPaths);
 		String[] pathsArr = dxsPaths.split(",");
 
@@ -41,10 +50,8 @@ public class Model {
 				XMLReader xmlReader = saxParser.getXMLReader();
 				SAXModelHandler handler = new SAXModelHandler(path);
 				xmlReader.setContentHandler(handler);
-				xmlReader.parse(VesselData.pathResolver.get(path).toString());
+				xmlReader.parse(new InputSource(pathResolver.get(path)));
 				model.add(handler.vertices, handler.polys);
-			} catch (URISyntaxException ex) { // shouldn't happen
-				throw new RuntimeException(ex);
 			} catch (SAXException ex) {
 				throw new RuntimeException(ex);
 			} catch (ParserConfigurationException ex) {
@@ -123,19 +130,19 @@ public class Model {
 		Map<String, double[]> pointMap = new HashMap<String, double[]>();
 		List<Matrix> matrices = new LinkedList<Matrix>();
 
-		if (!Util.withinEpsilon(config.mScale, 1.0)) {
+		if (!withinEpsilon(config.mScale, 1.0)) {
 			matrices.add(Matrix.buildScaleMatrix(config.mScale));
 		}
 
-		if (!Util.withinEpsilon(config.mRotateX, 0)) {
+		if (!withinEpsilon(config.mRotateX, 0)) {
 			matrices.add(Matrix.buildRotateXMatrix(config.mRotateX));
 		}
 
-		if (!Util.withinEpsilon(config.mRotateY, 0)) {
+		if (!withinEpsilon(config.mRotateY, 0)) {
 			matrices.add(Matrix.buildRotateYMatrix(config.mRotateY));
 		}
 
-		if (!Util.withinEpsilon(config.mRotateZ, 0)) {
+		if (!withinEpsilon(config.mRotateZ, 0)) {
 			matrices.add(Matrix.buildRotateZMatrix(config.mRotateZ));
 		}
 

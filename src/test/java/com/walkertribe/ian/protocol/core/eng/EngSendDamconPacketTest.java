@@ -11,8 +11,19 @@ import com.walkertribe.ian.util.GridCoord;
 
 public class EngSendDamconPacketTest extends AbstractPacketTester<EngSendDamconPacket> {
 	@Test
-	public void test() {
+	public void testParse() {
 		execute("core/eng/EngSendDamconPacket.txt", ConnectionType.CLIENT, 2);
+	}
+
+	@Test
+	public void testConstruct() {
+		new EngSendDamconPacket(0, GridCoord.getInstance(0, 0, 0));
+		new EngSendDamconPacket(0, 0, 0, 0);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidDamconTeamNumber() {
+		new EngSendDamconPacket(-1, 0, 0, 0);
 	}
 
 	@Override

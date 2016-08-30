@@ -2,9 +2,9 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.model.Model;
-import com.walkertribe.ian.vesseldata.VesselData;
 
 /**
  * This is a custom-rendered mesh in the game world. These are typically
@@ -37,14 +37,12 @@ public class ArtemisMesh extends BaseArtemisObject {
     }
 
     /**
-     * Returns the Model2D object corresponding to the mesh stored in the .dxs
+     * Returns the Model object corresponding to the mesh stored in the .dxs
      * file named in the mesh property, or null if the property is unspecified.
-     * Note that you must invoke VesselData.setArtemisInstallPath() first,
-     * before calling this method.
      */
     @Override
-    public Model getModel() {
-    	return VesselData.getModel(mMesh);
+    public Model getModel(Context ctx) {
+    	return ctx.getModel(mMesh);
     }
 
     public void setMesh(String path) {
@@ -147,8 +145,8 @@ public class ArtemisMesh extends BaseArtemisObject {
     }
 
     @Override
-    public void updateFrom(ArtemisObject other) {
-        super.updateFrom(other);
+    public void updateFrom(ArtemisObject other, Context ctx) {
+        super.updateFrom(other, ctx);
         
         ArtemisMesh m = (ArtemisMesh) other;
         if (m.mShieldsFront != Float.MIN_VALUE) {

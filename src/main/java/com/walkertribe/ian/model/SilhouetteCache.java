@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.walkertribe.ian.Context;
+
 /**
  * A convenient class for generating Silhouettes on demand and storing them for
  * later use.
@@ -44,6 +46,7 @@ public class SilhouetteCache {
 		}
 	}
 
+	private Context ctx;
 	private int size;
 	private Map<Key, Silhouette> map = new HashMap<Key, Silhouette>();
 
@@ -51,7 +54,8 @@ public class SilhouetteCache {
 	 * Creates a new SilhouetteCache where all the Silhouettes created will be
 	 * of the given size.
 	 */
-	public SilhouetteCache(int size) {
+	public SilhouetteCache(Context ctx, int size) {
+		this.ctx = ctx;
 		this.size = size;
 	}
 
@@ -65,7 +69,7 @@ public class SilhouetteCache {
 		Silhouette silhouette = map.get(key);
 
 		if (silhouette == null) {
-			silhouette = new Silhouette(model, size, color);
+			silhouette = new Silhouette(ctx, model, size, color);
 			map.put(key, silhouette);
 		}
 

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.protocol.ArtemisPacket;
@@ -13,6 +14,7 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.UnknownPacket;
 import com.walkertribe.ian.protocol.UnparsedPacket;
 import com.walkertribe.ian.protocol.core.setup.VersionPacket;
+import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
 import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
 import com.walkertribe.ian.util.BitField;
 import com.walkertribe.ian.util.BoolState;
@@ -27,6 +29,7 @@ import com.walkertribe.ian.util.Version;
  * @author rjwut
  */
 public class PacketReader {
+	private Context ctx;
 	private ConnectionType connType;
 	private InputStream in;
 	private byte[] intBuffer = new byte[4];
@@ -44,13 +47,21 @@ public class PacketReader {
 	/**
 	 * Wraps the given InputStream with this PacketReader.
 	 */
-	public PacketReader(ConnectionType connType, InputStream in,
+	public PacketReader(Context ctx, ConnectionType connType, InputStream in,
 			PacketFactoryRegistry factoryRegistry,
 			ListenerRegistry listenerRegistry) {
+		this.ctx = ctx;
 		this.connType = connType;
 		this.in = in;
 		this.factoryRegistry = factoryRegistry;
 		this.listenerRegistry = listenerRegistry;
+	}
+
+	/**
+	 * Returns the Context associated with this PacketReader.
+	 */
+	public Context getContext() {
+		return ctx;
 	}
 
 	/**
@@ -74,7 +85,7 @@ public class PacketReader {
 	 * Reads a single packet and returns it. The given Debugger will also be
 	 * notified.
 	 */
-	public ArtemisPacket readPacket(Debugger debugger) throws ArtemisPacketException {
+	public ParseResult readPacket(Debugger debugger) throws ArtemisPacketException {
 		objectType = null;
 		objectId = 0;
 		bitField = null;
@@ -167,60 +178,79 @@ public class PacketReader {
 			factory = factoryRegistry.get(connType, packetType, subtype);
 		}
 
-		if (factory == null) {
-			// No factory can handle this; return an UnknownPacket
-			UnknownPacket packet = new UnknownPacket(connType, packetType, payloadBytes);
-			debugger.onRecvUnparsedPacket(packet);
-			return packet;
+		ParseResult result = new ParseResult();
+		Class<? extends ArtemisPacket> factoryClass;
+		ArtemisPacket packet = null;
+
+		if (factory != null) {
+			// We've found a factory that can handle this packet; get the type
+			// of packet it produces.
+			factoryClass = factory.getFactoryClass();
+		} else {
+			// No factory can handle this; create an UnknownPacket
+			UnknownPacket unkPkt = new UnknownPacket(connType, packetType, payloadBytes);
+			debugger.onRecvUnparsedPacket(unkPkt);
+			factoryClass = UnknownPacket.class;
+			packet = unkPkt;
 		}
 
-		Class<? extends ArtemisPacket> factoryClass = factory.getFactoryClass();
-		boolean parsePacket = listenerRegistry.listeningFor(factoryClass);
+		// Find out if any listeners are interested in this packet type
+		result.setPacketListeners(listenerRegistry.listeningFor(factoryClass));
 
-		if (!parsePacket && factoryClass.isAssignableFrom(ObjectUpdatePacket.class)) {
+		// If it's an ObjectUpdatePacket, it might be transmitting an object
+		// type that listeners are interested in, so check for that.
+		if (factoryClass.isAssignableFrom(ObjectUpdatePacket.class)) {
 			ObjectType type = ObjectType.fromId(subtype);
 
 			if (type != null) {
-				parsePacket = listenerRegistry.listeningFor(type.getObjectClass());
+				result.setObjectListeners(listenerRegistry.listeningFor(type.getObjectClass()));
 			}
 		}
 
-		if (parsePacket) {
-			// We're interested in this packet; parse and build it
+		// IAN needs to parse the WelcomePacket and VersionPacket, even if the
+		// client isn't interested in them.
+		boolean required = packetType == WelcomePacket.TYPE || packetType == VersionPacket.TYPE;
+
+		if (required || result.isInteresting()) {
+			// We need this packet
 			payload = new ByteArrayReader(payloadBytes);
-			ArtemisPacket packet;
 
-			try {
-				packet = factory.build(this);
-			} catch (ArtemisPacketException ex) {
-				throw new ArtemisPacketException(ex, connType, packetType, payloadBytes);
-			} catch (RuntimeException ex) {
-				throw new ArtemisPacketException(ex, connType, packetType, payloadBytes);
-			}
+			if (packet == null) {
+				// It's not an UnknownPacket, so we need to parse it
+				try {
+					packet = factory.build(this);
+				} catch (ArtemisPacketException ex) {
+					throw new ArtemisPacketException(ex, connType, packetType, payloadBytes);
+				} catch (RuntimeException ex) {
+					throw new ArtemisPacketException(ex, connType, packetType, payloadBytes);
+				}
 
-			if (packet instanceof VersionPacket) {
-				// We got a VersionPacket; store the version
-				version = ((VersionPacket) packet).getVersion();
-			}
+				if (packet instanceof VersionPacket) {
+					// We got a VersionPacket; store the version
+					version = ((VersionPacket) packet).getVersion();
+				}
 
-			int unreadByteCount = payload.getBytesLeft();
+				int unreadByteCount = payload.getBytesLeft();
 
-			if (unreadByteCount > 0) {
-				debugger.warn(
-						"Unread bytes [" +
-						packet.getClass().getSimpleName() + "]: " +
-						TextUtil.byteArrayToHexString(readBytes(unreadByteCount))
-				);
+				if (unreadByteCount > 0) {
+					debugger.warn(
+							"Unread bytes [" +
+							packet.getClass().getSimpleName() + "]: " +
+							TextUtil.byteArrayToHexString(readBytes(unreadByteCount))
+					);
+				}
 			}
 
 			debugger.onRecvParsedPacket(packet);
-			return packet;
+		} else {
+			// Nothing is interested in this packet
+			UnparsedPacket unpPkt = new UnparsedPacket(connType, packetType, payloadBytes);
+			debugger.onRecvUnparsedPacket(unpPkt);
+			packet = unpPkt;
 		}
 
-		// We don't have any listeners for this packet
-		UnparsedPacket packet = new UnparsedPacket(connType, packetType, payloadBytes);
-		debugger.onRecvUnparsedPacket(packet);
-		return packet;
+		result.setPacket(packet);
+		return result;
 	}
 
 	public int getBytesLeft() {
@@ -350,14 +380,14 @@ public class PacketReader {
 	 * Reads a UTF-16LE String from the current packet's payload.
 	 */
 	public String readString() {
-		return payload.readUTF16LEString();
+		return payload.readUtf16LeString();
 	}
 
 	/**
 	 * Reads a US ASCII String from the current packet's payload.
 	 */
-	public String readUSASCIIString() {
-		return payload.readUSASCIIString();
+	public String readUsAsciiString() {
+		return payload.readUsAsciiString();
 	}
 
 	/**
@@ -419,7 +449,7 @@ public class PacketReader {
 	}
 
 	/**
-	 * if the indicated bit in the current BitField is off, this method returns
+	 * If the indicated bit in the current BitField is off, this method returns
 	 * without doing anything. Otherwise, it acts as a convenience method for
 	 * readObjectUnknown(bit.name(), byteCount).
 	 */

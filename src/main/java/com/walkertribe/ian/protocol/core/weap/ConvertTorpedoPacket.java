@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Converts a homing torpedo to energy or vice-versa.
@@ -54,12 +53,7 @@ public class ConvertTorpedoPacket extends BaseArtemisPacket {
 
     private ConvertTorpedoPacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
-        int subtype = reader.readInt();
-
-        if (subtype != SUBTYPE) {
-        	throw new UnexpectedTypeException(subtype, SUBTYPE);
-        }
-
+        reader.skip(4); // subtype
         mDirection = Direction.values()[(int)reader.readFloat()];
     }
 

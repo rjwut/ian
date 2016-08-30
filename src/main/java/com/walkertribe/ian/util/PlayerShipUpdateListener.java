@@ -6,27 +6,29 @@ import com.walkertribe.ian.protocol.core.GameOverPacket;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
 /**
+ * <p>
  * Convenience class for listening for updates to a particular player ship,
- * indicated by ship index. The ship index is usually omitted from updates, but
+ * indicated by ship number. The ship numberis usually omitted from updates, but
  * the first update will always specify it. This class automates the tactic of
- * noting the ID of the ship with the given index, and using that to identify
+ * noting the ID of the ship with the given number, and using that to identify
  * the ship from then on. When an update for the specific ship is received, the
  * onShipUpdate() method is invoked.
- * 
+ * </p>
+ * <p>
  * To use, extend the class and implement onShipUpdate(), then pass an instance
  * of your subclass into ArtemisNetworkInterface.addListener().
- * 
+ * </p>
  * @author rjwut
  */
 public abstract class PlayerShipUpdateListener {
 	public abstract void onShipUpdate(ArtemisPlayer player);
 
-	private int index;
+	private int number;
 	private int id;
 	private boolean found = false;
 
-	public PlayerShipUpdateListener(int index) {
-		this.index = index;
+	public PlayerShipUpdateListener(int number) {
+		this.number = number;
 	}
 
 	@Listener
@@ -34,9 +36,9 @@ public abstract class PlayerShipUpdateListener {
 		if (!found) {
 			synchronized (this) {
 				// We don't know the ship's ID yet
-				int curIndex = player.getShipNumber();
+				int curNumber = player.getShipNumber();
 
-				if (curIndex == -1 || curIndex != index) {
+				if (curNumber == -1 || curNumber != number) {
 					return; // this isn't the one we want
 				}
 
@@ -65,7 +67,7 @@ public abstract class PlayerShipUpdateListener {
         found = false; // ship will probably have a different ID next game
 	}
 
-	public int getIndex() {
-		return index;
+	public int getNumber() {
+		return number;
 	}
 }

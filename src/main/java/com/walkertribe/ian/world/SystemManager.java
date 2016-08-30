@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.iface.Listener;
@@ -27,7 +28,6 @@ import com.walkertribe.ian.util.ShipSystemGrid.GridEntry;
  * @author dhleong
  */
 public class SystemManager {
-    
     public interface OnObjectCountChangeListener {
         void onObjectCountChanged(int count);
     }
@@ -39,7 +39,8 @@ public class SystemManager {
     };
 
     private static final boolean DEBUG = false;
-    
+
+    private final Context mCtx;
     private final HashMap<Integer, ArtemisObject> mObjects = 
             new HashMap<Integer, ArtemisObject>();
     private OnObjectCountChangeListener mListener = sDummyListener;
@@ -52,7 +53,8 @@ public class SystemManager {
     
     private final ArtemisPlayer[] mPlayers = new ArtemisPlayer[Artemis.SHIP_COUNT];
     
-    public SystemManager() {
+    public SystemManager(Context ctx) {
+    	mCtx = ctx;
         clear();
     }
     
@@ -134,7 +136,7 @@ public class SystemManager {
         ArtemisObject p = mObjects.get(id);
 
         if (p != null) {
-            p.updateFrom(o);
+            p.updateFrom(o, mCtx);
             
             if (o instanceof ArtemisPlayer) {
                 // just in case we get the ship number AFTER
@@ -142,8 +144,8 @@ public class SystemManager {
                 //  updated ORIGINAL with the new ship number
                 ArtemisPlayer plr = (ArtemisPlayer) o;
 
-                if (plr.getShipNumber() >= 0) {
-                    mPlayers[plr.getShipNumber()] = (ArtemisPlayer) p;
+                if (plr.getShipNumber() != -1) {
+                    mPlayers[plr.getShipNumber() - 1] = (ArtemisPlayer) p;
                 }
             }
             
@@ -158,7 +160,7 @@ public class SystemManager {
             ArtemisPlayer plr = (ArtemisPlayer) o;
 
             if (plr.getShipNumber() >= 0) {
-                mPlayers[plr.getShipNumber()] = plr;
+                mPlayers[plr.getShipNumber() - 1] = plr;
             }
         }
 
@@ -223,20 +225,16 @@ public class SystemManager {
     }
     
     /**
-     * Get the player ship by index. Possible values
-     *  are the SetShipPacket#SHIP_* constants (that
-     *  is, ints in range [0,5]) and NOT the 
-     *  {@link ArtemisPlayer#getShipIndex()} value
-     *  
-     * @param shipIndex
+     * Get the player ship by number. Ship values range from 1 to 8.
+     * @param shipNumber
      * @return
      */
-    public ArtemisPlayer getPlayerShip(int shipIndex) {
-        if (shipIndex < 0 || shipIndex >= mPlayers.length) {
-            throw new IllegalArgumentException("Invalid ship index " + shipIndex);
+    public ArtemisPlayer getPlayerShip(int shipNumber) {
+        if (shipNumber < 1 || shipNumber > 8) {
+            throw new IllegalArgumentException("Invalid ship number: " + shipNumber);
         }
         
-        return mPlayers[shipIndex];
+        return mPlayers[shipNumber - 1];
     }
     
     /**

@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import com.walkertribe.ian.Context;
+
 /**
  * Creates and stores a top-down silhouette of a Model. As models can have many
  * polygons and can be expensive to render, using this class will typically be
@@ -12,7 +14,6 @@ import java.awt.image.BufferedImage;
  * @author rjwut
  */
 public class Silhouette {
-	private static final DefaultModelRenderer RENDERER = new DefaultModelRenderer();
 	private int size;
 	private int halfSize;
 	private BufferedImage image;
@@ -21,7 +22,8 @@ public class Silhouette {
 	 * Create a new Silhouette of the given Model, rendered using the indicated
 	 * size and color.
 	 */
-	public Silhouette(Model model, int size, Color color) {
+	public Silhouette(Context ctx, Model model, int size, Color color) {
+		DefaultModelRenderer renderer = new DefaultModelRenderer(ctx);
 		image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		this.size = size;
 		halfSize = size / 2;
@@ -31,7 +33,7 @@ public class Silhouette {
 				.offsetZ(halfSize)
 				.renderMode(RenderMode.SOLID)
 				.scale(model.computeScale(halfSize));
-		RENDERER.render(image.createGraphics(), model, params);
+		renderer.render(image.createGraphics(), model, params);
 	}
 
 	/**

@@ -1,0 +1,4 @@
+﻿<vessel_data version="2.1">
+  <hullRace ID="1" name="Terran" keys="friendly"></hullRace>
+  <vessel uniqueID="1500" side="1" classname="Escort" broadType="small warship"></vessel>
+</vessel_data>

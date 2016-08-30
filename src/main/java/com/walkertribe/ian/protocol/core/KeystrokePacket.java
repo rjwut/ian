@@ -12,10 +12,11 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * console, or if keystroke capture has been enabled via the
  * KeyCaptureTogglePacket.
  * @author rjwut
+ * @see {@link java.awt.event.KeyEvent} (for constants)
  */
 public class KeystrokePacket extends ShipActionPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_REVERSE_ENGINES,
+		registry.register(ConnectionType.CLIENT, TYPE, TYPE_KEYSTROKE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -30,16 +31,19 @@ public class KeystrokePacket extends ShipActionPacket {
 		});
 	}
 
-	/**
-	 * @param keycode the key that was pressed
-	 * @see {@link java.awt.event.KeyEvent} (for constants)
-	 */
 	public KeystrokePacket(int keycode) {
 		super(TYPE_KEYSTROKE, keycode);
 	}
 
 	private KeystrokePacket(PacketReader reader) {
 		super(TYPE_KEYSTROKE, reader);
+	}
+
+	/**
+	 * Returns the keycode for the key that was pressed.
+	 */
+	public int getKeycode() {
+		return mArg;
 	}
 
 	@Override

@@ -12,8 +12,14 @@ import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class IncomingAudioPacketTest extends AbstractPacketTester<IncomingAudioPacket> {
 	@Test
-	public void test() {
+	public void testParse() {
 		execute("core/comm/IncomingAudioPacket.txt", ConnectionType.SERVER, 2);
+	}
+
+	@Test
+	public void testConstruct() {
+		new IncomingAudioPacket(1);
+		new IncomingAudioPacket(1, "Title", "file");
 	}
 
 	@Override

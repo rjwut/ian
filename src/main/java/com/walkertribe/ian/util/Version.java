@@ -12,7 +12,7 @@ import com.walkertribe.ian.iface.PacketWriter;
  * @author rjwut
  */
 public class Version implements Comparable<Version> {
-	public static final Version MODERN = new Version("2.1");
+	private static final Version MODERN = new Version("2.1");
 
 	private int[] mParts;
 	private int hash;

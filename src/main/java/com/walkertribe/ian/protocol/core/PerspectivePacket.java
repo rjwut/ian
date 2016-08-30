@@ -9,7 +9,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Notifies clients that the main screen perspective has changed.
@@ -39,12 +38,7 @@ public class PerspectivePacket extends BaseArtemisPacket {
 
 	private PerspectivePacket(PacketReader reader) {
     	super(ConnectionType.SERVER, TYPE);
-        int subtype = reader.readInt();
-
-        if (subtype != MSG_TYPE) {
-			throw new UnexpectedTypeException(subtype, MSG_TYPE);
-        }
-
+        reader.skip(4); // subtype
         mPerspective = Perspective.values()[reader.readInt()];
     }
 

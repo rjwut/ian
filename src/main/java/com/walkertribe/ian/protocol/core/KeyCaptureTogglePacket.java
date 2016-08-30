@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Enables/disables keystroke capture for this console. Note that the game
@@ -40,12 +39,7 @@ public class KeyCaptureTogglePacket extends BaseArtemisPacket {
 
 	private KeyCaptureTogglePacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
-		byte subtype = reader.readByte();
-
-		if (subtype != MSG_TYPE) {
-			throw new UnexpectedTypeException(subtype, MSG_TYPE);
-		}
-
+        reader.skip(1); // subtype
 		mEnabled = reader.readInt() == 1;
 	}
 

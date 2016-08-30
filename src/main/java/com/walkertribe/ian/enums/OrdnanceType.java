@@ -1,7 +1,7 @@
 package com.walkertribe.ian.enums;
 
 /**
- * The four types of ordnance that player ships can fire.
+ * The types of ordnance that player ships can fire.
  * @author rjwut
  */
 public enum OrdnanceType {

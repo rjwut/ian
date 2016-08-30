@@ -13,6 +13,12 @@ import com.walkertribe.ian.world.ArtemisObject;
  * @author rjwut
  */
 public class ListenerMethod {
+	private static final Class<?>[] ARGUMENT_TYPES = {
+			ArtemisPacket.class,
+			ArtemisObject.class,
+			ConnectionEvent.class
+	};
+
 	private Object object;
 	private Method method;
 	private Class<?> paramType;
@@ -58,14 +64,12 @@ public class ListenerMethod {
 
 		Class<?> paramType = paramTypes[0];
 
-		if (
-				ArtemisPacket.class.isAssignableFrom(paramType) ||
-				ArtemisObject.class.isAssignableFrom(paramType) ||
-				ConnectionEvent.class.isAssignableFrom(paramType)
-		) {
-			return;
+		for (Class<?> clazz : ARGUMENT_TYPES) {
+			if (clazz.isAssignableFrom(paramType)) {
+				return;
+			}
 		}
-
+		
 		throw new IllegalArgumentException(
 				"Method " + method.getName() +
 				" argument must be assignable to ArtemisPacket," +
@@ -82,8 +86,8 @@ public class ListenerMethod {
 	}
 
 	/**
-	 * Invokes the wrapped listener Method, passing in the indicated argument,
-	 * if it is type-compatible with the Method's argument; otherwise, nothing
+	 * If the indicated argument is type-compatible with the Method's argument,
+	 * the method will be invoked using that argument. Otherwise, nothing
 	 * happens. Since the listeners have been pre-validated, no exception should
 	 * occur, so we wrap the ones thrown by Method.invoke() in a
 	 * RuntimeException.

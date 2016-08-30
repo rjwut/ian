@@ -3,7 +3,8 @@ package com.walkertribe.ian.world;
 import java.util.Set;
 import java.util.SortedMap;
 
-import com.walkertribe.ian.enums.EliteAbility;
+import com.walkertribe.ian.Context;
+import com.walkertribe.ian.enums.SpecialAbility;
 import com.walkertribe.ian.enums.FactionAttribute;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.ShipSystem;
@@ -22,7 +23,7 @@ public class ArtemisNpc extends BaseArtemisShip {
     public static final byte SCAN_LEVEL_FULL  = 2;
 
     private byte mScanLevel = -1;
-    private int mElite = -1, mEliteState = -1;
+    private int mSpecial = -1, mSpecialState = -1;
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = (byte) -1;
@@ -81,52 +82,52 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     /**
-     * Returns a Set containing the EliteAbility values that pertain to this
+     * Returns a Set containing the SpecialAbility values that pertain to this
      * ship.
      * Unspecified: null
      */
-    public Set<EliteAbility> getEliteAbilities() {
-    	return mElite != -1 ? EliteAbility.fromValue(mElite) : null;
+    public Set<SpecialAbility> getSpecialAbilities() {
+    	return mSpecial != -1 ? SpecialAbility.fromValue(mSpecial) : null;
     }
 
     /**
-     * Returns true if this ship has the specified elite ability and false if it
-     * does not or if it is unknown whether it has it.
+     * Returns true if this ship has the specified special ability and false if
+     * it does not or if it is unknown whether it has it.
      */
-    public boolean hasEliteAbility(EliteAbility ability) {
-        return mElite != -1 && ability.on(mElite);
+    public boolean hasSpecialAbility(SpecialAbility ability) {
+        return mSpecial != -1 && ability.on(mSpecial);
     }
 
     /**
-     * Returns true if this ship is using the specified elite ability and false
-     * if it is not.
+     * Returns true if this ship is using the specified special ability and
+     * false if it is not.
      */
-    public boolean isUsingEliteAbilty(EliteAbility ability) {
-        return mEliteState != -1 && ability.on(mEliteState);
+    public boolean isUsingSpecialAbilty(SpecialAbility ability) {
+        return mSpecialState != -1 && ability.on(mSpecialState);
     }
 
-    public int getEliteBits() {
-    	return mElite;
+    public int getSpecialBits() {
+    	return mSpecial;
     }
 
     /**
-     * Sets the elite ability bit field.
+     * Sets the special ability bit field.
      * Unspecified: -1
      */
-    public void setEliteBits(int elite) {
-        mElite = elite;
+    public void setSpecialBits(int special) {
+        mSpecial = special;
     }
 
-    public int getEliteStateBits() {
-    	return mEliteState;
+    public int getSpecialStateBits() {
+    	return mSpecialState;
     }
 
     /**
-     * Sets the elite state bit field (what abilities are being used).
+     * Sets the special state bit field (what abilities are being used).
      * Unspecified: -1
      */
-    public void setEliteStateBits(int elite) {
-        mEliteState = elite;
+    public void setSpecialStateBits(int special) {
+        mSpecialState = special;
     }
 
     /**
@@ -175,8 +176,8 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     @Override
-    public void updateFrom(ArtemisObject eng) {
-        super.updateFrom(eng);
+    public void updateFrom(ArtemisObject eng, Context ctx) {
+        super.updateFrom(eng, ctx);
         
         // it SHOULD be an ArtemisNpc
         if (eng instanceof ArtemisNpc) {
@@ -201,20 +202,20 @@ public class ArtemisNpc extends BaseArtemisShip {
                 setScanLevel(cast.mScanLevel);
             }
 
-            boolean elite = false;
-            Vessel vessel = getVessel();
+            boolean special = false;
+            Vessel vessel = getVessel(ctx);
 
         	if (vessel != null) {
         		Faction faction = vessel.getFaction();
-    			elite = faction.is(FactionAttribute.ELITE);
+    			special = faction.is(FactionAttribute.HASSPECIALS);
         	}
 
-            if (cast.mElite != -1) {
-            	setEliteBits(elite ? cast.mElite : 0);
+            if (cast.mSpecial != -1) {
+            	setSpecialBits(special ? cast.mSpecial : 0);
             }
 
-            if (cast.mEliteState != -1) {
-                setEliteStateBits(elite ? cast.mEliteState : 0);
+            if (cast.mSpecialState != -1) {
+                setSpecialStateBits(special ? cast.mSpecialState : 0);
             }
 
             if (cast.mIntel != null) {
@@ -237,15 +238,15 @@ public class ArtemisNpc extends BaseArtemisShip {
     	super.appendObjectProps(props, includeUnspecified);
     	putProp(props, "Scan level", mScanLevel, -1, includeUnspecified);
 
-    	if (mElite != -1) {
-    		String str = Util.enumSetToString(EliteAbility.fromValue(mElite));
+    	if (mSpecial != -1) {
+    		String str = Util.enumSetToString(SpecialAbility.fromValue(mSpecial));
     		props.put("Specials", str != "" ? str : "NONE");
     	} else if (includeUnspecified) {
         	props.put("Specials", "UNKNOWN");
     	}
 
-    	if (mEliteState != -1) {
-    		String str = Util.enumSetToString(EliteAbility.fromValue(mEliteState));
+    	if (mSpecialState != -1) {
+    		String str = Util.enumSetToString(SpecialAbility.fromValue(mSpecialState));
     		props.put("Specials active", str != "" ? str : "NONE");
     	} else if (includeUnspecified) {
         	props.put("Specials active", "UNKNOWN");

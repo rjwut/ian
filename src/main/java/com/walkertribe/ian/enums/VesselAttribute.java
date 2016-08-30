@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A list of attributes for Vessels. Corresponds to the <vessel broadType="">
- * attribute in vesselData.xml.
+ * A list of attributes for Vessels. Corresponds to the &lt;vessel
+ * broadType=""&gt; attribute in vesselData.xml.
  * @author rjwut
  */
 public enum VesselAttribute {

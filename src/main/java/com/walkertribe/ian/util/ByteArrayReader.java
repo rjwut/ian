@@ -12,11 +12,12 @@ import java.util.Arrays;
  */
 public class ByteArrayReader {
 	/**
-	 * Reads the indicated number of bytes from the given InputStream wrapped by this object and
-	 * stores them in the provided buffer. This method blocks until the desired number of bytes has
-	 * been read or the stream closes.
+	 * Reads the indicated number of bytes from the given InputStream wrapped by
+	 * this object and stores them in the provided buffer. This method blocks
+	 * until the desired number of bytes has been read or the stream closes.
 	 */
-	public static void readBytes(InputStream in, int byteCount, byte[] buffer) throws InterruptedException, IOException {
+	public static void readBytes(InputStream in, int byteCount, byte[] buffer)
+			throws InterruptedException, IOException {
 		if (byteCount > buffer.length) {
 			throw new IllegalArgumentException("Requested " + byteCount +
 					" byte(s) but buffer is only " + buffer.length + " byte(s)");
@@ -169,14 +170,14 @@ public class ByteArrayReader {
 	/**
 	 * Reads and returns a US ASCII encoded String().
 	 */
-	public String readUSASCIIString() {
+	public String readUsAsciiString() {
 		return readString(Util.US_ASCII, 1, false);
 	}
 
 	/**
 	 * Reads and returns a UTF-16LE encoded String().
 	 */
-	public String readUTF16LEString() {
+	public String readUtf16LeString() {
 		return readString(Util.UTF16LE, 2, true);
 	}
 

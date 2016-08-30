@@ -1,7 +1,7 @@
 package com.walkertribe.ian.enums;
 
 /**
- * All messages that can be sent over COMMs implement this interface.
+ * All messages that can be sent by the comm officer implement this interface.
  * @author rjwut
  */
 public interface CommsMessage {

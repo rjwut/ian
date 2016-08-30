@@ -1,5 +1,6 @@
 package com.walkertribe.ian.enums;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.world.ArtemisNpc;
@@ -52,7 +53,7 @@ public enum CommsRecipientType {
 	 * ArtemisObject; or null if the object in question cannot receive COMMs
 	 * messages.
 	 */
-	public static CommsRecipientType fromObject(ArtemisObject obj) {
+	public static CommsRecipientType fromObject(ArtemisObject obj, Context ctx) {
 		ObjectType type = obj.getType();
 
 		switch (type) {
@@ -62,7 +63,7 @@ public enum CommsRecipientType {
 			return BASE;
 		case NPC_SHIP:
 			ArtemisNpc npc = (ArtemisNpc) obj;
-			Vessel vessel = npc.getVessel();
+			Vessel vessel = npc.getVessel(ctx);
 			boolean enemy;
 
 			if (vessel != null) {

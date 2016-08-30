@@ -9,7 +9,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 import com.walkertribe.ian.world.Artemis;
 
 /**
@@ -66,12 +65,7 @@ public class LoadTubePacket extends BaseArtemisPacket {
 
     private LoadTubePacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
-        int subtype = reader.readInt();
-
-        if (subtype != SUBTYPE) {
-        	throw new UnexpectedTypeException(subtype, SUBTYPE);
-        }
-
+        reader.skip(4); // subtype
         mTube = reader.readInt();
         mOrdnanceType = OrdnanceType.values()[reader.readInt()];
         mUnknown0 = reader.readInt();

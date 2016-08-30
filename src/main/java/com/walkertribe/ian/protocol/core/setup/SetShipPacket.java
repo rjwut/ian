@@ -14,15 +14,6 @@ import com.walkertribe.ian.protocol.core.ShipActionPacket;
  * @author dhleong
  */
 public class SetShipPacket extends ShipActionPacket {
-    public static final int SHIP_1_ARTEMIS  = 0;
-    public static final int SHIP_2_INTREPID = 1;
-    public static final int SHIP_3_AEGIS    = 2;
-    public static final int SHIP_4_HORATIO  = 3;
-    public static final int SHIP_5_EXCALIBUR= 4;
-    public static final int SHIP_6_HERA     = 5;
-    public static final int SHIP_7_CERES	= 6;
-    public static final int SHIP_8_DIANA	= 7;
-    
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.CLIENT, TYPE, TYPE_SET_SHIP,
 				new PacketFactory() {
@@ -40,12 +31,11 @@ public class SetShipPacket extends ShipActionPacket {
 	}
 
     /**
-     * @param shipIndex Index [0,7] of the ship you want to be on. The SHIP_*
-     * constants are provided for reference, but the names can, of course, be
-     * changed.
+     * Selects a ship to use during setup. Note that Artemis ship numbers are
+     * one-based.
      */
-    public SetShipPacket(int shipIndex) {
-        super(TYPE_SET_SHIP, shipIndex);
+    public SetShipPacket(int shipNumber) {
+    	super(TYPE_SET_SHIP, shipNumber - 1); // underlying packet wants index
     }
 
     private SetShipPacket(PacketReader reader) {
@@ -54,6 +44,6 @@ public class SetShipPacket extends ShipActionPacket {
 
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append(mArg);
+		b.append(mArg + 1);
 	}
 }

@@ -15,7 +15,7 @@ import com.walkertribe.ian.protocol.BaseArtemisPacket;
  * @author rjwut
  */
 public class WelcomePacket extends BaseArtemisPacket {
-	private static final int TYPE = 0x6d04b3da;
+	public static final int TYPE = 0x6d04b3da;
 	protected static final String MSG = "You have connected to Thom Robertson's Artemis Bridge Simulator.  Please connect with an authorized game client.";
 
 	public static void register(PacketFactoryRegistry registry) {
@@ -37,7 +37,7 @@ public class WelcomePacket extends BaseArtemisPacket {
 
 	private WelcomePacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
-		msg = reader.readUSASCIIString();
+		msg = reader.readUsAsciiString();
 	}
 
 	public WelcomePacket() {
@@ -46,7 +46,7 @@ public class WelcomePacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeUSASCIIString(msg);
+		writer.writeUsAsciiString(msg);
 	}
 
 	/**

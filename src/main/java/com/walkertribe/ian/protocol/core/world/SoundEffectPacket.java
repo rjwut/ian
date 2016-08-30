@@ -8,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.UnexpectedTypeException;
 
 /**
  * Indicates that the client should play the indicated sound file.
@@ -38,12 +37,7 @@ public class SoundEffectPacket extends BaseArtemisPacket {
 
 	private SoundEffectPacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
-		int subtype = reader.readInt();
-
-		if (subtype != MSG_TYPE) {
-			throw new UnexpectedTypeException(subtype, MSG_TYPE);
-		}
-
+        reader.skip(4); // subtype
 		mFilename = reader.readString();
 	}
 

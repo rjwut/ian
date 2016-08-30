@@ -13,12 +13,6 @@ import com.walkertribe.ian.util.TextUtil;
 public abstract class RawPacket extends BaseArtemisPacket {
     protected final byte[] mPayload;
 
-    /**
-     * @param connectionType The type of connection over which this packet was
-     * 		received
-     * @param packetType The packet type value specified in the preamble
-     * @param payload The bytes from the payload (byte offset 24 onward)
-     */
     protected RawPacket(ConnectionType connectionType, int packetType,
     		byte[] payload) {
     	super(connectionType, packetType);
