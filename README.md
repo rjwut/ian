@@ -208,7 +208,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
             host = host.substring(0, colonPos);
         }
 
-    Context ctx = new Context(new FilePathResolver(artemisInstallPath));
+        Context ctx = new Context(new FilePathResolver(artemisInstallPath));
         server = new ThreadedArtemisNetworkInterface(host, port, ctx);
         server.addListener(this);
         server.start();
@@ -418,7 +418,7 @@ public class ProxyDemo implements Runnable {
      * thread.
      */
     public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
-    ctx = new Context(new FilePathResolver(artemisInstallPath));
+        ctx = new Context(new FilePathResolver(artemisInstallPath));
         this.port = port;
         int colonPos = serverAddr.indexOf(':');
 
