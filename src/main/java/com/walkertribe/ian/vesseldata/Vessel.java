@@ -161,7 +161,7 @@ public class Vessel {
 	 * cache the data for later re-use.
 	 */
 	public VesselInternals getInternals() {
-		return ctx.getInternals(internalDataFile);
+		return internalDataFile != null ? ctx.getInternals(internalDataFile) : null;
 	}
 
 	/**
