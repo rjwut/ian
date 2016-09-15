@@ -557,10 +557,13 @@ and did a lot of the difficult, thankless gruntwork of reverse engineering the A
 Various GitHub users have contributed to IAN by helping to discover and document the protocol,
 creating pull requests to implement features or bug fixes, or issuing bug reports. Their help is
 very much appreciated. They are, in alphabetical order:
+* [@abrindam](https://github.com/abrindam)
 * [@briandurney](https://github.com/briandurney)
+* [@chrivers](https://github.com/chrivers)
 * [@dthaler](https://github.com/dthaler)
 * [@huin](https://github.com/huin)
 * [@IvanSanchez](https://github.com/IvanSanchez)
+* [@JordanLongstaff](https://github.com/JordanLongstaff)
 * [@karafelix](https://github.com/karafelix)
 * [@kiwi13cubed](https://github.com/kiwi13cubed)
 * [@mrfishie](https://github.com/mrfishie)
