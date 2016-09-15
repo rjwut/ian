@@ -3,10 +3,15 @@ package com.walkertribe.ian.world;
 import com.walkertribe.ian.enums.ShipSystem;
 
 /**
- * Contains miscellaneous constants about the game world.
+ * Artemis-related constants
  * @author rjwut
  */
 public final class Artemis {
+	/**
+	 * The default port on which the Artemis server listens for connections.
+	 */
+	public static final int DEFAULT_PORT = 2010;
+
 	/**
 	 * The default amount of coolant the player ship has at start. The amount of
 	 * coolant may change due to side mission rewards or custom scripting.
