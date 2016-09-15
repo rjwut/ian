@@ -10,6 +10,7 @@ import java.util.Set;
 public class Util {
 	public static final Charset US_ASCII = Charset.forName("US-ASCII");
 	public static final Charset UTF16LE = Charset.forName("UTF-16LE");
+	public static final Charset UTF8 = Charset.forName("UTF-8");
 
 	public static final String enumSetToString(Set<? extends Enum<?>> set) {
     	if (set.isEmpty()) {

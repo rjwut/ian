@@ -8,11 +8,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.util.JamCrc;
 
 /**
  * Sent by the client whenever the game master clicks a custom on-screen button.
- * The argument is a hash value of the button's label, although at this writing
- * it is unknown how this value is computed.
  * @author rjwut
  */
 public class GameMasterButtonClickPacket extends ShipActionPacket {
@@ -34,9 +33,12 @@ public class GameMasterButtonClickPacket extends ShipActionPacket {
 
 	private int mUnknown = 0x0d;
 
-	public GameMasterButtonClickPacket(int hash) {
+	/**
+	 * Creates a click command packet for the button with the given label.
+	 */
+	public GameMasterButtonClickPacket(String label) {
 		super(TYPE_GM_BUTTON_CLICK);
-		mArg = hash;
+		mArg = JamCrc.compute(label);
 	}
 
 	private GameMasterButtonClickPacket(PacketReader reader) {

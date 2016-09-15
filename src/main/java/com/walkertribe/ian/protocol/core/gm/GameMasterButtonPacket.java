@@ -44,6 +44,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	private Action mAction;
 	private String mLabel;
 	private int mX = -1, mY = -1, mW = -1, mH = -1;
+	private GameMasterButtonClickPacket mClickPacket;
 
 	/**
 	 * Creates or removes a game master button; use Action.CREATE or
@@ -62,6 +63,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 
         mAction = action;
         mLabel = label;
+		mClickPacket = new GameMasterButtonClickPacket(mLabel);
 	}
 
 	/**
@@ -91,6 +93,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
         }
 
         mLabel = reader.readString();
+		mClickPacket = new GameMasterButtonClickPacket(mLabel);
 
         if (positioned) {
         	mW = reader.readInt();
@@ -120,6 +123,14 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	 */
 	public String getLabel() {
 		return mLabel;
+	}
+
+	/**
+	 * Returns the GameMasterButtonClickPacket that should be sent when the user
+	 * clicks the button described by this packet.
+	 */
+	public GameMasterButtonClickPacket buildClickPacket() {
+		return mClickPacket;
 	}
 
 	/**
