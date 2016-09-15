@@ -39,7 +39,7 @@ public class KeyCaptureTogglePacket extends BaseArtemisPacket {
 
 	private KeyCaptureTogglePacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
-        reader.skip(1); // subtype
+        reader.skip(4); // subtype
 		mEnabled = reader.readInt() == 1;
 	}
 
