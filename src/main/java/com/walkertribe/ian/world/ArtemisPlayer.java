@@ -14,7 +14,9 @@ import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.enums.TargetingMode;
 import com.walkertribe.ian.enums.TubeState;
 import com.walkertribe.ian.enums.Upgrade;
+import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.util.BoolState;
+import com.walkertribe.ian.vesseldata.Vessel;
 
 /**
  * A player ship.
@@ -35,7 +37,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private float mEnergy = -1;
     private int mDockingBase = -1;
     private MainScreenView mMainScreen;
-    private int mAvailableCoolant = -1;
+    private byte mAvailableCoolantOrMissiles = -1;
     private int mWeaponsTarget = -1;
     private byte mWarp = -1;
     private BeamFrequency mBeamFreq;
@@ -289,15 +291,94 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
-     * Amount of coolant in the ship's reserves.
+     * If this is a regular player ship, this value is the amount of coolant in
+     * the ship's reserves. If it's a fighter, it's the number of missiles it
+     * has. This property exists in order to support the protocol, which uses
+     * the same bit to represent both properties, since a packet may not contain
+     * the information required to know whether this is a regular player ship or
+     * a fighter. For ships that have been tracked by the SystemManager, you can
+     * use the separate getAvailableCoolant() and getMissiles() methods.
      * Unspecified: -1
      */
-    public int getAvailableCoolant() {
-        return mAvailableCoolant;
+    public byte getAvailableCoolantOrMissiles() {
+        return mAvailableCoolantOrMissiles;
     }
     
-    public void setAvailableCoolant(int availableCoolant) {
-        mAvailableCoolant = availableCoolant;
+    public void setAvailableCoolantOrMissiles(byte availableCoolantOrMissiles) {
+        mAvailableCoolantOrMissiles = availableCoolantOrMissiles;
+    }
+
+    /**
+     * Returns the amount of coolant in the ship's reserves, if this is a
+     * regular player ship, or 0 if this is a fighter. If the type of ship is
+     * unknown, an IllegalStateException will be thrown. It is advisable to only
+     * use this method for objects managed by the SystemManager.
+     */
+    public byte getAvailableCoolant(Context ctx) {
+    	Vessel vessel = getVessel(ctx);
+
+    	if (vessel == null) {
+    		throw new IllegalStateException("Vessel type unknown");
+    	}
+
+    	return vessel.is(VesselAttribute.FIGHTER) ? 0 : mAvailableCoolantOrMissiles;
+    }
+
+    /**
+     * Sets the amount of available coolant in the ship's reserves, if this is a
+     * regular player ship. If this ship is a figher, an
+     * UnsupportedOperationException will be thrown. If the ship's type is
+     * unknown, an IllegalStateException will be thrown. It is advisable to only
+     * use this method for objects managed by the SystemManager.
+     */
+    public void setAvailableCoolant(Context ctx, byte availableCoolant) {
+    	Vessel vessel = getVessel(ctx);
+
+    	if (vessel == null) {
+    		throw new IllegalStateException("Vessel type unknown");
+    	}
+
+    	if (vessel.is(VesselAttribute.FIGHTER)) {
+    		throw new UnsupportedOperationException("Fighters don't have coolant");
+    	}
+
+    	mAvailableCoolantOrMissiles = availableCoolant;
+    }
+
+    /**
+     * Returns the number of missiles on board the fighter, or 0 if this is not
+     * a fighter. If the type of ship is unknown, an IllegalStateException will
+     * be thrown. It is advisable to only use this method for objects managed by
+     * the SystemManager.
+     */
+    public byte getMissiles(Context ctx) {
+    	Vessel vessel = getVessel(ctx);
+
+    	if (vessel == null) {
+    		throw new IllegalStateException("Vessel type unknown");
+    	}
+
+    	return vessel.is(VesselAttribute.FIGHTER) ? mAvailableCoolantOrMissiles : 0;
+    }
+
+    /**
+     * Sets the number of missiles on board the figher. If this ship is not a
+     * figher, an UnsupportedOperationException will be thrown. If the ship's
+     * type is unknown, an IllegalStateException will be thrown. It is advisable
+     * to only use this method for objects managed by the SystemManager.
+     */
+    public void setMissiles(Context ctx, byte missiles) {
+    	Vessel vessel = getVessel(ctx);
+
+    	if (vessel == null) {
+    		throw new IllegalStateException("Vessel type unknown");
+    	}
+
+    	if (!vessel.is(VesselAttribute.FIGHTER)) {
+    		throw new UnsupportedOperationException("Only fighters have missiles");
+    	}
+
+    	mAvailableCoolantOrMissiles = missiles;
     }
 
     /**
@@ -516,8 +597,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
                 mEnergy = plr.mEnergy;
             }
             
-            if (plr.mAvailableCoolant != -1) {
-                mAvailableCoolant = plr.mAvailableCoolant;
+            if (plr.mAvailableCoolantOrMissiles != -1) {
+                mAvailableCoolantOrMissiles = plr.mAvailableCoolantOrMissiles;
             }
             
             if (plr.mDriveType != null) {
@@ -652,7 +733,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	putProp(props, "Energy", mEnergy, -1, includeUnspecified);
     	putProp(props, "Docking base", mDockingBase, -1, includeUnspecified);
     	putProp(props, "Main screen view", mMainScreen, includeUnspecified);
-    	putProp(props, "Coolant", mAvailableCoolant, -1, includeUnspecified);
+    	putProp(props, "Coolant", mAvailableCoolantOrMissiles, -1, includeUnspecified);
     	putProp(props, "Warp", mWarp, -1, includeUnspecified);
     	putProp(props, "Beam frequency", mBeamFreq, includeUnspecified);
     	putProp(props, "Drive type", mDriveType, includeUnspecified);

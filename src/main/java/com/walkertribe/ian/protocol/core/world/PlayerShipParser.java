@@ -45,7 +45,7 @@ public class PlayerShipParser extends AbstractObjectParser {
     	UNK_4_3,
     	MAIN_SCREEN,
     	BEAM_FREQUENCY,
-    	AVAILABLE_COOLANT,
+    	AVAILABLE_COOLANT_OR_MISSILES,
     	SCIENCE_TARGET,
     	CAPTAIN_TARGET,
 
@@ -126,7 +126,7 @@ public class PlayerShipParser extends AbstractObjectParser {
         	player.setBeamFrequency(BeamFrequency.values()[reader.readByte()]);
         }
 
-        player.setAvailableCoolant(reader.readByte(Bit.AVAILABLE_COOLANT, (byte) -1));
+        player.setAvailableCoolantOrMissiles(reader.readByte(Bit.AVAILABLE_COOLANT_OR_MISSILES, (byte) -1));
         player.setScienceTarget(reader.readInt(Bit.SCIENCE_TARGET, -1));
         player.setCaptainTarget(reader.readInt(Bit.CAPTAIN_TARGET, -1));
 
@@ -205,7 +205,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 			writer.writeByte(Bit.BEAM_FREQUENCY, (byte) beamFreq.ordinal(), (byte) -1);
 		}
 
-		writer	.writeByte(Bit.AVAILABLE_COOLANT, (byte) player.getAvailableCoolant(), (byte) -1)
+		writer	.writeByte(Bit.AVAILABLE_COOLANT_OR_MISSILES, player.getAvailableCoolantOrMissiles(), (byte) -1)
 				.writeInt(Bit.SCIENCE_TARGET, player.getScienceTarget(), -1)
 				.writeInt(Bit.CAPTAIN_TARGET, player.getCaptainTarget(), -1);
 
