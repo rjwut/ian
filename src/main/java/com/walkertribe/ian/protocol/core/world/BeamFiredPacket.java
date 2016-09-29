@@ -1,6 +1,7 @@
 package com.walkertribe.ian.protocol.core.world;
 
 import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -8,6 +9,7 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.world.ArtemisObject;
 
 public class BeamFiredPacket extends BaseArtemisPacket {
 	private static final int TYPE = 0xb83fd2c4;
@@ -30,6 +32,8 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 
 	private int mBeamId;
 	private int mBeamPortIndex;
+	private ObjectType mOriginObjectType;
+	private ObjectType mTargetObjectType;
 	private int mOriginId;
 	private int mTargetId;
 	private float mImpactX;
@@ -38,8 +42,6 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 	private boolean mAutoFired;
 	private byte[] unknown1 = DEFAULT_UNKNOWN_VALUE;
 	private byte[] unknown2 = DEFAULT_UNKNOWN_VALUE;
-	private byte[] unknown3 = DEFAULT_UNKNOWN_VALUE;
-	private byte[] unknown4 = DEFAULT_UNKNOWN_VALUE;
 
 	private BeamFiredPacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
@@ -47,8 +49,8 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 		unknown1 = reader.readBytes(4);
 		unknown2 = reader.readBytes(4);
 		mBeamPortIndex = reader.readInt();
-		unknown3 = reader.readBytes(4);
-		unknown4 = reader.readBytes(4);
+		mOriginObjectType = ObjectType.fromId(reader.readInt());
+		mTargetObjectType = ObjectType.fromId(reader.readInt());
 		mOriginId = reader.readInt();
 		mTargetId = reader.readInt();
 		mImpactX = reader.readFloat();
@@ -81,6 +83,44 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 
 	public void setBeamPortIndex(int beamPortIndex) {
 		mBeamPortIndex = beamPortIndex;
+	}
+
+	/**
+	 * Convenience method that calls setOriginObjectType() and setOriginId().
+	 */
+	public void setOrigin(ArtemisObject obj) {
+		setOriginObjectType(obj.getType());
+		setOriginId(obj.getId());
+	}
+
+	/**
+	 * The ObjectType of the vessel that fired the beam.
+	 */
+	public ObjectType getOriginObjectType() {
+		return mOriginObjectType;
+	}
+
+	public void setOriginObjectType(ObjectType originObjectType) {
+		mOriginObjectType = originObjectType;
+	}
+
+	/**
+	 * Convenience method that calls setTargetObjectType() and setTargetId().
+	 */
+	public void setTarget(ArtemisObject obj) {
+		setTargetObjectType(obj.getType());
+		setTargetId(obj.getId());
+	}
+
+	/**
+	 * Returns the ObjectType of the vessel that was struck by the beam.
+	 */
+	public ObjectType getTargetObjectType() {
+		return mTargetObjectType;
+	}
+
+	public void setTargetObjectType(ObjectType targetObjectType) {
+		mTargetObjectType = targetObjectType;
 	}
 
 	/**
@@ -165,8 +205,8 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 			.writeBytes(unknown1)
 			.writeBytes(unknown2)
 			.writeInt(mBeamPortIndex)
-			.writeBytes(unknown3)
-			.writeBytes(unknown4)
+			.writeInt(mOriginObjectType.getId())
+			.writeInt(mTargetObjectType.getId())
 			.writeInt(mOriginId)
 			.writeInt(mTargetId)
 			.writeFloat(mImpactX)
