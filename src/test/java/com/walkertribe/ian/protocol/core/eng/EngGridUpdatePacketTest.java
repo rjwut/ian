@@ -17,7 +17,7 @@ public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdateP
 
 	@Test
 	public void testConstruct() {
-		EngGridUpdatePacket pkt = new EngGridUpdatePacket();
+		EngGridUpdatePacket pkt = new EngGridUpdatePacket(false);
 		pkt.toString();
 		pkt.addDamageUpdate(0, 0, 0, 0.5f);
 		pkt.addDamconUpdate(1, 3, 0, 0, 0, 0, 0, 0, 1.0f);
