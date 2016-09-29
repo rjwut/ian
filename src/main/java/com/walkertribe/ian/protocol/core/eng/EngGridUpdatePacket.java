@@ -41,21 +41,24 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
     private static final int TEAM_NUMBER_OFFSET = 0x0a;
     private static final float PROGRESS_EPSILON = 0.001f;
 
+    private boolean mRequested;
     private List<GridDamage> mDamage = new ArrayList<GridDamage>();
     private List<DamconStatus> mDamconUpdates = new ArrayList<DamconStatus>();
 
     /**
      * Creates a new EngGridUpdatePacket with no updates. Use the
      * addDamageUpdate() and addDamconUpdate() methods to add update information
-     * to this packet.
+     * to this packet. The requested parameter indicates whether this packet is
+     * being sent in response to a {@link EngRequestGridUpdatePacket} packet.
      */
-    public EngGridUpdatePacket() {
+    public EngGridUpdatePacket(boolean requested) {
         super(ConnectionType.SERVER, TYPE);
+        mRequested = requested;
     }
 
     private EngGridUpdatePacket(PacketReader reader) {
         super(ConnectionType.SERVER, TYPE);
-        reader.readUnknown("Unknown", 1);
+        mRequested = reader.readByte() == 1;
 
         while (reader.peekByte() != END_GRID_MARKER) {
             GridCoord coord = GridCoord.getInstance(
@@ -85,6 +88,13 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
         }
 
         reader.skip(1); // read the 0xfe byte
+    }
+
+    /**
+     * Returns true if this update was requested by the client.
+     */
+    public boolean isRequested() {
+    	return mRequested;
     }
 
     /**
@@ -121,7 +131,7 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeByte((byte) 1); // unknown
+		writer.writeByte((byte) (mRequested ? 1 : 0));
 
 		for (GridDamage damage : mDamage) {
 			GridCoord coord = damage.coord;
