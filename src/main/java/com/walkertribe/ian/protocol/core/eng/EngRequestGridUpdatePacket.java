@@ -1,4 +1,4 @@
-package com.walkertribe.ian.protocol.core.setup;
+package com.walkertribe.ian.protocol.core.eng;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
@@ -9,33 +9,32 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.core.ShipActionPacket;
 
 /**
- * The official client sends this sometimes. We currently don't know why. It
- * seems to work fine without it.
- * @author dhleong
+ * Can be sent by the client to request a full update to the engineering grid.
+ * The server will respond with an EngGridUpdatePacket.
  */
-public class ReadyPacket2 extends ShipActionPacket {
+public class EngRequestGridUpdatePacket extends ShipActionPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_READY2,
+		registry.register(ConnectionType.CLIENT, TYPE, TYPE_REQUEST_ENG_GRID_UPDATE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return ReadyPacket2.class;
+				return EngRequestGridUpdatePacket.class;
 			}
 
 			@Override
 			public ArtemisPacket build(PacketReader reader)
 					throws ArtemisPacketException {
-				return new ReadyPacket2(reader);
+				return new EngRequestGridUpdatePacket(reader);
 			}
 		});
 	}
 
-    public ReadyPacket2() {
-        super(TYPE_READY2, 0);
+    public EngRequestGridUpdatePacket() {
+        super(TYPE_REQUEST_ENG_GRID_UPDATE, 0);
     }
 
-    private ReadyPacket2(PacketReader reader) {
-    	super(TYPE_READY2, reader);
+    private EngRequestGridUpdatePacket(PacketReader reader) {
+    	super(TYPE_REQUEST_ENG_GRID_UPDATE, reader);
     }
 
     @Override
