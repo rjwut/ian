@@ -6,15 +6,15 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.world.Artemis;
 
 /**
  * Unloads the indicated tube.
  */
-public class UnloadTubePacket extends ShipActionPacket {
+public class UnloadTubePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_UNLOAD_TUBE,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.UNLOAD_TUBE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -33,7 +33,7 @@ public class UnloadTubePacket extends ShipActionPacket {
 	 * @param tube Index of the tube to unload, [0 - Artemis.MAX_TUBES)
 	 */
     public UnloadTubePacket(int tube) {
-        super(TYPE_UNLOAD_TUBE, tube);
+        super(SubType.UNLOAD_TUBE, tube);
 
         if (tube < 0 || tube >= Artemis.MAX_TUBES) {
         	throw new IndexOutOfBoundsException(
@@ -43,7 +43,7 @@ public class UnloadTubePacket extends ShipActionPacket {
     }
 
     private UnloadTubePacket(PacketReader reader) {
-    	super(TYPE_UNLOAD_TUBE, reader);
+    	super(SubType.UNLOAD_TUBE, reader);
     }
 
 	@Override

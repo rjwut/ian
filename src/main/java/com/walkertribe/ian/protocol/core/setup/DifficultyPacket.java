@@ -9,9 +9,11 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 public class DifficultyPacket extends BaseArtemisPacket {
-	private static final int TYPE = 0x3de66711;
+	private static final PacketType TYPE = CorePacketType.START_GAME;
 	public static final int MIN = 1;
 	public static final int MAX = 11;
 

@@ -6,15 +6,15 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Scans the indicated target.
  */
-public class SciScanPacket extends ShipActionPacket {
+public class SciScanPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_SCI_SCAN,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.SCIENCE_SCAN,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -33,7 +33,7 @@ public class SciScanPacket extends ShipActionPacket {
 	 * @param target The target to scan
 	 */
     public SciScanPacket(ArtemisObject target) {
-        super(TYPE_SCI_SCAN, target != null ? target.getId() : 0);
+        super(SubType.SCIENCE_SCAN, target != null ? target.getId() : 0);
 
         if (target == null) {
         	throw new IllegalArgumentException("You must provide a target");
@@ -41,7 +41,7 @@ public class SciScanPacket extends ShipActionPacket {
     }
 
     private SciScanPacket(PacketReader reader) {
-        super(TYPE_SCI_SCAN, reader);
+        super(SubType.SCIENCE_SCAN, reader);
     }
 
     @Override

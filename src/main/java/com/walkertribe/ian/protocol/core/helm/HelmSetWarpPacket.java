@@ -6,16 +6,16 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.world.Artemis;
 
 /**
  * Set warp speed.
  * @author dhleong
  */
-public class HelmSetWarpPacket extends ShipActionPacket {
+public class HelmSetWarpPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_WARPSPEED,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.WARP,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -34,7 +34,7 @@ public class HelmSetWarpPacket extends ShipActionPacket {
 	 * @param warp Value between 0 (no warp) and 4 (max warp)
 	 */
     public HelmSetWarpPacket(int warp) {
-        super(TYPE_WARPSPEED, warp);
+        super(SubType.WARP, warp);
 
         if (warp < 0 || warp > Artemis.MAX_WARP) {
         	throw new IndexOutOfBoundsException("Warp speed out of range");
@@ -42,7 +42,7 @@ public class HelmSetWarpPacket extends ShipActionPacket {
     }
 
     private HelmSetWarpPacket(PacketReader reader) {
-        super(TYPE_WARPSPEED, reader);
+        super(SubType.WARP, reader);
     }
 
     @Override

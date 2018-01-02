@@ -12,10 +12,11 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
 
 public class GameOverStatsPacket extends BaseArtemisPacket implements
 		Iterable<GameOverStatsPacket.Row> {
-    private static final int TYPE = 0xf754c8fe;
+    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
     private static final byte MSG_TYPE = 0x15;
     private static final byte DELIMITER = 0x00;
     private static final byte END_MARKER = (byte) 0xce;

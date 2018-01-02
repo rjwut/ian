@@ -12,13 +12,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Updates the current status of the fighter bays.
  * @author rjwut
  */
 public class FighterBayStatusPacket extends BaseArtemisPacket implements Iterable<FighterBayStatusPacket.Bay> {
-    private static final int TYPE = 0x9ad1f23b;
+    private static final PacketType TYPE = CorePacketType.CARRIER_RECORD;
 
     public static class Bay {
     	private int id;

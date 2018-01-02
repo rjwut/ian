@@ -6,16 +6,16 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Selects (or deselects) a target on the game master's map.
  * @author rjwut
  */
-public class GameMasterSelectObjectPacket extends ShipActionPacket {
+public class GameMasterSelectObjectPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_GM_SELECT,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.GM_SELECT,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -34,11 +34,11 @@ public class GameMasterSelectObjectPacket extends ShipActionPacket {
 	 * @param target The target to select, or null to deselect a target
 	 */
     public GameMasterSelectObjectPacket(ArtemisObject target) {
-        super(TYPE_GM_SELECT, target == null ? 1 : target.getId());
+        super(SubType.GM_SELECT, target == null ? 1 : target.getId());
     }
 
     private GameMasterSelectObjectPacket(PacketReader reader) {
-    	super(TYPE_GM_SELECT, reader);
+    	super(SubType.GM_SELECT, reader);
     }
 
     @Override

@@ -6,15 +6,15 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Requests that a particular fighter be launched.
  * @author rjwut
  */
-public class FighterLaunchPacket extends ShipActionPacket {
+public class FighterLaunchPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_LAUNCH_PACKET,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.FIGHTER_LAUNCH,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -33,11 +33,11 @@ public class FighterLaunchPacket extends ShipActionPacket {
 	 * Requests the launch of the fighter with the given ID.
 	 */
     public FighterLaunchPacket(int objectId) {
-        super(TYPE_LAUNCH_PACKET, objectId);
+        super(SubType.FIGHTER_LAUNCH, objectId);
     }
 
     private FighterLaunchPacket(PacketReader reader) {
-    	super(TYPE_LAUNCH_PACKET, reader);
+    	super(SubType.FIGHTER_LAUNCH, reader);
     }
 
 	@Override

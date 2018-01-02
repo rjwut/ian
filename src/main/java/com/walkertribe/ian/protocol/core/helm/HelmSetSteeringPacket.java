@@ -8,6 +8,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Set steering amount. Just like the actual console, you need to send one
@@ -16,7 +18,7 @@ import com.walkertribe.ian.protocol.BaseArtemisPacket;
  * @author dhleong
  */
 public class HelmSetSteeringPacket extends BaseArtemisPacket {
-	private static final int TYPE = 0x0351A5AC;
+    private static final PacketType TYPE = CorePacketType.VALUE_FLOAT;
     private static final byte SUBTYPE = 0x01;
 
 	public static void register(PacketFactoryRegistry registry) {

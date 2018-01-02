@@ -11,13 +11,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Sends a message to another entity.
  */
 public class CommsOutgoingPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0x574C4C4b;
+    private static final PacketType TYPE = CorePacketType.COMMS_MESSAGE;
     public static final int NO_ARG = 0x00730078;
     private static final int NO_ARG_2 = 0x004f005e;
 

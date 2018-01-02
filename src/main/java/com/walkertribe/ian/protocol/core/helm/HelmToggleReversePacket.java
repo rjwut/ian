@@ -6,15 +6,15 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Toggles reverse engines.
  * @author dhleong
  */
-public class HelmToggleReversePacket extends ShipActionPacket {
+public class HelmToggleReversePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_REVERSE_ENGINES,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.TOGGLE_REVERSE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -30,11 +30,11 @@ public class HelmToggleReversePacket extends ShipActionPacket {
 	}
 
     public HelmToggleReversePacket() {
-        super(TYPE_REVERSE_ENGINES, 0);
+        super(SubType.TOGGLE_REVERSE, 0);
     }
 
     private HelmToggleReversePacket(PacketReader reader) {
-        super(TYPE_REVERSE_ENGINES, reader);
+        super(SubType.TOGGLE_REVERSE, reader);
     }
 
     @Override

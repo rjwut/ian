@@ -8,13 +8,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Manually fire beams.
  */
 public class FireBeamPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xc2bee72e;
+    private static final PacketType TYPE = CorePacketType.BEAM_REQUEST;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.CLIENT, TYPE, new PacketFactory() {

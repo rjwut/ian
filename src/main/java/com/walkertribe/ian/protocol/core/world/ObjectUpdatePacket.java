@@ -14,10 +14,12 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 public class ObjectUpdatePacket extends BaseArtemisPacket {
-	public static final int TYPE = 0x80803df9;
+	public static final PacketType TYPE = CorePacketType.OBJECT_BIT_STREAM;
 
 	private static final Map<ObjectType, ObjectParser> PARSERS;
 

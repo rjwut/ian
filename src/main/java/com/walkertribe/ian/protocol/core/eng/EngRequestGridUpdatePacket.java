@@ -6,15 +6,15 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Can be sent by the client to request a full update to the engineering grid.
  * The server will respond with an EngGridUpdatePacket.
  */
-public class EngRequestGridUpdatePacket extends ShipActionPacket {
+public class EngRequestGridUpdatePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_REQUEST_ENG_GRID_UPDATE,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.REQUEST_ENG_GRID_UPDATE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -30,11 +30,11 @@ public class EngRequestGridUpdatePacket extends ShipActionPacket {
 	}
 
     public EngRequestGridUpdatePacket() {
-        super(TYPE_REQUEST_ENG_GRID_UPDATE, 0);
+        super(SubType.REQUEST_ENG_GRID_UPDATE, 0);
     }
 
     private EngRequestGridUpdatePacket(PacketReader reader) {
-    	super(TYPE_REQUEST_ENG_GRID_UPDATE, reader);
+    	super(SubType.REQUEST_ENG_GRID_UPDATE, reader);
     }
 
     @Override

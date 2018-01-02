@@ -24,6 +24,10 @@ public abstract class BaseArtemisPacket implements ArtemisPacket {
     private final ConnectionType mConnectionType;
     private final int mType;
 
+    public BaseArtemisPacket(ConnectionType connectionType, PacketType packetType) {
+    	this(connectionType, packetType.getHash());
+    }
+
     public BaseArtemisPacket(ConnectionType connectionType, int packetType) {
         mConnectionType = connectionType;
         mType = packetType;

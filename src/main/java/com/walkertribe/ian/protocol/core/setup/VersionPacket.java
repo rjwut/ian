@@ -8,6 +8,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.Version;
 
 /**
@@ -16,7 +18,7 @@ import com.walkertribe.ian.util.Version;
  * @author rjwut
  */
 public class VersionPacket extends BaseArtemisPacket {
-	public static final int TYPE = 0xe548e74a;
+	public static final PacketType TYPE = CorePacketType.CONNECTED;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {

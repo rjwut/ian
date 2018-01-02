@@ -9,13 +9,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Received when an incoming COMMs audio message arrives.
  * @author dhleong
  */
 public class IncomingAudioPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xae88e058;
+    private static final PacketType TYPE = CorePacketType.INCOMING_MESSAGE;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {

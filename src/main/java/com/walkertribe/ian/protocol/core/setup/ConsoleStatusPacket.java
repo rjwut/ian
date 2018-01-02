@@ -10,6 +10,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.Artemis;
 
 /**
@@ -18,7 +20,7 @@ import com.walkertribe.ian.world.Artemis;
  * @author dhleong
  */
 public class ConsoleStatusPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0x19c6e2d4;
+    private static final PacketType TYPE = CorePacketType.CLIENT_CONSOLES;
     
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {

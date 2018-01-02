@@ -6,15 +6,15 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Toggles auto beams on/off.
  * @author rjwut
  */
-public class ToggleAutoBeamsPacket extends ShipActionPacket {
+public class ToggleAutoBeamsPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_TOGGLE_AUTO_BEAMS,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.TOGGLE_AUTO_BEAMS,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -30,11 +30,11 @@ public class ToggleAutoBeamsPacket extends ShipActionPacket {
 	}
 
 	public ToggleAutoBeamsPacket() {
-		super(TYPE_TOGGLE_AUTO_BEAMS, 0);
+		super(SubType.TOGGLE_AUTO_BEAMS, 0);
 	}
 
 	private ToggleAutoBeamsPacket(PacketReader reader) {
-		super(TYPE_TOGGLE_AUTO_BEAMS, reader);
+		super(SubType.TOGGLE_AUTO_BEAMS, reader);
 	}
 
 	@Override

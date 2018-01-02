@@ -8,13 +8,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Indicates that a jump has ended. Note that there is still some cooldown time
  * after the jump (about 5 seconds).
  */
 public class JumpEndPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xf754c8fe;
+    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
     private static final byte SUBTYPE = 0x0d;
 
 	public static void register(PacketFactoryRegistry registry) {

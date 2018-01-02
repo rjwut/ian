@@ -9,13 +9,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.Artemis;
 
 /**
  * Sets the amount of energy allocated to a system.
  */
 public class EngSetEnergyPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0x0351a5ac;
+    private static final PacketType TYPE = CorePacketType.VALUE_FLOAT;
     private static final byte SUBTYPE = 0x04;
 
 	public static void register(PacketFactoryRegistry registry) {

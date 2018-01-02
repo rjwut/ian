@@ -11,6 +11,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.GridCoord;
 
 /**
@@ -19,7 +21,7 @@ import com.walkertribe.ian.util.GridCoord;
  * @author dhleong
  */
 public class EngGridUpdatePacket extends BaseArtemisPacket {
-    private static final int TYPE = 0x77e9f3c;
+    private static final PacketType TYPE = CorePacketType.SHIP_SYSTEM_SYNC;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {

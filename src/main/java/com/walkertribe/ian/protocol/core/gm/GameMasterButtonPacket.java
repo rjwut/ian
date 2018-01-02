@@ -8,6 +8,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Creates or removes a button on the game master console.
@@ -19,7 +21,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 		CREATE
 	}
 
-	private static final int TYPE = 0x26faacb9;
+	private static final PacketType TYPE = CorePacketType.GM_BUTTON;
 	private static final int SUBTYPE_POSITIONED = 0x02;
 
 	public static void register(PacketFactoryRegistry registry) {

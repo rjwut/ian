@@ -1,4 +1,4 @@
-package com.walkertribe.ian.protocol.core.setup;
+package com.walkertribe.ian.protocol.core;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
@@ -9,16 +9,17 @@ import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.PacketType;
-import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
 
 /**
- * Sent by the server immediately on connection. The receipt of this packet
- * indicates a successful connection to the server.
+ * A packet sent periodically by the server to demonstrate that it's still
+ * alive.
+ * TODO Consider making ThreadedArtemisNetworkInterface watch for this packet
+ * and close if too much time goes by without one.
  * @author rjwut
  */
-public class WelcomePacket extends BaseArtemisPacket {
-	private static final PacketType TYPE = CorePacketType.PLAIN_TEXT_GREETING;
-	protected static final String MSG = "You have connected to Thom Robertson's Artemis Bridge Simulator.  Please connect with an authorized game client.";
+public class HeartbeatPacket extends BaseArtemisPacket {
+	private static final PacketType TYPE = CorePacketType.HEARTBEAT;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
@@ -30,36 +31,27 @@ public class WelcomePacket extends BaseArtemisPacket {
 			@Override
 			public ArtemisPacket build(PacketReader reader)
 					throws ArtemisPacketException {
-				return new WelcomePacket(reader);
+				return new HeartbeatPacket(reader);
 			}
 		});
 	}
 
-	private String msg = MSG;
-
-	private WelcomePacket(PacketReader reader) {
+	private HeartbeatPacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
-		msg = reader.readUsAsciiString();
 	}
 
-	public WelcomePacket() {
+	public HeartbeatPacket() {
 		super(ConnectionType.SERVER, TYPE);
 	}
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeUsAsciiString(msg);
-	}
-
-	/**
-	 * Returns the welcome message sent by the server.
-	 */
-	public String getMessage() {
-		return msg;
+		// no payload
 	}
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append(getMessage());
+		// nothing to write
 	}
+
 }

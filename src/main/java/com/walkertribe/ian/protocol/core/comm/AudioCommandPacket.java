@@ -9,12 +9,14 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Plays or deletes an audio message.
  */
 public class AudioCommandPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0x6aadc57f;
+    private static final PacketType TYPE = CorePacketType.CONTROL_MESSAGE;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.CLIENT, TYPE, new PacketFactory() {

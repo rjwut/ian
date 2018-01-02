@@ -14,9 +14,9 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * @author rjwut
  * @see {@link java.awt.event.KeyEvent} (for constants)
  */
-public class KeystrokePacket extends ShipActionPacket {
+public class KeystrokePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_KEYSTROKE,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.KEYSTROKE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -32,11 +32,11 @@ public class KeystrokePacket extends ShipActionPacket {
 	}
 
 	public KeystrokePacket(int keycode) {
-		super(TYPE_KEYSTROKE, keycode);
+		super(SubType.KEYSTROKE, keycode);
 	}
 
 	private KeystrokePacket(PacketReader reader) {
-		super(TYPE_KEYSTROKE, reader);
+		super(SubType.KEYSTROKE, reader);
 	}
 
 	/**

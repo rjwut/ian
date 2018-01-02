@@ -6,16 +6,16 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.world.Artemis;
 
 /**
  * Fire whatever's in the given tube.
  * @author dhleong
  */
-public class FireTubePacket extends ShipActionPacket {
+public class FireTubePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_FIRE_TUBE,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.FIRE_TUBE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -34,7 +34,7 @@ public class FireTubePacket extends ShipActionPacket {
 	 * @param tube The index of the tube to fire, [0 - Artemis.MAX_TUBES)
 	 */
     public FireTubePacket(int tube) {
-        super(TYPE_FIRE_TUBE, tube);
+        super(SubType.FIRE_TUBE, tube);
 
         if (tube < 0 || tube >= Artemis.MAX_TUBES) {
         	throw new IndexOutOfBoundsException(
@@ -44,7 +44,7 @@ public class FireTubePacket extends ShipActionPacket {
     }
 
     private FireTubePacket(PacketReader reader) {
-    	super(TYPE_FIRE_TUBE, reader);
+    	super(SubType.FIRE_TUBE, reader);
     }
 
     @Override

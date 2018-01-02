@@ -6,7 +6,7 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Signals to the server that this console is ready to join the game. If the
@@ -17,9 +17,9 @@ import com.walkertribe.ian.protocol.core.ShipActionPacket;
  * updates again.
  * @author dhleong
  */
-public class ReadyPacket extends ShipActionPacket {
+public class ReadyPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_READY,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.READY,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -35,11 +35,11 @@ public class ReadyPacket extends ShipActionPacket {
 	}
 
     public ReadyPacket() {
-        super(TYPE_READY, 0);
+        super(SubType.READY, 0);
     }
 
     private ReadyPacket(PacketReader reader) {
-    	super(TYPE_READY, reader);
+    	super(SubType.READY, reader);
     }
 
     @Override

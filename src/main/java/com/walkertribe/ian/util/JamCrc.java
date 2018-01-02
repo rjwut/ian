@@ -33,7 +33,7 @@ public final class JamCrc {
             crc = (crc >>> 8) ^ TABLE[(crc & 0xff) ^ (b & 0xff)];
         }
 
-    	return Integer.reverseBytes(crc);
+    	return crc;
     }
 
     /**

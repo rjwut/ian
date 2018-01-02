@@ -9,6 +9,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * A packet sent by the game master console to the server which causes a message
@@ -16,7 +18,7 @@ import com.walkertribe.ian.protocol.BaseArtemisPacket;
  * @author rjwut
  */
 public class GameMasterMessagePacket extends BaseArtemisPacket {
-    private static final int TYPE = 0x809305a7;
+    private static final PacketType TYPE = CorePacketType.GM_TEXT;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.CLIENT, TYPE, new PacketFactory() {

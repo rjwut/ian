@@ -13,8 +13,8 @@ import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.UnknownPacket;
 import com.walkertribe.ian.protocol.UnparsedPacket;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.setup.VersionPacket;
-import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
 import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
 import com.walkertribe.ian.util.BitField;
 import com.walkertribe.ian.util.BoolState;
@@ -209,7 +209,8 @@ public class PacketReader {
 
 		// IAN needs to parse the WelcomePacket and VersionPacket, even if the
 		// client isn't interested in them.
-		boolean required = packetType == WelcomePacket.TYPE || packetType == VersionPacket.TYPE;
+		boolean required = packetType == CorePacketType.PLAIN_TEXT_GREETING.getHash() ||
+				packetType == CorePacketType.CONNECTED.getHash();
 
 		if (required || result.isInteresting()) {
 			// We need this packet
@@ -239,9 +240,9 @@ public class PacketReader {
 							TextUtil.byteArrayToHexString(readBytes(unreadByteCount))
 					);
 				}
-			}
 
-			debugger.onRecvParsedPacket(packet);
+				debugger.onRecvParsedPacket(packet);
+			}
 		} else {
 			// Nothing is interested in this packet
 			UnparsedPacket unpPkt = new UnparsedPacket(connType, packetType, payloadBytes);

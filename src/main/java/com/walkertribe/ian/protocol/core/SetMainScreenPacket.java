@@ -12,9 +12,9 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * Set what to show on the MainScreen
  * @author dhleong
  */
-public class SetMainScreenPacket extends ShipActionPacket {
+public class SetMainScreenPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_MAINSCREEN,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.MAIN_SCREEN,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -33,7 +33,7 @@ public class SetMainScreenPacket extends ShipActionPacket {
 	 * @param screen The enum value representing the desired view
 	 */
     public SetMainScreenPacket(MainScreenView screen) {
-        super(TYPE_MAINSCREEN, screen != null ? screen.ordinal() : -1);
+        super(SubType.MAIN_SCREEN, screen != null ? screen.ordinal() : -1);
 
         if (screen == null) {
         	throw new IllegalArgumentException("You must specify a view");
@@ -41,7 +41,7 @@ public class SetMainScreenPacket extends ShipActionPacket {
     }
 
     private SetMainScreenPacket(PacketReader reader) {
-    	super(TYPE_MAINSCREEN, reader);
+    	super(SubType.MAIN_SCREEN, reader);
     }
 
     @Override

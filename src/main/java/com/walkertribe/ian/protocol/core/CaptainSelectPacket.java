@@ -12,9 +12,9 @@ import com.walkertribe.ian.world.ArtemisObject;
  * Selects (or deselects) a target on the captain's map.
  * @author rjwut
  */
-public class CaptainSelectPacket extends ShipActionPacket {
+public class CaptainSelectPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_CAPTAIN_SELECT,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.CAPTAIN_SELECT,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -33,11 +33,11 @@ public class CaptainSelectPacket extends ShipActionPacket {
 	 * @param target The target to select, or null to deselect a target
 	 */
     public CaptainSelectPacket(ArtemisObject target) {
-        super(TYPE_CAPTAIN_SELECT, target == null ? 1 : target.getId());
+        super(SubType.CAPTAIN_SELECT, target == null ? 1 : target.getId());
     }
 
     private CaptainSelectPacket(PacketReader reader) {
-    	super(TYPE_CAPTAIN_SELECT, reader);
+    	super(SubType.CAPTAIN_SELECT, reader);
     }
 
     @Override

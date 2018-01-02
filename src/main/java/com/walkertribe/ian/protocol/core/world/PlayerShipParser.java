@@ -58,8 +58,8 @@ public class PlayerShipParser extends AbstractObjectParser {
     	UNK_5_7,
     	UNK_5_8,
 
-    	ACCENT_COLOR,
     	CAPITAL_SHIP_ID,
+    	ACCENT_COLOR,
     	UNK_6_3
     }
 	private static final Bit[] BITS = Bit.values();
@@ -142,8 +142,8 @@ public class PlayerShipParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_5_6, 5);
         reader.readObjectUnknown(Bit.UNK_5_7, 4);
         reader.readObjectUnknown(Bit.UNK_5_8, 1);
-        player.setAccentColor(reader.readInt(Bit.ACCENT_COLOR, -1));
         player.setCapitalShipId(reader.readInt(Bit.CAPITAL_SHIP_ID, -1));
+        player.setAccentColor(reader.readInt(Bit.ACCENT_COLOR, -1));
         reader.readObjectUnknown(Bit.UNK_6_3, 4);
         return player;
 	}
@@ -222,8 +222,8 @@ public class PlayerShipParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_5_6)
 				.writeUnknown(Bit.UNK_5_7)
 				.writeUnknown(Bit.UNK_5_8)
-				.writeInt(Bit.ACCENT_COLOR, player.getAccentColor(), -1)
 				.writeInt(Bit.CAPITAL_SHIP_ID, player.getCapitalShipId(), -1)
+				.writeInt(Bit.ACCENT_COLOR, player.getAccentColor(), -1)
 				.writeUnknown(Bit.UNK_6_3);
 	}
 }

@@ -8,15 +8,15 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Take or relinquish a bridge console.
  * @author dhleong
  */
-public class SetConsolePacket extends ShipActionPacket {
+public class SetConsolePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_SET_CONSOLE,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.SET_CONSOLE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -39,7 +39,7 @@ public class SetConsolePacket extends ShipActionPacket {
 	 * @param selected Whether the player is taking this console or not
 	 */
 	public SetConsolePacket(Console console, boolean selected) {
-        super(TYPE_SET_CONSOLE);
+        super(SubType.SET_CONSOLE);
 
         if (console == null) {
         	throw new IllegalArgumentException("You must specify a console");
@@ -50,7 +50,7 @@ public class SetConsolePacket extends ShipActionPacket {
     }
 
 	private SetConsolePacket(PacketReader reader) {
-        super(TYPE_SET_CONSOLE);
+        super(SubType.SET_CONSOLE);
         reader.skip(4); // subtype
 		mConsole = Console.values()[reader.readInt()];
 		mSelected = reader.readInt() == 1;
@@ -58,7 +58,7 @@ public class SetConsolePacket extends ShipActionPacket {
 
 	@Override
     public void writePayload(PacketWriter writer) {
-    	writer	.writeInt(TYPE_SET_CONSOLE)
+    	writer	.writeInt(SubType.SET_CONSOLE.ordinal())
     			.writeInt(mConsole.ordinal())
     			.writeInt(mSelected ? 1 : 0);
     }

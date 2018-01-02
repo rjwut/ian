@@ -13,9 +13,9 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * that you want to switch from the current one to the other.
  * @author rjwut
  */
-public class TogglePerspectivePacket extends ShipActionPacket {
+public class TogglePerspectivePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_TOGGLE_PERSPECTIVE,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.TOGGLE_PERSPECTIVE,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -31,11 +31,11 @@ public class TogglePerspectivePacket extends ShipActionPacket {
 	}
 
 	public TogglePerspectivePacket() {
-		super(TYPE_TOGGLE_PERSPECTIVE, 0);
+		super(SubType.TOGGLE_PERSPECTIVE, 0);
 	}
 
 	private TogglePerspectivePacket(PacketReader reader) {
-		super(TYPE_TOGGLE_PERSPECTIVE, reader);
+		super(SubType.TOGGLE_PERSPECTIVE, reader);
 	}
 
 	@Override

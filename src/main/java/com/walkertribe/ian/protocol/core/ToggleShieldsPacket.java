@@ -11,9 +11,9 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * Toggle shields
  * @author dhleong
  */
-public class ToggleShieldsPacket extends ShipActionPacket {
+public class ToggleShieldsPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_TOGGLE_SHIELDS,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.TOGGLE_SHIELDS,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -29,11 +29,11 @@ public class ToggleShieldsPacket extends ShipActionPacket {
 	}
 
     public ToggleShieldsPacket() {
-        super(TYPE_TOGGLE_SHIELDS, 0);
+        super(SubType.TOGGLE_SHIELDS, 0);
     }
 
     private ToggleShieldsPacket(PacketReader reader) {
-    	super(TYPE_TOGGLE_SHIELDS, reader);
+    	super(SubType.TOGGLE_SHIELDS, reader);
     }
 
     @Override

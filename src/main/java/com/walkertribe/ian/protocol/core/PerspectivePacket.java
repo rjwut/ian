@@ -9,13 +9,14 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
 
 /**
  * Notifies clients that the main screen perspective has changed.
  * @author rjwut
  */
 public class PerspectivePacket extends BaseArtemisPacket {
-	private static final int TYPE = 0xf754c8fe;
+    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
     private static final byte MSG_TYPE = 0x12;
 
 	public static void register(PacketFactoryRegistry registry) {

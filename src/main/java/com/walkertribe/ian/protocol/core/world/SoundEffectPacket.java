@@ -8,13 +8,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Indicates that the client should play the indicated sound file.
  * @author rjwut
  */
 public class SoundEffectPacket extends BaseArtemisPacket {
-	private static final int TYPE = 0xf754c8fe;
+	private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
 	private static final byte MSG_TYPE = 0x03;
 
 	public static void register(PacketFactoryRegistry registry) {

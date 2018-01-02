@@ -7,14 +7,14 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Sets the frequency at which to tune the beams.
  */
-public class SetBeamFreqPacket extends ShipActionPacket {
+public class SetBeamFreqPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_SET_BEAMFREQ,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.SET_BEAM_FREQUENCY,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -33,7 +33,7 @@ public class SetBeamFreqPacket extends ShipActionPacket {
 	 * @param frequency The desired beam frequency
 	 */
     public SetBeamFreqPacket(BeamFrequency frequency) {
-        super(TYPE_SET_BEAMFREQ, frequency != null ? frequency.ordinal(): -1);
+        super(SubType.SET_BEAM_FREQUENCY, frequency != null ? frequency.ordinal(): -1);
 
         if (frequency == null) {
         	throw new IllegalArgumentException(
@@ -43,7 +43,7 @@ public class SetBeamFreqPacket extends ShipActionPacket {
     }
 
     private SetBeamFreqPacket(PacketReader reader) {
-    	super(TYPE_SET_BEAMFREQ, reader);
+    	super(SubType.SET_BEAM_FREQUENCY, reader);
     }
 
     @Override

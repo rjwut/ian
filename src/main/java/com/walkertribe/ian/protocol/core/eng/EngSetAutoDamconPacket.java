@@ -6,15 +6,15 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Set whether DAMCON teams should be autonomous or not.
  * @author dhleong
  */
-public class EngSetAutoDamconPacket extends ShipActionPacket {
+public class EngSetAutoDamconPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_AUTO_DAMCON,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.SET_AUTO_DAMCON,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -33,11 +33,11 @@ public class EngSetAutoDamconPacket extends ShipActionPacket {
 	 * @param autonomous Whether DAMCON teams should be autonomous
 	 */
     public EngSetAutoDamconPacket(boolean autonomous) {
-        super(TYPE_AUTO_DAMCON, autonomous ? 1 : 0);
+        super(SubType.SET_AUTO_DAMCON, autonomous ? 1 : 0);
     }
 
     private EngSetAutoDamconPacket(PacketReader reader) {
-        super(TYPE_AUTO_DAMCON, reader);
+        super(SubType.SET_AUTO_DAMCON, reader);
     }
 
     public boolean isAutonomous() {

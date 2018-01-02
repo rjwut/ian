@@ -10,6 +10,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.world.Artemis;
 
@@ -18,7 +20,7 @@ import com.walkertribe.ian.world.Artemis;
  * @author dhleong
  */
 public class AllShipSettingsPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xf754c8fe;
+    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
     private static final byte MSG_TYPE = 0x0f;
     
 	public static void register(PacketFactoryRegistry registry) {

@@ -8,6 +8,8 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Received when an incoming COMMs message arrives.
@@ -16,7 +18,7 @@ public class CommsIncomingPacket extends BaseArtemisPacket {
 	public static final int MIN_PRIORITY_VALUE = 0;
 	public static final int MAX_PRIORITY_VALUE = 8;
 
-	private static final int TYPE = 0xD672C35F;
+	private static final PacketType TYPE = CorePacketType.COMM_TEXT;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {

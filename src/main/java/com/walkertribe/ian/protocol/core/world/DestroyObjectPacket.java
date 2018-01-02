@@ -9,13 +9,15 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Sent by the server when an object is destroyed.
  */
 public class DestroyObjectPacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xcc5a3e30;
+    private static final PacketType TYPE = CorePacketType.OBJECT_DELETE;
     
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {

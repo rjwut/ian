@@ -9,16 +9,16 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ShipActionPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.vesseldata.Vessel;
 
 /**
  * Set the name, type and drive of ship your console has selected.
  * @author dhleong
  */
-public class SetShipSettingsPacket extends ShipActionPacket {
+public class SetShipSettingsPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, TYPE_SHIP_SETUP,
+		registry.register(ConnectionType.CLIENT, TYPE, SubType.SHIP_SETUP,
 				new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
@@ -42,7 +42,7 @@ public class SetShipSettingsPacket extends ShipActionPacket {
 	 * VesselData class.
 	 */
 	public SetShipSettingsPacket(DriveType drive, Vessel vessel, String name) {
-        super(TYPE_SHIP_SETUP);
+        super(SubType.SHIP_SETUP);
 
         if (vessel == null) {
         	throw new IllegalArgumentException("You must specify a Vessel");
@@ -59,12 +59,12 @@ public class SetShipSettingsPacket extends ShipActionPacket {
 	 * Use this constructor if you wish to use a hull ID.
 	 */
 	public SetShipSettingsPacket(DriveType drive, int hullId, String name) {
-        super(TYPE_SHIP_SETUP);
+        super(SubType.SHIP_SETUP);
         init(drive, hullId, name);
     }
 
 	private SetShipSettingsPacket(PacketReader reader) {
-        super(TYPE_SHIP_SETUP);
+        super(SubType.SHIP_SETUP);
         reader.skip(4); // subtype
 		mDrive = DriveType.values()[reader.readInt()];
 		mHullId = reader.readInt();
@@ -88,7 +88,7 @@ public class SetShipSettingsPacket extends ShipActionPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer	.writeInt(TYPE_SHIP_SETUP)
+		writer	.writeInt(SubType.SHIP_SETUP.ordinal())
 				.writeInt(mDrive.ordinal())
 				.writeInt(mHullId)
 				.writeInt(1) // RJW: UNKNOWN INT (always seems to be 1 0 0 0)

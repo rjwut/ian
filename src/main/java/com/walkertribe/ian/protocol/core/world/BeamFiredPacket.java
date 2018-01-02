@@ -9,10 +9,12 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 public class BeamFiredPacket extends BaseArtemisPacket {
-	private static final int TYPE = 0xb83fd2c4;
+	private static final PacketType TYPE = CorePacketType.ATTACK;
 	private static final byte[] DEFAULT_UNKNOWN_VALUE = { 0, 0, 0, 0 };
 
 	public static void register(PacketFactoryRegistry registry) {

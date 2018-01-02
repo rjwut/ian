@@ -8,9 +8,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
 
 public class PlayerShipDamagePacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xf754c8fe;
+    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
 
 	public static void register(PacketFactoryRegistry registry) {
 		PacketFactory factory = new PacketFactory() {

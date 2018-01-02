@@ -8,12 +8,13 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.PacketType;
 
 /**
  * "Toast" messages sent by the server.
  */
 public class GameMessagePacket extends BaseArtemisPacket {
-    private static final int TYPE = 0xf754c8fe;
+    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
     private static final byte MSG_TYPE = 0x0a;
 
 	public static void register(PacketFactoryRegistry registry) {
