@@ -20,9 +20,23 @@ public class Version implements Comparable<Version> {
 	/**
 	 * Constructs a Version from integer parts, with the most significant part
 	 * first. This constructor can be used to create both modern and legacy
-	 * version numbers.
+	 * version numbers. Note that this constructor only accepts two or more
+	 * parts, as the JVM insists on calling Version(float) if you only provide
+	 * one part.
 	 */
 	public Version(int... parts) {
+		if (parts.length < 2) {
+			throw new IllegalArgumentException("Version must have at least two parts");
+		}
+
+		for (int part : parts) {
+			if (part < 0) {
+				throw new IllegalArgumentException(
+						"Negative version numbers not allowed"
+				);
+			}
+		}
+
 		mParts = parts;
 		hash = Arrays.hashCode(mParts);
 	}
@@ -36,7 +50,13 @@ public class Version implements Comparable<Version> {
 	 * @see http://artemiswiki.pbworks.com/w/page/53699717/Version%20history
 	 */
 	public Version(float version) {
-		if (version >= 2.1) {
+		if (version < 0) {
+			throw new IllegalArgumentException(
+					"Negative version numbers not allowed"
+			);
+		}
+
+		if (version > 2.0999999) {
 			throw new IllegalArgumentException(
 					"Legacy version constructor is not valid for Artemis 2.1+"
 			);
@@ -62,7 +82,15 @@ public class Version implements Comparable<Version> {
 		mParts = new int[strParts.length];
 
 		for (int i = 0; i < strParts.length; i++) {
-			mParts[i] = Integer.parseInt(strParts[i]);
+			int part = Integer.parseInt(strParts[i]);
+
+			if (part < 0) {
+				throw new IllegalArgumentException(
+						"Negative version numbers not allowed"
+				);
+			}
+
+			mParts[i] = part;
 		}
 
 		hash = Arrays.hashCode(mParts);
@@ -142,7 +170,7 @@ public class Version implements Comparable<Version> {
 	@Override
 	public String toString() {
 		if (isLegacy()) {
-			return mParts[0] + "." + mParts[1];
+			return getPart(mParts, 0) + "." + getPart(mParts, 1);
 		}
 
 		StringBuilder b = new StringBuilder();
