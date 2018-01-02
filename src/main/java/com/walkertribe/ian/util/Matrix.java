@@ -1,15 +1,19 @@
 package com.walkertribe.ian.util;
 
+import java.util.Arrays;
+
 /**
  * Represents a matrix and permits mathematical operations on them.
  * @author rjwut
  */
 public class Matrix {
+	private static final double EPSILON = 2.220446049250313E-16;
+
 	/**
 	 * Operations that can be performed in matrix cells. Used to build Matrix
 	 * objects to perform various tranformations.
 	 */
-	private enum Op {
+	enum Op {
 		ZERO {
 			@Override
 			double apply(double value) {
@@ -112,11 +116,11 @@ public class Matrix {
 	 * Given an Op array defining a Matrix to build and an input value, returns
 	 * the resulting Matrix.
 	 */
-	private static Matrix buildMatrix(Op[][] rotationMatrix, double value) {
+	private static Matrix buildMatrix(Op[][] opArray, double value) {
 		double[][] matrix = new double[3][];
 
 		for (int r = 0; r < 3; r++) {
-			Op[] rotRow = rotationMatrix[r];
+			Op[] rotRow = opArray[r];
 			double[] row = new double[3];
 			matrix[r] = row;
 
@@ -130,6 +134,7 @@ public class Matrix {
 	}
 
 	private double[][] matrix;
+	private Integer hashCode;
 
 	/**
 	 * Constructs a Matrix of the given dimensions, with all its cells set to 0.
@@ -220,6 +225,7 @@ public class Matrix {
 	 */
 	public void set(int r, int c, double value) {
 		matrix[r][c] = value;
+		hashCode = null;
 	}
 
 	/**
@@ -303,6 +309,55 @@ public class Matrix {
 		return new Matrix(result, false);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof Matrix)) {
+			return false;
+		}
+
+		Matrix that = (Matrix) obj;
+
+		if (matrix.length != that.matrix.length) {
+			return false;
+		}
+
+		if (matrix[0].length != that.matrix[0].length) {
+			return false;
+		}
+
+		for (int r = 0; r < matrix.length; r++) {
+			double[] thisRow = matrix[r];
+			double[] thatRow = that.matrix[r];
+
+			for (int c = 0; c < thisRow.length; c++) {
+				if (Math.abs(thisRow[c] - thatRow[c]) >= EPSILON) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		if (hashCode == null) {
+			Integer[] hashCodes = new Integer[matrix.length];
+
+			for (int r = 0; r < matrix.length; r++) {
+				hashCodes[r] = Arrays.hashCode(matrix[r]);
+			}
+
+			hashCode = Arrays.hashCode(hashCodes);
+		}
+
+		return hashCode.intValue();
+	}
+	
 	/**
 	 * Returns a String showing the contents of this Matrix.
 	 */
