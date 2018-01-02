@@ -9,8 +9,9 @@ public class TextUtil {
 	 */
     public static String byteToHex(byte b) {
         String hex = Integer.toHexString(b);
+
         if (hex.length() >= 2) {
-            return hex.substring(hex.length()-2);
+            return hex.substring(hex.length() - 2);
         }
 
         return String.format("0%s", hex);
@@ -30,10 +31,8 @@ public class TextUtil {
         StringBuilder buf = new StringBuilder();
         final int end = offset + length;
 
-        for (int i=offset; i < end; i++) {
-            byte b = data[i];
-            
-            buf.append(byteToHex(b));
+        for (int i = offset; i < end; i++) {
+            buf.append(byteToHex(data[i]));
         }
 
         return buf.toString();
@@ -46,7 +45,7 @@ public class TextUtil {
         String hex = Integer.toHexString(val);
 
         if (hex.length() >= 8) {
-            return hex.substring(hex.length()-8);
+            return hex.substring(hex.length() - 8);
         }
 
         return String.format("%8s", hex).replace(' ', '0');
