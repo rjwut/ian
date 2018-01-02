@@ -10,25 +10,25 @@ import java.util.Set;
  */
 public enum VesselAttribute {
 	// vessel class
-	PLAYER,
-	BASE,
-	FIGHTER,
-	SMALL,
-	MEDIUM,
-	LARGE,
+	BASE,			// immovable, allies can dock and resupply
+	CARRIER,		// can launch fighters
+	FIGHTER,		// launched from carriers
+	LARGE,			// large non-player vessel
+	MEDIUM,			// medium non-player vessel
+	PLAYER,			// player can control
+	SMALL,			// small non-player vessel
 
-	// civilian type
-	WARSHIP,
-	SCIENCE,
-	CARGO,
-	LUXURY,
-	TRANSPORT,
+	// friendly type
+	CARGO,			// unarmed
+	LUXURY,			// unarmed
+	SCIENCE,		// unarmed
+	TRANSPORT,		// unarmed
+	WARSHIP,		// armed, can assist players in combat
 
-	// behavior
-	CARRIER,
-	ASTEROIDEATER,
-	ANOMALYEATER,
-	SENTIENT;
+	// biomech traits
+	ANOMALYEATER,	// eats anomalies
+	ASTEROIDEATER,	// eats asteroids
+	SENTIENT;		// can respond to hails and calm the tribe
 
 	/**
 	 * Returns a Set containing the VesselAttributes that correspond to the
