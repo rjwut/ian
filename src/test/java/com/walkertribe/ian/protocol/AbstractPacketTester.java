@@ -2,7 +2,6 @@ package com.walkertribe.ian.protocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,13 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.util.TestUtil;
 
 /**
  * Abstract class that can be extended for testing individual packet types.
  */
 public abstract class AbstractPacketTester<T extends ArtemisPacket> {
-	// Are we running in debug mode?
-	private static final boolean DEBUG = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("jdwp") >= 0;
-
-	protected static final float EPSILON = 0.00000001f; // for float equality checks
+	protected static final float EPSILON = TestUtil.EPSILON;
 
 	/**
 	 * Invoked by AbstractPacketTester when it has successfully parsed the
@@ -35,7 +32,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 */
 	protected abstract void testPackets(List<T> packets);
 
-	private Debugger debugger = DEBUG ? new OutputStreamDebugger() : new BaseDebugger();
+	private Debugger debugger = TestUtil.DEBUG ? new OutputStreamDebugger() : new BaseDebugger();
 
 	/**
 	 * Loads the test packet file at the indicated path and reads the given
@@ -51,7 +48,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 			URL url = TestPacketFile.class.getResource(resourcePath);
 			TestPacketFile file = new TestPacketFile(url);
 
-			if (DEBUG) {
+			if (TestUtil.DEBUG) {
 				System.out.println("\n### " + resourcePath);
 			}
 
@@ -73,7 +70,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 			testPackets(list);
 
 			// Write packets back out
-			if (DEBUG) {
+			if (TestUtil.DEBUG) {
 				System.out.println("Writing packets...");
 			}
 
@@ -87,7 +84,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 			// Compare written bytes to originals
 			Assert.assertTrue(file.matches(baos));
 
-			if (DEBUG) {
+			if (TestUtil.DEBUG) {
 				System.out.println("Input and output bytes match");
 			}
 		} catch (IOException ex) {
