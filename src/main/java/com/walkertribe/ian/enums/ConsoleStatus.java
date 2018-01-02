@@ -5,7 +5,7 @@ package com.walkertribe.ian.enums;
  * @author rjwut
  */
 public enum ConsoleStatus {
-	AVAILABLE,   // you can claim this station
-	YOURS,       // you have already claimed this station
-	UNAVAILABLE; // you cannot claim this station
+	AVAILABLE,   // you can claim this console
+	YOURS,       // you have already claimed this console
+	UNAVAILABLE; // you cannot claim this console
 }

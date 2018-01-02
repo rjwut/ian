@@ -95,6 +95,9 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     	init(skt, connType);
     }
 
+    /**
+     * Invoked by constructors to perform common initialization.
+     */
     private void init(Socket skt, ConnectionType connType) throws IOException {
     	recvType = connType;
     	sendType = connType.opposite();

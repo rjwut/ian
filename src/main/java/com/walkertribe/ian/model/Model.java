@@ -73,6 +73,9 @@ public class Model {
 		this.dxsPaths = dxsPaths;
 	}
 
+	/**
+	 * Adds the given Vertexes and Polys to this Model.
+	 */
 	private void add(Map<String, Vertex> v, List<Poly> p) {
 		vertexMap.putAll(v);
 		polys.addAll(p);

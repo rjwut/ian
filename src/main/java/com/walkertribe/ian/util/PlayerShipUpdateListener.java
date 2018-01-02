@@ -8,11 +8,11 @@ import com.walkertribe.ian.world.ArtemisPlayer;
 /**
  * <p>
  * Convenience class for listening for updates to a particular player ship,
- * indicated by ship number. The ship numberis usually omitted from updates, but
- * the first update will always specify it. This class automates the tactic of
- * noting the ID of the ship with the given number, and using that to identify
- * the ship from then on. When an update for the specific ship is received, the
- * onShipUpdate() method is invoked.
+ * indicated by ship number. The ship number is usually omitted from updates,
+ * but the first update will always specify it. This class automates the
+ * tactic of noting the ID of the ship with the given number, and using that to
+ * identify the ship from then on. When an update for the specific ship is
+ * received, the onShipUpdate() method is invoked.
  * </p>
  * <p>
  * To use, extend the class and implement onShipUpdate(), then pass an instance
