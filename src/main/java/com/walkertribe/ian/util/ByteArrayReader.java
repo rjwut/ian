@@ -12,15 +12,14 @@ import java.util.Arrays;
  */
 public class ByteArrayReader {
 	/**
-	 * Reads the indicated number of bytes from the given InputStream wrapped by
-	 * this object and stores them in the provided buffer. This method blocks
-	 * until the desired number of bytes has been read or the stream closes.
+	 * Reads the indicated number of bytes from the given InputStream and
+	 * stores them in the provided buffer. This method blocks until the desired
+	 * number of bytes has been read or the stream closes.
 	 */
 	public static void readBytes(InputStream in, int byteCount, byte[] buffer)
 			throws InterruptedException, IOException {
-		if (byteCount > buffer.length) {
-			throw new IllegalArgumentException("Requested " + byteCount +
-					" byte(s) but buffer is only " + buffer.length + " byte(s)");
+		if (byteCount == 0) {
+			return;
 		}
 
 		int totalBytesRead = 0;
@@ -47,7 +46,7 @@ public class ByteArrayReader {
 	 * given byte array.
 	 */
 	public static int readShort(byte[] bytes, int offset) {
-		return (0xff & (bytes[offset + 1] << 8)) | (0xff & bytes[offset]);
+		return ((0xff & bytes[offset + 1]) << 8) | (0xff & bytes[offset]);
 	}
 
 	/**
@@ -75,6 +74,10 @@ public class ByteArrayReader {
 	 * array.
 	 */
 	public ByteArrayReader(byte[] bytes) {
+		if (bytes == null) {
+			throw new NullPointerException("Null byte array not allowed");
+		}
+
 		this.bytes = bytes;
 	}
 
@@ -97,6 +100,11 @@ public class ByteArrayReader {
 	 * Skips the indicated number of bytes.
 	 */
 	public void skip(int byteCount) {
+		if (byteCount < 0) {
+			throw new IllegalArgumentException("Can't move pointer backward");
+		}
+
+		checkOverflow(byteCount);
 		offset += byteCount;
 	}
 
@@ -111,6 +119,7 @@ public class ByteArrayReader {
 	 * Returns the next given number of bytes.
 	 */
 	public byte[] readBytes(int byteCount) {
+		checkOverflow(byteCount);
 		byte[] readBytes = Arrays.copyOfRange(bytes, offset, offset + byteCount);
 		offset += byteCount;
 		return readBytes;
@@ -118,15 +127,16 @@ public class ByteArrayReader {
 
 	/**
 	 * Reads the given number of bytes, then returns true if the first byte was
-	 * 1 and false otherwise.
+	 * non-zero and false otherwise. All remaining bytes are not considered.
 	 */
 	public boolean readBoolean(int byteCount) {
-		return readBytes(byteCount)[0] == 1;
+		return readBytes(byteCount)[0] != 0;
 	}
 
 	/**
 	 * Reads the given number of bytes, then returns BoolState.TRUE if the first
-	 * byte was 1 and BoolState.FALSE otherwise.
+	 * byte was non-zero and BoolState.FALSE otherwise. All remaining bytes are
+	 * not considered.
 	 */
 	public BoolState readBoolState(int byteCount) {
 		return BoolState.from(readBoolean(byteCount));
@@ -162,20 +172,21 @@ public class ByteArrayReader {
 	 * represent the bits it stores.
 	 */
 	public BitField readBitField(Enum<?>[] bits) {
+		checkOverflow(BitField.countBytes(bits.length));
 		BitField bitField = new BitField(bits, bytes, offset);
 		offset += bitField.getByteCount();
 		return bitField;
 	}
 
 	/**
-	 * Reads and returns a US ASCII encoded String().
+	 * Reads and returns a US ASCII encoded String.
 	 */
 	public String readUsAsciiString() {
 		return readString(Util.US_ASCII, 1, false);
 	}
 
 	/**
-	 * Reads and returns a UTF-16LE encoded String().
+	 * Reads and returns a UTF-16LE encoded String.
 	 */
 	public String readUtf16LeString() {
 		return readString(Util.UTF16LE, 2, true);
@@ -188,6 +199,7 @@ public class ByteArrayReader {
 	private String readString(Charset charset, int bytesPerChar, boolean nullTerminated) {
 		int charCount = readInt();
 		int byteCount = charCount * bytesPerChar;
+		checkOverflow(byteCount);
 		int nullLength = nullTerminated ? bytesPerChar : 0;
 		int endOffset = offset + byteCount - nullLength;
 		byte[] readBytes = Arrays.copyOfRange(bytes, offset, endOffset);
@@ -195,22 +207,30 @@ public class ByteArrayReader {
 		int i = 0;
 
 		// check for "early" null
-		for ( ; i < readBytes.length; i += bytesPerChar) {
-			boolean isNull = true;
+		if (nullTerminated) {
+			for ( ; i < readBytes.length; i += bytesPerChar) {
+				boolean isNull = true;
 
-			for (int j = 0; isNull && j < bytesPerChar; j++) {
-				isNull = readBytes[i + j] == 0;
+				for (int j = 0; isNull && j < bytesPerChar; j++) {
+					isNull = readBytes[i + j] == 0;
+				}
+
+				if (isNull) {
+					break;
+				}
 			}
 
-			if (isNull) {
-				break;
+			if (i != readBytes.length) {
+				readBytes = Arrays.copyOfRange(readBytes, 0, i);
 			}
-		}
-
-		if (i != readBytes.length) {
-			readBytes = Arrays.copyOfRange(readBytes, 0, i);
 		}
 
 		return new String(readBytes, charset);
+	}
+
+	private void checkOverflow(int byteCount) {
+		if (offset + byteCount > bytes.length) {
+			throw new ArrayIndexOutOfBoundsException("Can't move past end of byte array");
+		}
 	}
 }

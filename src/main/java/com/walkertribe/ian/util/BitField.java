@@ -19,7 +19,7 @@ public class BitField {
 	 * bits start at 0.
 	 */
 	public BitField(Enum<?>[] bits) {
-		this(bits.length);
+		this.bytes = new byte[countBytes(bits.length)];
 	}
 
 	/**
@@ -27,14 +27,7 @@ public class BitField {
 	 * stores the indicated bytes in it.
 	 */
 	public BitField(Enum<?>[] bits, byte[] bytes, int offset) {
-		this.bytes = Arrays.copyOfRange(bytes, offset, offset + countBytes(bits));
-	}
-
-	/**
-	 * Creates a BitField with the given number of bits. All bits start at 0.
-	 */
-	public BitField(int bitCount) {
-		this.bytes = new byte[countBytes(bitCount)];
+		this.bytes = Arrays.copyOfRange(bytes, offset, offset + countBytes(bits.length));
 	}
 
 	/**
@@ -114,14 +107,7 @@ public class BitField {
 	/**
 	 * Returns the number of bytes required to store the given number of bits in a BitField.
 	 */
-	private static int countBytes(int bitCount) {
+	public static int countBytes(int bitCount) {
 		return (bitCount + 7) / 8;
-	}
-
-	/**
-	 * Returns the number of bytes required to store the enumerated bits. 
-	 */
-	private static int countBytes(Enum<?>[] bits) {
-		return countBytes(bits.length);
 	}
 }
