@@ -15,6 +15,12 @@ public class EngSetAutoDamconPacketTest extends AbstractPacketTester<EngSetAutoD
 		execute("core/eng/EngSetAutoDamconPacket.txt", ConnectionType.CLIENT, 2);
 	}
 
+	@Test
+	public void testConstruct() {
+		Assert.assertTrue(new EngSetAutoDamconPacket(true).isAutonomous());
+		Assert.assertFalse(new EngSetAutoDamconPacket(false).isAutonomous());
+	}
+
 	@Override
 	protected void testPackets(List<EngSetAutoDamconPacket> packets) {
 		EngSetAutoDamconPacket pkt = packets.get(0);
