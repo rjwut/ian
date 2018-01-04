@@ -2,7 +2,6 @@ package com.walkertribe.ian.protocol.core;
 
 import com.walkertribe.ian.protocol.PacketType;
 import com.walkertribe.ian.util.JamCrc;
-import com.walkertribe.ian.util.TextUtil;
 
 /**
  * PacketType implementation for the core Artemis protocol.
