@@ -1,6 +1,6 @@
 package com.walkertribe.ian.enums;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.walkertribe.ian.util.Util;
@@ -34,7 +34,7 @@ public enum FactionAttribute {
 	 */
 	public static Set<FactionAttribute> build(String keys) {
 		String[] tokens = keys.split(" ");
-		Set<FactionAttribute> attrs = new HashSet<FactionAttribute>();
+		Set<FactionAttribute> attrs = new LinkedHashSet<FactionAttribute>();
 
 		for (String token : tokens) {
 			attrs.add(FactionAttribute.valueOf(token.toUpperCase()));
