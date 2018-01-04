@@ -1,6 +1,5 @@
 package com.walkertribe.ian.iface;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -98,11 +97,7 @@ public class ListenerMethod {
 		if (paramType.isAssignableFrom(clazz)) {
     		try {
 				method.invoke(object, arg);
-			} catch (IllegalAccessException ex) {
-				throw new RuntimeException(ex);
-			} catch (IllegalArgumentException ex) {
-				throw new RuntimeException(ex);
-			} catch (InvocationTargetException ex) {
+			} catch (ReflectiveOperationException ex) {
 				throw new RuntimeException(ex);
 			}
 		}
