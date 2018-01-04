@@ -192,7 +192,7 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
         private final GridCoord coord;
         private final float damage;
 
-        private GridDamage(GridCoord coord, float damage) {
+        GridDamage(GridCoord coord, float damage) {
             this.coord = coord;
             this.damage = damage;
         }
@@ -239,8 +239,8 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
         private GridCoord goal;
         private GridCoord pos;
         private float progress;
-        
-        public DamconStatus(int teamNumber, int members, int xGoal,
+
+        DamconStatus(int teamNumber, int members, int xGoal,
                 int yGoal, int zGoal, int x, int y, int z, float progress) {
             this.teamNumber = teamNumber;
             this.members = members;
