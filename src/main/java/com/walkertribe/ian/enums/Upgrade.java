@@ -58,7 +58,7 @@ public enum Upgrade {
 	 * Returns the Console that can activate this Upgrade, or null if the
 	 * Upgrade is used immediately when picked up.
 	 */
-	public Console getActivatedby() {
+	public Console getActivatedBy() {
 		return activatedBy;
 	}
 }

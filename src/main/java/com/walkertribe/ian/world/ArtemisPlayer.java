@@ -512,7 +512,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * Unspecified: -1
      */
     public byte getUpgrades(Upgrade upgrade) {
-    	if (upgrade.getActivatedby() == null) {
+    	if (upgrade.getActivatedBy() == null) {
     		throw new IllegalArgumentException(upgrade + " upgrades can't be stored on the ship");
     	}
 
@@ -520,7 +520,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     public void setUpgrades(Upgrade upgrade, byte count) {
-    	if (upgrade.getActivatedby() == null) {
+    	if (upgrade.getActivatedBy() == null) {
     		throw new IllegalArgumentException(upgrade + " upgrades can't be stored on the ship");
     	}
 
