@@ -35,6 +35,8 @@ public enum ObjectType {
 	CREATURE(15, true, ArtemisCreature.class, null),
 	DRONE(16, false, ArtemisDrone.class, "drone1");
 
+	static final float MODEL_SCALE = 0.05f;
+
 	public static ObjectType fromId(int id) {
 		if (id == 0) {
 			return null;
@@ -60,7 +62,7 @@ public enum ObjectType {
 		this.named = named;
 		this.objectClass = objectClass;
 		modelPath = modelName != null ? "dat/" + modelName + ".dxs" : null;
-		scale = modelName != null ? 0.05f : 0;
+		scale = modelName != null ? MODEL_SCALE : 0;
 	}
 
 	/**
