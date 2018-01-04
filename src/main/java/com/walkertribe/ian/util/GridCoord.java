@@ -110,15 +110,6 @@ public final class GridCoord implements Comparable<GridCoord> {
     }
 
     /**
-     * Return a unique long representing this coord.
-     *  It's super simple, but should work since our
-     *  coords tend to be 10 or less in any dimension
-     */
-    public long getUniqueId() {
-        return (x * 10000L) + (y * 100) + z;
-    }
-
-    /**
      * Sorts in z order, then x, then y.
      */
     @Override
