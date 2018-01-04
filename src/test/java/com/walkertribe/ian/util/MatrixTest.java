@@ -100,18 +100,20 @@ public class MatrixTest {
 	}
 
 	@Test
-	public void testEquals() {
-		Assert.assertTrue(POINT.equals(POINT));
-		Assert.assertFalse(POINT.equals(null));
-		Assert.assertFalse(POINT.equals(new Matrix(new double[][] {
-			new double[] { 1, 1, 1 }
-		})));
-		Assert.assertFalse(POINT.equals(new Matrix(new double[][] {
-			new double[] { 1, 1 },
-			new double[] { 1, 1 },
-			new double[] { 1, 1 }
-		})));
-		Assert.assertFalse(POINT.equals(new Matrix(1, 1, 1.1)));
+	public void testEqualsAndHashCode() {
+		TestUtil.testEqualsAndHashCode(
+				POINT,
+				new Matrix(1, 1, 1),
+				new Matrix(new double[][] {
+					new double[] { 1, 1, 1 }
+				}),
+				new Matrix(new double[][] {
+					new double[] { 1, 1 },
+					new double[] { 1, 1 },
+					new double[] { 1, 1 }
+				}),
+				new Matrix(1, 1, 1.1)
+		);
 	}
 
 	@Test

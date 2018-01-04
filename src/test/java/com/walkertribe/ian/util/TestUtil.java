@@ -4,6 +4,12 @@ import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import org.junit.Assert;
+import org.junit.Assume;
+
+import com.walkertribe.ian.Context;
+import com.walkertribe.ian.vesseldata.FilePathResolver;
+
 /**
  * Utility methods for testing. Code testing the source Util class is found in
  * the UtilTest class, not this one.
@@ -13,6 +19,39 @@ public class TestUtil {
 	// Are we running in debug mode?
 	public static final boolean DEBUG = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("jdwp") >= 0;
 	public static final float EPSILON = 0.00000001f; // for float equality checks
+
+	private static final String PROPERTY_INSTALL_PATH = "artemisInstallPath";
+
+	private static Context ctx;
+
+	/**
+	 * Returns a Context object if an Artemis install path is specified in the
+	 * VM arguments, or null if it has not.
+	 */
+	public static Context getContext() {
+		if (ctx == null) {
+			String installPath = System.getProperty(PROPERTY_INSTALL_PATH);
+
+			if (installPath != null) {
+				ctx = new Context(new FilePathResolver(installPath));
+			}
+		}
+
+		return ctx;
+	}
+
+	/**
+	 * Assumes that we have a context (Artemis install path specified in VM
+	 * arguments) and returns it if we do. If not, the test is ignored.
+	 */
+	public static Context assumeContext() {
+		Context ctx = getContext();
+		Assume.assumeTrue(
+				"No -D" + PROPERTY_INSTALL_PATH + " specified in VM arguments",
+				ctx != null
+		);
+		return ctx;
+	}
 
 	/**
 	 * EclEmma will highlight the package line of an enum as uncovered if
@@ -53,5 +92,56 @@ public class TestUtil {
 		} catch (IllegalArgumentException ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	/**
+	 * Performs a basic exercise of the equals() and hashCode() contracts for a
+	 * class. You must provide three or more objects of the same class. The
+	 * first (obj) is the test object. The second is an object which equals()
+	 * obj but isn't == to it. The rest are objects which are neither == nor
+	 * equals() to obj.
+	 */
+	public static <T> void testEqualsAndHashCode(T obj, T equal, T... notEqual) {
+		if (obj == null) {
+			throw new NullPointerException("Must specify obj");
+		}
+
+		if (equal == null) {
+			throw new NullPointerException("Must specify equal");
+		}
+
+		if (notEqual == null || notEqual.length == 0) {
+			throw new NullPointerException("Must specify notEqual");
+		}
+
+		if (obj == equal) {
+			throw new IllegalArgumentException("obj == equal not allowed (it must be equal() but !=)");
+		}
+
+		for (T ne : notEqual) {
+			if (ne == null) {
+				throw new NullPointerException("Can't give a null notEqual value");
+			}
+
+			if (obj == ne) {
+				throw new IllegalArgumentException("Can't give a notEqual value that == obj");
+			}
+
+			if (equal == ne) {
+				throw new IllegalArgumentException("Can't give a notEqual value that == equal");
+			}
+		}
+
+		Assert.assertEquals(obj, obj);
+		Assert.assertNotEquals(obj, null);
+		Assert.assertNotEquals(obj, "foo");
+		Assert.assertEquals(obj, equal);
+
+		for (T ne : notEqual) {
+			Assert.assertNotEquals(obj, ne);
+		}
+
+		Assert.assertEquals(obj.hashCode(), obj.hashCode());
+		Assert.assertEquals(obj.hashCode(), equal.hashCode());
 	}
 }

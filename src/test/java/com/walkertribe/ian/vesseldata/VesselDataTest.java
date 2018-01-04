@@ -5,22 +5,20 @@ import static org.junit.Assert.*;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.FactionAttribute;
 import com.walkertribe.ian.enums.VesselAttribute;
+import com.walkertribe.ian.util.TestUtil;
 
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class VesselDataTest {
-	private static final String PROPERTY_INSTALL_PATH = "artemisInstallPath";
 	private static VesselData vesselData;
 
 	@BeforeClass
 	public static void beforeClass() {
-		String installPath = System.getProperty(PROPERTY_INSTALL_PATH);
+		Context ctx = TestUtil.getContext();
 
-		if (installPath != null) {
-			Context ctx = new Context(new FilePathResolver(installPath));
+		if (ctx != null) {
 			vesselData = ctx.getVesselData();
 			vesselData.preloadInternals();
 			vesselData.preloadModels();
@@ -29,10 +27,7 @@ public class VesselDataTest {
 
 	@Before
 	public void before() {
-		Assume.assumeTrue(
-				"No -D" + PROPERTY_INSTALL_PATH + " specified in VM arguments",
-				vesselData != null
-		);
+		TestUtil.assumeContext();
 	}
 
 	@Test

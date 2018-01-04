@@ -169,10 +169,7 @@ public class VersionTest {
 	}
 
 	@Test
-	public void testEquals() {
-		Assert.assertEquals(V1_0, V1_0);
-		Assert.assertNotEquals(V1_0, "foo");
-		Assert.assertEquals(V1_0, new Version("1.0"));
-		Assert.assertNotEquals(V1_0, V2_0);
+	public void testEqualsAndHashCode() {
+		TestUtil.testEqualsAndHashCode(V1_0, new Version("1.0"), V2_0);
 	}
 }
