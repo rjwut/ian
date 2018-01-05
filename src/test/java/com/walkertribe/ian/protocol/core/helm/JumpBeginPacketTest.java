@@ -8,19 +8,19 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
-public class HelmRequestDockPacketTest extends AbstractPacketTester<HelmRequestDockPacket> {
+public class JumpBeginPacketTest extends AbstractPacketTester<JumpBeginPacket> {
 	@Test
 	public void test() {
-		execute("core/helm/HelmRequestDockPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/helm/JumpBeginPacket.txt", ConnectionType.SERVER, 1);
 	}
 
 	@Test
 	public void testConstruct() {
-		new HelmRequestDockPacket();
+		new JumpBeginPacket();
 	}
 
 	@Override
-	protected void testPackets(List<HelmRequestDockPacket> packets) {
-		Assert.assertNotNull(packets.get(0));
+	protected void testPackets(List<JumpBeginPacket> packets) {
+		Assert.assertEquals(1, packets.size());
 	}
 }

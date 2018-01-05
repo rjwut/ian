@@ -14,6 +14,22 @@ public class HelmSetSteeringPacketTest extends AbstractPacketTester<HelmSetSteer
 		execute("core/helm/HelmSetSteeringPacket.txt", ConnectionType.CLIENT, 2);
 	}
 
+	@Test
+	public void testConstruct() {
+		Assert.assertEquals(0.0f, new HelmSetSteeringPacket(0.0f).getSteering(), EPSILON);
+		Assert.assertEquals(1.0f, new HelmSetSteeringPacket(1.0f).getSteering(), EPSILON);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructTooHardPort() {
+		new HelmSetSteeringPacket(-0.01f);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructTooHardStarboard() {
+		new HelmSetSteeringPacket(1.01f);
+	}
+
 	@Override
 	protected void testPackets(List<HelmSetSteeringPacket> packets) {
 		HelmSetSteeringPacket pkt = packets.get(0);

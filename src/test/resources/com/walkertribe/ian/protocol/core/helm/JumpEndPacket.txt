@@ -1,0 +1,6 @@
+efbeadde          // header
+1c000000          // packet length = 28 
+01000000          // origin = server
+00000000          // padding
+08000000          // remaining length = 8
+fec854f7 0d000000 // JumpEndPacket

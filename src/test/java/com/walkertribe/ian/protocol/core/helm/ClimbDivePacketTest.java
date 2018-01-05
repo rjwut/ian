@@ -14,6 +14,12 @@ public class ClimbDivePacketTest extends AbstractPacketTester<ClimbDivePacket> {
 		execute("core/helm/ClimbDivePacket.txt", ConnectionType.CLIENT, 2);
 	}
 
+	@Test
+	public void testConstruct() {
+		Assert.assertTrue(new ClimbDivePacket(true).isUp());
+		Assert.assertFalse(new ClimbDivePacket(false).isUp());
+	}
+
 	@Override
 	protected void testPackets(List<ClimbDivePacket> packets) {
 		Assert.assertTrue(packets.get(0).isUp());

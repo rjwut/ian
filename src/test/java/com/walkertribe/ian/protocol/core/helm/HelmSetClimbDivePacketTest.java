@@ -14,6 +14,23 @@ public class HelmSetClimbDivePacketTest extends AbstractPacketTester<HelmSetClim
 		execute("core/helm/HelmSetClimbDivePacket.txt", ConnectionType.CLIENT, 3);
 	}
 
+	@Test
+	public void testConstruct() {
+		Assert.assertEquals(-1.0f, new HelmSetClimbDivePacket(-1.0f).getPitch(), EPSILON);
+		Assert.assertEquals(0.0f, new HelmSetClimbDivePacket(0.0f).getPitch(), EPSILON);
+		Assert.assertEquals(1.0f, new HelmSetClimbDivePacket(1.0f).getPitch(), EPSILON);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructPastMaxClimb() {
+		new HelmSetClimbDivePacket(-1.01f);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructPastMaxDive() {
+		new HelmSetClimbDivePacket(1.01f);
+	}
+
 	@Override
 	protected void testPackets(List<HelmSetClimbDivePacket> packets) {
 		HelmSetClimbDivePacket pkt = packets.get(0);
