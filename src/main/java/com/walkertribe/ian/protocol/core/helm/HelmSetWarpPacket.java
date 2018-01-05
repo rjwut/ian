@@ -37,12 +37,19 @@ public class HelmSetWarpPacket extends ValueIntPacket {
         super(SubType.WARP, warp);
 
         if (warp < 0 || warp > Artemis.MAX_WARP) {
-        	throw new IndexOutOfBoundsException("Warp speed out of range");
+        	throw new IllegalArgumentException("Warp speed out of range");
         }
     }
 
     private HelmSetWarpPacket(PacketReader reader) {
         super(SubType.WARP, reader);
+    }
+
+    /**
+     * Returns the desired warp factor.
+     */
+    public int getWarpFactor() {
+    	return mArg;
     }
 
     @Override
