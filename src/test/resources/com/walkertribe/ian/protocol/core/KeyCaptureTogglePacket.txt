@@ -1,0 +1,15 @@
+efbeadde          // header
+1d000000          // packet length = 29
+01000000          // origin = server
+00000000          // padding
+09000000          // remaining length = 9
+fec854f7 11000000 // KeyCaptureTogglePacket
+01                // capture = true
+
+efbeadde          // header
+1d000000          // packet length = 29
+01000000          // origin = server
+00000000          // padding
+09000000          // remaining length = 9
+fec854f7 11000000 // KeyCaptureTogglePacket
+00                // capture = false

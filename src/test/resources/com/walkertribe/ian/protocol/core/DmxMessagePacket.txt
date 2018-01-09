@@ -1,0 +1,19 @@
+efbeadde          // header
+30000000          // packet length = 48
+01000000          // origin = server
+00000000          // padding
+1c000000          // remaining length = 28
+fec854f7 10000000 // DmxMessagePacket
+06000000          // string length = 6
+74 00 65 00 73 00 74 00 31 00 00 00 // test1
+01000000          // state = on
+
+efbeadde          // header
+30000000          // packet length = 48
+01000000          // origin = server
+00000000          // padding
+1c000000          // remaining length = 28
+fec854f7 10000000 // DmxMessagePacket
+06000000          // string length = 6
+74 00 65 00 73 00 74 00 32 00 00 00 // test2
+00000000          // state = off

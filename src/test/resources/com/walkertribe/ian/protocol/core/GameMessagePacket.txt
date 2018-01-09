@@ -1,0 +1,9 @@
+efbeadde          // header
+28000000          // packet length = 40
+01000000          // origin = server
+00000000          // padding
+14000000          // remaining length = 20
+fec854f7 0a000000 // GameMessagePacket
+04000000          // string length = 4
+
+48 00 69 00 21 00 00 00 // Hi!

@@ -1,7 +1,6 @@
 package com.walkertribe.ian.protocol.core.weap;
 
 import com.walkertribe.ian.enums.BeamFrequency;
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -14,8 +13,7 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
  */
 public class SetBeamFreqPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.SET_BEAM_FREQUENCY,
-				new PacketFactory() {
+		register(registry, SubType.SET_BEAM_FREQUENCY, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return SetBeamFreqPacket.class;

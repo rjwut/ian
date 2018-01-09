@@ -1,7 +1,6 @@
 package com.walkertribe.ian.protocol.core.setup;
 
 import com.walkertribe.ian.Context;
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
@@ -9,9 +8,7 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
-import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.world.Artemis;
 
@@ -19,12 +16,9 @@ import com.walkertribe.ian.world.Artemis;
  * Sent by the server to update the names, types and drives for each ship.
  * @author dhleong
  */
-public class AllShipSettingsPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
-    private static final byte MSG_TYPE = 0x0f;
-    
+public class AllShipSettingsPacket extends SimpleEventPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, MSG_TYPE, new PacketFactory() {
+		register(registry, SubType.SHIP_SETTINGS, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return AllShipSettingsPacket.class;
@@ -88,10 +82,9 @@ public class AllShipSettingsPacket extends BaseArtemisPacket {
 	private final Ship[] mShips;
 
     private AllShipSettingsPacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
+        super(SubType.SHIP_SETTINGS, reader);
         mShips = new Ship[Artemis.SHIP_COUNT];
-        reader.skip(4); // subtype
-        
+
         for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
         	DriveType drive = DriveType.values()[reader.readInt()];
         	int shipType = reader.readInt();
@@ -103,7 +96,7 @@ public class AllShipSettingsPacket extends BaseArtemisPacket {
     }
 
     public AllShipSettingsPacket(Ship[] ships) {
-        super(ConnectionType.SERVER, TYPE);
+        super(SubType.SHIP_SETTINGS);
 
         if (ships.length != Artemis.SHIP_COUNT) {
         	throw new IllegalArgumentException(
@@ -138,7 +131,7 @@ public class AllShipSettingsPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(MSG_TYPE);
+		super.writePayload(writer);
 
 		for (Ship ship : mShips) {
 			writer.writeInt(ship.mDrive.ordinal());

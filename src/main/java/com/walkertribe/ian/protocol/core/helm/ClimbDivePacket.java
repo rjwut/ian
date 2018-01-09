@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.helm;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -17,8 +16,7 @@ public class ClimbDivePacket extends ValueIntPacket {
     private static final int DOWN = 1;
 
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.CLIMB_DIVE,
-				new PacketFactory() {
+		register(registry, SubType.CLIMB_DIVE, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return ClimbDivePacket.class;

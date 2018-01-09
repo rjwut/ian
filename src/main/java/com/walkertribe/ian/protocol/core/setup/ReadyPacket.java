@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -19,8 +18,7 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
  */
 public class ReadyPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.READY,
-				new PacketFactory() {
+		register(registry, SubType.READY, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return ReadyPacket.class;

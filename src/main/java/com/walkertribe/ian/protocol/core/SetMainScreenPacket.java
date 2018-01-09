@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.MainScreenView;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
@@ -9,13 +8,12 @@ import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 
 /**
- * Set what to show on the MainScreen
+ * Set what to show on the main screen.
  * @author dhleong
  */
 public class SetMainScreenPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.MAIN_SCREEN,
-				new PacketFactory() {
+		register(registry, SubType.MAIN_SCREEN, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return SetMainScreenPacket.class;
@@ -42,6 +40,13 @@ public class SetMainScreenPacket extends ValueIntPacket {
 
     private SetMainScreenPacket(PacketReader reader) {
     	super(SubType.MAIN_SCREEN, reader);
+    }
+
+    /**
+     * Returns the requested MainScreenView.
+     */
+    public MainScreenView getView() {
+    	return MainScreenView.values()[mArg];
     }
 
     @Override

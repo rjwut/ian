@@ -19,7 +19,7 @@ public abstract class ValueIntPacket extends BaseArtemisPacket {
      * VALUE_INT client packet subtypes.
      * The order of these enum values matters! Do not reorder!
      */
-    protected enum SubType {
+    public enum SubType {
     	WARP,                    // 00
     	MAIN_SCREEN,             // 01
     	SET_TARGET,              // 02
@@ -91,8 +91,8 @@ public abstract class ValueIntPacket extends BaseArtemisPacket {
     /**
      * Convenience method for coercing the SubType enum to a byte.
      */
-    protected static void register(PacketFactoryRegistry registry, ConnectionType connType, SubType subType,
+    protected static void register(PacketFactoryRegistry registry, SubType subType,
     		PacketFactory factory) {
-    	registry.register(connType, TYPE, (byte) subType.ordinal(), factory);
+    	registry.register(ConnectionType.CLIENT, TYPE, (byte) subType.ordinal(), factory);
     }
 }

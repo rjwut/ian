@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -14,8 +13,7 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 public class CaptainSelectPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.CAPTAIN_SELECT,
-				new PacketFactory() {
+		register(registry, SubType.CAPTAIN_SELECT, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return CaptainSelectPacket.class;
@@ -40,8 +38,20 @@ public class CaptainSelectPacket extends ValueIntPacket {
     	super(SubType.CAPTAIN_SELECT, reader);
     }
 
+    /**
+     * Returns the ID of the selected target, or 1 if the previous target was
+     * deselected.
+     */
+    public int getTargetId() {
+    	return mArg;
+    }
+
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append('#').append(mArg);
+    	if (mArg == 1) {
+    		b.append("no target");
+    	} else {
+    		b.append('#').append(mArg);
+    	}
 	}
 }

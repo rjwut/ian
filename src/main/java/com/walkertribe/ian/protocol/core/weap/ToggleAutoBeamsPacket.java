@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.weap;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -14,8 +13,7 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
  */
 public class ToggleAutoBeamsPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.TOGGLE_AUTO_BEAMS,
-				new PacketFactory() {
+		register(registry, SubType.TOGGLE_AUTO_BEAMS, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return ToggleAutoBeamsPacket.class;

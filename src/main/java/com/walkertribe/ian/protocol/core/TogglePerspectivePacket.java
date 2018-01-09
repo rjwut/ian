@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -15,8 +14,7 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  */
 public class TogglePerspectivePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.TOGGLE_PERSPECTIVE,
-				new PacketFactory() {
+		register(registry, SubType.TOGGLE_PERSPECTIVE, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return TogglePerspectivePacket.class;

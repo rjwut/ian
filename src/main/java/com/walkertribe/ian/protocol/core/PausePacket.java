@@ -1,23 +1,16 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
 import com.walkertribe.ian.util.BoolState;
 
-public class PausePacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
-    private static final byte MSG_TYPE = 0x04;
-
+public class PausePacket extends SimpleEventPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, MSG_TYPE,
-				new PacketFactory() {
+		register(registry, SubType.PAUSE, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return PausePacket.class;
@@ -34,13 +27,12 @@ public class PausePacket extends BaseArtemisPacket {
     private final BoolState mPaused;
     
     private PausePacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
-        reader.skip(4); // subtype
+        super(SubType.PAUSE, reader);
         mPaused = reader.readBool(4);
     }
 
     public PausePacket(boolean paused) {
-        super(ConnectionType.SERVER, TYPE);
+        super(SubType.PAUSE);
     	mPaused = BoolState.from(paused);
     }
 
@@ -50,7 +42,8 @@ public class PausePacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(MSG_TYPE).writeInt(BoolState.safeValue(mPaused) ? 1 : 0);
+		super.writePayload(writer);
+		writer.writeInt(BoolState.safeValue(mPaused) ? 1 : 0);
 	}
 
 	@Override

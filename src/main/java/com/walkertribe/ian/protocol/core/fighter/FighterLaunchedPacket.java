@@ -1,27 +1,20 @@
 package com.walkertribe.ian.protocol.core.fighter;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
-import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket;
 
 /**
  * Notifies the client that a fighter has been launched.
  * @author rjwut
  */
-public class FighterLaunchedPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
-    private static final byte MSG_TYPE = 0x17;
-
+public class FighterLaunchedPacket extends SimpleEventPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, MSG_TYPE,
-				new PacketFactory() {
+		register(registry, SubType.FIGHTER_LAUNCHED, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return FighterLaunchedPacket.class;
@@ -38,13 +31,12 @@ public class FighterLaunchedPacket extends BaseArtemisPacket {
     private final int mObjectId;
 
     private FighterLaunchedPacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
-        reader.skip(4); // subtype
+        super(SubType.FIGHTER_LAUNCHED, reader);
         mObjectId = reader.readInt();
     }
 
     public FighterLaunchedPacket(int objectId) {
-        super(ConnectionType.SERVER, TYPE);
+        super(SubType.FIGHTER_LAUNCHED);
     	mObjectId = objectId;
     }
 
@@ -54,7 +46,8 @@ public class FighterLaunchedPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(MSG_TYPE).writeInt(mObjectId);
+		super.writePayload(writer);
+		writer.writeInt(mObjectId);
 	}
 
 	@Override

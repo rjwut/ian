@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.iface.PacketFactory;
@@ -18,8 +17,7 @@ import com.walkertribe.ian.vesseldata.Vessel;
  */
 public class SetShipSettingsPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.SHIP_SETUP,
-				new PacketFactory() {
+		register(registry, SubType.SHIP_SETUP, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return SetShipSettingsPacket.class;

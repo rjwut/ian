@@ -1,0 +1,15 @@
+efbeadde          // header
+42000000          // packet length = 66
+01000000          // origin = server
+00000000          // padding
+2e000000          // remaining length = 46
+fec854f7 15000000 // GameOverStats
+
+01                                     // column = 1
+00                                     // array row
+07000000                               // value = 7
+04000000 48 00 69 00 21 00 00 00       // Hi!
+00                                     // array row
+04000000                               // value = 4
+05000000 42 00 79 00 65 00 21 00 00 00 // Bye!
+ce                                     // array end

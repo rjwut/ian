@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.gm;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -16,8 +15,7 @@ import com.walkertribe.ian.util.JamCrc;
  */
 public class GameMasterButtonClickPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.GM_BUTTON_CLICK,
-				new PacketFactory() {
+		register(registry, SubType.GM_BUTTON_CLICK, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return GameMasterButtonClickPacket.class;

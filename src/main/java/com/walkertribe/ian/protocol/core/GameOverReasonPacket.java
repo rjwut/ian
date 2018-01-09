@@ -4,23 +4,16 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
 
-public class GameOverReasonPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
-    private static final byte MSG_TYPE = 0x14;
-
+public class GameOverReasonPacket extends SimpleEventPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, MSG_TYPE,
-				new PacketFactory() {
+		register(registry, SubType.GAME_OVER_REASON, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return GameOverReasonPacket.class;
@@ -37,8 +30,7 @@ public class GameOverReasonPacket extends BaseArtemisPacket {
 	private List<String> mText;
 
 	private GameOverReasonPacket(PacketReader reader) {
-    	super(ConnectionType.SERVER, TYPE);
-        reader.skip(4); // subtype
+    	super(SubType.GAME_OVER_REASON, reader);
         mText = new LinkedList<String>();
 
         while (reader.hasMore()) {
@@ -47,7 +39,18 @@ public class GameOverReasonPacket extends BaseArtemisPacket {
     }
 
     public GameOverReasonPacket(String... text) {
-    	super(ConnectionType.SERVER, TYPE);
+    	super(SubType.GAME_OVER_REASON);
+
+    	if (text.length == 0) {
+    		throw new IllegalArgumentException("You must provide a reason");
+    	}
+
+    	for (String line : text) {
+    		if (line == null || line.length() == 0) {
+    			throw new IllegalArgumentException("No blank lines allowed");
+    		}
+    	}
+
     	mText = Arrays.asList(text);
     }
 
@@ -61,7 +64,7 @@ public class GameOverReasonPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(MSG_TYPE);
+		super.writePayload(writer);
 
 		for (String line : mText) {
 			writer.writeString(line);

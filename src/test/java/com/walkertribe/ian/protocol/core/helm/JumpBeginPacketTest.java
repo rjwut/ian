@@ -21,6 +21,6 @@ public class JumpBeginPacketTest extends AbstractPacketTester<JumpBeginPacket> {
 
 	@Override
 	protected void testPackets(List<JumpBeginPacket> packets) {
-		Assert.assertEquals(1, packets.size());
+		Assert.assertNotNull(packets.get(0));
 	}
 }

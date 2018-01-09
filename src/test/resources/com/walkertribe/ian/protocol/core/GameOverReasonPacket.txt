@@ -1,0 +1,9 @@
+efbeadde          // header
+36000000          // packet length = 54
+01000000          // origin = server
+00000000          // padding
+22000000          // remaining length = 34
+fec854f7 14000000 // GameOverReason
+
+04000000 48 00 69 00 21 00 00 00 // Hi!
+05000000 42 00 79 00 65 00 21 00 00 00 // Bye!

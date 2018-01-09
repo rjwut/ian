@@ -1,7 +1,6 @@
 package com.walkertribe.ian.protocol.core.setup;
 
 import com.walkertribe.ian.enums.Console;
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -16,8 +15,7 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
  */
 public class SetConsolePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.SET_CONSOLE,
-				new PacketFactory() {
+		register(registry, SubType.SET_CONSOLE, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return SetConsolePacket.class;

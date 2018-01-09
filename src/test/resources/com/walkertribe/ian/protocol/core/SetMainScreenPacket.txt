@@ -1,0 +1,7 @@
+efbeadde          // header
+20000000          // packet length = 32
+02000000          // origin = client
+00000000          // padding
+0c000000          // remaining length = 12
+3c1d824c 01000000 // SetMainScreenPacket
+05000000          // view = long range

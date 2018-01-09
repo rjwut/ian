@@ -1,0 +1,7 @@
+efbeadde          // header
+24000000          // packet length = 36
+01000000          // origin = server
+00000000          // padding
+10000000          // remaining length = 16
+fec854f7 05000000 // PlayerShipDamagePacket
+00000000 00000000 // unknown

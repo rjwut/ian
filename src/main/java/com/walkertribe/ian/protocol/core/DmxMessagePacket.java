@@ -1,22 +1,15 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
 
-public class DmxMessagePacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.SIMPLE_EVENT;
-    private static final byte MSG_TYPE = 0x10;
-
+public class DmxMessagePacket extends SimpleEventPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, MSG_TYPE,
-				new PacketFactory() {
+		register(registry, SubType.DMX_MESSAGE, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return DmxMessagePacket.class;
@@ -34,14 +27,18 @@ public class DmxMessagePacket extends BaseArtemisPacket {
     private final boolean mOn;
 
     private DmxMessagePacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
-        reader.skip(4); // subtype
+        super(SubType.DMX_MESSAGE, reader);
         mName = reader.readString();
         mOn = reader.readInt() == 1;
     }
 
     public DmxMessagePacket(String name, boolean on) {
-        super(ConnectionType.SERVER, TYPE);
+        super(SubType.DMX_MESSAGE);
+
+        if (name == null || name.length() == 0) {
+        	throw new IllegalArgumentException("You must provide a name");
+        }
+
         mName = name;
         mOn = on;
     }
@@ -49,7 +46,7 @@ public class DmxMessagePacket extends BaseArtemisPacket {
     /**
      * The name of the DMX flag.
      */
-    public String getMessage() {
+    public String getName() {
         return mName;
     }
 
@@ -62,7 +59,8 @@ public class DmxMessagePacket extends BaseArtemisPacket {
 
     @Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(MSG_TYPE).writeString(mName).writeInt(mOn ? 1 : 0);
+    	super.writePayload(writer);
+		writer.writeString(mName).writeInt(mOn ? 1 : 0);
 	}
 
 	@Override

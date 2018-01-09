@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -16,8 +15,7 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  */
 public class KeystrokePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.KEYSTROKE,
-				new PacketFactory() {
+		register(registry, SubType.KEYSTROKE, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return KeystrokePacket.class;

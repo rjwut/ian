@@ -1,0 +1,15 @@
+efbeadde          // header
+20000000          // packet length = 32
+01000000          // origin = server
+00000000          // padding
+0c000000          // remaining length = 12
+fec854f7 04000000 // PausePacket
+01000000          // paused = true
+
+efbeadde          // header
+20000000          // packet length = 32
+01000000          // origin = server
+00000000          // padding
+0c000000          // remaining length = 12
+fec854f7 04000000 // PausePacket
+00000000          // paused = false

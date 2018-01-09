@@ -1,0 +1,6 @@
+efbeadde // header
+18000000 // packet length = 24
+01000000 // origin = server
+00000000 // padding
+04000000 // remaining length = 4
+261282f5 // HeartbeatPacket

@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.weap;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -15,8 +14,7 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 public class SetWeaponsTargetPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.SET_TARGET,
-				new PacketFactory() {
+		register(registry, SubType.SET_TARGET, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return SetWeaponsTargetPacket.class;

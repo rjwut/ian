@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.helm;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -16,8 +15,7 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
  */
 public class HelmRequestDockPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.REQUEST_DOCK,
-				new PacketFactory() {
+		register(registry, SubType.REQUEST_DOCK, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return HelmRequestDockPacket.class;

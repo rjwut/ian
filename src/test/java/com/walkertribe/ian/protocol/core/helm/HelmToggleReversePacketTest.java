@@ -21,6 +21,6 @@ public class HelmToggleReversePacketTest extends AbstractPacketTester<HelmToggle
 
 	@Override
 	protected void testPackets(List<HelmToggleReversePacket> packets) {
-		Assert.assertEquals(1, packets.size());
+		Assert.assertNotNull(packets.get(0));
 	}
 }

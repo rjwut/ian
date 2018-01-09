@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.sci;
 
-import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
@@ -14,8 +13,7 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 public class SciSelectPacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SubType.SCIENCE_SELECT,
-				new PacketFactory() {
+		register(registry, SubType.SCIENCE_SELECT, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return SciSelectPacket.class;
