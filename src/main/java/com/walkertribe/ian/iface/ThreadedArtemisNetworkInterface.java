@@ -19,6 +19,7 @@ import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.Protocol;
+import com.walkertribe.ian.protocol.core.HeartbeatPacket;
 import com.walkertribe.ian.protocol.core.setup.VersionPacket;
 import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
 import com.walkertribe.ian.util.Version;
@@ -39,6 +40,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     private Exception exception;
     private Debugger mDebugger = new BaseDebugger();
     private List<ArtemisNetworkInterface> proxyTargets = new LinkedList<ArtemisNetworkInterface>();
+    private Long lastHeartbeatTimestamp = null;
 
     /**
      * Prepares an outgoing client connection to an Artemis server. The send and
@@ -173,6 +175,16 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
         mSendThread.end();
     }
 
+    /**
+     * Returns the number of milliseconds since the last heartbeat packet was
+     * received (or since the connection was established if no heartbeat packet
+     * has yet been received). If the interface is not connected,
+     * getLastHearbeat() returns null.
+     */
+    public Long getLastHeartbeat() {
+    	return lastHeartbeatTimestamp == null ? null : System.currentTimeMillis() - lastHeartbeatTimestamp.longValue();
+    }
+
 
     /**
 	 * Manages sending packets to the OutputStream.
@@ -237,6 +249,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             }
 
             mConnected = false;
+            mInterface.lastHeartbeatTimestamp = null;
             mInterface.stop();
             
             // Close the socket here; this will allow us to send any closing
@@ -267,6 +280,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
         public void onPacket(final WelcomePacket pkt) {
             final boolean wasConnected = mConnected;
             mConnected = true;
+        	mInterface.lastHeartbeatTimestamp = System.currentTimeMillis();
 
             if (!wasConnected) {
             	mInterface.mListeners.fire(new ConnectionSuccessEvent());
@@ -328,11 +342,13 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                     final ArtemisPacket pkt = result.getPacket();
 
                     if (mRunning) {
-                    	// Handle WelcomePacket and VersionPacket specially
+                    	// Handle certain packets specially
                     	if (pkt instanceof WelcomePacket) {
                     		sender.onPacket((WelcomePacket) pkt);
                     	} else if (pkt instanceof VersionPacket) {
                     		sender.onPacket((VersionPacket) pkt);
+                    	} else if (pkt instanceof HeartbeatPacket) {
+                    		lastHeartbeatTimestamp = Long.valueOf(System.currentTimeMillis());
                     	}
 
                     	// Notify listeners

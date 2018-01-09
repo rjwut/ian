@@ -3,6 +3,8 @@ package com.walkertribe.ian.iface;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -29,6 +31,14 @@ import com.walkertribe.ian.util.Version;
  * @author rjwut
  */
 public class PacketReader {
+	private static final Set<Integer> REQUIRED_PACKET_TYPES = new HashSet<Integer>();
+
+	static {
+		REQUIRED_PACKET_TYPES.add(CorePacketType.PLAIN_TEXT_GREETING.getHash());
+		REQUIRED_PACKET_TYPES.add(CorePacketType.CONNECTED.getHash());
+		REQUIRED_PACKET_TYPES.add(CorePacketType.HEARTBEAT.getHash());
+	}
+
 	private Context ctx;
 	private ConnectionType connType;
 	private InputStream in;
@@ -207,10 +217,9 @@ public class PacketReader {
 			}
 		}
 
-		// IAN needs to parse the WelcomePacket and VersionPacket, even if the
-		// client isn't interested in them.
-		boolean required = packetType == CorePacketType.PLAIN_TEXT_GREETING.getHash() ||
-				packetType == CorePacketType.CONNECTED.getHash();
+		// IAN wants certain packet types even if the code consuming IAN isn't
+		// interested in them.
+		boolean required = REQUIRED_PACKET_TYPES.contains(Integer.valueOf(packetType));
 
 		if (required || result.isInteresting()) {
 			// We need this packet
