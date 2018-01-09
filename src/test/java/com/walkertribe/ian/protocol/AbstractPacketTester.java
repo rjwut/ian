@@ -46,7 +46,14 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 		try {
 			// Load test packet file
 			URL url = TestPacketFile.class.getResource(resourcePath);
-			TestPacketFile file = new TestPacketFile(url);
+			TestPacketFile file = null;
+
+			try {
+				file = new TestPacketFile(url);
+			} catch (NullPointerException ex) {
+				// Test packet file now found
+				Assert.fail("Test packet file not found: " + resourcePath);
+			}
 
 			if (TestUtil.DEBUG) {
 				System.out.println("\n### " + resourcePath);
