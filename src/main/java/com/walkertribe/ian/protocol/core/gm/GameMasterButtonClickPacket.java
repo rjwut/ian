@@ -8,6 +8,7 @@ import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.util.JamCrc;
+import com.walkertribe.ian.util.TextUtil;
 
 /**
  * Sent by the client whenever the game master clicks a custom on-screen button.
@@ -72,6 +73,6 @@ public class GameMasterButtonClickPacket extends ValueIntPacket {
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append("hash=").append(mArg);
+		b.append("hash=").append(TextUtil.intToHexLE(mArg));
 	}
 }
