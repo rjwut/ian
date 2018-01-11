@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -55,9 +54,7 @@ public abstract class AbstractProtocol implements Protocol {
 				method.invoke(null, registry);
 			} catch (IllegalArgumentException ex) {
 				throw new RuntimeException(ex);
-			} catch (IllegalAccessException ex) {
-				throw new RuntimeException(ex);
-			} catch (InvocationTargetException ex) {
+			} catch (ReflectiveOperationException ex) {
 				throw new RuntimeException(ex);
 			}
 		}
