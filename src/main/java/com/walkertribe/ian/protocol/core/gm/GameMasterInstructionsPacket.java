@@ -17,7 +17,7 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
  * @author rjwut
  */
 public class GameMasterInstructionsPacket extends BaseArtemisPacket {
-	private static final PacketType TYPE = CorePacketType.GM_BUTTON;
+	private static final PacketType TYPE = CorePacketType.GM_TEXT;
 	private static final byte SUBTYPE = 0x63;
 
 	public static void register(PacketFactoryRegistry registry) {
