@@ -220,11 +220,10 @@ public class PacketReader {
 		// IAN wants certain packet types even if the code consuming IAN isn't
 		// interested in them.
 		boolean required = REQUIRED_PACKET_TYPES.contains(Integer.valueOf(packetType));
+		payload = new ByteArrayReader(payloadBytes);
 
 		if (required || result.isInteresting()) {
 			// We need this packet
-			payload = new ByteArrayReader(payloadBytes);
-
 			if (packet == null) {
 				// It's not an UnknownPacket, so we need to parse it
 				try {
@@ -251,12 +250,15 @@ public class PacketReader {
 				}
 
 				debugger.onRecvParsedPacket(packet);
+			} else {
+				payload.skip(payloadBytes.length);
 			}
 		} else {
 			// Nothing is interested in this packet
 			UnparsedPacket unpPkt = new UnparsedPacket(connType, packetType, payloadBytes);
 			debugger.onRecvUnparsedPacket(unpPkt);
 			packet = unpPkt;
+			payload.skip(payloadBytes.length);
 		}
 
 		result.setPacket(packet);
