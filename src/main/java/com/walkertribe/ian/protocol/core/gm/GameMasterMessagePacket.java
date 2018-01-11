@@ -42,27 +42,16 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
     private GameMasterMessagePacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
         byte console = reader.readByte();
-
-        if (console != 0) {
-        	console--;
-
-        	if (console < 0 || console > Console.COMMUNICATIONS.ordinal()) {
-        		throw new IllegalArgumentException("Invalid console value: " + console);
-        	}
-
-        	mConsole = Console.values()[console];
-        } else {
-        	mConsole = null;
-        }
-
+        mConsole = console != 0 ? Console.values()[console - 1] : null;
         mSender = reader.readString();
         mMessage = reader.readString();
     }
 
     /**
      * A message from the game master that will be received as a normal COMMs
-     * message.
-     * Convenience constructor for GameMasterMessage(String, String, null).
+     * message. The sender can be any arbitrary String; it doesn't have to
+     * match the name of an existing object. This is a convenience constructor
+     * for GameMasterMessage(String, String, null).
      */
     public GameMasterMessagePacket(String sender, String message) {
     	this(sender, message, null);
@@ -70,13 +59,23 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
 
     /**
      * A message from the game master that will be received by one of the
-     * consoles. If the console argument is null, it will be recieved as a
-     * normal COMMs message. Otherwise, it will be displayed as a popup on the
-     * named Console. Only the six main console types (MAIN_SCREEN, HELM,
-     * WEAPONS, ENGINEERING, SCIENCE, COMMUNICATIONS) are allowed.
+     * consoles. The sender can by any arbitrary String; it doesn't have to
+     * match the name of an existing argument. If the console argument is null,
+     * it will be received as a normal COMMs message. Otherwise, it will be
+     * displayed as a popup on the named Console. Only the six main console
+     * types (MAIN_SCREEN, HELM, WEAPONS, ENGINEERING, SCIENCE, COMMUNICATIONS)
+     * are allowed.
      */
     public GameMasterMessagePacket(String sender, String message, Console console) {
         super(ConnectionType.CLIENT, TYPE);
+
+        if (sender == null || sender.length() == 0) {
+        	throw new IllegalArgumentException("You must provide a sender");
+        }
+
+        if (message == null || message.length() == 0) {
+        	throw new IllegalArgumentException("You must provide a message");
+        }
 
         if (console != null && console.ordinal() > Console.COMMUNICATIONS.ordinal()) {
         	throw new IllegalArgumentException("Invalid console: " + console);
@@ -87,21 +86,37 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
         mConsole = console;
     }
 
+    /**
+     * The message's sender. This can be any arbitrary String and does not have
+     * to match the name of an existing object.
+     */
     public String getSender() {
         return mSender;
     }
 
+    /**
+     * The content of the message being sent.
+     */
     public String getMessage() {
     	return mMessage;
     }
 
+    /**
+     * The Console that should receive display a popup containing the message,
+     * or null if the message should be sent as a normal COMMs message.  Only
+     * the six main console types (MAIN_SCREEN, HELM, WEAPONS, ENGINEERING,
+     * SCIENCE, COMMUNICATIONS) are allowed.
+     */
     public Console getConsole() {
     	return mConsole;
     }
 
     @Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeByte((byte) (mConsole == null ? 0 : mConsole.ordinal() - 1));
+		writer
+			.writeByte((byte) (mConsole == null ? 0 : mConsole.ordinal() + 1))
+			.writeString(mSender)
+			.writeString(mMessage);
 	}
 
 	@Override
