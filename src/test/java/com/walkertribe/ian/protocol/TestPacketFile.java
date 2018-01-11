@@ -75,14 +75,14 @@ public class TestPacketFile {
 		}
 	}
 
-	private Context ctx;
-	private Mode mode;
+	private Context ctx;                // created from path to Artemis install
+	private Mode mode;                  // READ or WRITE
 	private byte[] bytes;               // bytes read in on read mode
 	private OutputStream os;            // destination stream for write mode
 	private ByteArrayOutputStream baos; // buffer for write mode
 
 	/**
-	 * Reads test packet data from the given File.
+	 * Opens the named File (read or write).
 	 */
 	public TestPacketFile(File file, Mode mode, Context ctx) throws IOException {
 		this.ctx = ctx;
@@ -109,7 +109,7 @@ public class TestPacketFile {
 	}
 
 	/**
-	 * Reads the given test packet data.
+	 * Reads the test packet data in the given byte array.
 	 */
 	public TestPacketFile(ConnectionType connType, int pktType, byte[] payload) throws IOException {
 		ByteArrayOutputStream out = null;
@@ -132,10 +132,17 @@ public class TestPacketFile {
 		
 	}
 
+	/**
+	 * Creates a TestPacketFile that will be written to the given OutputStream.
+	 */
 	public TestPacketFile(OutputStream os) {
 		initWrite(os);
 	}
 
+	/**
+	 * Reads the data from the given InputStream and stores it in a byte array
+	 * for testing.
+	 */
 	private void initRead(InputStream is) throws IOException {
 		mode = Mode.READ;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8));
@@ -163,6 +170,9 @@ public class TestPacketFile {
 		bytes = out.toByteArray();
 	}
 
+	/**
+	 * Prepares an output buffer for writing to the given OutputStream.
+	 */
 	private void initWrite(OutputStream outputStream) {
 		mode = Mode.WRITE;
 		this.os = outputStream;
@@ -220,15 +230,23 @@ public class TestPacketFile {
 
 	/**
 	 * Returns a PacketReader of the given type that will consume the bytes from
-	 * this file.
+	 * this file. If parse is true, TestPacketFile will register an
+	 * ArtemisPacket listener to the ListenerRegistry it creates for the
+	 * PacketReader, causing all known packets received to be parsed. Otherwise,
+	 * no listener will be registered, and all known packets received will be
+	 * emitted as UnparsedPackets.
 	 */
-	public PacketReader toPacketReader(ConnectionType type) {
+	public PacketReader toPacketReader(ConnectionType type, boolean parse) {
 		if (mode != Mode.READ) {
 			throw new IllegalStateException("toPacketReader() only valid for read mode");
 		}
 
 		ListenerRegistry listeners = new ListenerRegistry();
-		listeners.register(this);
+
+		if (parse) {
+			listeners.register(this);
+		}
+
 		return new PacketReader(
 				ctx,
 				type,
@@ -250,11 +268,12 @@ public class TestPacketFile {
 	}
 
 	/**
-	 * Flushes the packets which have been written to the OutputStream and closes it.
+	 * Grabs the bytes that have been written to the output buffer and writes
+	 * them to the OutputStream, then closes it.
 	 */
 	public void close() throws IOException {
 		if (mode != Mode.WRITE) {
-			throw new IllegalStateException("flush() only valid for read mode");
+			throw new IllegalStateException("close() only valid for read mode");
 		}
 
 		BufferedOutputStream bos = new BufferedOutputStream(os);
@@ -265,7 +284,8 @@ public class TestPacketFile {
 
 	/**
 	 * Do nothing upon parsing a packet; this simply forces all packets to be
-	 * read; the actual test work is handled by the PacketTestDebugger class.
+	 * read when registered to the ListenerRegistry; the actual test work is
+	 * handled by the PacketTestDebugger class.
 	 */
 	@Listener
 	public void onPacket(ArtemisPacket pkt) {
@@ -310,6 +330,9 @@ public class TestPacketFile {
 	private class PacketTestDebugger extends BaseDebugger {
 		private byte[] in;
 
+		/**
+		 * Captures the raw bytes of a received packet.
+		 */
 		@Override
 		public void onRecvPacketBytes(ConnectionType connType, int pktType,
 				byte[] payload) {
