@@ -1,0 +1,38 @@
+efbeadde // header
+27000000 // packet length = 39
+01000000 // origin = server
+00000000 // padding
+13000000 // remaining length = 19
+b9acfa26 // GameMasterButtonPacket
+01       // action = create
+05000000 54 00 65 00 73 00 74 00 00 00 // label = "Test"
+
+efbeadde // header
+37000000 // packet length = 55
+01000000 // origin = server
+00000000 // padding
+23000000 // remaining length = 35
+b9acfa26 // GameMasterButtonPacket
+02       // action = create (positioned)
+05000000 54 00 65 00 73 00 74 00 00 00 // label = "Test"
+00000000 // x = 0
+00000000 // y = 0
+64000000 // w = 100
+1e000000 // h = 30
+
+efbeadde // header
+27000000 // packet length = 39
+01000000 // origin = server
+00000000 // padding
+13000000 // remaining length = 19
+b9acfa26 // GameMasterButtonPacket
+00       // action = remove
+05000000 54 00 65 00 73 00 74 00 00 00 // label = "Test"
+
+efbeadde // header
+19000000 // packet length = 25
+01000000 // origin = server
+00000000 // padding
+05000000 // remaining length = 5
+b9acfa26 // GameMasterButtonPacket
+64       // action = remove all

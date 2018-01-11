@@ -1,0 +1,19 @@
+efbeadde // header
+3f000000 // packet length = 63
+02000000 // origin = client
+00000000 // padding
+2b000000 // remaining length = 43
+a7059380 // GameMasterMessagePacket
+00       // COMMs message
+07000000 53 00 65 00 6e 00 64 00 65 00 72 00 00 00 // title = "Sender"
+08000000 4d 00 65 00 73 00 73 00 61 00 67 00 65 00 00 00 // content = "Message"
+
+efbeadde // header
+3f000000 // packet length = 63
+02000000 // origin = client
+00000000 // padding
+2b000000 // remaining length = 43
+a7059380 // GameMasterMessagePacket
+01       // popup on main screen
+07000000 53 00 65 00 6e 00 64 00 65 00 72 00 00 00 // title = "Sender"
+08000000 4d 00 65 00 73 00 73 00 61 00 67 00 65 00 00 00 // content = "Message"

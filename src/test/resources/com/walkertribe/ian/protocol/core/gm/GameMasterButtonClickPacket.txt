@@ -1,0 +1,8 @@
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+3c1d824c 15000000 // GameMasterButtonClickPacket
+00000000          // unknown
+cd2eb287          // hash

@@ -1,0 +1,8 @@
+efbeadde    // header
+3d000000    // packet length = 61
+01000000    // origin = server
+00000000    // padding
+29000000    // remaining length = 41
+a7059380 63 // GameMasterInstructionsPacket
+06000000 54 00 69 00 74 00 6c 00 65 00 00 00 // title = "Title"
+08000000 43 00 6f 00 6e 00 74 00 65 00 6e 00 74 00 00 00 // content = "Content"
