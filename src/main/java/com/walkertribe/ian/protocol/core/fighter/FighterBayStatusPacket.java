@@ -29,6 +29,22 @@ public class FighterBayStatusPacket extends BaseArtemisPacket implements Iterabl
     	private int refitTime;
 
     	public Bay(int id, String name, String className, int refitTime) {
+    		if (id == 0) {
+    			throw new IllegalArgumentException("Fighter bay can't have an ID of 0");
+    		}
+
+    		if (name == null || name.length() == 0) {
+    			throw new IllegalArgumentException("You must provide a name");
+    		}
+
+    		if (className == null || className.length() == 0) {
+    			throw new IllegalArgumentException("You must provide a class name");
+    		}
+
+    		if (refitTime < 0) {
+    			throw new IllegalArgumentException("Cannot have a negative refit time");
+    		}
+
     		this.id = id;
     		this.name = name;
     		this.className = className;
@@ -39,32 +55,16 @@ public class FighterBayStatusPacket extends BaseArtemisPacket implements Iterabl
 			return id;
 		}
 
-		public void setId(int id) {
-			this.id = id;
-		}
-
 		public String getName() {
 			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
 		}
 
 		public String getClassName() {
 			return className;
 		}
 
-		public void setClassName(String className) {
-			this.className = className;
-		}
-
 		public int getRefitTime() {
 			return refitTime;
-		}
-
-		public void setRefitTime(int refitTime) {
-			this.refitTime = refitTime;
 		}
 
 		@Override
@@ -111,7 +111,7 @@ public class FighterBayStatusPacket extends BaseArtemisPacket implements Iterabl
     private FighterBayStatusPacket(PacketReader reader) {
         super(ConnectionType.SERVER, TYPE);
 
-        do {
+        while (true) {
         	int id = reader.readInt();
 
         	if (id == 0) {
@@ -122,16 +122,28 @@ public class FighterBayStatusPacket extends BaseArtemisPacket implements Iterabl
         	String className = reader.readString();
         	int refitTime = reader.readInt();
         	bays.add(new Bay(id, name, className, refitTime));
-        } while (reader.hasMore());
-
-        System.out.println(this);
+        }
     }
 
     public FighterBayStatusPacket() {
     	super(ConnectionType.SERVER, TYPE);
     }
 
-	@Override
+    /**
+     * Adds the given Bay to the list of Bays.
+     */
+    public void addBay(Bay bay) {
+    	bays.add(bay);
+    }
+
+    /**
+     * Returns the number of Bays described in this packet.
+     */
+    public int getBayCount() {
+    	return bays.size();
+    }
+
+    @Override
 	public Iterator<FighterBayStatusPacket.Bay> iterator() {
 		return bays.iterator();
 	}
