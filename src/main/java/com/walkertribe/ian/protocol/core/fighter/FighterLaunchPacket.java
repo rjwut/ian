@@ -38,7 +38,14 @@ public class FighterLaunchPacket extends ValueIntPacket {
     	super(SubType.FIGHTER_LAUNCH, reader);
     }
 
-	@Override
+    /**
+     * The object ID of the fighter to launch.
+     */
+    public int getObjectId() {
+    	return mArg;
+    }
+
+    @Override
 	protected void appendPacketDetail(StringBuilder b) {
 		b.append(mArg);
 	}
