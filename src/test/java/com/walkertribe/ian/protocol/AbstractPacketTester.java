@@ -32,8 +32,6 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 */
 	protected abstract void testPackets(List<T> packets);
 
-	private Debugger debugger = TestUtil.DEBUG ? new OutputStreamDebugger() : new BaseDebugger();
-
 	/**
 	 * Loads the test packet file at the indicated path and reads the given
 	 * number of packets from it. After building a human-readable description of
@@ -44,60 +42,94 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 */
 	protected void execute(String resourcePath, ConnectionType type, int packetCount) {
 		try {
-			// Load test packet file
-			URL url = TestPacketFile.class.getResource(resourcePath);
-			TestPacketFile file = null;
+			Debugger debugger = buildDebugger();
+			TestPacketFile file = loadTestPacketFile(resourcePath);
+			List<T> list = readPackets(file, type, packetCount, debugger);
+			testPackets(list); // delegate to subclass
+			ByteArrayOutputStream baos = writePackets(list, debugger);
+			Assert.assertTrue(file.matches(baos)); // output matches input
+		} catch (ArtemisPacketException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
-			try {
-				file = new TestPacketFile(url);
-			} catch (NullPointerException ex) {
-				// Test packet file now found
-				Assert.fail("Test packet file not found: " + resourcePath);
-			}
+	/**
+	 * Returns a TestPacketFile containing the data found in the file at the
+	 * given resource path.
+	 */
+	public TestPacketFile loadTestPacketFile(String resourcePath) throws IOException {
+		URL url = TestPacketFile.class.getResource(resourcePath);
+		TestPacketFile file = null;
 
-			if (TestUtil.DEBUG) {
-				System.out.println("\n### " + resourcePath);
-			}
+		try {
+			file = new TestPacketFile(url);
+		} catch (NullPointerException ex) {
+			// Test packet file now found
+			Assert.fail("Test packet file not found: " + resourcePath);
+		}
 
-			// Parse the desired number of packets
-			PacketReader reader = file.toPacketReader(type);
-			List<T> list = new ArrayList<T>(packetCount);
-	
-			for (int i = 0; i < packetCount; i++) {
-				@SuppressWarnings("unchecked")
-				T pkt = (T) reader.readPacket(debugger).getPacket();
-				Assert.assertEquals(type, pkt.getConnectionType());
-				Assert.assertNotNull(pkt);
-				list.add(pkt);
-				Assert.assertFalse(reader.hasMore()); // Any bytes left over?
-				pkt.toString();
-			}
+		if (TestUtil.DEBUG) {
+			System.out.println("\n### " + getClass().getSimpleName());
+		}
 
-			// Delegate to subclass for type-specific tests
-			testPackets(list);
+		return file;
+	}
 
-			// Write packets back out
-			if (TestUtil.DEBUG) {
-				System.out.println("Writing packets...");
-			}
+	/**
+	 * Given a TestPacketFile and expected ConnectionType, reads the indicated
+	 * number of packets from the file and returns them in a List.  
+	 */
+	protected List<T> readPackets(TestPacketFile file, ConnectionType type,
+			int packetCount, Debugger debugger) throws ArtemisPacketException {
+		PacketReader reader = buildPacketReader(file, type);
+		List<T> list = new ArrayList<T>(packetCount);
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			PacketWriter writer = new PacketWriter(baos);
-	
+		for (int i = 0; i < packetCount; i++) {
+			@SuppressWarnings("unchecked")
+			T pkt = (T) reader.readPacket(debugger).getPacket();
+			Assert.assertNotNull(pkt);
+			Assert.assertEquals(type, pkt.getConnectionType());
+			Assert.assertFalse(reader.hasMore()); // Any bytes left over?
+			list.add(pkt);
+			pkt.toString();
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns a ByteArrayOutputStream to which the given List of packets has
+	 * been written.
+	 */
+	protected ByteArrayOutputStream writePackets(List<T> list, Debugger debugger) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PacketWriter writer = new PacketWriter(baos);
+
+		try {
 			for (T pkt : list) {
 				pkt.writeTo(writer, debugger);
 			}
-
-			// Compare written bytes to originals
-			Assert.assertTrue(file.matches(baos));
-
-			if (TestUtil.DEBUG) {
-				System.out.println("Input and output bytes match");
-			}
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
-		} catch (ArtemisPacketException ex) {
-			throw new RuntimeException(ex);
 		}
+
+		return baos;
+	}
+
+	/**
+	 * Returns a new Debugger object to use for this test.
+	 */
+	protected Debugger buildDebugger() {
+		return TestUtil.DEBUG ? new OutputStreamDebugger() : new BaseDebugger();
+	}
+
+	/**
+	 * Returns a PacketReader that reads the contents of the given
+	 * TestPacketFile.
+	 */
+	protected PacketReader buildPacketReader(TestPacketFile file, ConnectionType type) {
+		return file.toPacketReader(type, true);
 	}
 }
