@@ -1,0 +1,48 @@
+efbeadde // header
+1c000000 // packet length = 28
+01000000 // origin = server
+00000000 // padding
+08000000 // remaining length = 8
+3bf2d19a // FighterBayStatusPacket
+00000000 // no bays
+
+
+efbeadde // header
+50000000 // packet length = 80
+01000000 // origin = server
+00000000 // padding
+3c000000 // remaining length = 60
+3bf2d19a // FighterBayStatusPacket
+
+01000000 // fighter ID = 1
+0a000000 46 00 69 00 67 00 68 00 74 00 65 00 72 00 20 00 31 00 00 00
+         // name = "Fighter 1"
+08000000 43 00 6c 00 61 00 73 00 73 00 20 00 31 00 00 00
+         // class = "Class 1"
+01010000 // refit time = 257
+
+00000000 // end array
+
+
+efbeadde // header
+84000000 // packet length = 132
+01000000 // origin = server
+00000000 // padding
+70000000 // remaining length = 112
+3bf2d19a // FighterBayStatusPacket
+
+01000000 // fighter ID = 1
+0a000000 46 00 69 00 67 00 68 00 74 00 65 00 72 00 20 00 31 00 00 00
+         // name = "Fighter 1"
+08000000 43 00 6c 00 61 00 73 00 73 00 20 00 31 00 00 00
+         // class = "Class 1"
+01010000 // refit time = 257
+
+02000000 // fighter ID = 2
+0a000000 46 00 69 00 67 00 68 00 74 00 65 00 72 00 20 00 32 00 00 00
+         // name = "Fighter 2"
+08000000 43 00 6c 00 61 00 73 00 73 00 20 00 32 00 00 00
+         // class = "Class 2"
+00000000 // refit time = 0
+
+00000000 // end array
