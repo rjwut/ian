@@ -39,8 +39,20 @@ public class GameMasterSelectObjectPacket extends ValueIntPacket {
     	super(SubType.GM_SELECT, reader);
     }
 
+    /**
+     * Returns the ID of the selected object, or 1 if the previously-selected
+     * object was deselected.
+     */
+    public int getTargetId() {
+    	return mArg;
+    }
+
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append('#').append(mArg);
+    	if (mArg == 1) {
+    		b.append("DESELECTED");
+    	} else {
+    		b.append('#').append(mArg);
+    	}
 	}
 }
