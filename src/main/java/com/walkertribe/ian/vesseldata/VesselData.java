@@ -27,8 +27,7 @@ import com.walkertribe.ian.util.Version;
 public class VesselData {
 	/**
 	 * Loads the vesselData.xml file using the given PathResolver and returns the resulting
-	 * VesselData object. This is a "localized" load; it does not replace the static instance loaded
-	 * by get().
+	 * VesselData object.
 	 */
 	public static VesselData load(Context ctx) {
 		try {
