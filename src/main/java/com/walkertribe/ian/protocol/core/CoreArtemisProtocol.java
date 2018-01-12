@@ -28,7 +28,7 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			ConsoleStatusPacket.class,
 			DmxMessagePacket.class,
 			DestroyObjectPacket.class,
-			DifficultyPacket.class,
+			GameStartPacket.class,
 			FighterBayStatusPacket.class,
 			FighterLaunchedPacket.class,
 			GameMasterButtonPacket.class,
