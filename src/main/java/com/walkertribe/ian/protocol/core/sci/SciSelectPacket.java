@@ -28,18 +28,30 @@ public class SciSelectPacket extends ValueIntPacket {
 	}
 
 	/**
-	 * @param target The target to select (or null to clear the taregt)
+	 * @param target The target to select (or null to clear the target)
 	 */
     public SciSelectPacket(ArtemisObject target) {
         super(SubType.SCIENCE_SELECT, target == null ? 1 : target.getId());
     }
 
-    public SciSelectPacket(PacketReader reader) {
+    private SciSelectPacket(PacketReader reader) {
     	super(SubType.SCIENCE_SELECT, reader);
+    }
+
+    /**
+     * Returns the ID of the selected target, or 1 if the previously-selected
+     * target has been deselected.
+     */
+    public int getTargetId() {
+    	return mArg;
     }
 
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append('#').append(mArg);
+    	if (mArg == 1) {
+    		b.append("no target");
+    	} else {
+    		b.append('#').append(mArg);
+    	}
 	}
 }
