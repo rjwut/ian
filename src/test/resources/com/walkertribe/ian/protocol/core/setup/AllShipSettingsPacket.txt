@@ -1,0 +1,54 @@
+efbeadde          // header
+1c010000          // packet length = 284
+01000000          // origin = server
+00000000	      // padding
+08010000          // remaining length = 264
+fec854f7 0f000000 // AllShipSettingsPacket
+
+00000000 // drive = warp
+00000000 // vessel ID = 0
+00000000 // accent color = red (0.0)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 30 00 00 00 // name = Ship0
+
+01000000 // drive = jump
+01000000 // vessel ID = 1
+0000003e // accent color = orange (0.125)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 31 00 00 00 // name = Ship1
+
+00000000 // drive = warp
+02000000 // vessel ID = 2
+0000803e // accent color = light green (0.25)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 32 00 00 00 // name = Ship2
+
+01000000 // drive = jump
+03000000 // vessel ID = 3
+0000c03e // accent color = green (0.375)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 33 00 00 00 // name = Ship3
+
+00000000 // drive = warp
+04000000 // vessel ID = 4
+0000003f // accent color = cyan (0.5)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 34 00 00 00 // name = Ship4
+
+01000000 // drive = jump
+05000000 // vessel ID = 5
+0000203f // accent color = blue (0.625)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 35 00 00 00 // name = Ship5
+
+00000000 // drive = warp
+06000000 // vessel ID = 6
+0000403f // accent color = purple (0.75)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 36 00 00 00 // name = Ship6
+
+01000000 // drive = jump
+07000000 // vessel ID = 7
+0000603f // accent color = magenta (0.875)
+01000000 // unknown
+06000000 53 00 68 00 69 00 70 00 37 00 00 00 // name = Ship7

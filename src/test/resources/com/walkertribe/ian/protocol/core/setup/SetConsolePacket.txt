@@ -1,0 +1,17 @@
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+3c1d824c 0e000000 // SetConsolePacket
+01000000          // console = helm
+01000000          // selected = true
+
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+3c1d824c 0e000000 // SetConsolePacket
+05000000          // console = comms
+00000000          // selected = false

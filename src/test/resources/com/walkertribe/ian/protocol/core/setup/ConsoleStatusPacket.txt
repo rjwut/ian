@@ -1,0 +1,19 @@
+efbeadde // header
+27000000 // packet length = 39
+01000000 // origin = server
+00000000 // padding
+13000000 // remaining length = 19
+d4e2c619 // ConsoleStatusPacket
+
+01000000 // ship number = 1
+00 // main screen = available
+01 // helm = yours
+02 // weapons = unavailable
+00 // engineering = available
+01 // science = yours
+02 // comms = unavailable
+00 // fighter = available
+01 // data = yours
+02 // observer = unavailable
+00 // captain's map = available
+01 // game master = yours
