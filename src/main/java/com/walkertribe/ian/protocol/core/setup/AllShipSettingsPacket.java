@@ -35,10 +35,22 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
 	public static class Ship {
 		private String mName;
 		private int mShipType;
-		private int mAccentColor;
+		private float mAccentColor;
 		private DriveType mDrive;
 
-		public Ship(String name, int shipType, int accentColor, DriveType drive) {
+		public Ship(String name, int shipType, float accentColor, DriveType drive) {
+			if (name == null || name.length() == 0) {
+				throw new IllegalArgumentException("You must provide a name");
+			}
+
+			if (accentColor < 0.0f || accentColor >= 1.0f) {
+				throw new IllegalArgumentException("Accent color must be in range [0.0,1.0)");
+			}
+
+			if (drive == null) {
+				throw new IllegalArgumentException("You must provide a drive type");
+			}
+
 			mName = name;
 			mShipType = shipType;
 			mAccentColor = accentColor;
@@ -57,7 +69,7 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
 			return ctx.getVesselData().getVessel(mShipType);
 		}
 
-		public int getAccentColor() {
+		public float getAccentColor() {
 			return mAccentColor;
 		}
 
@@ -88,7 +100,7 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
         for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
         	DriveType drive = DriveType.values()[reader.readInt()];
         	int shipType = reader.readInt();
-        	int accentColor = reader.readInt();
+        	float accentColor = reader.readFloat();
         	reader.skip(4); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
         	String name = reader.readString();
         	mShips[i] = new Ship(name, shipType, accentColor, drive);
@@ -97,6 +109,10 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
 
     public AllShipSettingsPacket(Ship[] ships) {
         super(SubType.SHIP_SETTINGS);
+
+        if (ships == null) {
+        	throw new IllegalArgumentException("Ship array can't be null");
+        }
 
         if (ships.length != Artemis.SHIP_COUNT) {
         	throw new IllegalArgumentException(
@@ -109,16 +125,6 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
             	throw new IllegalArgumentException(
             			"Must specify " + Artemis.SHIP_COUNT + " ships"
             	);
-        	}
-
-        	if (ship.getDrive() == null) {
-            	throw new IllegalArgumentException("Must specify ship drive");
-        	}
-
-        	String name = ship.getName();
-
-        	if (name == null || name.trim().length() == 0) {
-            	throw new IllegalArgumentException("Must specify ship name");
         	}
         }
 
@@ -136,7 +142,7 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
 		for (Ship ship : mShips) {
 			writer.writeInt(ship.mDrive.ordinal());
 			writer.writeInt(ship.mShipType);
-			writer.writeInt(ship.mAccentColor);
+			writer.writeFloat(ship.mAccentColor);
 			writer.writeInt(1); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
 			writer.writeString(ship.mName);
 		}
