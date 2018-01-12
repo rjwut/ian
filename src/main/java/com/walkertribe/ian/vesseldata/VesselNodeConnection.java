@@ -1,5 +1,7 @@
 package com.walkertribe.ian.vesseldata;
 
+import java.util.Objects;
+
 /**
  * Represents a connection between two VesselNodes.
  * @author rjwut
@@ -37,9 +39,7 @@ public class VesselNodeConnection {
 
 	@Override
 	public int hashCode() {
-		int hash1 = node1.hashCode();
-		int hash2 = node2.hashCode();
-		return 31 * (hash1 ^ (hash1 >>> 32)) + (hash2 ^ (hash2 >>> 32));
+		return Objects.hash(node1, node2);
 	}
 
 	@Override

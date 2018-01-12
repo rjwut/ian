@@ -2,6 +2,7 @@ package com.walkertribe.ian.util;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Queue;
 
 /**
@@ -52,10 +53,7 @@ public final class GridCoord implements Comparable<GridCoord> {
 
     @Override
     public int hashCode() {
-        int result = (x ^ (x >>> 32));
-        result = 31 * result + (y ^ (y >>> 32));
-        result = 31 * result + (z ^ (z >>> 32));
-        return result;
+    	return Objects.hash(x, y, z);
     }
 
     @Override

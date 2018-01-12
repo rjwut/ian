@@ -240,14 +240,14 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     	if (mSpecial != -1) {
     		String str = Util.enumSetToString(SpecialAbility.fromValue(mSpecial));
-    		props.put("Specials", str != "" ? str : "NONE");
+    		props.put("Specials", str.length() > 0 ? str : "NONE");
     	} else if (includeUnspecified) {
         	props.put("Specials", "UNKNOWN");
     	}
 
     	if (mSpecialState != -1) {
     		String str = Util.enumSetToString(SpecialAbility.fromValue(mSpecialState));
-    		props.put("Specials active", str != "" ? str : "NONE");
+    		props.put("Specials active", str.length() > 0 ? str : "NONE");
     	} else if (includeUnspecified) {
         	props.put("Specials active", "UNKNOWN");
     	}
