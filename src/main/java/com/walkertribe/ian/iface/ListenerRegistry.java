@@ -17,15 +17,13 @@ public class ListenerRegistry {
      * annotation with the registry.
      */
     public void register(Object object) {
-    	synchronized (listeners) {
-			Method[] methods = object.getClass().getMethods();
-	
-			for (Method method : methods) {
-				if (method.getAnnotation(Listener.class) != null) {
-					listeners.add(new ListenerMethod(object, method));
-				}
+		Method[] methods = object.getClass().getMethods();
+		
+		for (Method method : methods) {
+			if (method.getAnnotation(Listener.class) != null) {
+				listeners.add(new ListenerMethod(object, method));
 			}
-    	}
+		}
     }
 
     /**
@@ -33,17 +31,15 @@ public class ListenerRegistry {
      * objects of the given Class.
      */
     public List<ListenerMethod> listeningFor(Class<?> clazz) {
-    	synchronized (listeners) {
-    		List<ListenerMethod> interested = new LinkedList<ListenerMethod>();
+		List<ListenerMethod> interested = new LinkedList<ListenerMethod>();
 
-    		for (ListenerMethod listener : listeners) {
-				if (listener.accepts(clazz)) {
-					interested.add(listener);
-				}
+		for (ListenerMethod listener : listeners) {
+			if (listener.accepts(clazz)) {
+				interested.add(listener);
 			}
+		}
 
-    		return interested;
-    	}
+		return interested;
     }
 
     /**
