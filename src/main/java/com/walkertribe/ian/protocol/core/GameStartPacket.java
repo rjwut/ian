@@ -1,4 +1,4 @@
-package com.walkertribe.ian.protocol.core.setup;
+package com.walkertribe.ian.protocol.core;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.GameType;
@@ -10,9 +10,12 @@ import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.PacketType;
-import com.walkertribe.ian.protocol.core.CorePacketType;
 
-public class DifficultyPacket extends BaseArtemisPacket {
+/**
+ * Sent by the server when the simulation starts.
+ * @author rjwut
+ */
+public class GameStartPacket extends BaseArtemisPacket {
 	private static final PacketType TYPE = CorePacketType.START_GAME;
 	public static final int MIN = 1;
 	public static final int MAX = 11;
@@ -21,13 +24,13 @@ public class DifficultyPacket extends BaseArtemisPacket {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return DifficultyPacket.class;
+				return GameStartPacket.class;
 			}
 
 			@Override
 			public ArtemisPacket build(PacketReader reader)
 					throws ArtemisPacketException {
-				return new DifficultyPacket(reader);
+				return new GameStartPacket(reader);
 			}
 		});
 	}
@@ -35,23 +38,15 @@ public class DifficultyPacket extends BaseArtemisPacket {
     private int difficulty;
     private GameType gameType;
 
-    private DifficultyPacket(PacketReader reader) {
+    private GameStartPacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
-		setDifficulty(reader.readInt());
-		setGameType(GameType.values()[reader.readInt()]);
+		difficulty = reader.readInt();
+		gameType = GameType.values()[reader.readInt()];
     }
 
-    public DifficultyPacket(int difficulty, GameType gameType) {
+    public GameStartPacket(int difficulty, GameType gameType) {
 		super(ConnectionType.SERVER, TYPE);
-		setDifficulty(difficulty);
-		setGameType(gameType);
-	}
 
-    public int getDifficulty() {
-    	return difficulty;
-    }
-
-    public void setDifficulty(int difficulty) {
     	if (difficulty < MIN || difficulty > MAX) {
     		throw new IllegalArgumentException(
     				"Invalid difficulty level (" +
@@ -63,15 +58,26 @@ public class DifficultyPacket extends BaseArtemisPacket {
     		);
     	}
 
+    	if (gameType == null) {
+    		throw new IllegalArgumentException("You must provide a game type");
+    	}
+
     	this.difficulty = difficulty;
+    	this.gameType = gameType;
+	}
+
+    /**
+     * The simulation's difficulty level, a value between 1 and 11, inclusive.
+     */
+    public int getDifficulty() {
+    	return difficulty;
     }
 
+    /**
+     * What type of simulation is running (siege, single front, etc.)
+     */
     public GameType getGameType() {
     	return gameType;
-    }
-
-    public void setGameType(GameType gameType) {
-    	this.gameType = gameType;
     }
 
     @Override
