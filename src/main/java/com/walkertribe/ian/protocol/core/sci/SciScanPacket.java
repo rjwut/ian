@@ -42,6 +42,13 @@ public class SciScanPacket extends ValueIntPacket {
         super(SubType.SCIENCE_SCAN, reader);
     }
 
+    /**
+     * Returns the ID of the target to be scanned.
+     */
+    public int getTargetId() {
+    	return mArg;
+    }
+
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
 		b.append('#').append(mArg);
