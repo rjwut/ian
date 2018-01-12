@@ -35,15 +35,31 @@ public class WelcomePacket extends BaseArtemisPacket {
 		});
 	}
 
-	private String msg = MSG;
+	private String msg;
+
+	/**
+	 * Uses the default message given by the Artemis server on connection.
+	 */
+	public WelcomePacket() {
+		this(MSG);
+	}
+
+	/**
+	 * Uses an arbitrary message you provide.
+	 */
+	public WelcomePacket(String msg) {
+		super(ConnectionType.SERVER, TYPE);
+
+		if (msg == null || msg.length() == 0) {
+			throw new IllegalArgumentException("You must provide a message");
+		}
+
+		this.msg = msg;
+	}
 
 	private WelcomePacket(PacketReader reader) {
 		super(ConnectionType.SERVER, TYPE);
 		msg = reader.readUsAsciiString();
-	}
-
-	public WelcomePacket() {
-		super(ConnectionType.SERVER, TYPE);
 	}
 
 	@Override
