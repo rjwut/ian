@@ -15,6 +15,22 @@ public class WelcomePacketTest extends AbstractPacketTester<WelcomePacket> {
 		execute("core/setup/WelcomePacket.txt", ConnectionType.SERVER, 1);
 	}
 
+	@Test
+	public void testConstruct() {
+		Assert.assertEquals(WelcomePacket.MSG, new WelcomePacket().getMessage());
+		Assert.assertEquals("Hi!", new WelcomePacket("Hi!").getMessage());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructNullMessage() {
+		new WelcomePacket(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptyMessage() {
+		new WelcomePacket("");
+	}
+
 	@Override
 	protected void testPackets(List<WelcomePacket> packets) {
 		Assert.assertEquals(WelcomePacket.MSG, packets.get(0).getMessage());

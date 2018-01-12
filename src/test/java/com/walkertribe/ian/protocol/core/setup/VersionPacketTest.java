@@ -19,6 +19,11 @@ public class VersionPacketTest extends AbstractPacketTester<VersionPacket> {
 		execute("core/setup/VersionPacket.txt", ConnectionType.SERVER, 2);
 	}
 
+	@Test
+	public void testConstruct() {
+		Assert.assertEquals(VERSION_2_1_1, new VersionPacket(VERSION_2_1_1).getVersion());
+	}
+
 	@Override
 	protected void testPackets(List<VersionPacket> packets) {
 		Assert.assertEquals(VERSION_2_0, packets.get(0).getVersion());
