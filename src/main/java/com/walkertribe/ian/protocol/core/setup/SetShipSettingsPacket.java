@@ -33,13 +33,14 @@ public class SetShipSettingsPacket extends ValueIntPacket {
 
 	private DriveType mDrive;
 	private int mHullId;
+	private float mColor;
 	private String mName;
 
 	/**
 	 * Use this constructor if you wish to use a Vessel instance from the
 	 * VesselData class.
 	 */
-	public SetShipSettingsPacket(DriveType drive, Vessel vessel, String name) {
+	public SetShipSettingsPacket(DriveType drive, Vessel vessel, float color, String name) {
         super(SubType.SHIP_SETUP);
 
         if (vessel == null) {
@@ -50,15 +51,15 @@ public class SetShipSettingsPacket extends ValueIntPacket {
         	throw new IllegalArgumentException("Must select a player vessel");
         }
 
-        init(drive, vessel.getId(), name);
+        init(drive, vessel.getId(), color, name);
 	}
 
 	/**
 	 * Use this constructor if you wish to use a hull ID.
 	 */
-	public SetShipSettingsPacket(DriveType drive, int hullId, String name) {
+	public SetShipSettingsPacket(DriveType drive, int hullId, float color, String name) {
         super(SubType.SHIP_SETUP);
-        init(drive, hullId, name);
+        init(drive, hullId, color, name);
     }
 
 	private SetShipSettingsPacket(PacketReader reader) {
@@ -66,22 +67,57 @@ public class SetShipSettingsPacket extends ValueIntPacket {
         reader.skip(4); // subtype
 		mDrive = DriveType.values()[reader.readInt()];
 		mHullId = reader.readInt();
-		reader.skip(4); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
+		mColor = reader.readFloat();
 		mName = reader.readString();
 	}
 
-	private void init(DriveType drive, int hullId, String name) {
+	private void init(DriveType drive, int hullId, float color, String name) {
         if (drive == null) {
         	throw new IllegalArgumentException("You must specify a drive type");
         }
 
-        if (name == null) {
+        if (color < 0.0f || color >= 1.0f) {
+        	throw new IllegalArgumentException("Color must be in range [0.0,1.0)");
+        }
+
+        if (name == null || name.length() == 0) {
         	throw new IllegalArgumentException("You must specify a name");
         }
 
         mDrive = drive;
         mHullId = hullId;
+        mColor = color;
         mName = name;
+	}
+
+	/**
+	 * The ship's drive type
+	 */
+	public DriveType getDrive() {
+		return mDrive;
+	}
+
+	/**
+	 * The ship's vessel ID
+	 */
+	public int getHullId() {
+		return mHullId;
+	}
+
+	/**
+	 * A float in range [0.0,1.0) describing the accent color. Multiply this
+	 * value by 360 to get a hue expressed in degrees.
+	 * @see https://en.wikipedia.org/wiki/Hue
+	 */
+	public float getAccentColor() {
+		return mColor;
+	}
+
+	/**
+	 * The ship's name
+	 */
+	public String getName() {
+		return mName;
 	}
 
 	@Override
@@ -89,14 +125,15 @@ public class SetShipSettingsPacket extends ValueIntPacket {
 		writer	.writeInt(SubType.SHIP_SETUP.ordinal())
 				.writeInt(mDrive.ordinal())
 				.writeInt(mHullId)
-				.writeInt(1) // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
+				.writeFloat(mColor)
 				.writeString(mName);
 	}
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-    	b	.append(mName).append(": hull ID #")
-    		.append(mHullId)
-    		.append(" [").append(mDrive).append(']');
+    	b	.append(mName)
+    		.append(": hull ID #").append(mHullId)
+    		.append(" [").append(mDrive)
+    		.append("], hue=").append(mColor * 360).append(" deg");
 	}
 }
