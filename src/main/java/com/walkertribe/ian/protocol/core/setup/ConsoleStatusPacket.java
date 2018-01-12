@@ -61,7 +61,13 @@ public class ConsoleStatusPacket extends BaseArtemisPacket {
     		);
     	}
 
-    	if (statuses.length != ConsoleStatus.values().length) {
+    	if (statuses == null) {
+    		throw new IllegalArgumentException(
+    				"Must provide status array"
+    		);
+    	}
+
+    	if (statuses.length != Console.values().length) {
     		throw new IllegalArgumentException(
     				"Must provide a status for each bridge console"
     		);
