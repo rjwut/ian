@@ -13,7 +13,7 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.Version;
 
 /**
- * Gives the Artemis server's version number. Send immediately after
+ * Gives the Artemis server's version number. Sent immediately after
  * WelcomePacket.
  * @author rjwut
  */
