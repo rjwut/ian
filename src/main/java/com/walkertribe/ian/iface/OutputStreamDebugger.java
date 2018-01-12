@@ -91,7 +91,7 @@ public class OutputStreamDebugger implements Debugger {
 
 	@Override
 	public void warn(String msg) {
-		out.println((name != "" ? (name + ": ") : "") + "WARNING: "  + msg);
+		out.println((name.length() > 0 ? (name + ": ") : "") + "WARNING: "  + msg);
 	}
 
 	/**
