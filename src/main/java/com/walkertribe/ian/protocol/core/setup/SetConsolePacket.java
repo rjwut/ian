@@ -54,6 +54,20 @@ public class SetConsolePacket extends ValueIntPacket {
 		mSelected = reader.readInt() == 1;
 	}
 
+	/**
+	 * The Console being updated
+	 */
+	public Console getConsole() {
+		return mConsole;
+	}
+
+	/**
+	 * Returns true if the Console is selected
+	 */
+	public boolean isSelected() {
+		return mSelected;
+	}
+
 	@Override
     public void writePayload(PacketWriter writer) {
     	writer	.writeInt(SubType.SET_CONSOLE.ordinal())
