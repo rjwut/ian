@@ -1,17 +1,21 @@
 package com.walkertribe.ian.world;
 
+import java.util.SortedMap;
+
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 
+/**
+ * Nebulae
+ * @author rjwut
+ */
 public class ArtemisNebula extends BaseArtemisObject {
-    private boolean hasColor;
-    private byte a;
-    private byte r;
-    private byte g;
-    private byte b;
+    private float mRed = -1;
+    private float mGreen = -1;
+    private float mBlue = -1;
 
 	public ArtemisNebula(int objId) {
         super(objId);
-        setName("NEBULA");
     }
 
 	@Override
@@ -19,57 +23,68 @@ public class ArtemisNebula extends BaseArtemisObject {
 		return ObjectType.NEBULA;
 	}
 
-    public boolean hasColor() {
-    	return hasColor;
+    /**
+     * The red channel value for the color.
+     * Unspecified: -1
+     */
+    public float getRed() {
+    	return mRed;
+    }
+
+    public void setRed(float red) {
+    	mRed = red;
     }
 
     /**
-     * The color of the nebula. This is specified as an ARGB int value. To
-     * specify each channel separately, use the setARGB() method.
-     * Unspecified: 0
+     * The green channel value for the color.
+     * Unspecified: -1
      */
-    public int getColor() {
-        return a << 24 | r << 16 | g << 8 | b;
+    public float getGreen() {
+    	return mGreen;
     }
 
-    public byte getAlpha() {
-    	return a;
-    }
-
-    public byte getRed() {
-    	return r;
-    }
-
-    public byte getGreen() {
-    	return g;
-    }
-
-    public byte getBlue() {
-    	return b;
+    public void setGreen(float green) {
+    	mGreen = green;
     }
 
     /**
-     * Sets the color of the nebula, specifying each channel as a value between
-     * 0 and 255.
+     * The blue channel value for the color.
+     * Unspecified: -1
      */
-    public void setARGB(byte a, byte r, byte g, byte b) {
-    	this.a = a;
-    	this.r = r;
-    	this.g = g;
-    	this.b = b;
-    	hasColor = true;
+    public float getBlue() {
+    	return mBlue;
     }
-   
-    /**
-     * Sets the color that will be used to render this object on sensor views,
-     * specifying each channel as a value between 0 and 1.
-     */
-    public void setARGB(float a, float r, float g, float b) {
-        setARGB(
-            (byte) (255 * a),
-            (byte) (255 * r), 
-            (byte) (255 * g), 
-            (byte) (255 * b)
-        );
+
+    public void setBlue(float blue) {
+    	mBlue = blue;
+    }
+
+    @Override
+    public void updateFrom(ArtemisObject other, Context ctx) {
+        super.updateFrom(other, ctx);
+
+        if (other instanceof ArtemisNebula) {
+            ArtemisNebula n = (ArtemisNebula) other;
+
+            if (n.mRed != -1) {
+            	mRed = n.mRed;
+            }
+
+            if (n.mGreen != -1) {
+            	mGreen = n.mGreen;
+            }
+
+            if (n.mBlue != -1) {
+            	mBlue = n.mBlue;
+            }
+        }
+    }
+
+    @Override
+	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
+    	super.appendObjectProps(props, includeUnspecified);
+    	putProp(props, "Red", mRed, -1, includeUnspecified);
+    	putProp(props, "Green", mGreen, -1, includeUnspecified);
+    	putProp(props, "Blue", mBlue, -1, includeUnspecified);
     }
 }

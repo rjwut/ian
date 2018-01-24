@@ -31,17 +31,14 @@ public class NebulaParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisNebula parseImpl(PacketReader reader) {
         final ArtemisNebula obj = new ArtemisNebula(reader.getObjectId());
-		reader.readObjectUnknown(Bit.UNK_1_7, 4);
-		reader.readObjectUnknown(Bit.UNK_1_8, 4);
         obj.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
         obj.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
         obj.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
-        obj.setARGB(
-        		0,
-        		reader.readFloat(Bit.RED, Float.MIN_VALUE),
-        		reader.readFloat(Bit.GREEN, Float.MIN_VALUE),
-        		reader.readFloat(Bit.BLUE, Float.MIN_VALUE)
-        );
+        obj.setRed(reader.readFloat(Bit.RED, -1));
+        obj.setGreen(reader.readFloat(Bit.GREEN, -1));
+        obj.setBlue(reader.readFloat(Bit.BLUE, -1));
+		reader.readObjectUnknown(Bit.UNK_1_7, 4);
+		reader.readObjectUnknown(Bit.UNK_1_8, 4);
         return obj;
 	}
 
@@ -51,9 +48,9 @@ public class NebulaParser extends AbstractObjectParser {
     	writer	.writeFloat(Bit.X, nObj.getX(), Float.MIN_VALUE)
 				.writeFloat(Bit.Y, nObj.getY(), Float.MIN_VALUE)
 				.writeFloat(Bit.Z, nObj.getZ(), Float.MIN_VALUE)
-				.writeFloat(Bit.RED, nObj.getRed() / 255f, Float.MIN_VALUE)
-				.writeFloat(Bit.GREEN, nObj.getGreen() / 255f, Float.MIN_VALUE)
-				.writeFloat(Bit.BLUE, nObj.getBlue() / 255f, Float.MIN_VALUE)
+				.writeFloat(Bit.RED, nObj.getRed(), -1)
+				.writeFloat(Bit.GREEN, nObj.getGreen(), -1)
+				.writeFloat(Bit.BLUE, nObj.getBlue(), -1)
 				.writeUnknown(Bit.UNK_1_7)
 				.writeUnknown(Bit.UNK_1_8);
 	}
