@@ -20,6 +20,14 @@ public abstract class AbstractProtocol implements Protocol {
 	 */
 	protected static void registerPacketFactories(PacketFactoryRegistry registry,
 			Class<?>[] packetClasses) {
+		if (registry == null) {
+			throw new IllegalArgumentException("You must provide a registry");
+		}
+
+		if (packetClasses == null) {
+			throw new IllegalArgumentException("You must provide an array of classes");
+		}
+
 		for (Class<?> clazz : packetClasses) {
 			Method method;
 
@@ -28,17 +36,12 @@ public abstract class AbstractProtocol implements Protocol {
 			} catch (NoSuchMethodException ex) {
 				throw new IllegalArgumentException(
 						"Class " + clazz +
-						" has no register(PacketFactoryRegistry) method",
+						" has no visible register(PacketFactoryRegistry) method",
 						ex
 				);
 			}
 
 			int modifiers = method.getModifiers();
-
-			if (!Modifier.isPublic(modifiers)) {
-				throw new IllegalArgumentException("Method " + method +
-						" must be public");
-			}
 
 			if (!Modifier.isStatic(modifiers)) {
 				throw new IllegalArgumentException("Method " + method +
