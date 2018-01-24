@@ -44,7 +44,14 @@ public class UnloadTubePacket extends ValueIntPacket {
     	super(SubType.UNLOAD_TUBE, reader);
     }
 
-	@Override
+    /**
+     * Returns the index of the tube to be unloaded.
+     */
+    public int getTubeIndex() {
+    	return mArg;
+    }
+
+    @Override
 	protected void appendPacketDetail(StringBuilder b) {
 		b.append(mArg);
 	}
