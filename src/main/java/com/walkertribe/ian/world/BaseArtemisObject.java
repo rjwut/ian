@@ -144,14 +144,14 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
 	@Override
-    public void updateFrom(ArtemisObject eng, Context ctx) {
-        if (eng.getName() != null) {
-            mName = eng.getName();
+    public void updateFrom(ArtemisObject obj, Context ctx) {
+        if (obj.getName() != null) {
+            mName = obj.getName();
         }
 
-        float x = eng.getX();
-        float y = eng.getY();
-        float z = eng.getZ();
+        float x = obj.getX();
+        float y = obj.getY();
+        float z = obj.getZ();
 
         if (x != Float.MIN_VALUE) {
         	mX = x;
@@ -165,7 +165,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
         	mZ = z;
         }
 
-        BaseArtemisObject cast = (BaseArtemisObject) eng;
+        BaseArtemisObject cast = (BaseArtemisObject) obj;
         SortedMap<String, byte[]> unknown = cast.getUnknownProps();
 
         if (unknown != null && !unknown.isEmpty()) {
