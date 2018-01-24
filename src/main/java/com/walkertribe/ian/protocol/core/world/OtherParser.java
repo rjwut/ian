@@ -30,25 +30,12 @@ public class OtherParser extends AbstractObjectParser {
 
 	@Override
 	protected ArtemisGenericObject parseImpl(PacketReader reader) {
-        ObjectType type = reader.getObjectType();
-        float x = reader.readFloat(Bit.X, Float.MIN_VALUE);
-        float y = reader.readFloat(Bit.Y, Float.MIN_VALUE);
-        float z = reader.readFloat(Bit.Z, Float.MIN_VALUE);
         final ArtemisGenericObject obj = new ArtemisGenericObject(reader.getObjectId());
-        String name;
-
-        if (type.isNamed()) {
-            name = reader.readString(Bit.NAME);
-        } else {
-            name = null;
-            reader.readObjectUnknown(Bit.NAME, 4);
-        }
-
-        obj.setName(name);
-        obj.setType(type);
-        obj.setX(x);
-        obj.setY(y);
-        obj.setZ(z);
+        obj.setType(reader.getObjectType());
+        obj.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
+        obj.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
+        obj.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+        obj.setName(reader.readString(Bit.NAME)); // generic objects aren't usually named, but custom missions might name them
         reader.readObjectUnknown(Bit.UNK_1_5, 4);
         reader.readObjectUnknown(Bit.UNK_1_6, 4);
         reader.readObjectUnknown(Bit.UNK_1_7, 4);
@@ -61,15 +48,9 @@ public class OtherParser extends AbstractObjectParser {
 		ArtemisGenericObject gObj = (ArtemisGenericObject) obj;
     	writer	.writeFloat(Bit.X, gObj.getX(), Float.MIN_VALUE)
 				.writeFloat(Bit.Y, gObj.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, gObj.getZ(), Float.MIN_VALUE);
-
-        if (objectType.isNamed()) {
-        	writer.writeString(Bit.NAME, gObj.getName());
-        } else {
-        	writer.writeUnknown(Bit.NAME);
-        }
-
-        writer	.writeUnknown(Bit.UNK_1_5)
+				.writeFloat(Bit.Z, gObj.getZ(), Float.MIN_VALUE)
+				.writeString(Bit.NAME, gObj.getName())
+				.writeUnknown(Bit.UNK_1_5)
 				.writeUnknown(Bit.UNK_1_6)
 				.writeUnknown(Bit.UNK_1_7)
 				.writeUnknown(Bit.UNK_1_8);
