@@ -14,8 +14,9 @@ import com.walkertribe.ian.model.Model;
 public class ArtemisMesh extends BaseArtemisObject {
     private String mMesh;
     private String mTex;
-    private boolean hasColor;
-    private int mColor;
+    private float mRed = -1;
+    private float mGreen = -1;
+    private float mBlue = -1;
     private float mShieldsFront = Float.MIN_VALUE;
     private float mShieldsRear = Float.MIN_VALUE;
 
@@ -61,60 +62,40 @@ public class ArtemisMesh extends BaseArtemisObject {
         mTex = path;
     }
 
-    public boolean hasColor() {
-    	return hasColor;
+    /**
+     * The red channel value for the color.
+     * Unspecified: -1
+     */
+    public float getRed() {
+    	return mRed;
+    }
+
+    public void setRed(float red) {
+    	mRed = red;
     }
 
     /**
-     * The color that will be used to render this object on sensor views. This
-     * is specified as an ARGB int value. To specify each channel separately,
-     * use the setARGB() method.
-     * Unspecified: 0
+     * The green channel value for the color.
+     * Unspecified: -1
      */
-    public int getColor() {
-        return mColor;
+    public float getGreen() {
+    	return mGreen;
     }
 
-    public int getAlpha() {
-    	return (mColor >>> 24) & 0xff;
-    }
-
-    public int getRed() {
-    	return (mColor >>> 16) & 0xff;
-    }
-
-    public int getGreen() {
-    	return (mColor >>> 8) & 0xff;
-    }
-
-    public int getBlue() {
-    	return mColor & 0xff;
+    public void setGreen(float green) {
+    	mGreen = green;
     }
 
     /**
-     * Sets the color that will be used to render this object on sensor views,
-     * specifying each channel as a value between 0 and 255.
+     * The blue channel value for the color.
+     * Unspecified: -1
      */
-    public void setARGB(int a, int r, int g, int b) {
-        mColor = 0;
-        mColor |= ((a & 0xff) << 24);
-        mColor |= ((r & 0xff) << 16);
-        mColor |= ((g & 0xff) << 8);
-        mColor |= (b & 0xff);
-    	hasColor = true;
+    public float getBlue() {
+    	return mBlue;
     }
-    
-    /**
-     * Sets the color that will be used to render this object on sensor views,
-     * specifying each channel as a value between 0 and 1.
-     */
-    public void setARGB(float a, float r, float g, float b) {
-        setARGB(
-            (int)(255 * a),
-            (int)(255 * r), 
-            (int)(255 * g), 
-            (int)(255 * b)
-        );
+
+    public void setBlue(float blue) {
+    	mBlue = blue;
     }
 
     /**
@@ -147,14 +128,37 @@ public class ArtemisMesh extends BaseArtemisObject {
     @Override
     public void updateFrom(ArtemisObject other, Context ctx) {
         super.updateFrom(other, ctx);
-        
-        ArtemisMesh m = (ArtemisMesh) other;
-        if (m.mShieldsFront != Float.MIN_VALUE) {
-            mShieldsFront = m.mShieldsFront;
-        }
-        
-        if (m.mShieldsRear != Float.MIN_VALUE) {
-            mShieldsRear = m.mShieldsRear;
+
+        if (other instanceof ArtemisMesh) {
+            ArtemisMesh m = (ArtemisMesh) other;
+
+            if (m.mMesh != null) {
+            	mMesh = m.mMesh;
+            }
+
+            if (m.mTex != null) {
+            	mTex = m.mTex;
+            }
+
+            if (m.mRed != -1) {
+            	mRed = m.mRed;
+            }
+
+            if (m.mGreen != -1) {
+            	mGreen = m.mGreen;
+            }
+
+            if (m.mBlue != -1) {
+            	mBlue = m.mBlue;
+            }
+
+            if (m.mShieldsFront != Float.MIN_VALUE) {
+                mShieldsFront = m.mShieldsFront;
+            }
+            
+            if (m.mShieldsRear != Float.MIN_VALUE) {
+                mShieldsRear = m.mShieldsRear;
+            }
         }
     }
 
@@ -163,7 +167,9 @@ public class ArtemisMesh extends BaseArtemisObject {
     	super.appendObjectProps(props, includeUnspecified);
     	putProp(props, "Mesh", mMesh, includeUnspecified);
     	putProp(props, "Texture", mTex, includeUnspecified);
-    	putProp(props, "Color", mColor, 0, includeUnspecified);
+    	putProp(props, "Red", mRed, -1, includeUnspecified);
+    	putProp(props, "Green", mGreen, -1, includeUnspecified);
+    	putProp(props, "Blue", mBlue, -1, includeUnspecified);
     	putProp(props, "Shields: fore", mShieldsFront, Float.MIN_VALUE, includeUnspecified);
     	putProp(props, "Shields: aft", mShieldsRear, Float.MIN_VALUE, includeUnspecified);
     }

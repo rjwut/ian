@@ -26,9 +26,9 @@ public class GenericMeshParser extends AbstractObjectParser {
 		UNK_2_7,
 		UNK_2_8,
 
-		UNK_3_1,
-		UNK_3_2,
-		COLOR,
+		RED,
+		GREEN,
+		BLUE,
 		FORE_SHIELDS,
 		AFT_SHIELDS,
 		UNK_3_6,
@@ -51,9 +51,10 @@ public class GenericMeshParser extends AbstractObjectParser {
 
 	@Override
 	protected ArtemisMesh parseImpl(PacketReader reader) {
-        float x = reader.readFloat(Bit.X, Float.MIN_VALUE);
-        float y = reader.readFloat(Bit.Y, Float.MIN_VALUE);
-        float z = reader.readFloat(Bit.Z, Float.MIN_VALUE);
+        final ArtemisMesh mesh = new ArtemisMesh(reader.getObjectId());
+        mesh.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
+        mesh.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
+        mesh.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
 
         reader.readObjectUnknown(Bit.UNK_1_4, 4);
         reader.readObjectUnknown(Bit.UNK_1_5, 4);
@@ -63,38 +64,23 @@ public class GenericMeshParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_2_1, 4);
         reader.readObjectUnknown(Bit.UNK_2_2, 8);
         
-        final ArtemisMesh mesh = new ArtemisMesh(reader.getObjectId());
         mesh.setName(reader.readString(Bit.NAME));
-        mesh.setX(x);
-        mesh.setY(y);
-        mesh.setZ(z);
-        mesh.setMesh(reader.readString(Bit.TEXTURE_PATH)); // wtf?!
-        mesh.setTexture(reader.readString(Bit.TEXTURE_PATH));
-        
+        mesh.setMesh(reader.readString(Bit.MESH_PATH));
+        mesh.setTexture(reader.readString(Bit.MESH_PATH)); // wtf?!
+
         reader.readObjectUnknown(Bit.UNK_2_6, 4);
         reader.readObjectUnknown(Bit.UNK_2_7, 2);
         reader.readObjectUnknown(Bit.UNK_2_8, 1);
-        reader.readObjectUnknown(Bit.UNK_3_1, 1);
-        reader.readObjectUnknown(Bit.UNK_3_2, 1);
 
-        boolean hasColor = reader.has(Bit.COLOR);
-
-        // color
-        if (hasColor) {
-        	mesh.setARGB(
-        			1.0f,
-        			reader.readFloat(),
-        			reader.readFloat(),
-        			reader.readFloat()
-        	);
-        }
-
+        mesh.setRed(reader.readFloat(Bit.RED, Float.MIN_VALUE));
+        mesh.setGreen(reader.readFloat(Bit.GREEN, Float.MIN_VALUE));
+        mesh.setBlue(reader.readFloat(Bit.BLUE, Float.MIN_VALUE));
         mesh.setFakeShields(
         		reader.readFloat(Bit.FORE_SHIELDS, Float.MIN_VALUE),
         		reader.readFloat(Bit.AFT_SHIELDS, Float.MIN_VALUE)
         );
 
-        reader.readObjectUnknown(Bit.UNK_3_6, 1);
+        reader.readObjectUnknown(Bit.UNK_3_6, 4);
         reader.readObjectUnknown(Bit.UNK_3_7, 4);
         reader.readObjectUnknown(Bit.UNK_3_8, 4);
         reader.readObjectUnknown(Bit.UNK_4_1, 4);
@@ -116,21 +102,15 @@ public class GenericMeshParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_2_1)
 				.writeUnknown(Bit.UNK_2_2)
 				.writeString(Bit.NAME, mesh.getName())
-				.writeString(Bit.TEXTURE_PATH, mesh.getMesh())
-				.writeString(Bit.TEXTURE_PATH, mesh.getTexture())
+				.writeString(Bit.MESH_PATH, mesh.getMesh())
+				.writeString(Bit.MESH_PATH, mesh.getTexture())
 				.writeUnknown(Bit.UNK_2_6)
 				.writeUnknown(Bit.UNK_2_7)
 				.writeUnknown(Bit.UNK_2_8)
-				.writeUnknown(Bit.UNK_3_1)
-				.writeUnknown(Bit.UNK_3_2);
-
-		if (mesh.hasColor()) {
-			writer	.writeFloat(((float) mesh.getRed()) / 255)
-					.writeFloat(((float) mesh.getGreen()) / 255)
-					.writeFloat(((float) mesh.getBlue()) / 255);
-		}
-
-		writer	.writeFloat(Bit.FORE_SHIELDS, mesh.getShieldsFront(), Float.MIN_VALUE)
+				.writeFloat(Bit.RED, mesh.getRed(), Float.MIN_VALUE)
+				.writeFloat(Bit.GREEN, mesh.getGreen(), Float.MIN_VALUE)
+				.writeFloat(Bit.BLUE, mesh.getBlue(), Float.MIN_VALUE)
+				.writeFloat(Bit.FORE_SHIELDS, mesh.getShieldsFront(), Float.MIN_VALUE)
 				.writeFloat(Bit.AFT_SHIELDS, mesh.getShieldsRear(), Float.MIN_VALUE)
 				.writeUnknown(Bit.UNK_3_6)
 				.writeUnknown(Bit.UNK_3_7)
