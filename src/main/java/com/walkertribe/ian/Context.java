@@ -23,6 +23,10 @@ public class Context {
 	 * Creates a new Context using the given PathResolver.
 	 */
 	public Context(PathResolver pathResolver) {
+		if (pathResolver == null) {
+			throw new IllegalArgumentException("You must provide a PathResolver");
+		}
+
 		this.pathResolver = pathResolver;
 	}
 
