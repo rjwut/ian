@@ -1,0 +1,28 @@
+efbeadde // header
+32000000 // packet length = 50
+01000000 // origin = server
+00000000 // padding
+1e000000 // remaining length = 30
+f93d8080 // ObjectUpdatePacket
+08       // object type = anomaly
+02000000 // object ID = 2
+0f       // bit field
+0000803f // x = 1.0
+00000040 // y = 2.0
+00004040 // z = 3.0
+02000000 // upgrade = Cetrocite Crystal
+00000000 // end of array
+
+efbeadde // header
+2e000000 // packet length = 46
+01000000 // origin = server
+00000000 // padding
+1a000000 // remaining length = 26
+f93d8080 // ObjectUpdatePacket
+08       // object type = anomaly
+02000000 // object ID = 2
+07       // bit field (no upgrade)
+00000040 // x = 2.0
+00004040 // y = 3.0
+0000803f // z = 1.0
+00000000 // end of array

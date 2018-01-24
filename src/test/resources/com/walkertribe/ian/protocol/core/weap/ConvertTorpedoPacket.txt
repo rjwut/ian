@@ -1,0 +1,17 @@
+efbeadde          // header
+2c000000          // packet length = 44
+02000000          // origin = client
+00000000          // padding
+18000000          // remaining length = 24
+d901cc69 03000000 // ConvertTorpedoPacket
+00000000          // direction = torp -> energy
+000000000000000000000000 // unknown
+
+efbeadde          // header
+2c000000          // packet length = 44
+02000000          // origin = client
+00000000          // padding
+18000000          // remaining length = 24
+d901cc69 03000000 // ConvertTorpedoPacket
+0000803f          // direction = energy -> torp
+000000000000000000000000 // unknown

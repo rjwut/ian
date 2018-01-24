@@ -1,0 +1,24 @@
+efbeadde // header
+5d000000 // packet length = 93
+01000000 // origin = server
+00000000 // padding
+49000000 // remaining length = 73
+f93d8080 // ObjectUpdatePacket
+06       // object type = base
+02000000 // object ID = 2
+ff3f     // bit field
+04000000 44 00 53 00 31 00 00 00 // name = DS1
+00003c42 // shields = 47.0
+00000000 // aft shields = 0.0 (ignored)
+00000000 // index = 0
+e8030000 // vessel ID = 1000
+0000803f // x = 1.0
+00000040 // y = 2.0
+00004040 // z = 3.0
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00       // unknown
+00       // unknown
+00000000 // end of array

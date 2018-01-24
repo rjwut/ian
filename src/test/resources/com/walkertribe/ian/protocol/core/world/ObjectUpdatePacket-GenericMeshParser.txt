@@ -1,0 +1,36 @@
+efbeadde // header
+be000000 // packet length = 190
+01000000 // origin = server
+00000000 // padding
+aa000000 // remaining length = 170
+f93d8080 // ObjectUpdatePacket
+0e       // object type = generic mesh
+02000000 // object ID = 2
+ffefff03 // bit field
+0000803f // x = 1.0
+00000040 // y = 2.0
+00004040 // z = 3.0
+00000000 // unknown
+00000000 // unknown
+00000000 00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 00000000 // unknown
+05000000 4d 00 45 00 53 00 48 00 00 00 // name = MESH
+09000000 74 00 65 00 73 00 74 00 2e 00 64 00 78 00 73 00 00 00 // mesh = test.dxs
+09000000 74 00 65 00 73 00 74 00 2e 00 70 00 6e 00 67 00 00 00 // texture = test.png
+00000000 // unknown
+0000     // unknown
+00       // unknown
+0000803f // red = 1.0
+0000803f // green = 1.0
+0000803f // blue = 1.0
+0000c842 // front shields = 100.0
+00004842 // rear shields = 50.0
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // end array

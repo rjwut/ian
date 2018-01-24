@@ -1,0 +1,8 @@
+efbeadde // header
+20000000 // packet length = 32
+01000000 // origin = server
+00000000 // padding
+0c000000 // remaining length = 12
+1167e63d // GameStartPacket
+01000000 // difficulty = 1
+02000000 // game type = double front

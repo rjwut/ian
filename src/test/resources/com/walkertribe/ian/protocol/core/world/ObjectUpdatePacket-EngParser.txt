@@ -1,0 +1,45 @@
+efbeadde // header
+25000000 // packet length = 37
+01000000 // origin = server
+00000000 // padding
+11000000 // remaining length = 17
+f93d8080 // ObjectUpdatePacket
+03       // object type = engineering console
+02000000 // object ID = 2
+00000000 // bit field
+00000000 // end array
+
+efbeadde // header
+6d000000 // packet length = 109
+01000000 // origin = server
+00000000 // padding
+59000000 // remaining length = 89
+f93d8080 // ObjectUpdatePacket
+03       // object type = engineering console
+02000000 // object ID = 2
+ffffff00 // bit field
+00000000 // beams heat = 0.0
+0000003e // torps heat = 0.125
+0000803e // sensors heat = 0.25
+0000c03e // maneuvering heat = 0.375
+0000003f // impulse heat = 0.5
+0000203f // warp/jump drive heat = 0.625
+0000403f // fore shields heat = 0.75
+0000603f // aft shields heat = 0.875
+00000000 // beams energy = 0.0
+0000003e // torps energy = 0.125
+0000803e // sensors energy = 0.25
+0000c03e // maneuvering energy = 0.375
+0000003f // impulse energy = 0.5
+0000203f // warp/jump drive energy = 0.625
+0000403f // fore shields energy = 0.75
+0000603f // aft shields energy = 0.875
+00       // beams coolant = 0
+01       // torps coolant = 1
+02       // sensors coolant = 2
+03       // maneuvering coolant = 3
+04       // impulse coolant = 4
+05       // warp/jump coolant = 5
+06       // fore shields coolant = 6
+07       // aft shields coolant = 7
+00000000 // end array

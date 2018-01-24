@@ -1,0 +1,52 @@
+efbeadde // header
+70000000 // packet length = 112
+01000000 // origin = server
+00000000 // padding
+5c000000 // remaining length = 92
+f93d8080 // ObjectUpdatePacket
+0f       // object type = creature
+02000000 // object ID = 2
+ffff00   // bit field
+0000803f // x = 1.0
+00000040 // y = 2.0
+00004040 // z = 3.0
+06000000 57 00 48 00 41 00 4c 00 45 00 00 00 // name = WHALE
+00008040 // heading = 4.0
+0000a040 // pitch = 5.0
+0000c040 // roll = 6.0
+01000000 // creature type = whale
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // end of array
+
+efbeadde // header
+6c000000 // packet length = 108
+01000000 // origin = server
+00000000 // padding
+58000000 // remaining length = 88
+f93d8080 // ObjectUpdatePacket
+0f       // object type = creature
+02000000 // object ID = 2
+7fff00   // bit field
+0000803f // x = 1.0
+00000040 // y = 2.0
+00004040 // z = 3.0
+06000000 57 00 48 00 41 00 4c 00 45 00 00 00 // name = WHALE
+00008040 // heading = 4.0
+0000a040 // pitch = 5.0
+0000c040 // roll = 6.0
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // unknown
+00000000 // end of array
