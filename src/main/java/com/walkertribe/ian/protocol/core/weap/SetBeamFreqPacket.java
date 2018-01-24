@@ -44,6 +44,10 @@ public class SetBeamFreqPacket extends ValueIntPacket {
     	super(SubType.SET_BEAM_FREQUENCY, reader);
     }
 
+    public BeamFrequency getBeamFrequency() {
+    	return BeamFrequency.values()[mArg];
+    }
+
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
 		b.append(BeamFrequency.values()[mArg]);
