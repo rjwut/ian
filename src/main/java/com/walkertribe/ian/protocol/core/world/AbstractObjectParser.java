@@ -27,13 +27,6 @@ public abstract class AbstractObjectParser implements ObjectParser {
 			return null; // no more objects to parse
 		}
 
-		ObjectType parsedObjectType = ObjectType.fromId(typeId);
-
-		if (objectType != parsedObjectType) {
-			throw new IllegalStateException("Expected to parse " + objectType +
-					" but received " + parsedObjectType);
-		}
-
 		reader.startObject(objectType, getBits());
 		ArtemisObject obj = parseImpl(reader);
 		obj.setUnknownProps(reader.getUnknownObjectProps());
