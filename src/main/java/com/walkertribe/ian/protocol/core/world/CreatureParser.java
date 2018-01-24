@@ -7,6 +7,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisCreature;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for creatures
+ * @author rjwut
+ */
 public class CreatureParser extends AbstractObjectParser {
 	private enum Bit {
     	X,
@@ -25,7 +29,9 @@ public class CreatureParser extends AbstractObjectParser {
     	UNK_2_5,
     	UNK_2_6,
     	UNK_2_7,
-    	UNK_2_8;
+    	UNK_2_8,
+
+    	UNK_3_1;
     }
     private static final Bit[] BITS = Bit.values();
 
@@ -41,7 +47,6 @@ public class CreatureParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisCreature parseImpl(PacketReader reader) {
         final ArtemisCreature creature = new ArtemisCreature(reader.getObjectId());
-        reader.skip(1); // unused third byte in bit field
         creature.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
         creature.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
         creature.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
@@ -62,14 +67,14 @@ public class CreatureParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_2_6, 4);
         reader.readObjectUnknown(Bit.UNK_2_7, 4);
         reader.readObjectUnknown(Bit.UNK_2_8, 4);
+        reader.readObjectUnknown(Bit.UNK_3_1, 4);
         return creature;
 	}
 
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisCreature creature = (ArtemisCreature) obj;
-		writer	.writeByte((byte) 0)
-				.writeFloat(Bit.X, creature.getX(), Float.MIN_VALUE)
+		writer	.writeFloat(Bit.X, creature.getX(), Float.MIN_VALUE)
 				.writeFloat(Bit.Y, creature.getY(), Float.MIN_VALUE)
 				.writeFloat(Bit.Z, creature.getZ(), Float.MIN_VALUE)
 				.writeString(Bit.NAME, creature.getName())
@@ -90,6 +95,7 @@ public class CreatureParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_2_5)
 				.writeUnknown(Bit.UNK_2_6)
 				.writeUnknown(Bit.UNK_2_7)
-				.writeUnknown(Bit.UNK_2_8);
+				.writeUnknown(Bit.UNK_2_8)
+				.writeUnknown(Bit.UNK_3_1);
 	}
 }
