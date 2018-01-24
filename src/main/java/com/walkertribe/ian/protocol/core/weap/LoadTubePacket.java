@@ -74,7 +74,21 @@ public class LoadTubePacket extends BaseArtemisPacket {
         mUnknown1 = reader.readInt();
     }
 
-	@Override
+    /**
+     * The index of the tube to load.
+     */
+    public int getTubeIndex() {
+    	return mTube;
+    }
+
+    /**
+     * The ordnance to load in the tube.
+     */
+    public OrdnanceType getOrdnanceType() {
+    	return mOrdnanceType;
+    }
+
+    @Override
 	protected void writePayload(PacketWriter writer) {
     	writer	.writeInt(SUBTYPE)
     			.writeInt(mTube)
