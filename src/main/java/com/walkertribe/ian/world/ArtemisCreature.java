@@ -42,6 +42,9 @@ public class ArtemisCreature extends BaseArtemisOrientable {
         }
     }
 
+    /**
+     * Returns the type of creature this is.
+     */
     public CreatureType getCreatureType() {
     	return mCreatureType;
     }

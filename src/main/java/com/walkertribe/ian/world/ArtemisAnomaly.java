@@ -6,6 +6,10 @@ import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.Upgrade;
 
+/**
+ * An anomaly (objects which can be picked up for upgrades)
+ * @author rjwut
+ */
 public class ArtemisAnomaly extends BaseArtemisObject {
 	private Upgrade mUpgrade;
 
@@ -18,6 +22,9 @@ public class ArtemisAnomaly extends BaseArtemisObject {
 		return ObjectType.ANOMALY;
 	}
 
+	/**
+	 * Returns the Upgrade you receive for picking up this anomaly.
+	 */
 	public Upgrade getUpgrade() {
 		return mUpgrade;
 	}

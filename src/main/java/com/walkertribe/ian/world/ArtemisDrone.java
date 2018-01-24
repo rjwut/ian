@@ -5,6 +5,10 @@ import java.util.SortedMap;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 
+/**
+ * Torgoth drones
+ * @author rjwut
+ */
 public class ArtemisDrone extends BaseArtemisOrientable {
 	private float mSteering = -1;
 
@@ -17,6 +21,10 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 		return ObjectType.DRONE;
 	}
 
+	/**
+	 * Current rudder position for the drone, as a value between 0 (hard port)
+	 * and 1 (hard starboard).
+	 */
 	public float getSteering() {
 		return mSteering;
 	}

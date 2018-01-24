@@ -7,6 +7,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisAnomaly;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for anomalies
+ * @author rjwut
+ */
 public class AnomalyParser extends AbstractObjectParser {
 	private enum Bit {
 		X,
