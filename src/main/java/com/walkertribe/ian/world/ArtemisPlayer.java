@@ -104,9 +104,13 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     public void setSystemCoolant(ShipSystem sys, int coolant) {
-        mCoolant[sys.ordinal()] = coolant;
+    	if (coolant < 0 || coolant > Artemis.MAX_COOLANT_PER_SYSTEM) {
+    		throw new IllegalArgumentException("Invalid coolant value (" + coolant + ") for " + sys);
+    	}
+
+    	mCoolant[sys.ordinal()] = coolant;
     }
-    
+
     /**
      * The energy allocation level for a system, as a value between 0 (no energy
      * allocated) and 1 (maximum energy allocated).
@@ -117,17 +121,18 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     public void setSystemEnergy(ShipSystem sys, float energy) {
-        if (energy > 1f) {
-            throw new IllegalArgumentException("Illegal energy value: " + energy);
+        if (energy < 0f || energy > 1f) {
+            throw new IllegalArgumentException("Illegal energy value (" + energy + ") for " + sys);
         }
+
         mSystems[sys.ordinal()] = energy;
     }
 
     /**
-     * Convenience, set energy as an int percentage [0, 300]
+     * Convenience, set energy as a percentage [0, 300]
      */
-    public void setSystemEnergy(ShipSystem sys, int energyPercentage) {
-        setSystemEnergy(sys, energyPercentage / (float) Artemis.MAX_ENERGY_ALLOCATION_PERCENT);
+    public void setSystemEnergyAsPercent(ShipSystem sys, float energyPercentage) {
+        setSystemEnergy(sys, energyPercentage / Artemis.MAX_ENERGY_ALLOCATION_PERCENT);
     }
 
     /**
@@ -139,7 +144,11 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     public void setSystemHeat(ShipSystem sys, float heat) {
-        mHeat[sys.ordinal()] = heat;
+    	if (heat < 0f || heat > 1f) {
+            throw new IllegalArgumentException("Illegal heat value (" + heat + ") for " + sys);
+    	}
+
+    	mHeat[sys.ordinal()] = heat;
     }
 
     /**
