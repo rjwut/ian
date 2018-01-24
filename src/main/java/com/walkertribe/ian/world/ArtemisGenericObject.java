@@ -1,5 +1,6 @@
 package com.walkertribe.ian.world;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 
 /**
@@ -29,5 +30,18 @@ public class ArtemisGenericObject extends BaseArtemisObject {
     	}
 
     	mType = type;
+    }
+
+    @Override
+    public void updateFrom(ArtemisObject obj, Context ctx) {
+    	super.updateFrom(obj, ctx);
+
+    	if (obj instanceof ArtemisGenericObject) {
+    		ArtemisGenericObject cast = (ArtemisGenericObject) obj;
+
+    		if (cast.mType != null) {
+    			mType = cast.mType;
+    		}
+    	}
     }
 }
