@@ -63,6 +63,7 @@ public class TestUtil {
 	public static <T extends Enum<?>> void coverEnumValueOf(Class<T> clazz) {
 		try {
 			Method method = clazz.getMethod("valueOf", String.class);
+			method.setAccessible(true); // valueOf() is always public, but maybe the enum isn't
 			method.invoke(null, clazz.getEnumConstants()[0].name());
 		} catch (ReflectiveOperationException ex) {
 			throw new RuntimeException(ex);
