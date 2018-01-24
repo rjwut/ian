@@ -39,6 +39,7 @@ public class ConvertTorpedoPacket extends BaseArtemisPacket {
 	}
 
     private Direction mDirection;
+    private byte[] mUnknown;
 
     /**
      * @param direction The Direction value indicating the desired conversion type
@@ -51,17 +52,31 @@ public class ConvertTorpedoPacket extends BaseArtemisPacket {
         }
 
         mDirection = direction;
+        mUnknown = new byte[] {
+        		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
     }
 
     private ConvertTorpedoPacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
         reader.skip(4); // subtype
-        mDirection = Direction.values()[(int)reader.readFloat()];
+        mDirection = Direction.values()[(int) reader.readFloat()];
+        mUnknown = reader.readBytes(12);
     }
 
-	@Override
+    /**
+     * Returns the direction of the conversion.
+     */
+    public Direction getDirection() {
+    	return mDirection;
+    }
+
+    @Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(SUBTYPE).writeFloat(mDirection.ordinal());
+		writer
+			.writeInt(SUBTYPE)
+			.writeFloat(mDirection.ordinal())
+			.writeBytes(mUnknown);
 	}
 
 	@Override
