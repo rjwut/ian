@@ -7,10 +7,33 @@ import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.util.ByteArrayReader;
 import com.walkertribe.ian.util.GridCoord;
 
+/**
+ * <p>
+ * Represents a single node in the VesselInternals.
+ * </p>
+ * <p>
+ * Every node has two sets of coordinates: a grid coordinate (within the
+ * 5 x 5 x 10 ship system grid) and a physical coordinate (within the
+ * coordinate space of the vessels 3D model).
+ * </p>
+ * <p>
+ * There are three types of nodes:
+ * </p>
+ * <ul>
+ * <li>System nodes: Nodes where a ship system is located. These are
+ * represented by large dots on the engineering console in the stock client.
+ * Each system node has a corresponding ship system.</li>
+ * <li>Hallway nodes: Nodes which are within the ship, but which don't contain
+ * a ship system.</li>
+ * <li>Empty nodes: Nodes which are outside the ship. These are inaccessible to
+ * DAMCON teams.</li>
+ * </ul>
+ * @author rjwut
+ */
 public class VesselNode {
 	static final int BLOCK_SIZE = 32;
-	private static final int EMPTY_NODE_VALUE = -2;
-	private static final int HALLWAY_NODE_VALUE = -1;
+	static final int EMPTY_NODE_VALUE = -2;
+	static final int HALLWAY_NODE_VALUE = -1;
 
 	private GridCoord coords;
 	private float x;
@@ -19,6 +42,20 @@ public class VesselNode {
 	private boolean accessible;
 	private ShipSystem system;
 
+	/**
+	 * Creates a new VesselNode at the given grid coordinates. This node will
+	 * be located at (0,0,0) in the physical coordinate space and will be
+	 * inaccessible.
+	 */
+	VesselNode (GridCoord coords) {
+		this.coords = coords;
+	}
+
+	/**
+	 * Reads the VesselNode at the indicated grid coordinates from the given
+	 * InputStream. The buffer is a byte array with a size equal to
+	 * VesselNode.BLOCK_SIZE.
+	 */
 	VesselNode (InputStream in, GridCoord coords, byte[] buffer) throws InterruptedException, IOException {
 		ByteArrayReader.readBytes(in, BLOCK_SIZE, buffer);
 		ByteArrayReader reader = new ByteArrayReader(buffer);
@@ -42,31 +79,71 @@ public class VesselNode {
 	}
 
 	/**
-	 * Returns the X-coordinate of this node relative to the origin of the ship's model coordinates.
+	 * Returns the X-coordinate of this node relative to the origin of the
+	 * ship's model coordinates.
 	 */
 	public float getX() {
 		return x;
 	}
 
 	/**
-	 * Returns the Y-coordinate of this node relative to the origin of the ship's model coordinates.
+	 * Sets the X-coordinate of this node relative to the origin of the ship's
+	 * model coordinates.
+	 */
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	/**
+	 * Returns the Y-coordinate of this node relative to the origin of the
+	 * ship's model coordinates.
 	 */
 	public float getY() {
 		return y;
 	}
 
 	/**
-	 * Returns the Z-coordinate of this node relative to the origin of the ship's model coordinates.
+	 * Sets the Y-coordinate of this node relative to the origin of the ship's
+	 * model coordinates.
+	 */
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	/**
+	 * Returns the Z-coordinate of this node relative to the origin of the
+	 * ship's model coordinates.
 	 */
 	public float getZ() {
 		return z;
 	}
 
 	/**
-	 * Returns true if it's possible for DAMCON teams to access this node; false otherwise.
+	 * Sets the Z-coordinate of this node relative to the origin of the ship's
+	 * model coordinates.
+	 */
+	public void setZ(float z) {
+		this.z = z;
+	}
+
+	/**
+	 * Returns true if this node represents a location within the system grid;
+	 * false if it's outside the ship.
 	 */
 	public boolean isAccessible() {
 		return accessible;
+	}
+
+	/**
+	 * Sets whether this node is accessible or not. Note that if you set this
+	 * to false, the system property will be set to null as well.
+	 */
+	public void setAccessible(boolean accessible) {
+		this.accessible = accessible;
+
+		if (!accessible) {
+			system = null;
+		}
 	}
 
 	/**
@@ -74,6 +151,18 @@ public class VesselNode {
 	 */
 	public ShipSystem getSystem() {
 		return system;
+	}
+
+	/**
+	 * Sets the ship system located at this node. Note that if you set this to
+	 * a non-null value, the accessible property will be set to true as well.
+	 */
+	public void setSystem(ShipSystem system) {
+		this.system = system;
+
+		if (system != null) {
+			accessible = true;
+		}
 	}
 
 	@Override
