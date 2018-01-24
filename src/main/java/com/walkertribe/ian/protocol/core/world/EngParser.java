@@ -6,7 +6,6 @@ import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.world.Artemis;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
@@ -37,7 +36,9 @@ public class EngParser extends AbstractObjectParser {
 		COOLANT_IMPULSE,
 		COOLANT_WARP_OR_JUMP,
 		COOLANT_FORE_SHIELDS,
-		COOLANT_AFT_SHIELDS
+		COOLANT_AFT_SHIELDS,
+
+		UNKNOWN_4_1
 	}
 	private static final Bit[] BITS = Bit.values();
 	private static final Bit[] HEAT;
@@ -47,7 +48,7 @@ public class EngParser extends AbstractObjectParser {
 	static {
 		HEAT = Arrays.copyOfRange(BITS, Bit.HEAT_BEAMS.ordinal(), Bit.ENERGY_BEAMS.ordinal());
 		ENERGY = Arrays.copyOfRange(BITS, Bit.ENERGY_BEAMS.ordinal(), Bit.COOLANT_BEAMS.ordinal());
-		COOLANT = Arrays.copyOfRange(BITS, Bit.COOLANT_BEAMS.ordinal(), Bit.values().length);
+		COOLANT = Arrays.copyOfRange(BITS, Bit.COOLANT_BEAMS.ordinal(), Bit.UNKNOWN_4_1.ordinal());
 	}
 
 	EngParser() {
@@ -61,30 +62,24 @@ public class EngParser extends AbstractObjectParser {
 
 	@Override
 	protected ArtemisPlayer parseImpl(PacketReader reader) {
-        float[] heat = new float[ Artemis.SYSTEM_COUNT ];
-        float[] sysEnergy = new float[ Artemis.SYSTEM_COUNT ];
-        int[] coolant = new int[ Artemis.SYSTEM_COUNT ];
-        reader.skip(1);
-    
-        for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-            heat[i] = reader.readFloat(HEAT[i], -1);
-        }
-
-        for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-            sysEnergy[i] = reader.readFloat(ENERGY[i], -1);
-        }
-
-        for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-            coolant[i] = reader.readByte(COOLANT[i], (byte) -1);
-        }
-
         ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId());
 
-        for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-            ShipSystem sys = ShipSystem.values()[i];
-            player.setSystemHeat(sys, heat[i]);
-            player.setSystemEnergy(sys, sysEnergy[i]);
-            player.setSystemCoolant(sys, coolant[i]);
+        for (ShipSystem sys : ShipSystem.values()) {
+        	if (reader.has(HEAT[sys.ordinal()])) {
+            	player.setSystemHeat(sys, reader.readFloat());
+        	}
+        }
+
+        for (ShipSystem sys : ShipSystem.values()) {
+        	if (reader.has(ENERGY[sys.ordinal()])) {
+            	player.setSystemEnergy(sys, reader.readFloat());
+        	}
+        }
+
+        for (ShipSystem sys : ShipSystem.values()) {
+        	if (reader.has(COOLANT[sys.ordinal()])) {
+            	player.setSystemCoolant(sys, reader.readByte());
+        	}
         }
 
         return player;
@@ -93,7 +88,6 @@ public class EngParser extends AbstractObjectParser {
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisPlayer player = (ArtemisPlayer) obj;
-		writer.writeObjByte((byte) 0);
 
 		for (ShipSystem sys : ShipSystem.values()) {
 			writer.writeFloat(HEAT[sys.ordinal()], player.getSystemHeat(sys), -1);
