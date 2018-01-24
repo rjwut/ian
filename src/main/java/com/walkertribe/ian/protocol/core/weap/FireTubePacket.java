@@ -45,6 +45,13 @@ public class FireTubePacket extends ValueIntPacket {
     	super(SubType.FIRE_TUBE, reader);
     }
 
+    /**
+     * Returns the index of the tube to fire.
+     */
+    public int getTubeIndex() {
+    	return mArg;
+    }
+
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
 		b.append(mArg);
