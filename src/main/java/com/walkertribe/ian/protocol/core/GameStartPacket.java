@@ -17,8 +17,8 @@ import com.walkertribe.ian.protocol.PacketType;
  */
 public class GameStartPacket extends BaseArtemisPacket {
 	private static final PacketType TYPE = CorePacketType.START_GAME;
-	public static final int MIN = 1;
-	public static final int MAX = 11;
+	public static final int MIN_DIFFICULTY = 1;
+	public static final int MAX_DIFFICULTY = 11;
 
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
@@ -47,14 +47,14 @@ public class GameStartPacket extends BaseArtemisPacket {
     public GameStartPacket(int difficulty, GameType gameType) {
 		super(ConnectionType.SERVER, TYPE);
 
-    	if (difficulty < MIN || difficulty > MAX) {
+    	if (difficulty < MIN_DIFFICULTY || difficulty > MAX_DIFFICULTY) {
     		throw new IllegalArgumentException(
     				"Invalid difficulty level (" +
     				difficulty +
     				"); must be between " +
-    				MIN +
+    				MIN_DIFFICULTY +
     				" and " + 
-    				MAX
+    				MAX_DIFFICULTY
     		);
     	}
 
