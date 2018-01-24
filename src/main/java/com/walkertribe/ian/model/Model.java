@@ -69,14 +69,14 @@ public class Model {
 	private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
 	private List<Poly> polys = new LinkedList<Poly>();
 
-	private Model(String dxsPaths) {
+	Model(String dxsPaths) {
 		this.dxsPaths = dxsPaths;
 	}
 
 	/**
 	 * Adds the given Vertexes and Polys to this Model.
 	 */
-	private void add(Map<String, Vertex> v, List<Poly> p) {
+	void add(Map<String, Vertex> v, List<Poly> p) {
 		vertexMap.putAll(v);
 		polys.addAll(p);
 
