@@ -39,8 +39,19 @@ public class SetWeaponsTargetPacket extends ValueIntPacket {
     	super(SubType.SET_TARGET, reader);
     }
 
+    /**
+     * Returns the target's ID.
+     */
+    public int getTargetId() {
+    	return mArg;
+    }
+
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append('#').append(mArg);
+    	if (mArg == 1) {
+    		b.append("no target");
+    	} else {
+    		b.append('#').append(mArg);
+    	}
 	}
 }
