@@ -10,42 +10,23 @@ import com.walkertribe.ian.protocol.RawPacket;
 import com.walkertribe.ian.util.TextUtil;
 
 /**
- * Debugger implementation that simply writes all packets to an OutputStream.
+ * Debugger implementation that writes to output and error streams.
  * @author rjwut
  */
 public class OutputStreamDebugger implements Debugger {
 	private String name;
 	private PrintStream out;
-
-	/**
-	 * Convenience constructor for new OutputStreamDebugger("", System.out);
-	 */
-	public OutputStreamDebugger() {
-		this("", System.out);
-	}
-
-	/**
-	 * Convenience constructor for new OutputStreamDebugger(name, System.out);
-	 */
-	public OutputStreamDebugger(String name) {
-		this(name, System.out);
-	}
-
-	/**
-	 * Convenience constructor for new OutputStreamDebugger("", out);
-	 */
-	public OutputStreamDebugger(OutputStream out) {
-		this("", out);
-	}
+	private PrintStream err;
 
 	/**
 	 * Creates an OutputStreamDebugger with the indicated name that writes to
-	 * the given OutputStream. The name is prefixed to each event that is
+	 * the given OutputStreams. The name is prefixed to each event that is
 	 * written to the stream so you can tell which Debugger is reporting it.
 	 */
-	public OutputStreamDebugger(String name, OutputStream out) {
+	public OutputStreamDebugger(String name, OutputStream out, OutputStream err) {
 		this.name = name;
-		this.out = out instanceof PrintStream ? (PrintStream) out : new PrintStream(out);
+		this.out = wrapInPrintStream(out);
+		this.err = wrapInPrintStream(err);
 	}
 
 	@Override
@@ -77,21 +58,30 @@ public class OutputStreamDebugger implements Debugger {
 
 	@Override
 	public void onPacketParseException(ArtemisPacketException ex) {
-		System.err.println(ex.getConnectionType() + ": " +
+		byte[] payload = ex.getPayload();
+		err.println(ex.getConnectionType() + ": " +
 				TextUtil.intToHex(ex.getPacketType()) + " " +
-				TextUtil.byteArrayToHexString(ex.getPayload()));
-		ex.printStackTrace();
+				(payload == null ? "" : TextUtil.byteArrayToHexString(payload))
+		);
+		ex.printStackTrace(err);
 	}
 
 	@Override
 	public void onPacketWriteException(ArtemisPacket pkt, Exception ex) {
-		System.err.println(pkt);
-		ex.printStackTrace();
+		err.println(pkt);
+		ex.printStackTrace(err);
 	}
 
 	@Override
 	public void warn(String msg) {
 		out.println((name.length() > 0 ? (name + ": ") : "") + "WARNING: "  + msg);
+	}
+
+	/**
+	 * Returns the given OutputStream cast to or wrapped in a PrintStream.
+	 */
+	private PrintStream wrapInPrintStream(OutputStream stream) {
+		return stream instanceof PrintStream ? (PrintStream) stream : new PrintStream(stream);
 	}
 
 	/**

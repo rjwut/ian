@@ -122,7 +122,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 * Returns a new Debugger object to use for this test.
 	 */
 	protected Debugger buildDebugger() {
-		return TestUtil.DEBUG ? new OutputStreamDebugger() : new BaseDebugger();
+		return TestUtil.DEBUG ? new OutputStreamDebugger("", System.out, System.err) : new BaseDebugger();
 	}
 
 	/**

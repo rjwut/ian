@@ -43,7 +43,7 @@ public class UnparsedPacketTest extends AbstractPacketTester<UnknownPacket> {
 	 */
 	@Override
 	protected Debugger buildDebugger() {
-		return TestUtil.DEBUG ? new OutputStreamDebugger() {
+		return TestUtil.DEBUG ? new OutputStreamDebugger("", System.out, System.err) {
 			@Override
 			public void onRecvUnparsedPacket(RawPacket pkt) {
 				super.onRecvUnparsedPacket(pkt);
