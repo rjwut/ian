@@ -58,7 +58,38 @@ public class FireBeamPacket extends BaseArtemisPacket {
         mZ = reader.readFloat();
     }
 
-	@Override
+    /**
+     * Returns the ID of the beam target.
+     */
+    public int getTargetId() {
+    	return mId;
+    }
+
+    /**
+     * Returns the X-coordinate of the beam endpoint relative to the target's
+     * model origin.
+     */
+    public float getX() {
+    	return mX;
+    }
+
+    /**
+     * Returns the Y-coordinate of the beam endpoint relative to the target's
+     * model origin.
+     */
+    public float getY() {
+    	return mY;
+    }
+
+    /**
+     * Returns the Z-coordinate of the beam endpoint relative to the target's
+     * model origin.
+     */
+    public float getZ() {
+    	return mZ;
+    }
+
+    @Override
 	protected void writePayload(PacketWriter writer) {
 		writer.writeInt(mId).writeFloat(mX).writeFloat(mY).writeFloat(mZ);
 	}
