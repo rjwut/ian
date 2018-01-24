@@ -6,6 +6,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisBase;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for bases
+ * @author rjwut
+ */
 public class BaseParser extends AbstractObjectParser {
 	private enum Bit {
 		NAME,
@@ -39,12 +43,10 @@ public class BaseParser extends AbstractObjectParser {
 	protected ArtemisBase parseImpl(PacketReader reader) {
         ArtemisBase base = new ArtemisBase(reader.getObjectId());
         base.setName(reader.readString(Bit.NAME));
-        float shieldsFront = reader.readFloat(Bit.FORE_SHIELDS, Float.MIN_VALUE);
-        float shieldsRear = reader.readFloat(Bit.AFT_SHIELDS, Float.MIN_VALUE);
+        base.setShieldsFront(reader.readFloat(Bit.FORE_SHIELDS, Float.MIN_VALUE));
+        base.setShieldsRear(reader.readFloat(Bit.AFT_SHIELDS, Float.MIN_VALUE));
         base.setIndex(reader.readInt(Bit.INDEX, -1));
         base.setHullId(reader.readInt(Bit.HULL_ID, -1));
-        base.setShieldsFront(shieldsFront);
-        base.setShieldsRear(shieldsRear);
         base.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
         base.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
         base.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
