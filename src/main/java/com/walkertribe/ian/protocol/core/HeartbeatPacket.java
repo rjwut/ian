@@ -14,8 +14,6 @@ import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
 /**
  * A packet sent periodically by the server to demonstrate that it's still
  * alive.
- * TODO Consider making ThreadedArtemisNetworkInterface watch for this packet
- * and close if too much time goes by without one.
  * @author rjwut
  */
 public class HeartbeatPacket extends BaseArtemisPacket {
