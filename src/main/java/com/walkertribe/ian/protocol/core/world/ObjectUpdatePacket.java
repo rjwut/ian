@@ -88,7 +88,7 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 	}
 
 	public void addObject(ArtemisObject obj) {
-		if (objectType.isCompatible(obj)) {
+		if (!objectType.isCompatible(obj)) {
 			throw new IllegalArgumentException("Object is of type " +
 					obj.getType() + "; expected " + objectType);
 		}
