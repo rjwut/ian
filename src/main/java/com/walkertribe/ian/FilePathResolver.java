@@ -1,4 +1,4 @@
-package com.walkertribe.ian.vesseldata;
+package com.walkertribe.ian;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,41 +46,25 @@ public class VesselInternals {
 	/**
 	 * Imports an .snt file.
 	 */
-	public VesselInternals(PathResolver pathResolver, String sntPath) {
-		InputStream in = null;
+	public VesselInternals(InputStream in) {
+		if (!(in instanceof BufferedInputStream)) {
+			in = new BufferedInputStream(in);
+		}
 
 		try {
-			in = pathResolver.get(sntPath);
-			load(new BufferedInputStream(in));
-		} catch (MalformedURLException ex) {
+			for (int x = 0; x < GRID_SIZE_X; x++) {
+				for (int y = 0; y < GRID_SIZE_Y; y++) {
+					for (int z = 0; z < GRID_SIZE_Z; z++) {
+						GridCoord coords = GridCoord.getInstance(x, y, z); 
+						VesselNode node = new VesselNode(in, coords, buffer);
+						map.put(coords, node);
+					}
+				}
+			}
+		} catch (InterruptedException ex) {
 			throw new RuntimeException(ex);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
-		} catch (InterruptedException ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException ex) {
-					// don't care
-				}
-			}
-		}
-	}
-
-	/**
-	 * Builds a VesselInternals object from the .snt file read from the given InputStream.
-	 */
-	private void load(InputStream in) throws InterruptedException, IOException {
-		for (int x = 0; x < GRID_SIZE_X; x++) {
-			for (int y = 0; y < GRID_SIZE_Y; y++) {
-				for (int z = 0; z < GRID_SIZE_Z; z++) {
-					GridCoord coords = GridCoord.getInstance(x, y, z); 
-					VesselNode node = new VesselNode(in, coords, buffer);
-					map.put(coords, node);
-				}
-			}
 		}
 	}
 

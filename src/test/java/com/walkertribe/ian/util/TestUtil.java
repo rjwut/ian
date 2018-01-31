@@ -8,7 +8,8 @@ import org.junit.Assert;
 import org.junit.Assume;
 
 import com.walkertribe.ian.Context;
-import com.walkertribe.ian.vesseldata.FilePathResolver;
+import com.walkertribe.ian.DefaultContext;
+import com.walkertribe.ian.FilePathResolver;
 
 /**
  * Utility methods for testing. Code testing the source Util class is found in
@@ -33,7 +34,7 @@ public class TestUtil {
 			String installPath = System.getProperty(PROPERTY_INSTALL_PATH);
 
 			if (installPath != null) {
-				ctx = new Context(new FilePathResolver(installPath));
+				ctx = new DefaultContext(new FilePathResolver(installPath));
 			}
 		}
 

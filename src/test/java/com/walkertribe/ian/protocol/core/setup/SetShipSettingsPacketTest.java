@@ -5,11 +5,23 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.walkertribe.ian.Context;
+import com.walkertribe.ian.TestContext;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.vesseldata.MutableFaction;
+import com.walkertribe.ian.vesseldata.MutableVessel;
+import com.walkertribe.ian.vesseldata.MutableVesselData;
+import com.walkertribe.ian.vesseldata.VesselData;
 
 public class SetShipSettingsPacketTest extends AbstractPacketTester<SetShipSettingsPacket> {
+	private static final VesselData VESSEL_DATA;
+
+	static {
+		VESSEL_DATA = buildContext().getVesselData();
+	}
+
 	@Test
 	public void test() {
 		execute("core/setup/SetShipSettingsPacket.txt", ConnectionType.CLIENT, 2);
@@ -18,14 +30,28 @@ public class SetShipSettingsPacketTest extends AbstractPacketTester<SetShipSetti
 	@Test
 	public void testConstruct() {
 		test(
-				new SetShipSettingsPacket(DriveType.WARP, 0, 0.0f, "Artemis"),
-				new SetShipSettingsPacket(DriveType.JUMP, 47, 0.875f, "Diana")
+				new SetShipSettingsPacket(DriveType.WARP, 1000, 0.0f, "Artemis"),
+				new SetShipSettingsPacket(DriveType.JUMP, 1001, 0.875f, "Diana")
+		);
+		test(
+				new SetShipSettingsPacket(DriveType.WARP, VESSEL_DATA.getVessel(1000), 0.0f, "Artemis"),
+				new SetShipSettingsPacket(DriveType.JUMP, VESSEL_DATA.getVessel(1001), 0.875f, "Diana")
 		);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNullDriveType() {
 		new SetShipSettingsPacket(null, 0, 0.0f, "Artemis");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructNullVessel() {
+		new SetShipSettingsPacket(DriveType.WARP, null, 0.0f, "Artemis");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructNonPlayerVessel() {
+		new SetShipSettingsPacket(DriveType.WARP, VESSEL_DATA.getVessel(2000), 0.0f, "Artemis");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -55,12 +81,24 @@ public class SetShipSettingsPacketTest extends AbstractPacketTester<SetShipSetti
 
 	private void test(SetShipSettingsPacket pkt0, SetShipSettingsPacket pkt1) {
 		Assert.assertEquals(DriveType.WARP, pkt0.getDrive());
-		Assert.assertEquals(0, pkt0.getHullId());
+		Assert.assertEquals(1000, pkt0.getHullId());
 		Assert.assertEquals(0.0f, pkt0.getAccentColor(), EPSILON);
 		Assert.assertEquals("Artemis", pkt0.getName());
 		Assert.assertEquals(DriveType.JUMP, pkt1.getDrive());
-		Assert.assertEquals(47, pkt1.getHullId());
+		Assert.assertEquals(1001, pkt1.getHullId());
 		Assert.assertEquals(0.875f, pkt1.getAccentColor(), EPSILON);
 		Assert.assertEquals("Diana", pkt1.getName());
+	}
+
+	private static Context buildContext() {
+		TestContext ctx = new TestContext();
+		MutableVesselData vesselData = new MutableVesselData(ctx);
+		ctx.setVesselData(vesselData);
+		vesselData.putFaction(new MutableFaction(0, "TSN", "player"));
+		vesselData.putFaction(new MutableFaction(1, "Skaraan", "enemy loner hasspecials"));
+		vesselData.putVessel(new MutableVessel(ctx, 1000, 0, "Cruiser", "player small"));
+		vesselData.putVessel(new MutableVessel(ctx, 1001, 0, "Cruiser", "player small"));
+		vesselData.putVessel(new MutableVessel(ctx, 2000, 1, "Defiler", "small"));
+		return ctx;
 	}
 }

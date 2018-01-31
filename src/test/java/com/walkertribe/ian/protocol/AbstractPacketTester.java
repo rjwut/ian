@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Assert;
 
+import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.Debugger;
@@ -60,21 +61,29 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 * given resource path.
 	 */
 	public TestPacketFile loadTestPacketFile(String resourcePath) throws IOException {
+		if (TestUtil.DEBUG) {
+			System.out.println("\n### " + getClass().getSimpleName());
+		}
+
 		URL url = TestPacketFile.class.getResource(resourcePath);
 		TestPacketFile file = null;
 
 		try {
-			file = new TestPacketFile(url);
+			file = new TestPacketFile(url, getContext());
 		} catch (NullPointerException ex) {
 			// Test packet file now found
 			Assert.fail("Test packet file not found: " + resourcePath);
 		}
 
-		if (TestUtil.DEBUG) {
-			System.out.println("\n### " + getClass().getSimpleName());
-		}
-
 		return file;
+	}
+
+	/**
+	 * Returns a Context instance to use for this test. The default
+	 * implementation returns null.
+	 */
+	protected Context getContext() {
+		return null;
 	}
 
 	/**

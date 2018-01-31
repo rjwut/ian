@@ -7,7 +7,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.walkertribe.ian.ClasspathResolver;
 import com.walkertribe.ian.Context;
+import com.walkertribe.ian.DefaultContext;
 import com.walkertribe.ian.enums.BaseMessage;
 import com.walkertribe.ian.enums.CommsRecipientType;
 import com.walkertribe.ian.enums.ConnectionType;
@@ -15,7 +17,6 @@ import com.walkertribe.ian.enums.EnemyMessage;
 import com.walkertribe.ian.enums.OtherMessage;
 import com.walkertribe.ian.enums.PlayerMessage;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
-import com.walkertribe.ian.vesseldata.ClasspathResolver;
 import com.walkertribe.ian.vesseldata.VesselDataTest;
 import com.walkertribe.ian.world.ArtemisBase;
 import com.walkertribe.ian.world.ArtemisNebula;
@@ -26,7 +27,7 @@ public class CommsOutgoingPacketTest extends AbstractPacketTester<CommsOutgoingP
 
 	@BeforeClass
 	public static void beforeClass() {
-		ctx = new Context(new ClasspathResolver(VesselDataTest.class));
+		ctx = new DefaultContext(new ClasspathResolver(VesselDataTest.class));
 	}
 
 	@AfterClass

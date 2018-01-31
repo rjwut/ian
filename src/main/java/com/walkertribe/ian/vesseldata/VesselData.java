@@ -1,19 +1,10 @@
 package com.walkertribe.ian.vesseldata;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.CreatureType;
@@ -25,36 +16,12 @@ import com.walkertribe.ian.util.Version;
  * @author rjwut
  */
 public class VesselData {
-	/**
-	 * Loads the vesselData.xml file using the given PathResolver and returns the resulting
-	 * VesselData object.
-	 */
-	public static VesselData load(Context ctx) {
-		try {
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-			SAXParser saxParser = spf.newSAXParser();
-			XMLReader xmlReader = saxParser.getXMLReader();
-			PathResolver pathResolver = ctx.getPathResolver();
-			SAXVesselDataHandler handler = new SAXVesselDataHandler(ctx);
-			xmlReader.setContentHandler(handler);
-			xmlReader.parse(new InputSource(pathResolver.get("dat/vesselData.xml")));
-			return handler.vesselData;
-		} catch (SAXException ex) {
-			throw new VesselDataException(ex);
-		} catch (ParserConfigurationException ex) {
-			throw new VesselDataException(ex);
-		} catch (IOException ex) {
-			throw new VesselDataException(ex);
-		}
-	}
-
-
 	Version version;
 	List<Faction> factions = new ArrayList<Faction>();
 	Map<Integer, Vessel> vessels = new LinkedHashMap<Integer, Vessel>();
 	private Context ctx;
 
-	VesselData(Context ctx, String version) {
+	VesselData (Context ctx, String version) {
 		this.ctx = ctx;
 		this.version = new Version(version);
 	}

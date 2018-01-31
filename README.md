@@ -2,128 +2,71 @@ Interface for Artemis Networking (IAN)
 ======================================
 [![Build Status](https://secure.travis-ci.org/rjwut/ian.svg)](http://travis-ci.org/rjwut/ian)
 
-**IAN** is an unofficial Java library for communicating with
-[Artemis Spaceship Bridge Simulator](http://www.artemis.eochu.com/) servers and clients.
+**IAN** is an unofficial Java library for communicating with [*Artemis Spaceship Bridge Simulator*](http://www.artemis.eochu.com/) servers and clients.
 
-IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It
-currently supports Artemis version 2.4.0. If you need Java library support for previous versions of
-Artemis, please see the list below:
+IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* version 2.4.0. If you need Java library support for previous versions of *Artemis*, please see the list below:
 
-* Artemis v2.3.0: [IAN v3.0.0](https://github.com/rjwut/ian/releases/tag/v3.0.0)
-* Artemis v2.1.1: [ArtClientLib v2.6.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.6.0)
-* Artemis v2.1: [ArtClientLib v2.4.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.4.0)
-* Artemis v2.0: [ArtClientLib v2.3.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.3.0)
-* Artemis v1.x: [ArtClientLib v1.x](https://github.com/dhleong/ArtClientLib) (by Daniel Leong)
+* *Artemis* v2.3.0: [IAN v3.0.0](https://github.com/rjwut/ian/releases/tag/v3.0.0)
+* *Artemis* v2.1.1: [ArtClientLib v2.6.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.6.0)
+* *Artemis* v2.1: [ArtClientLib v2.4.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.4.0)
+* *Artemis* v2.0: [ArtClientLib v2.3.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.3.0)
+* *Artemis* v1.x: [ArtClientLib v1.x](https://github.com/dhleong/ArtClientLib) (by Daniel Leong)
 
-This library was originally developed by Daniel Leong and released on GitHub with permission of the
-developer of Artemis, Thom Robertson.
+This library was originally developed by Daniel Leong and released on GitHub with permission of the developer of *Artemis*, Thom Robertson.
 
 ## Things to Know Before Using This Library ##
 
-**IAN is an unofficial library.** Thom Robertson and Incandescent Workshop are not involved with its
-development and do not provide support for it. Please don't bother them with questions about it.
+**IAN is an unofficial library.** Thom Robertson and Incandescent Workshop are not involved with its development and do not provide support for it. Please don't bother them with questions about it.
 
-**Stuff might not work.** There is no official public documentation of the Artemis protocol. A
-library such as IAN is made possible through reverse engineering, requiring careful observation of
-Artemis network traffic and experimentation to learn how game data is formatted. IAN is a very good
-implementation of the Artemis protocol, but under these circumstances it is next to impossible to
-guarantee that it is 100% accurate. Also, new Artemis releases are likely to break this library
-until a contributor can figure out what changes were made and update things accordingly.
+**Stuff might not work.** There is no official public documentation of the *Artemis* protocol. A library such as IAN is made possible through reverse engineering, requiring careful observation of *Artemis* network traffic and experimentation to learn how game data is formatted. IAN is a very good implementation of the *Artemis* protocol, but under these circumstances it is next to impossible to guarantee that it is 100% accurate. Also, new *Artemis* releases are likely to break this library until a contributor can figure out what changes were made and update things accordingly.
 
 **There is no official support.**
-[Bug reports and feature requests](https://github.com/rjwut/ian/issues) are welcome, and I'm happy
-to try to answer questions. However, IAN is developed in my spare time, and as such, I can't
-guarantee support for it. I can't make any promises to address your requests, bug reports or
-questions in a timely fashion.
+[Bug reports and feature requests](https://github.com/rjwut/ian/issues) are welcome, and I'm happy to try to answer questions. However, IAN is developed in my spare time, and as such, I can't guarantee support for it. I can't make any promises to address your requests, bug reports or questions in a timely fashion.
 
-**Use at your own risk.** This software is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; not even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE.
+**Use at your own risk.** This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; not even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-**Don't pirate Artemis.** IAN is intended to allow you to enhance your Artemis experience with
-custom behavior. However, using a custom Artemis client or server proxy does not release you from
-the obligation to license the Artemis software. If you are playing Artemis without a license, either
-with stock or custom software, you are engaging in software piracy and inhibiting the future
-development of Artemis. If you don't have a license, please support Thom by purchasing one now.
+**Don't pirate *Artemis*.** IAN is intended to allow you to enhance your *Artemis* experience with custom behavior. However, using a custom *Artemis* client or server proxy does not release you from the obligation to license the *Artemis* software. If you are playing *Artemis* without a license, either with stock or custom software, you are engaging in software piracy and inhibiting the future development of *Artemis*. If you don't have a license, please support Thom by purchasing one now.
 
-**I'd love to see what you do with it!** If you make something cool from this, I'd love to know.
-Crediting this library would be appreciated, as would sharing any improvements you make, to
-potentially include upstream contributions in the form of pull requests.
+**I'd love to see what you do with it!** If you make something cool from this, I'd love to know. Crediting this library would be appreciated, as would sharing any improvements you make, to potentially include upstream contributions in the form of pull requests.
 
 **You can help make IAN better.** There are several ways that you can assist in IAN's development:
-* Found a bug or missing feature?
-  [Check to see if I already know about it.](https://github.com/rjwut/ian/issues) If not, you can
-  [submit a new issue](https://github.com/rjwut/ian/issues/new).
-* Handy with a packet sniffer? Join in the effort to
-  [document the Artemis protocol](https://github.com/artemis-nerds/protocol-docs).
-* Are you a Java developer? Feel free to implement a feature or bug fix yourself! Fork the
-  repository, apply the changes to your copy, then submit a pull request.
+* Found a bug or missing feature? [Check to see if I already know about it.](https://github.com/rjwut/ian/issues) If not, you can [submit a new issue](https://github.com/rjwut/ian/issues/new).
+* Handy with a packet sniffer? Join in the effort to [document the *Artemis* protocol](https://github.com/artemis-nerds/protocol-docs).
+* Are you a Java developer? Feel free to implement a feature or bug fix yourself! Fork the repository, apply the changes to your copy, then submit a pull request.
 
 ## Using IAN ##
 
-### Connecting to an Artemis Server ###
-1.  **Tell IAN where to find Artemis resource files.** There are three kinds of Artemis resources
-    that IAN may need to load:
+### Connecting to an *Artemis* Server ###
+1. **Tell IAN where to find *Artemis* resource data.** There are sets of data that IAN can read from *Artemis* resource files:
+ * A `VesselData` object contains data read from `dat/vesselData.xml`. IAN requires this information and uses it to provide `Faction` and `Vessel` objects.
+ * A `Model` object contains data required to draw a 3D mesh of an *Artemis* object. These are loaded from `dat/*.dxs` files, but are only required if you need a `Model` object.
+ * A `VesselInternals` object contains data about the system nodes and hallways in a vessel. These are loaded from `dat/*.snt` files, but are only required if you need a `VesselInternals` object.
 
-    - `dat/vesselData.xml` (required)
-    - `dat/*.dxs` (loaded if you request a `Model` from a `Vessel`)
-    - `dat/*.snt` (loaded if you request a `VesselInternals` from a `Vessel`)
+ There are several interfaces and classes that can help you with reading *Artemis* resource data:
 
-    In order to do this, IAN needs to know where these resources are located. The `Context` class
-    provides a way to tell IAN how to find resources, and to cache the data from those resources
-    once it's loaded. The Context constructor requires a `PathResolver`, which is an interface for
-    objects which can return an `InputStream` for a given path. IAN comes with two implementations
-    of `PathResolver` out of the box:
+ * `Context`: An interface for classes which can provide instances of `VesselData`, `Model` and `VesselInternals` to IAN.
+ * `DefaultContext`: An implementation of `Context` which can parse *Artemis* resource data from an `InputStream`. It delegates the creation of the `InputStream` to a `PathResolver`.
+ * `PathResolver`: An interface for classes which can provide an `InputStream` that corresponds to an *Artemis* resource path. It should be noted that IAN does not require a full *Artemis* install to load resources from; at most IAN will only ask for `dat/vesselData.xml`, `dat/*.dxs`, and `dat/*.snt`.
+ * `FilePathResolver`: A `PathResolver` implementation that loads resources from the file system relative to a particular directory (such as the *Artemis* install directory).
+ * `ClasspathResolver`: A `PathResolver` implementation that loads resources from the classpath (so that you can bundle them inside your JAR).
 
-    - `FilePathResolver`: Loads resources from the file system relative to a particular directory
-      (the Artemis install directory, most likely).
-    - `ClasspathResolver`: Loads resources from the classpath (so that you can bundle them inside
-      your JAR).
+ You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load *Artemis* resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise classes that use a `Context`.)
 
-    If one of these implementations is not suitable for your needs, you can of course implement
-    `PathResolver` yourself. It should be noted that IAN does not require a full Artemis install; at
-    most only the three types of files listed above are needed.
+2. **Construct a `ThreadedArtemisNetworkInterface` object.** This object is responsible for managing the connection to the Artemis server. Along with the `Context` you instantiated earlier, you must provide the constructor with the host/IP address and port to which it should connect. (By default, *Artemis* servers listen for connections on port 2010, but this can be changed in the `artemis.ini` file.) On construction, it will attempt to connect, throwing an `IOException` if it fails.
 
-    After constructing a `Context` object, you are ready to proceed.
+3. **Add event listeners.** Next, you must add one or more event listeners to the `ThreadedArtemisNetworkInterface` object via the `addListener()` method. Event listeners are objects which IAN will notify when certain events occur. An event listener can be any `Object` which has one or more methods marked with the `@Listener` annotation. A listener method must be `public`, return `void`, and have exactly one argument of type `ConnectionEvent`, `ArtemisPacket`, `ArtemisObject`, or (more probably) any of their subtypes. Listener methods are invoked by IAN when the corresponding event occurs. For example, if you create a listener method whose argument type is `CommsIncomingPacket`, that method will be invoked every time the comms console receives a text message.
 
-2.  **Construct a `ThreadedArtemisNetworkInterface` object.** This object is responsible for
-    managing the connection to the Artemis server. Along with the `Context` object you instantiated
-    earlier, you must provide the constructor with the host/IP address and port to which it should
-    connect. (By default, Artemis servers listen for connections on port 2010, but this can be
-    changed in the `artemis.ini` file.) On construction, it will attempt to connect, throwing an
-    `IOException` if it fails.
+ Note that for efficiency's sake, IAN will only bother to parse packets that your listeners are actually interested in, so don't write a listener with `ArtemisPacket` as its argument type unless you genuinely want to parse every packet.
 
-3.  **Add event listeners.** Next, you must add one or more event listeners to the
-    `ThreadedArtemisNetworkInterface` object via the `addListener()` method. Event listeners are
-    objects which IAN will notify when certain events occur. An event listener can be any `Object`
-    which has one or more methods marked with the `@Listener` annotation. A listener method must be
-    `public`, return `void`, and have exactly one argument of type `ConnectionEvent`,
-    `ArtemisPacket`, `ArtemisObject`, or any of their subtypes. Listener methods are invoked by IAN
-    when the corresponding event occurs. For example, if you create a listener method whose argument
-    type is `CommsIncomingPacket`, that method will be invoked every time the comms console receives
-    a text message.
+ One important event to listen for is the `ConnectionSuccessEvent`. You shouldn't attempt to send any packets to the server before you receive this event. This may also a good time to send a `SetShipPacket` and a `SetConsolePacket`.
 
-    One important event to listen for is the `ConnectionSuccessEvent`. You shouldn't attempt to send
-    any packets to the server before you receive this event. This may also a good time to send a
-    `SetShipPacket` and a `SetConsolePacket`.
+ It's also likely that you'll want to know when the connection to the server is lost; listening for `DisconnectEvent` will handle that.
 
-    It's also likely that you'll want to know when the connection to the server is lost; listening
-    for `DisconnectEvent` will handle that.
+4. **Start the network interface.** Once your listeners are registered, invoke `start()` on the `ThreadedArtemisNetworkInterface` object. Internally, this spins up two `Thread`s, one to receive and parse incoming packets, and one to send packets. Once you invoke `start()`, your listeners will start being notified of events.
 
-4.  **Start the network interface.** Once your listeners are registered, invoke `start()` on the
-    `ThreadedArtemisNetworkInterface` object. Internally, this spins up two `Thread`s, one to
-    receive and parse incoming packets, and one to send packets. Once you invoke `start()`, your
-    listeners will start being notified of events.
+5. **Send packets in response to events.** As your listeners receive events, you will inevitably want to send packets back to the Artemis server. To do so, construct an instance of the appropriate subclass of `ArtemisPacket`, then pass it into the `ThreadedArtemisNetworkInterface.send()` method. For example, to fire a torpedo, construct a `FireTubePacket` and `send()` it.
 
-5.  **Send packets in response to events.** As your listeners receive events, you will inevitably
-    want to send packets back to the Artemis server. To do so, construct an instance of the
-    appropriate subclass of `ArtemisPacket`, then pass it into the
-    `ThreadedArtemisNetworkInterface.send()` method. For example, to fire a torpedo, construct a
-    `FireTubePacket` and `send()` it.
-
-6.  **Disconnect.** To disconnect from the Artemis server, invoke the
-    `ThreadedArtemisNetworkInterface.stop()` method. Make sure you do this so that the send and
-    receive threads will be terminated; otherwise, your application won't stop.
+6. **Disconnect.** To disconnect from the Artemis server, invoke the `ThreadedArtemisNetworkInterface.stop()` method. Make sure you do this so that the send and receive threads will be terminated; otherwise, your application won't stop.
 
 ### Example Client ###
 ```java
@@ -132,6 +75,7 @@ package com.walkertribe.ian.clientdemo;
 import java.io.IOException;
 
 import com.walkertribe.ian.Context;
+import com.walkertribe.ian.DefaultContext;
 import com.walkertribe.ian.enums.AlertStatus;
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.iface.ArtemisNetworkInterface;
@@ -146,7 +90,8 @@ import com.walkertribe.ian.protocol.core.setup.SetConsolePacket;
 import com.walkertribe.ian.protocol.core.setup.SetShipPacket;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.PlayerShipUpdateListener;
-import com.walkertribe.ian.vesseldata.FilePathResolver;
+import com.walkertribe.ian.FilePathResolver;
+import com.walkertribe.ian.world.Artemis;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
 /**
@@ -162,17 +107,8 @@ import com.walkertribe.ian.world.ArtemisPlayer;
  * @author rjwut
  */
 public class ClientDemo extends PlayerShipUpdateListener {
-    private static final int DEFAULT_ARTEMIS_PORT = 2010;
-
     /**
-     * <p>
-     * Usage:
-     * </p>
-     * <code>ClientDemo {ipOrHostname}\[:{port}] {artemisInstallPath} [shipNumber]</code>
-     * <p>
-     * If omitted, the port is assumed to be 2010 and the ship number is assumed
-     * to be 1.
-     * </p>
+     * <p>Run with no arguments for usage syntax.</p>
      */
     public static void main(String[] args) {
         if (args.length < 2 || args.length > 3) {
@@ -201,7 +137,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
     public ClientDemo(String host, String artemisInstallPath, int shipNumber) throws IOException {
         super(shipNumber);
         System.out.println("Connecting to " + host + "...");
-        int port = DEFAULT_ARTEMIS_PORT;
+        int port = Artemis.DEFAULT_PORT;
         int colonPos = host.indexOf(':');
 
         if (colonPos != -1) {
@@ -209,7 +145,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
             host = host.substring(0, colonPos);
         }
 
-        Context ctx = new Context(new FilePathResolver(artemisInstallPath));
+        Context ctx = new DefaultContext(new FilePathResolver(artemisInstallPath));
         server = new ThreadedArtemisNetworkInterface(host, port, ctx);
         server.addListener(this);
         server.start();
@@ -288,44 +224,20 @@ public class ClientDemo extends PlayerShipUpdateListener {
 }
 ```
 
-### Creating an Artemis Proxy Server ###
-1.  **Tell IAN where to find Artemis resource files.** This is done in exactly the same way as when
-    when you create a client.
+### Creating an *Artemis* Proxy Server ###
+1. **Tell IAN where to find *Artemis* resource files.** This is done in exactly the same way as when you create a client.
 
-1.  **Listen for a client connection.**
-    Open a `ServerSocket` on the desired port, then call `accept()` on it to listen for a connecting
-    client. The `accept()` method will block until a client connects or it times out, and return a
-    `Socket` object when the client connects. You can set the timeout by calling
-    `ServerSocket.setSoTimeout()`; passing in `0` will cause it to wait indefinitely for a
-    connection.
+2. **Listen for a client connection.** Open a `ServerSocket` on the desired port, then call `accept()` on it to listen for a connecting client. The `accept()` method will block until a client connects or it times out, and return a `Socket` object when the client connects. You can set the timeout by calling `ServerSocket.setSoTimeout()`; passing in `0` will cause it to wait indefinitely for a connection.
 
-2.  **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.**
-    `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and a
-    `ConnectionType` (`CLIENT` in this case), along with the `Context`. The resulting object will be
-    responsible for managing the connection to the client.
+3. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and a `ConnectionType` (`CLIENT` in this case), along with the `Context`. The resulting object will be responsible for managing the connection to the client.
 
-3.  **Connect to the Artemis server.** This is done exactly the same way as you would for creating
-    an Artemis client, as documented above. You now have two `ThreadedArtemisNetworkInterface`
-    objects: one for the client and one for the server.
+4. **Connect to the *Artemis* server.** This is done exactly the same way as you would for creating an *Artemis* client, as documented above. You now have two `ThreadedArtemisNetworkInterface` objects: one for the client and one for the server.
 
-4.  **Pass through all packets.** The `proxyTo()` method on `ThreadedArtemisNetworkInterface`
-    creates a "pass through" connection between two connections of opposite types. Any packet that
-    is not caught by a listener method will be passed through automatically. Note that `proxyTo()`
-    only creates connection in one direction; to pass through packets both ways, each connection
-    will need to call `proxyTo()` on the other.
+5. **Pass through all packets.** The `proxyTo()` method on `ThreadedArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
 
-5.  **Add listeners.** Add your listeners to both the client and server objects. Once the listener
-    has caught the packet and extracted whatever information it wants from it, you can either pass
-    the packet along by passing it to `send()` (potentially modifying it first), suppress it (by
-    doing nothing), or even inject your own packets instead (by constructing them and passing them
-    to `send()`). Remember that `proxyTo()` does **not** pass along packets caught by listeners, so
-    it's up to you to `send()` them if you want them passed along. Also, keep in mind that multiple
-    listeners can catch the same packet; be careful not to send it more than once!
+5. **Add listeners.** Add your listeners to both the client and server objects. Once the listener has caught the packet and extracted whatever information it wants from it, you can either pass the packet along by passing it to `send()`, suppress it (by doing nothing), or even inject your own packets instead (by constructing them and passing them to `send()`). Remember that `proxyTo()` does **not** pass along packets caught by listeners, so it's up to you to `send()` them if you want them passed along. Also, keep in mind that multiple listeners can catch the same packet; be careful not to send it more than once!
 
-6.  **When one side disconnects, close the connection to the other side.** Listen for the
-    `DisconnectEvent` from both sides. When you receive it from one side, invoke
-    `ThreadedArtemisNetworkInterface.stop()` on the other connection (or both connections, if that's
-    easier; calling `stop()` on an already closed connection has no effect).
+6. **When one side disconnects, close the connection to the other side.** Listen for the `DisconnectEvent` from both sides. When you receive it from one side, invoke `ThreadedArtemisNetworkInterface.stop()` on the other connection (or both connections, if that's easier; calling `stop()` on an already closed connection has no effect).
 
 ### Example Proxy ###
 ```java
@@ -336,13 +248,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.walkertribe.ian.Context;
+import com.walkertribe.ian.DefaultContext;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.iface.ArtemisNetworkInterface;
 import com.walkertribe.ian.iface.DisconnectEvent;
 import com.walkertribe.ian.iface.Listener;
 import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
 import com.walkertribe.ian.protocol.core.comm.ToggleRedAlertPacket;
-import com.walkertribe.ian.vesseldata.FilePathResolver;
+import com.walkertribe.ian.FilePathResolver;
+import com.walkertribe.ian.world.Artemis;
 
 /**
  * <p>
@@ -386,13 +300,7 @@ import com.walkertribe.ian.vesseldata.FilePathResolver;
  */
 public class ProxyDemo implements Runnable {
     /**
-     * <p>
-     * Usage:
-     * </p>
-     * <code>ProxyDemo {artemisInstallPath} {serverIpOrHostname}\[:{port}] [listenerPort]</code>
-     * <p>
-     * The default Artemis port (2010) is assumed where unspecified.
-     * </p>
+     * <p>Run with no arguments for usage syntax.</p>
      */
     public static void main(String[] args) {
         if (args.length < 2 || args.length > 3) {
@@ -410,7 +318,7 @@ public class ProxyDemo implements Runnable {
     private Context ctx;
     private int port;
     private String serverAddr;
-    private int serverPort;
+    private int serverPort = Artemis.DEFAULT_PORT;
 
     /**
      * Creates a new proxy. It will listen on the given port, and connect to the
@@ -419,7 +327,7 @@ public class ProxyDemo implements Runnable {
      * thread.
      */
     public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
-        ctx = new Context(new FilePathResolver(artemisInstallPath));
+        ctx = new DefaultContext(new FilePathResolver(artemisInstallPath));
         this.port = port;
         int colonPos = serverAddr.indexOf(':');
 
@@ -524,49 +432,34 @@ public class ProxyDemo implements Runnable {
 ```
 
 ### Tracking World State ###
-The most frequently received packets from the server are ones which provide updates on the status of
-objects in the game world. These updates typically contain only that information which has changed,
-not the complete state of the object. The `SystemManager` class aggregates the received updates in
-order to provide an up-to-the-moment view of the game world. To use it, simply construct a new
-`SystemManager` and add it as a listener to your `ThreadedArtemisNetworkInterface`; it has several
-listener methods which collect the relevant packets to build the game world. You can then use the
-various `get*()` methods to retrieve game state from the `SystemManager`.
+The most frequently received packets from the server are ones which provide updates on the status of objects in the game world. These updates typically contain only that information which has changed, not the complete state of the object. The `SystemManager` class aggregates the received updates in order to provide an up-to-the-moment view of the game world. To use it, simply construct a new `SystemManager` and add it as a listener to your `ThreadedArtemisNetworkInterface`; it has several listener methods which collect the relevant packets to build the game world. You can then use the various `get*()` methods to retrieve game state from the `SystemManager`.
 
 ### Reading `vesselData.xml` ###
-The `VesselData` class allows you to access the information about the vessels and factions in the
-game. You can get a reference to a `VesselData` by calling `Context.getVesselData()`. On the
-`VesselData` object itself, you can invoke `getFaction(int)` or `getVessel(int)` to retrieve the
-`Faction` or `Vessel` with the corresponding ID, or use the `factionIterator()` or
-`vesselIterator()` methods to see all of them.
+The `VesselData` class allows you to access the information about the vessels and factions in the game. You can get a reference to a `VesselData` by calling `Context.getVesselData()`. On the `VesselData` object itself, you can invoke `getFaction(int)` or `getVessel(int)` to retrieve the `Faction` or `Vessel` with the corresponding ID, or use the `factionIterator()` or `vesselIterator()` methods to see all of them. The `VesselData` object can be accessed via `Context.getVesselData()`.
 
-Resource files are loaded on demand (when you request a `Model` or `VesselInternals` object). If you
-wish to preload resources up front, you can do so with the `preloadModels()` and
-`preloadInternals()` methods.
+`DefaultContext` loads resource files on demand and caches them for subsequent requests. If you wish to preload all resources up front, you can do so with the `preloadModels()` and `preloadInternals()` methods.
 
-You should make sure that your code deals gracefully with the possibility that no `Faction` or
-`Vessel` with a given ID exists (in which case, the `get*()` methods will return null). For example,
-if your `vesselData.xml` file doesn't match the server's, this can occur.
+You should make sure that your code deals gracefully with the possibility that no `Faction` or `Vessel` with a given ID exists (in which case, the `VesselData.get*()` methods will return null). For example, if your `vesselData.xml` file doesn't match the server's, this can occur.
 
 ## Acknowledgements ##
-Thanks to Thom Robertson and Incandescent Workshop for creating Artemis, and for so graciously
-tolerating the community's desire to tinker with their baby.
+Thanks to Thom Robertson and Incandescent Workshop for creating Artemis, and for so graciously tolerating the community's desire to tinker with their baby.
 
-Daniel Leong ([@dhleong](https://github.com/dhleong)) created the original version of ArtClientLib
-and did a lot of the difficult, thankless gruntwork of reverse engineering the Artemis protocol.
+Daniel Leong ([@dhleong](https://github.com/dhleong)) created the original version of ArtClientLib and did a lot of the difficult, thankless gruntwork of reverse engineering the Artemis protocol.
 
-Various GitHub users have contributed to IAN by helping to discover and document the protocol,
-creating pull requests to implement features or bug fixes, or issuing bug reports. Their help is
-very much appreciated. They are, in alphabetical order:
+Various GitHub users have contributed to IAN by helping to discover and document the protocol, creating pull requests to implement features or bug fixes, or issuing bug reports. Their help is very much appreciated. They are, in alphabetical order:
 * [@abrindam](https://github.com/abrindam)
 * [@briandurney](https://github.com/briandurney)
 * [@chrivers](https://github.com/chrivers)
 * [@dthaler](https://github.com/dthaler)
+* [@Hackmancoltaire](https://github.com/Hackmancoltaire)
 * [@huin](https://github.com/huin)
 * [@IvanSanchez](https://github.com/IvanSanchez)
 * [@JordanLongstaff](https://github.com/JordanLongstaff)
 * [@karafelix](https://github.com/karafelix)
 * [@kiwi13cubed](https://github.com/kiwi13cubed)
 * [@mrfishie](https://github.com/mrfishie)
+* [@NoseyNick](https://github.com/NoseyNick)
 * [@prophile](https://github.com/prophile)
 * [@russjudge](https://github.com/russjudge)
 * [@theGuyFromHell](https://github.com/theGuyFromHell)
+* [@UserMcUser](https://github.com/UserMcUser)

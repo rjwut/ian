@@ -5,7 +5,7 @@ efbeadde          // header
 28000000          // remaining length = 40
 3c1d824c 16000000 // SetShipSettingsPacket
 00000000          // drive = warp
-00000000          // hull ID = 0
+e8030000          // hull ID = 1000
 00000000          // accent color = red (0.0)
 08000000 41 00 72 00 74 00 65 00 6d 00 69 00 73 00 00 00 // name = Artemis
 
@@ -16,6 +16,6 @@ efbeadde          // header
 24000000          // remaining length = 36
 3c1d824c 16000000 // SetShipSettingsPacket
 01000000          // drive = jump
-2f000000          // hull ID = 47
+e9030000          // hull ID = 1001
 0000603f          // accent color = magenta (0.875)
 06000000 44 00 69 00 61 00 6e 00 61 00 00 00 // name = Diana
