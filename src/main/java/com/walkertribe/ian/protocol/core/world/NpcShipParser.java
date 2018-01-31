@@ -1,12 +1,10 @@
 package com.walkertribe.ian.protocol.core.world;
 
 import com.walkertribe.ian.enums.BeamFrequency;
-import com.walkertribe.ian.enums.FactionAttribute;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.world.ArtemisNpc;
 import com.walkertribe.ian.world.ArtemisObject;
 
@@ -14,7 +12,7 @@ public class NpcShipParser extends AbstractObjectParser {
 	private enum Bit {
 		NAME,
 		IMPULSE,
-		UNK_1_3,
+		RUDDER,
 		MAX_IMPULSE,
 		MAX_TURN_RATE,
 		IS_ENEMY,
@@ -100,9 +98,7 @@ public class NpcShipParser extends AbstractObjectParser {
         ArtemisNpc obj = new ArtemisNpc(reader.getObjectId());
         obj.setName(reader.readString(Bit.NAME));
         obj.setImpulse(reader.readFloat(Bit.IMPULSE, -1));
-
-        reader.readObjectUnknown(Bit.UNK_1_3, 4);
-
+        obj.setSteering(reader.readFloat(Bit.RUDDER, -1));
         obj.setTopSpeed(reader.readFloat(Bit.MAX_IMPULSE, -1));
         obj.setTurnRate(reader.readFloat(Bit.MAX_TURN_RATE, -1));
         obj.setEnemy(reader.readBool(Bit.IS_ENEMY, 4));
@@ -126,15 +122,8 @@ public class NpcShipParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_3_5, 2);
 
         obj.setFleetNumber(reader.readByte(Bit.FLEET_NUMBER, (byte) -1));
-        int special = reader.readInt(Bit.SPECIAL_ABILITIES, -1);
-        int specialState = reader.readInt(Bit.SPECIAL_STATE, -1);
-        Vessel vessel = obj.getVessel(reader.getContext());
-
-        if (vessel != null && vessel.getFaction().is(FactionAttribute.HASSPECIALS)) {
-            obj.setSpecialBits(special);
-            obj.setSpecialStateBits(specialState);
-        }
-
+        obj.setSpecialBits(reader.readInt(Bit.SPECIAL_ABILITIES, -1));
+        obj.setSpecialStateBits(reader.readInt(Bit.SPECIAL_STATE, -1));
         obj.setScanLevel((byte) reader.readInt(Bit.UNK_4_1));
 
         reader.readObjectUnknown(Bit.UNK_4_2, 4);
@@ -150,17 +139,13 @@ public class NpcShipParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_5_2, 4);
 
         // system damage
-        ShipSystem[] systems = ShipSystem.values();
-
-        for (int i = 0; i < SYSTEM_DAMAGES.length; i++) {
-        	obj.setSystemDamage(systems[i], reader.readFloat(SYSTEM_DAMAGES[i], -1));
+        for (ShipSystem sys : ShipSystem.values()) {
+        	obj.setSystemDamage(sys, reader.readFloat(SYSTEM_DAMAGES[sys.ordinal()], -1));
         }
 
         // shield frequencies
-        BeamFrequency[] freqs = BeamFrequency.values();
-
-        for (int i = 0; i < SHLD_FREQS.length; i++) {
-        	obj.setShieldFreq(freqs[i], reader.readFloat(SHLD_FREQS[i], -1));
+        for (BeamFrequency freq : BeamFrequency.values()) {
+        	obj.setShieldFreq(freq, reader.readFloat(SHLD_FREQS[freq.ordinal()], -1));
         }
 
         return obj;
@@ -171,7 +156,7 @@ public class NpcShipParser extends AbstractObjectParser {
 		ArtemisNpc npc = (ArtemisNpc) obj;
 		writer	.writeString(Bit.NAME, npc.getName())
 				.writeFloat(Bit.IMPULSE, npc.getImpulse(), -1)
-				.writeUnknown(Bit.UNK_1_3)
+				.writeFloat(Bit.RUDDER, npc.getSteering(), -1)
 				.writeFloat(Bit.MAX_IMPULSE, npc.getTopSpeed(), -1)
 				.writeFloat(Bit.MAX_TURN_RATE, npc.getTurnRate(), -1)
 				.writeBool(Bit.IS_ENEMY, npc.isEnemy(), 4)

@@ -1,5 +1,6 @@
 package com.walkertribe.ian.world;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -10,11 +11,25 @@ import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.Util;
-import com.walkertribe.ian.vesseldata.Faction;
 import com.walkertribe.ian.vesseldata.Vessel;
 
 /**
+ * <p>
  * An NPC ship; they may have special abilities, and can be scanned.
+ * </p>
+ * <p>
+ * The Artemis server sometimes sends garbage data for the special abilities
+ * properties when a vessel does not have special abilities. The
+ * {@link #getSpecialBits()} and {@link #getSpecialStateBits()} methods
+ * preserve the exact data sent by the server. The other methods related to
+ * special abilities will attempt to reconcile this with the information parsed
+ * from vesselData.xml. If the vessel spec indicates that it can't have special
+ * abilities, then these methods will never report that it has them, regardless
+ * of what is reported by received packets. If the vessel cannot be determined
+ * (because the hull ID is unspecified or does not correspond to a known
+ * vessel), these methods will indicate that it cannot reliably make a
+ * determination.
+ * </p>
  * @author dhleong
  */
 public class ArtemisNpc extends BaseArtemisShip {
@@ -28,12 +43,12 @@ public class ArtemisNpc extends BaseArtemisShip {
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = (byte) -1;
     private String mIntel;
-    private final float[] mSysDamage = new float[8];
+    private final float[] mSysDamage = new float[Artemis.SYSTEM_COUNT];
 
     public ArtemisNpc(int objId) {
         super(objId);
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
         	mSysDamage[i] = -1;
         }
     }
@@ -83,49 +98,98 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     /**
      * Returns a Set containing the SpecialAbility values that pertain to this
-     * ship.
+     * ship, or null if the special abilities are unspecified or cannot be
+     * determined. See the class documentation about special abilities for more
+     * information.
      * Unspecified: null
      */
-    public Set<SpecialAbility> getSpecialAbilities() {
-    	return mSpecial != -1 ? SpecialAbility.fromValue(mSpecial) : null;
+    public Set<SpecialAbility> getSpecialAbilities(Context ctx) {
+    	if (mSpecial == -1) {
+    		return null; // specials are unspecified
+    	}
+
+    	Vessel vessel = getVessel(ctx);
+
+    	if (vessel == null) {
+    		return null; // Vessel is unspecified or unrecognized
+    	}
+
+    	if (!vessel.getFaction().is(FactionAttribute.HASSPECIALS)) {
+    		return new HashSet<SpecialAbility>();
+    	}
+
+    	return SpecialAbility.fromValue(mSpecial);
     }
 
     /**
-     * Returns true if this ship has the specified special ability and false if
-     * it does not or if it is unknown whether it has it.
+     * Returns .TRUE if this ship has the specified special ability, .FALSE if
+     * it does not, and .UNKNOWN if it cannot be determined. See the class
+     * documentation about special abilities for more information.
      */
-    public boolean hasSpecialAbility(SpecialAbility ability) {
-        return mSpecial != -1 && ability.on(mSpecial);
+    public BoolState hasSpecialAbility(SpecialAbility ability, Context ctx) {
+    	if (mSpecial == -1) {
+    		return BoolState.UNKNOWN; // specials are unspecified
+    	}
+
+    	Vessel vessel = getVessel(ctx);
+
+    	if (vessel == null) {
+    		return BoolState.UNKNOWN; // Vessel is unspecified or unrecognized
+    	}
+
+    	if (!vessel.getFaction().is(FactionAttribute.HASSPECIALS)) {
+    		return BoolState.FALSE;
+    	}
+
+    	return BoolState.from(ability.on(mSpecial));
     }
 
     /**
-     * Returns true if this ship is using the specified special ability and
-     * false if it is not.
+     * Returns .TRUE if this ship is using the specified special ability,
+     * .FALSE if it is not, and .UNKNOWN if it cannot be determined. See the
+     * class documentation about special abilities for more information.
      */
-    public boolean isUsingSpecialAbilty(SpecialAbility ability) {
-        return mSpecialState != -1 && ability.on(mSpecialState);
+    public BoolState isUsingSpecialAbility(SpecialAbility ability, Context ctx) {
+    	if (mSpecialState == -1) {
+    		return BoolState.UNKNOWN; // specials are unspecified
+    	}
+
+    	Vessel vessel = getVessel(ctx);
+
+    	if (vessel == null) {
+    		return BoolState.UNKNOWN; // Vessel is unspecified or unrecognized
+    	}
+
+    	if (!vessel.getFaction().is(FactionAttribute.HASSPECIALS)) {
+    		return BoolState.FALSE;
+    	}
+
+        return BoolState.from(ability.on(mSpecialState));
     }
 
+    /**
+     * Returns the bits for the special ability property. See the class
+     * documentation about special abilities for more information.
+     * Unspecified: -1
+     */
     public int getSpecialBits() {
     	return mSpecial;
     }
 
-    /**
-     * Sets the special ability bit field.
-     * Unspecified: -1
-     */
     public void setSpecialBits(int special) {
         mSpecial = special;
     }
 
+    /**
+     * Returns the bits for special ability state property (what abilities are
+     * currently active). See the class documentation about special abilities
+     * for more information.
+     * Unspecified: -1
+     */
     public int getSpecialStateBits() {
     	return mSpecialState;
     }
 
-    /**
-     * Sets the special state bit field (what abilities are being used).
-     * Unspecified: -1
-     */
     public void setSpecialStateBits(int special) {
         mSpecialState = special;
     }
@@ -176,12 +240,12 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     @Override
-    public void updateFrom(ArtemisObject eng, Context ctx) {
-        super.updateFrom(eng, ctx);
+    public void updateFrom(ArtemisObject npc, Context ctx) {
+        super.updateFrom(npc, ctx);
         
         // it SHOULD be an ArtemisNpc
-        if (eng instanceof ArtemisNpc) {
-            ArtemisNpc cast = (ArtemisNpc) eng;
+        if (npc instanceof ArtemisNpc) {
+            ArtemisNpc cast = (ArtemisNpc) npc;
             BoolState enemy = cast.isEnemy();
 
             if (BoolState.isKnown(enemy)) {
@@ -202,20 +266,12 @@ public class ArtemisNpc extends BaseArtemisShip {
                 setScanLevel(cast.mScanLevel);
             }
 
-            boolean special = false;
-            Vessel vessel = getVessel(ctx);
-
-        	if (vessel != null) {
-        		Faction faction = vessel.getFaction();
-    			special = faction.is(FactionAttribute.HASSPECIALS);
-        	}
-
             if (cast.mSpecial != -1) {
-            	setSpecialBits(special ? cast.mSpecial : 0);
+            	setSpecialBits(cast.mSpecial);
             }
 
             if (cast.mSpecialState != -1) {
-                setSpecialStateBits(special ? cast.mSpecialState : 0);
+                setSpecialStateBits(cast.mSpecialState);
             }
 
             if (cast.mIntel != null) {
