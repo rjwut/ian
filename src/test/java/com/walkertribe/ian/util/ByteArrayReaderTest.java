@@ -292,7 +292,7 @@ public class ByteArrayReaderTest {
 	public void testReadBitField() {
 		ByteArrayReader reader = new ByteArrayReader(DEADBEEF);
 		reader.skip(DEADBEEF.length - 1);
-		BitField field = reader.readBitField(EIGHT_BITS);
+		BitField field = reader.readBitField(EIGHT_BITS.length);
 		Assert.assertEquals("V1 V2 V3 V4 V6 V7", field.listActiveBits(EIGHT_BITS));
 		Assert.assertEquals(0, reader.getBytesLeft());
 	}
@@ -301,7 +301,7 @@ public class ByteArrayReaderTest {
 	public void testReadBitFieldPastEndOfArray() {
 		ByteArrayReader reader = new ByteArrayReader(DEADBEEF);
 		reader.skip(DEADBEEF.length - 1);
-		reader.readBitField(NINE_BITS);
+		reader.readBitField(NINE_BITS.length);
 	}
 
 	@Test

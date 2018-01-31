@@ -37,7 +37,7 @@ public class NpcShipParser extends AbstractObjectParser {
 		SPECIAL_ABILITIES,
 		SPECIAL_STATE,
 
-		UNK_4_1,
+		SCAN_LEVEL,
 		UNK_4_2,
 		UNK_4_3,
 		UNK_4_4,
@@ -63,7 +63,7 @@ public class NpcShipParser extends AbstractObjectParser {
 		SHIELD_FREQUENCY_D,
 		SHIELD_FREQUENCY_E
 	}
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	private static final Bit[] SYSTEM_DAMAGES = new Bit[] {
 		Bit.BEAM_SYSTEM_DAMAGE,
@@ -89,8 +89,8 @@ public class NpcShipParser extends AbstractObjectParser {
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override
@@ -124,11 +124,9 @@ public class NpcShipParser extends AbstractObjectParser {
         obj.setFleetNumber(reader.readByte(Bit.FLEET_NUMBER, (byte) -1));
         obj.setSpecialBits(reader.readInt(Bit.SPECIAL_ABILITIES, -1));
         obj.setSpecialStateBits(reader.readInt(Bit.SPECIAL_STATE, -1));
-        obj.setScanLevel((byte) reader.readInt(Bit.UNK_4_1));
+        obj.setScanLevel(reader.readInt(Bit.SCAN_LEVEL, -1));
 
         reader.readObjectUnknown(Bit.UNK_4_2, 4);
-
-        // TODO What are these?
         reader.readObjectUnknown(Bit.UNK_4_3, 4);
         reader.readObjectUnknown(Bit.UNK_4_4, 1);
         reader.readObjectUnknown(Bit.UNK_4_5, 1);
@@ -178,7 +176,7 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeByte(Bit.FLEET_NUMBER, npc.getFleetNumber(), (byte) -1)
 				.writeInt(Bit.SPECIAL_ABILITIES, npc.getSpecialBits(), -1)
 				.writeInt(Bit.SPECIAL_STATE, npc.getSpecialStateBits(), -1)
-				.writeInt(Bit.UNK_4_1, npc.getScanLevel(), -1)
+				.writeInt(Bit.SCAN_LEVEL, npc.getScanLevel(), -1)
 				.writeUnknown(Bit.UNK_4_2)
 				.writeUnknown(Bit.UNK_4_3)
 				.writeUnknown(Bit.UNK_4_4)

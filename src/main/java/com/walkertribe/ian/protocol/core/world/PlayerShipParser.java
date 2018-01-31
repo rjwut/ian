@@ -62,15 +62,15 @@ public class PlayerShipParser extends AbstractObjectParser {
     	ACCENT_COLOR,
     	UNK_6_3
     }
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
     protected PlayerShipParser() {
 		super(ObjectType.PLAYER_SHIP);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override
@@ -93,8 +93,8 @@ public class PlayerShipParser extends AbstractObjectParser {
         	player.setShields(reader.readBool(Bit.SHIELD_STATE, 2).getBooleanValue());
         }
 
-        player.setShipNumber(reader.readInt(Bit.SHIP_NUMBER));
-        player.setHullId(reader.readInt(Bit.SHIP_TYPE));
+        player.setShipNumber(reader.readInt(Bit.SHIP_NUMBER, -1));
+        player.setHullId(reader.readInt(Bit.SHIP_TYPE, -1));
         player.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
         player.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
         player.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));

@@ -56,8 +56,8 @@ public class EngParser extends AbstractObjectParser {
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BITS.length;
 	}
 
 	@Override

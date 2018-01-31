@@ -5,29 +5,30 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 /**
- * Provides easy reading and writing of bits in a bit field. The bit places are
- * identified by an enum. The bytes are little-endian, so in the event that the
- * final byte is not completely utilized, it will be the most significant bits
- * that are left unused.
+ * Provides easy reading and writing of bits in a bit field. The bytes are
+ * little-endian, so in the event that the final byte is not completely
+ * utilized, it will be the most significant bits that are left unused. The
+ * bits in a bit field are commonly represented as enums in IAN, but BitField
+ * does not require this.
  * @author rjwut
  */
 public class BitField {
 	private byte[] bytes;
 
 	/**
-	 * Creates a BitField large enough to accommodate the enumerated bits. All
-	 * bits start at 0.
+	 * Creates a BitField large enough to accommodate the given number of bits.
+	 * All bits start at 0.
 	 */
-	public BitField(Enum<?>[] bits) {
-		this.bytes = new byte[countBytes(bits.length)];
+	public BitField(int bitCount) {
+		this.bytes = new byte[countBytes(bitCount)];
 	}
 
 	/**
 	 * Creates a BitField large enough to accommodate the enumerated bits, and
 	 * stores the indicated bytes in it.
 	 */
-	public BitField(Enum<?>[] bits, byte[] bytes, int offset) {
-		this.bytes = Arrays.copyOfRange(bytes, offset, offset + countBytes(bits.length));
+	public BitField(int bitCount, byte[] bytes, int offset) {
+		this.bytes = Arrays.copyOfRange(bytes, offset, offset + countBytes(bitCount));
 	}
 
 	/**
@@ -40,8 +41,7 @@ public class BitField {
 	/**
 	 * Returns true if the indicated bit is 1, false if it's 0.
 	 */
-	public boolean get(Enum<?> bit) {
-		int bitIndex = bit.ordinal();
+	public boolean get(int bitIndex) {
 		int byteIndex =  bitIndex / 8;
 		int mask = 0x1 << (bitIndex % 8);
 		return (bytes[byteIndex] & mask) != 0;
@@ -51,10 +51,9 @@ public class BitField {
 	 * If value is true, the indicated bit is set to 1; otherwise, it's set to
 	 * 0.
 	 */
-	public void set(Enum<?> bit, boolean value) {
-		int ordinal = bit.ordinal();
-		int byteIndex = ordinal / 8;
-		int bitIndex = ordinal % 8;
+	public void set(int bitIndex, boolean value) {
+		int byteIndex = bitIndex / 8;
+		bitIndex = bitIndex % 8;
 		int mask = (0x1 << bitIndex) ^ 0xff;
 		int shiftedValue = (value ? 1 : 0) << bitIndex;
 		bytes[byteIndex] = (byte) ((bytes[byteIndex] & mask) | shiftedValue);
@@ -109,5 +108,13 @@ public class BitField {
 	 */
 	public static int countBytes(int bitCount) {
 		return (bitCount + 7) / 8;
+	}
+
+	/**
+	 * Generates a name for an unknown bit in the form UNKNOWN_{byte}_{bit},
+	 * where the byte and bit values are one-based.
+	 */
+	public static String generateBitName(int bitIndex) {
+		return "UNKNOWN_" + ((bitIndex / 8) + 1) + "_" + ((bitIndex % 8) + 1);
 	}
 }

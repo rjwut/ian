@@ -1,6 +1,8 @@
 package com.walkertribe.ian.world;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.SortedMap;
 
 import com.walkertribe.ian.Context;
@@ -23,6 +25,18 @@ import com.walkertribe.ian.vesseldata.Vessel;
  * @author dhleong
  */
 public class ArtemisPlayer extends BaseArtemisShip {
+	public class Tube {
+		private float secondsLeft = -1f;
+		private TubeState state;
+		private byte contents;
+	}
+
+	public class UpgradeStatus {
+		private BoolState active;
+		private byte count = -1;
+		private int secondsLeft = -1;
+	}
+
 	private TargetingMode mTargetingMode;
 	private AlertStatus mAlertStatus;
     private BoolState mShields;
@@ -31,9 +45,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private final float[] mSystems = new float[Artemis.SYSTEM_COUNT];
     private final int[] mCoolant = new int[Artemis.SYSTEM_COUNT];
     private final int[] mTorpedos = new int[OrdnanceType.COUNT];
-    private final float[] mTubeTimes = new float[Artemis.MAX_TUBES];
-    private final TubeState[] mTubeState = new TubeState[Artemis.MAX_TUBES];
-    private final byte[] mTubeContents = new byte[Artemis.MAX_TUBES];
+    private final Tube[] mTubes = new Tube[Artemis.MAX_TUBES];
     private float mEnergy = -1;
     private int mDockingBase = -1;
     private MainScreenView mMainScreen;
@@ -47,7 +59,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private float mScanProgress = -1;
     private int mCaptainTarget = -1;
     private int mScanningId = -1;
-    private final byte[] mUpgrades = new byte[Upgrade.STORABLE_UPGRADE_COUNT];
+    private Map<Upgrade, UpgradeStatus> mUpgrades = new LinkedHashMap<Upgrade, UpgradeStatus>(Upgrade.ACTIVATION_UPGRADE_COUNT);
     private int mCapitalShipId = -1;
     private int mAccentColor = -1;
 
@@ -59,9 +71,14 @@ public class ArtemisPlayer extends BaseArtemisShip {
         Arrays.fill(mSystems, -1);
         Arrays.fill(mCoolant, -1);
         Arrays.fill(mTorpedos, -1);
-        Arrays.fill(mTubeTimes, -1);
-        Arrays.fill(mTubeContents, (byte) -1);
-        Arrays.fill(mUpgrades, (byte) -1);
+
+        for (int i = 0; i < Artemis.MAX_TUBES; i++) {
+        	mTubes[i] = new Tube();
+        }
+
+        for (Upgrade upgrade : Upgrade.activation()) {
+        	mUpgrades.put(upgrade, new UpgradeStatus());
+        }
     }
 
     @Override
@@ -217,12 +234,12 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * The loading state of the given tube.
      * Unspecified: null
      */
-    public TubeState getTubeState(int tube) {
-    	return mTubeState[tube];
+    public TubeState getTubeState(int tubeIndex) {
+    	return mTubes[tubeIndex].state;
     }
 
-    public void setTubeState(int tube, TubeState state) {
-    	mTubeState[tube] = state;
+    public void setTubeState(int tubeIndex, TubeState state) {
+    	mTubes[tubeIndex].state = state;
     }
 
     /**
@@ -232,12 +249,12 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * tube.
      * Unspecified: any negative number
      */
-    public byte getTubeContentsValue(int tube) {
-    	return mTubeContents[tube];
+    public byte getTubeContentsValue(int tubeIndex) {
+    	return mTubes[tubeIndex].contents;
     }
 
-    public void setTubeContentsValue(int tube, byte value) {
-    	mTubeContents[tube] = value;
+    public void setTubeContentsValue(int tubeIndex, byte value) {
+    	mTubes[tubeIndex].contents = value;
     }
 
     /**
@@ -245,44 +262,43 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * method will return null if the tube contents are unspecified, or if the
      * tube is empty.
      */
-    public OrdnanceType getTubeContents(int tube) {
-    	TubeState state = mTubeState[tube];
-    	int contents = mTubeContents[tube];
+    public OrdnanceType getTubeContents(int tubeIndex) {
+    	Tube tube = mTubes[tubeIndex];
 
-    	if (state == null || contents < 0) {
+    	if (tube.state == null || tube.contents < 0) {
     		return null;
     	}
 
-    	return state == TubeState.UNLOADED ? null : OrdnanceType.values()[contents];
+    	return tube.state == TubeState.UNLOADED ? null : OrdnanceType.values()[tube.contents];
     }
 
     /**
      * Sets the contents of the given tube. The tube state must be set to a
      * value other than TubeState.UNLOADED before invoking this method.
      */
-    public void setTubeContents(int tube, OrdnanceType type) {
-    	TubeState state = mTubeState[tube];
+    public void setTubeContents(int tubeIndex, OrdnanceType type) {
+    	Tube tube = mTubes[tubeIndex];
 
-    	if (state == null) {
+    	if (tube.state == null) {
     		throw new IllegalStateException("Tube state not set"); 
     	}
 
-    	if (state == TubeState.UNLOADED) {
+    	if (tube.state == TubeState.UNLOADED) {
     		if (type != null) {
     			throw new IllegalArgumentException(
     					"Unloaded tubes cannot contain ordnance"
     			);
     		}
 
-    		mTubeContents[tube] = 0;
+    		tube.contents = 0;
     	} else {
     		if (type == null) {
     			throw new IllegalArgumentException(
-    					"No OrdnanceType specified for " + state + " tube state"
+    					"No OrdnanceType specified for " + tube.state + " tube state"
     			);
     		}
 
-    		mTubeContents[tube] = (byte) type.ordinal();
+    		tube.contents = (byte) type.ordinal();
     	}
     }
 
@@ -291,12 +307,12 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * complete.
      * Unspecified: -1
      */
-    public float getTubeCountdown(int tube) {
-        return mTubeTimes[tube];
+    public float getTubeCountdown(int tubeIndex) {
+        return mTubes[tubeIndex].secondsLeft;
     }
 
-    public void setTubeCountdown(int tube, float seconds) {
-    	mTubeTimes[tube] = seconds;
+    public void setTubeCountdown(int tubeIndex, float seconds) {
+    	mTubes[tubeIndex].secondsLeft = seconds;
     }
 
     /**
@@ -517,23 +533,47 @@ public class ArtemisPlayer extends BaseArtemisShip {
 	}
 
     /**
+     * Returns whether the indicated upgrade is active.
+     * Unspecified: UNKNOWN
+     */
+    public BoolState isUpgradeActive(Upgrade upgrade) {
+    	assertUpgradeCanBeActivated(upgrade);
+    	return mUpgrades.get(upgrade).active;
+    }
+
+    public void setUpgradeActive(Upgrade upgrade, BoolState active) {
+    	assertUpgradeCanBeActivated(upgrade);
+    	mUpgrades.get(upgrade).active = active;
+    }
+
+    /**
      * Returns the number of upgrades of the indicated type stored on the ship.
      * Unspecified: -1
      */
-    public byte getUpgrades(Upgrade upgrade) {
-    	if (upgrade.getActivatedBy() == null) {
-    		throw new IllegalArgumentException(upgrade + " upgrades can't be stored on the ship");
-    	}
-
-    	return mUpgrades[upgrade.ordinal() - 2];
+    public byte getUpgradeCount(Upgrade upgrade) {
+    	assertUpgradeCanBeActivated(upgrade);
+    	return mUpgrades.get(upgrade).count;
     }
 
-    public void setUpgrades(Upgrade upgrade, byte count) {
-    	if (upgrade.getActivatedBy() == null) {
-    		throw new IllegalArgumentException(upgrade + " upgrades can't be stored on the ship");
-    	}
+    public void setUpgradeCount(Upgrade upgrade, byte count) {
+    	assertUpgradeCanBeActivated(upgrade);
+    	mUpgrades.get(upgrade).count = count;
+    }
 
-    	mUpgrades[upgrade.ordinal() - 2] = count;
+    /**
+     * Returns the number of seconds remaining until the given Upgrade expires.
+     * The return value will be undefined if isUpgradeActive() returns FALSE
+     * for this Upgrade.
+     * Unspecified: -1
+     */
+    public int getUpgradeSecondsLeft(Upgrade upgrade) {
+    	assertUpgradeCanBeActivated(upgrade);
+    	return mUpgrades.get(upgrade).secondsLeft;
+    }
+
+    public void setUpgradeSecondsLeft(Upgrade upgrade, int secondsLeft) {
+    	assertUpgradeCanBeActivated(upgrade);
+    	mUpgrades.get(upgrade).secondsLeft = secondsLeft;
     }
 
     /**
@@ -635,24 +675,21 @@ public class ArtemisPlayer extends BaseArtemisShip {
             }
 
             for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-            	float time = plr.mTubeTimes[i];
+            	Tube plrTube = plr.mTubes[i];
+            	Tube tube = mTubes[i];
 
-            	if (time >= 0) {
-                	mTubeTimes[i] = time < 0.05f ? 0 : time;
+            	if (plrTube.secondsLeft >= 0) {
+                	tube.secondsLeft = plrTube.secondsLeft < 0.05f ? 0 : plrTube.secondsLeft;
                 }
 
-                TubeState state = plr.mTubeState[i];
-
-                if (state != null) {
-                	mTubeState[i] = state;
+                if (plrTube.state != null) {
+                	tube.state = plrTube.state;
                 }
 
-                byte contents = plr.mTubeContents[i];
-
-                if (contents != -1) {
-                	mTubeContents[i] = contents;
-                } else if (state == TubeState.UNLOADED) {
-                	mTubeContents[i] = 0;
+                if (plrTube.contents != -1) {
+                	tube.contents = plrTube.contents;
+                } else if (plrTube.state == TubeState.UNLOADED) {
+                	tube.contents = 0;
                 }
             }
 
@@ -680,11 +717,20 @@ public class ArtemisPlayer extends BaseArtemisShip {
                 mScanningId = plr.mScanningId;
             }
 
-            for (int i = 0; i < mUpgrades.length; i++) {
-            	byte upgrade = plr.mUpgrades[i];
+            for (Upgrade upgrade : Upgrade.activation()) {
+            	UpgradeStatus plrUpgradeStatus = plr.mUpgrades.get(upgrade);
+            	UpgradeStatus upgradeStatus = mUpgrades.get(upgrade);
 
-            	if (upgrade >= 0) {
-            		mUpgrades[i] = upgrade;
+            	if (BoolState.isKnown(plrUpgradeStatus.active)) {
+            		upgradeStatus.active = plrUpgradeStatus.active;
+            	}
+
+            	if (plrUpgradeStatus.count != -1) {
+            		upgradeStatus.count = plrUpgradeStatus.count;
+            	}
+
+            	if (plrUpgradeStatus.secondsLeft != -1) {
+            		upgradeStatus.secondsLeft = plrUpgradeStatus.secondsLeft;
             	}
             }
 
@@ -721,22 +767,21 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	}
 
     	for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-    		TubeState state = mTubeState[i];
-    		int contents = mTubeContents[i];
-    		putProp(props, "Tube " + i + " state", state, includeUnspecified);
+    		Tube tube = mTubes[i];
+    		putProp(props, "Tube " + i + " state", tube.state, includeUnspecified);
     		String contentsStr;
 
-    		if (state != null && contents != -1) {
-    			if (state == TubeState.UNLOADED) {
+    		if (tube.state != null && tube.contents != -1) {
+    			if (tube.state == TubeState.UNLOADED) {
     				contentsStr = "EMPTY";
     			} else {
-    				contentsStr = ordValues[contents].name();
+    				contentsStr = ordValues[tube.contents].name();
     			}
 
     			putProp(props, "Tube " + i + " contents", contentsStr, includeUnspecified);
     		}
 
-    		putProp(props, "Tube " + i + " countdown", mTubeTimes[i], -1, includeUnspecified);
+    		putProp(props, "Tube " + i + " countdown", tube.secondsLeft, -1, includeUnspecified);
     	}
 
     	putProp(props, "Energy", mEnergy, -1, includeUnspecified);
@@ -752,14 +797,24 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	putProp(props, "Scan object ID", mScanningId, -1, includeUnspecified);
     	putProp(props, "Weapons target", mWeaponsTarget, -1, includeUnspecified);
     	putProp(props, "Captain target", mCaptainTarget, -1, includeUnspecified);
-    	Upgrade[] upgradeTypes = Upgrade.getStorableUpgrades();
 
-    	for (int i = 0; i < mUpgrades.length; i++) {
-    		Upgrade upgradeType = upgradeTypes[i];
-        	putProp(props, "Upgrades: " + upgradeType, mUpgrades[i], -1, includeUnspecified);
-        }
+    	for (Upgrade upgrade : Upgrade.activation()) {
+    		UpgradeStatus status = mUpgrades.get(upgrade);
+        	putProp(props, "Upgrades: " + upgrade + ": active", status.active, includeUnspecified);
+        	putProp(props, "Upgrades: " + upgrade + ": count", status.count, -1, includeUnspecified);
+        	putProp(props, "Upgrades: " + upgrade + ": time", status.secondsLeft, -1, includeUnspecified);
+    	}
 
     	putProp(props, "Capital ship ID", mCapitalShipId, -1, includeUnspecified);
     	putProp(props, "Accent color", mAccentColor, -1, includeUnspecified);
+    }
+
+    /**
+     * Throws an IllegalArgumentException if the given Upgrade can't be activated.
+     */
+    private void assertUpgradeCanBeActivated(Upgrade upgrade) {
+    	if (upgrade.getActivationIndex() == null) {
+    		throw new IllegalArgumentException(upgrade + " upgrades can't be stored on the ship");
+    	}
     }
 }

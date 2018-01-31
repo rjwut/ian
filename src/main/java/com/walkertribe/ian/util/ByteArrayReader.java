@@ -168,12 +168,11 @@ public class ByteArrayReader {
 	}
 
 	/**
-	 * Reads and returns a BitField, presuming that the given enum values
-	 * represent the bits it stores.
+	 * Reads and returns a BitField containing the given number of bits.
 	 */
-	public BitField readBitField(Enum<?>[] bits) {
-		checkOverflow(BitField.countBytes(bits.length));
-		BitField bitField = new BitField(bits, bytes, offset);
+	public BitField readBitField(int bitCount) {
+		checkOverflow(BitField.countBytes(bitCount));
+		BitField bitField = new BitField(bitCount, bytes, offset);
 		offset += bitField.getByteCount();
 		return bitField;
 	}

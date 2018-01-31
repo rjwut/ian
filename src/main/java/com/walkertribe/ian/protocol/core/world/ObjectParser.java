@@ -11,11 +11,12 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 public interface ObjectParser {
 	/**
-	 * Returns an array of enum values representing the available properties
-	 * for this type of object. The object will start with a BitField which
-	 * describes which of these properties are present.
+	 * Returns the number of bits in the bit field representing the available
+	 * properties for this type of object. If this value is greater than zero,
+	 * the object will start with a BitField which describes which of these
+	 * properties are present.
 	 */
-	public Enum<?>[] getBits();
+	public int getBitCount();
 
 	/**
 	 * Reads and returns an object from the payload. If there are no more

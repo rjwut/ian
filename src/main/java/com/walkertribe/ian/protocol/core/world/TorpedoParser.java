@@ -18,15 +18,15 @@ public class TorpedoParser extends AbstractObjectParser {
     	UNK_1_8,
     	UNK_2_1
     }
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	TorpedoParser() {
 		super(ObjectType.TORPEDO);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

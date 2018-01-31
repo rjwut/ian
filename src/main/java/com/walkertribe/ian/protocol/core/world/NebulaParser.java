@@ -17,15 +17,15 @@ public class NebulaParser extends AbstractObjectParser {
     	UNK_1_7,
     	UNK_1_8
     }
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	NebulaParser() {
 		super(ObjectType.NEBULA);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

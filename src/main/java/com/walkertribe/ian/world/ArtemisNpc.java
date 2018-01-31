@@ -37,7 +37,7 @@ public class ArtemisNpc extends BaseArtemisShip {
     public static final byte SCAN_LEVEL_BASIC = 1;
     public static final byte SCAN_LEVEL_FULL  = 2;
 
-    private byte mScanLevel = -1;
+    private int mScanLevel = -1;
     private int mSpecial = -1, mSpecialState = -1;
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
@@ -198,11 +198,11 @@ public class ArtemisNpc extends BaseArtemisShip {
      * The scan level for this ship.
      * Unspecified: -1
      */
-    public byte getScanLevel() {
+    public int getScanLevel() {
         return mScanLevel;
     }
 
-    public void setScanLevel(byte scanLevel) {
+    public void setScanLevel(int scanLevel) {
         mScanLevel = scanLevel;
     }
 

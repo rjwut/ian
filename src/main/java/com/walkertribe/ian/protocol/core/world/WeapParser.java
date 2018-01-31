@@ -47,7 +47,7 @@ public class WeapParser extends AbstractObjectParser {
 		UNK_4_7,
 		UNK_4_8
 	}
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	private static final Bit[] TORPEDOS = {
         Bit.TORP_HOMING, Bit.TORP_NUKE, Bit.TORP_MINE, Bit.TORP_EMP,
@@ -75,8 +75,8 @@ public class WeapParser extends AbstractObjectParser {
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

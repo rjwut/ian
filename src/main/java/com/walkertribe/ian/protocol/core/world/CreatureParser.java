@@ -33,15 +33,15 @@ public class CreatureParser extends AbstractObjectParser {
 
     	UNK_3_1;
     }
-    private static final Bit[] BITS = Bit.values();
+    private static final int BIT_COUNT = Bit.values().length;
 
     CreatureParser() {
 		super(ObjectType.CREATURE);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

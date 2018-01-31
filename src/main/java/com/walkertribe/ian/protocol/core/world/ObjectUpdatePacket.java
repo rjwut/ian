@@ -103,7 +103,7 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		for (ArtemisObject obj : objects) {
-			writer.startObject(obj, objectType, parser.getBits());
+			writer.startObject(obj, objectType, parser.getBitCount());
 			parser.write(obj, writer);
 			writer.endObject();
 		}

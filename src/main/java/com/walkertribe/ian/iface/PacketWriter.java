@@ -89,18 +89,23 @@ public class PacketWriter {
 	}
 
 	/**
-	 * Starts writing a new entry into the packet for the given object,
-	 * overriding the object's type with the specified ObjectType. If object
-	 * entries for this packet have bit fields, an array of the possible enum
-	 * values (not just the ones in this packet) should be provided; otherwise,
-	 * the bits argument should be null.
+	 * Convenience method for startObject(object, type, bits.length).
 	 */
 	public PacketWriter startObject(ArtemisObject object, ObjectType type,
 			Enum<?>[] bits) {
+		return startObject(object, type, bits.length);
+	}
+
+	/**
+	 * Starts writing a new entry into the packet for the given object,
+	 * overriding the object's type with the specified ObjectType.
+	 */
+	public PacketWriter startObject(ArtemisObject object, ObjectType type,
+			int bitFieldSize) {
 		assertStarted();
 		obj = object;
 		objType = type;
-		bitField = new BitField(bits);
+		bitField = new BitField(bitFieldSize);
 		baosObj = new ByteArrayOutputStream();
 		return this;
 	}
@@ -125,20 +130,34 @@ public class PacketWriter {
 	}
 
 	/**
+	 * Convenience method for writeByte(bit.ordinal(), v, defaultValue).
+	 */
+	public PacketWriter writeByte(Enum<?> bit, byte v, byte defaultValue) {
+		return writeByte(bit.ordinal(), v, defaultValue);
+	}
+
+	/**
 	 * If the given byte is different from defaultValue, the byte is written
 	 * to the packet, and the corresponding bit in the object's bit field is set;
 	 * otherwise, nothing happens. You must invoke startObject() before calling
 	 * this method.
 	 */
-	public PacketWriter writeByte(Enum<?> bit, byte v, byte defaultValue) {
+	public PacketWriter writeByte(int bitIndex, byte v, byte defaultValue) {
 		assertObjectStarted();
 
 		if (v != defaultValue) {
-			bitField.set(bit, true);
+			bitField.set(bitIndex, true);
 			baosObj.write(v);
 		}
 
 		return this;
+	}
+
+	/**
+	 * Convenience method for writeBool(bit.ordinal(), v, byteCount).
+	 */
+	public PacketWriter writeBool(Enum<?> bit, BoolState v, int byteCount) {
+		return writeBool(bit.ordinal(), v, byteCount);
 	}
 
 	/**
@@ -147,7 +166,7 @@ public class PacketWriter {
 	 * field is set; otherwise, nothing happens. You must invoke startObject()
 	 * before calling this method.
 	 */
-	public PacketWriter writeBool(Enum<?> bit, BoolState v, int byteCount) {
+	public PacketWriter writeBool(int bitIndex, BoolState v, int byteCount) {
 		assertObjectStarted();
 
 		if (!BoolState.isKnown(v)) {
@@ -160,7 +179,7 @@ public class PacketWriter {
 			buffer[i] = 0;
 		}
 
-		bitField.set(bit, true);
+		bitField.set(bitIndex, true);
 		baosObj.write(buffer, 0, byteCount);
 		return this;
 	}
@@ -176,16 +195,23 @@ public class PacketWriter {
 	}
 
 	/**
+	 * Convenience method for writeShort(bit.ordinal(), v, defaultValue).
+	 */
+	public PacketWriter writeShort(Enum<?> bit, int v, int defaultValue) {
+		return writeShort(bit.ordinal(), v, defaultValue);
+	}
+
+	/**
 	 * If the given int is different from defaultValue, the int is coerced to a
 	 * short and written to the packet, and the corresponding bit in the
 	 * object's bit field is set; otherwise, nothing happens. You must invoke
 	 * startObject() before calling this method.
 	 */
-	public PacketWriter writeShort(Enum<?> bit, int v, int defaultValue) {
+	public PacketWriter writeShort(int bitIndex, int v, int defaultValue) {
 		assertObjectStarted();
 
 		if (v != defaultValue) {
-			bitField.set(bit, true);
+			bitField.set(bitIndex, true);
 			writeShort(v, baosObj);
 		}
 
@@ -203,16 +229,23 @@ public class PacketWriter {
 	}
 
 	/**
+	 * Convenience method for writeInt(bit.ordinal(), v, defaultValue).
+	 */
+	public PacketWriter writeInt(Enum<?> bit, int v, int defaultValue) {
+		return writeInt(bit.ordinal(), v, defaultValue);
+	}
+
+	/**
 	 * If the given int is different from defaultValue, the int is written to
 	 * the packet, and the corresponding bit in the object's bit field is set;
 	 * otherwise, nothing happens. You must invoke startObject() before calling
 	 * this method.
 	 */
-	public PacketWriter writeInt(Enum<?> bit, int v, int defaultValue) {
+	public PacketWriter writeInt(int bitIndex, int v, int defaultValue) {
 		assertObjectStarted();
 
 		if (v != defaultValue) {
-			bitField.set(bit, true);
+			bitField.set(bitIndex, true);
 			writeInt(v, baosObj);
 		}
 
@@ -228,14 +261,21 @@ public class PacketWriter {
 	}
 
 	/**
+	 * Convenience method for writeFloat(bit.ordinal(), v, defaultValue).
+	 */
+	public PacketWriter writeFloat(Enum<?> bit, float v, float defaultValue) {
+		return writeFloat(bit.ordinal(), v, defaultValue);
+	}
+
+	/**
 	 * If the given float is different from defaultValue, the float is written
 	 * to the packet, and the corresponding bit in the object's bit field is
 	 * set; otherwise, nothing happens. You must invoke startObject() before
 	 * calling this method.
 	 */
-	public PacketWriter writeFloat(Enum<?> bit, float v, float defaultValue) {
+	public PacketWriter writeFloat(int bitIndex, float v, float defaultValue) {
 		return writeInt(
-				bit,
+				bitIndex,
 				Float.floatToRawIntBits(v),
 				Float.floatToRawIntBits(defaultValue)
 		);
@@ -262,15 +302,22 @@ public class PacketWriter {
 	}
 
 	/**
+	 * Convenience method for writeString(bit.ordinal(), str).
+	 */
+	public PacketWriter writeString(Enum<?> bit, String str) {
+		return writeString(bit.ordinal(), str);
+	}
+
+	/**
 	 * If the given String is not null, it is written to the packet, and the
 	 * corresponding bit in the object's bit field is set; otherwise, nothing
 	 * happens. You must invoke startObject() before calling this method.
 	 */
-	public PacketWriter writeString(Enum<?> bit, String str) {
+	public PacketWriter writeString(int bitIndex, String str) {
 		assertObjectStarted();
 
 		if (str != null) {
-			bitField.set(bit, true);
+			bitField.set(bitIndex, true);
 			writeString(str, baosObj);
 		}
 
@@ -287,15 +334,22 @@ public class PacketWriter {
 	}
 
 	/**
+	 * Convenience method for writeBytes(bit.ordinal(), bytes).
+	 */
+	public PacketWriter writeBytes(Enum<?> bit, byte[] bytes) {
+		return writeBytes(bit.ordinal(), bytes);
+	}
+
+	/**
 	 * If the given byte array is not null, it is written to the packet, and the
 	 * corresponding bit in the object's bit field is set; otherwise, nothing
 	 * happens. You must invoke startObject() before calling this method.
 	 */
-	public PacketWriter writeBytes(Enum<?> bit, byte[] bytes) {
+	public PacketWriter writeBytes(int bitIndex, byte[] bytes) {
 		assertObjectStarted();
 
 		if (bytes != null) {
-			bitField.set(bit, true);
+			bitField.set(bitIndex, true);
 			baosObj.write(bytes, 0, bytes.length);
 		}
 
@@ -325,14 +379,36 @@ public class PacketWriter {
 	 * startObject() before calling this method.
 	 */
 	public PacketWriter writeUnknown(Enum<?> bit) {
+		return writeUnknown(bit.ordinal(), bit.name());
+	}
+
+	/**
+	 * Retrieves the unknown value identified by the indicated bit as a byte
+	 * array from the unknown properties map. If the retrieved value is not
+	 * null, it is written to the packet and the corresponding bit in the
+	 * object's bit field is set; otherwise, nothing happens. You must invoke
+	 * startObject() before calling this method.
+	 */
+	public PacketWriter writeUnknown(int bitIndex) {
+		return writeUnknown(bitIndex, BitField.generateBitName(bitIndex));
+	}
+
+	/**
+	 * Retrieves the unknown value identified by the indicated bit as a byte
+	 * array from the unknown properties map. If the retrieved value is not
+	 * null, it is written to the packet and the corresponding bit in the
+	 * object's bit field is set; otherwise, nothing happens. You must invoke
+	 * startObject() before calling this method.
+	 */
+	private PacketWriter writeUnknown(int bitIndex, String bitName) {
 		assertObjectStarted();
 		SortedMap<String, byte[]> unknownProps = obj.getUnknownProps();
 
 		if (unknownProps != null) {
-			byte[] bytes = unknownProps.get(bit.name());
+			byte[] bytes = unknownProps.get(bitName);
 	
 			if (bytes != null) {
-				bitField.set(bit, true);
+				bitField.set(bitIndex, true);
 				baosObj.write(bytes, 0, bytes.length);
 			}
 		}

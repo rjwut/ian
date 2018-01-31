@@ -28,15 +28,15 @@ public class BaseParser extends AbstractObjectParser {
 		UNK_2_5,
 		UNK_2_6
 	}
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	BaseParser() {
 		super(ObjectType.BASE);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

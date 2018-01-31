@@ -19,10 +19,10 @@ public class BitFieldTest {
 
 	@Test
 	public void testZeroBits() throws IOException {
-		BitField field = new BitField(ZERO_BITS_VALUES);
+		BitField field = new BitField(ZERO_BITS_VALUES.length);
 
 		for (ZeroBits v : ZERO_BITS_VALUES) {
-			Assert.assertFalse(field.get(v));
+			Assert.assertFalse(field.get(v.ordinal()));
 		}
 
 		Assert.assertEquals(0, field.getByteCount());
@@ -32,20 +32,20 @@ public class BitFieldTest {
 
 	@Test
 	public void testOneBit() throws IOException {
-		BitField field = new BitField(ONE_BIT_VALUES);
-		Assert.assertFalse(field.get(OneBit.V0));
+		BitField field = new BitField(ONE_BIT_VALUES.length);
+		Assert.assertFalse(field.get(OneBit.V0.ordinal()));
 		Assert.assertEquals(1, field.getByteCount());
 		Assert.assertEquals("", field.listActiveBits(ONE_BIT_VALUES));
 		assertFieldBytes(new byte[] { (byte) 0 }, field);
 		Assert.assertEquals("00", field.toString());
-		field.set(OneBit.V0, true);
-		Assert.assertTrue(field.get(OneBit.V0));
+		field.set(OneBit.V0.ordinal(), true);
+		Assert.assertTrue(field.get(OneBit.V0.ordinal()));
 		Assert.assertEquals(1, field.getByteCount());
 		Assert.assertEquals("V0", field.listActiveBits(ONE_BIT_VALUES));
 		assertFieldBytes(new byte[] { (byte) 1 }, field);
 		Assert.assertEquals("01", field.toString());
-		field.set(OneBit.V0, false);
-		Assert.assertFalse(field.get(OneBit.V0));
+		field.set(OneBit.V0.ordinal(), false);
+		Assert.assertFalse(field.get(OneBit.V0.ordinal()));
 		Assert.assertEquals(1, field.getByteCount());
 		Assert.assertEquals("", field.listActiveBits(ONE_BIT_VALUES));
 		assertFieldBytes(new byte[] { (byte) 0 }, field);
@@ -54,10 +54,10 @@ public class BitFieldTest {
 
 	@Test
 	public void testEightBits() throws IOException {
-		BitField field = new BitField(EIGHT_BITS_VALUES);
+		BitField field = new BitField(EIGHT_BITS_VALUES.length);
 
 		for (EightBits v : EIGHT_BITS_VALUES) {
-			Assert.assertFalse(field.get(v));
+			Assert.assertFalse(field.get(v.ordinal()));
 		}
 
 		Assert.assertEquals(1, field.getByteCount());
@@ -65,8 +65,8 @@ public class BitFieldTest {
 		assertFieldBytes(new byte[] { (byte) 0 }, field);
 
 		for (EightBits v : EIGHT_BITS_VALUES) {
-			field.set(v, true);
-			Assert.assertTrue(field.get(v));
+			field.set(v.ordinal(), true);
+			Assert.assertTrue(field.get(v.ordinal()));
 		}
 
 		Assert.assertEquals(1, field.getByteCount());
@@ -76,10 +76,10 @@ public class BitFieldTest {
 
 	@Test
 	public void testNineBits() throws IOException {
-		BitField field = new BitField(NINE_BITS_VALUES);
+		BitField field = new BitField(NINE_BITS_VALUES.length);
 
 		for (NineBits v : NINE_BITS_VALUES) {
-			Assert.assertFalse(field.get(v));
+			Assert.assertFalse(field.get(v.ordinal()));
 		}
 
 		Assert.assertEquals(2, field.getByteCount());
@@ -87,8 +87,8 @@ public class BitFieldTest {
 		assertFieldBytes(new byte[] { (byte) 0, (byte) 0 }, field);
 
 		for (NineBits v : NINE_BITS_VALUES) {
-			field.set(v, true);
-			Assert.assertTrue(field.get(v));
+			field.set(v.ordinal(), true);
+			Assert.assertTrue(field.get(v.ordinal()));
 		}
 
 		Assert.assertEquals(2, field.getByteCount());

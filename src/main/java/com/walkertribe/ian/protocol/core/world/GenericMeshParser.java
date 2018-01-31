@@ -38,15 +38,15 @@ public class GenericMeshParser extends AbstractObjectParser {
 		UNK_4_1,
 		UNK_4_2
 	}
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	GenericMeshParser() {
 		super(ObjectType.GENERIC_MESH);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

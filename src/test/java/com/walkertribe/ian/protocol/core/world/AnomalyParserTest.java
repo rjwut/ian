@@ -21,7 +21,7 @@ public class AnomalyParserTest extends AbstractObjectUpdatePacketTester<ArtemisA
 		ArtemisAnomaly obj = objects.get(0);
 		Assert.assertEquals(ObjectType.ANOMALY, obj.getType());
 		Assert.assertNull(obj.getName());
-		ArtemisAnomalyTest.assertAnomaly(obj, 1.0f, 2.0f, 3.0f, Upgrade.CETROCITE_CRYSTAL);
+		ArtemisAnomalyTest.assertAnomaly(obj, 1.0f, 2.0f, 3.0f, Upgrade.CETROCITE_HEATSINKS);
 		obj = objects.get(1);
 		Assert.assertEquals(ObjectType.ANOMALY, obj.getType());
 		Assert.assertNull(obj.getName());

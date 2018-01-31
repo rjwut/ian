@@ -18,15 +18,15 @@ public class AnomalyParser extends AbstractObjectParser {
 		Z,
 		UPGRADE
 	}
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	AnomalyParser() {
 		super(ObjectType.ANOMALY);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class AnomalyParser extends AbstractObjectParser {
         anomaly.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
 
         if (reader.has(Bit.UPGRADE)) {
-        	anomaly.setUpgrade(Upgrade.values()[reader.readInt()]);
+        	anomaly.setUpgrade(Upgrade.fromAnomalyIndex(reader.readInt()));
         }
 
         return anomaly;
@@ -53,7 +53,7 @@ public class AnomalyParser extends AbstractObjectParser {
 		Upgrade upgrade = anomaly.getUpgrade();
 
 		if (upgrade != null) {
-			writer.writeInt(Bit.UPGRADE, upgrade.ordinal(), -1);
+			writer.writeInt(Bit.UPGRADE, upgrade.getAnomalyIndex(), -1);
 		}
 	}
 }

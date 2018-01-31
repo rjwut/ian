@@ -19,15 +19,15 @@ public class DroneParser extends AbstractObjectParser {
 
     	UNK_2_1
     }
-    private static final Bit[] BITS = Bit.values();
+    private static final int BIT_COUNT = Bit.values().length;
 
     DroneParser() {
 		super(ObjectType.DRONE);
     }
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

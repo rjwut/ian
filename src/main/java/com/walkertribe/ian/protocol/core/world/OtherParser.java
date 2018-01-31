@@ -17,15 +17,15 @@ public class OtherParser extends AbstractObjectParser {
     	UNK_1_7,
     	UNK_1_8
     }
-	private static final Bit[] BITS = Bit.values();
+	private static final int BIT_COUNT = Bit.values().length;
 
 	OtherParser(ObjectType objectType) {
 		super(objectType);
 	}
 
 	@Override
-	public Bit[] getBits() {
-		return BITS;
+	public int getBitCount() {
+		return BIT_COUNT;
 	}
 
 	@Override

@@ -7,56 +7,132 @@ import java.util.Arrays;
  * @author rjwut
  */
 public enum Upgrade {
-	HIDENS_POWER_CELL(null),                  // +500 energy (on pickup)
-	VIGORANIUM_NODULE(null),                  // resurrects 1 DAMCON (on pickup)
-	CETROCITE_CRYSTAL(Console.ENGINEERING),   // coolant buff
-	LATERAL_ARRAY(Console.SCIENCE),           // scanning is instantaneous
-	TAURON_FOCUSER(Console.WEAPONS),          // +10% beam damage and cooldown buff
-	INFUSION_P_COIL(Console.HELM),            // +10% warp and impulse speed
-	CARPACTION_COIL(Console.WEAPONS),         // +10% shield recharge rate
-	SECRET_CODE_CASE(Console.COMMUNICATIONS); // force 1 enemy to accept surrender
-	/*
-	 * Unknown types:
-	 * HYDROGEN_RAM
-	 * POLYPHASIC_CAPACITORS
-	 * COOLANT_RESERVES
-	 * ECM_STARPULSE
-	 * WARTIME_PRODUCTION
-	 * PROTONIC_VERNIERS
-	 * REGENERATIVE_PAU_GRIDS
-	 * VETERAN_DAMCON_TEAMS
-	 * TACHYON_SCANNERS
-	 * GRIDSCAN_OVERLOAD
-	 * OVERRIDE_AUTHORIZATION
-	 * RESUPPLY_IMPERATIVES
-	 * PATROL_GROUP
-	 * FAST_SUPPLY
-	 * VANGUARD_REFIT (x6)
-	 */
+	HIDENS_POWER_CELL,                        // +500 energy (on pickup)
+	VIGORANIUM_NODULE,                        // resurrects 1 DAMCON (on pickup)
+	INFUSION_P_COILS(Console.HELM),           // +10% warp and impulse speed for 5 min
+	HYDROGEN_RAM,                             // 10% turn speed boost for 5 min
+	TAURON_FOCUSERS(Console.WEAPONS),         // +10% beam and reload speed for 5 min
+	CARPACTION_COILS(Console.WEAPONS),        // +10% shield recharge rate for 5 min
+	POLYPHASIC_CAPACITORS,                    // +10% energy recharge for 5 min
+	COOLANT_RESERVES,                         // +10% heat reduction for 5 min
+	LATERAL_ARRAY(Console.SCIENCE),           // 3x scan speed for 5 minutes
+	ECM_STARPULSE,                            // enemy can't get target lock for 5 min
+	SECRET_CODE_CASE(Console.COMMUNICATIONS), // force 1 enemy to accept surrender
+	WARTIME_PRODUCTION,                       // 10% (min +1) boost to all starting base munitions
+	INFUSION_P_COILS_PERM,                    // permanent +10% warp and impulse speed
+	PROTONIC_VERNIERS,                        // permanent +10% turn speed
+	TAURON_FOCUSERS_PERM,                     // permanent +10% beam and reload speed
+	REGENERATIVE_PAU_GRIDS,                   // permanent +10% shield recharge rate
+	VETERAN_DAMCON_TEAMS,                     // +10% DamCon move/repair speed
+	CETROCITE_HEATSINKS(Console.ENGINEERING), // +10% reduction in heat generation
+	TACHYON_SCANNERS,                         // permanent +10% scan speed
+	GRIDSCAN_OVERLOAD,                        // permanent +10% sensor range boost
+	OVERRIDE_AUTHORIZATION,                   // +10% base production speed
+	RESUPPLY_IMPERATIVES,                     // +10% more missions
+	PATROL_GROUP,                             // +1 TSN escort
+	FAST_SUPPLY,                              // +1 TSN cargo ship
+	VANGUARD_REFIT_HELM,                      // permanent +10% impulse/warp/turn speed
+	VANGUARD_REFIT_WEAP,                      // permanent +10% beam/shield/reload speed
+	VANGUARD_REFIT_SCI,                       // permanent +10% scan speed and sensor range
+	VANGUARD_REFIT_COMM,                      // permanent +10% station production speed
+	VANGUARD_REFIT_ENG,                       // permanent +10% efficiency all eng systems
+	VANGUARD_REFIT_ALL;                       // permanent +10% boost to all ship systems
 
-	public static final int STORABLE_UPGRADE_COUNT;
+	private static final Upgrade[] ANOMALY_UPGRADES = {
+		HIDENS_POWER_CELL,
+		VIGORANIUM_NODULE,
+		CETROCITE_HEATSINKS,
+		LATERAL_ARRAY,
+		TAURON_FOCUSERS,
+		INFUSION_P_COILS,
+		CARPACTION_COILS,
+		SECRET_CODE_CASE
+	};
+
+	private static final Upgrade[] ACTIVATION_UPGRADES = Arrays.copyOfRange(
+			values(),
+			INFUSION_P_COILS.ordinal(),
+			values().length
+	);
+
+	public static final int ACTIVATION_UPGRADE_COUNT = ACTIVATION_UPGRADES.length;
 
 	static {
-		STORABLE_UPGRADE_COUNT = getStorableUpgrades().length;
+		for (int i = 0; i < ANOMALY_UPGRADES.length; i++) {
+			ANOMALY_UPGRADES[i].anomalyIndex = i;
+		}
+
+		for (int i = 0; i < ACTIVATION_UPGRADES.length; i++) {
+			ACTIVATION_UPGRADES[i].activationIndex = i;
+		}
 	}
 
 	/**
-	 * Returns an array containing the Upgrade values that players can store on
-	 * the ship and use later.
+	 * Returns the Upgrade identified by the given index used in ArtemisAnomaly
+	 * objects.
 	 */
-	public static Upgrade[] getStorableUpgrades() {
-		return Arrays.copyOfRange(values(), 2, 8);
+	public static Upgrade fromAnomalyIndex(int index) {
+		if (index < 0 || index >= ANOMALY_UPGRADES.length) {
+			throw new IllegalArgumentException("Invalid anomaly index: " + index);
+		}
+
+		return ANOMALY_UPGRADES[index];
 	}
 
+	/**
+	 * Returns the Upgrade indentified by the given index used in ArtemisPlayer
+	 * objects and ActivateUpgradePackets.
+	 */
+	public static Upgrade fromActivationIndex(int index) {
+		if (index < 0 || index >= ACTIVATION_UPGRADES.length) {
+			throw new IllegalArgumentException("Invalid activation index: " + index);
+		}
+
+		return ACTIVATION_UPGRADES[index];
+	}
+
+	/**
+	 * Returns an array containing Upgrades that can be activated, ordered by
+	 * activation index.
+	 */
+	public static Upgrade[] activation() {
+		return Arrays.copyOf(ACTIVATION_UPGRADES, ACTIVATION_UPGRADES.length);
+	}
+
+	private Integer anomalyIndex;
+	private Integer activationIndex;
 	private Console activatedBy;
+
+	private Upgrade() {
+		// do nothing
+	}
 
 	private Upgrade(Console activatedBy) {
 		this.activatedBy = activatedBy;
 	}
 
 	/**
-	 * Returns the Console that can activate this Upgrade, or null if the
-	 * Upgrade is used immediately when picked up.
+	 * If this Upgrade is available through an anomaly pickup, returns the
+	 * index used by ArtemisAnomaly to refer to this Upgrade. Upgrades which
+	 * aren't available through anomaly pickup return null.
+	 */
+	public Integer getAnomalyIndex() {
+		return anomalyIndex;
+	}
+
+	/**
+	 * If this Upgrade can be stored and activated, returns the index used by
+	 * ArtemisPlayer objects and ActivateUpgradePacket to refer to this Upgrade.
+	 * Upgrades which can't be stored and activated return null.
+	 */
+	public Integer getActivationIndex() {
+		return activationIndex;
+	}
+
+	/**
+	 * If this Upgrade can be stored and activated, returns the Console that
+	 * can activate the Upgrade. Upgrades which can't be stored and activated
+	 * return null.
 	 */
 	public Console getActivatedBy() {
 		return activatedBy;
