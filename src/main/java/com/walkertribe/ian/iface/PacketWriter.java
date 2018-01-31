@@ -160,6 +160,7 @@ public class PacketWriter {
 			buffer[i] = 0;
 		}
 
+		bitField.set(bit, true);
 		baosObj.write(buffer, 0, byteCount);
 		return this;
 	}
