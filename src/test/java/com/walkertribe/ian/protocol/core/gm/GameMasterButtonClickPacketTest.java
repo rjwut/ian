@@ -27,8 +27,6 @@ public class GameMasterButtonClickPacketTest extends AbstractPacketTester<GameMa
 
 	@Override
 	protected void testPackets(List<GameMasterButtonClickPacket> packets) {
-		// TODO Auto-generated method stub
-		
+		Assert.assertEquals(HASH, packets.get(0).getHash());
 	}
-
 }
