@@ -1,6 +1,6 @@
 package com.walkertribe.ian.enums;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -25,7 +25,7 @@ public enum SpecialAbility {
 	 * given bit field value.
 	 */
 	public static Set<SpecialAbility> fromValue(int value) {
-		Set<SpecialAbility> set = new HashSet<SpecialAbility>();
+		Set<SpecialAbility> set = new LinkedHashSet<SpecialAbility>();
 
 		for (SpecialAbility ability : values()) {
 			if ((value & ability.bit) != 0) {
