@@ -1,0 +1,88 @@
+// ALL PROPERTIES
+efbeadde     // header
+d7000000     // packet length = 215
+01000000     // origin = server
+00000000     // padding
+c3000000     // remaining length = 195
+f93d8080     // ObjectUpdatePacket
+05           // object type = NPC ship
+2f000000     // object ID = 47
+ffffffffff7f // bit field
+05000000 5400 4500 5300 5400 0000 // name = TEST
+3333333f     // throttle = 0.7
+cdcc4c3e     // rudder = 0.2
+cdcc4c3f     // max impulse = 0.8
+9a99193e     // max turn rate = 0.15
+01000000     // enemy = true
+d0070000     // vessel type = 2000
+0000803f     // x = 1.0
+00000040     // y = 2.0
+00004040     // z = 3.0
+cdcc4c3e     // pitch = 0.2
+cdcccc3d     // roll = 0.1
+9a99993e     // heading = 0.3
+cdcccc3e     // velocity = 0.4
+01           // surrendered = true
+0000         // unknown
+0000c842     // forward shields = 100
+0000c842     // forward shields max = 100
+00003c42     // aft shields = 47
+0000c842     // aft shields max = 100
+0000         // unknown
+02           // fleet number = 2
+05000000     // special abilities = STEALTH CLOAK
+01000000     // active special abilities = STEALTH
+02000000     // scan level = 2
+00000000     // unknown
+00000000     // unknown
+00           // unknown
+00           // unknown
+00           // unknown
+00           // unknown
+00000000     // unknown
+00000000     // unknown
+00000000     // unknown
+00000000     // beam damage = 0.0
+0000003e     // torpedo damage = 0.125
+0000803e     // sensor damage = 0.25
+0000c03e     // maneuvering damage = 0.375
+0000003f     // impulse damage = 0.5
+0000203f     // warp/jump drive damage = 0.625 
+0000403f     // fore shields damage = 0.75
+0000603f     // aft shields damage = 0.875
+00000000     // beam frequency A resistance = 0.0
+cdcc4c3e     // beam frequency B resistance = 0.2
+cdcccc3e     // beam frequency C resistance = 0.4
+9a99193f     // beam frequency D resistance = 0.6
+cdcc4c3f     // beam frequency E resistance = 0.8
+00000000     // end array
+
+// UNKNOWN VESSEL WITH SPECIAL ABILITIES
+efbeadde     // header
+33000000     // packet length = 51
+01000000     // origin = server
+00000000     // padding
+1f000000     // remaining length = 31
+f93d8080     // ObjectUpdatePacket
+05           // object type = NPC ship
+2f000000     // object ID = 47
+4000c0000000 // bit field
+d1070000     // vessel type = 2001
+05000000     // special abilities = STEALTH CLOAK
+01000000     // active special abilities = STEALTH
+00000000
+
+// NON-SPECIAL SHIP WITH SPECIAL ABILITIES (simulating Artemis server bug)
+efbeadde     // header
+33000000     // packet length = 51
+01000000     // origin = server
+00000000     // padding
+1f000000     // remaining length = 31
+f93d8080     // ObjectUpdatePacket
+05           // object type = NPC ship
+2f000000     // object ID = 47
+4000c0000000 // bit field
+e8030000     // vessel type = 1000
+05000000     // special abilities = STEALTH CLOAK
+01000000     // active special abilities = STEALTH
+00000000
