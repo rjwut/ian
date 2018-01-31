@@ -22,7 +22,7 @@ public enum BoolState {
     }
 
     /**
-     * Returns .FALSE if state is null or .UNKNOWN; .TRUE otherwise.
+     * Returns false if state is null or .UNKNOWN; true otherwise.
      */
     public static boolean isKnown(BoolState state) {
         return state == TRUE || state == FALSE;

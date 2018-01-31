@@ -25,7 +25,11 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
         	mShieldFreqs[i] = -1;
         }
     }
-    
+
+    /**
+     * Current speed of the ship: 0.0 = all stop, 1.0 = full speed
+     * Unspecified: -1
+     */
     public float getVelocity() {
         return mVelocity;
     }
@@ -34,6 +38,11 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
         mVelocity = velocity;
     }
 
+    /**
+     * Rudder position for this ship: 0.0 = hard to port, 0.5 = rudder
+     * amidships, 1.0 hard to starboard
+     * Unspecified: -1
+     */
     public float getSteering() {
         return mSteering;
     }

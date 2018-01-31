@@ -2,7 +2,7 @@ efbeadde // header
 3e000000 // packet length = 62
 01000000 // origin = server
 00000000 // padding
-2a000000 // remaining length = 46
+2a000000 // remaining length = 42
 f93d8080 // ObjectUpdatePacket
 07       // object type = mine
 02000000 // object ID = 2
