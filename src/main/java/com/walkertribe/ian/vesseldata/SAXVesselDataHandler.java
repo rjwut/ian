@@ -27,13 +27,13 @@ public class SAXVesselDataHandler extends DefaultHandler {
 		void parse(Attributes attrs);
 	}
 
-	VesselData vesselData;
+	private VesselData vesselData;
 	private Context ctx;
 	private Map<String, Parser> parsers = new HashMap<String, Parser>();
 	private Faction faction;
 	private Vessel vessel;
 
-	SAXVesselDataHandler(Context ctx) {
+	public SAXVesselDataHandler(Context ctx) {
 		this.ctx = ctx;
 		parsers.put("art", new ArtParser());
 		parsers.put("beam_port", new BeamPortParser());
@@ -55,6 +55,10 @@ public class SAXVesselDataHandler extends DefaultHandler {
 		parsers.put("torpedo_tube", new TorpedoTubeParser());
 		parsers.put("vessel", new VesselParser());
 		parsers.put("vessel_data", new VesselDataParser());
+	}
+
+	public VesselData getVesselData() {
+		return vesselData;
 	}
 
 	@Override

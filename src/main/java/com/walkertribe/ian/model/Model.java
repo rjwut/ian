@@ -1,22 +1,12 @@
 package com.walkertribe.ian.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
 import com.walkertribe.ian.util.Matrix;
-import com.walkertribe.ian.vesseldata.PathResolver;
 
 /**
  * Contains data about the Vessel's model.
@@ -33,50 +23,19 @@ public class Model {
 		return Math.abs(val1 - val2) <= EPSILON;
 	}
 
-	/**
-	 * Constructs a Model described by the given .dxs files. This is not cached;
-	 * to avoid building the same Model over and over, use VesselData.getModel()
-	 * instead.
-	 */
-	public static Model build(PathResolver pathResolver, String dxsPaths) {
-		Model model = new Model(dxsPaths);
-		String[] pathsArr = dxsPaths.split(",");
-
-
-		for (String path : pathsArr) {
-			try {
-				SAXParserFactory spf = SAXParserFactory.newInstance();
-				SAXParser saxParser = spf.newSAXParser();
-				XMLReader xmlReader = saxParser.getXMLReader();
-				SAXModelHandler handler = new SAXModelHandler(path);
-				xmlReader.setContentHandler(handler);
-				xmlReader.parse(new InputSource(pathResolver.get(path)));
-				model.add(handler.vertices, handler.polys);
-			} catch (SAXException ex) {
-				throw new RuntimeException(ex);
-			} catch (ParserConfigurationException ex) {
-				throw new RuntimeException(ex);
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
-		}
-
-		return model;
-	}
-
 	private String dxsPaths;
 	private double maxRadius = 0;
 	private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
 	private List<Poly> polys = new LinkedList<Poly>();
 
-	Model(String dxsPaths) {
+	public Model(String dxsPaths) {
 		this.dxsPaths = dxsPaths;
 	}
 
 	/**
 	 * Adds the given Vertexes and Polys to this Model.
 	 */
-	void add(Map<String, Vertex> v, List<Poly> p) {
+	public void add(Map<String, Vertex> v, List<Poly> p) {
 		vertexMap.putAll(v);
 		polys.addAll(p);
 

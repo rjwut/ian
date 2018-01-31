@@ -20,12 +20,12 @@ public class SAXModelHandler extends DefaultHandler {
 	}
 
 	private String dxsPath;
-	Map<String, Vertex> vertices = new HashMap<String, Vertex>();
-	List<Poly> polys = new LinkedList<Poly>();
+	private Map<String, Vertex> vertices = new HashMap<String, Vertex>();
+	private List<Poly> polys = new LinkedList<Poly>();
 	private ParseMode mode = ParseMode.NONE;
 	private List<String> vertexList = new ArrayList<String>();
 
-	SAXModelHandler(String dxsPath) {
+	public SAXModelHandler(String dxsPath) {
 		this.dxsPath = dxsPath;
 	}
 
@@ -62,4 +62,12 @@ public class SAXModelHandler extends DefaultHandler {
 			vertexList.clear();
 		}
     }
+
+	public Map<String, Vertex> getVertices() {
+		return vertices;
+	};
+
+	public List<Poly> getPolys() {
+		return polys;
+	}
 }
