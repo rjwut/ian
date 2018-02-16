@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class GameMasterMessagePacketTest extends AbstractPacketTester<GameMasterMessagePacket> {
 	@Test
@@ -54,11 +55,11 @@ public class GameMasterMessagePacketTest extends AbstractPacketTester<GameMaster
 	}
 
 	private void test(GameMasterMessagePacket pkt0, GameMasterMessagePacket pkt1) {
-		Assert.assertEquals("Sender", pkt0.getSender());
-		Assert.assertEquals("Message", pkt0.getMessage());
+		TestUtil.assertToStringEquals("Sender", pkt0.getSender());
+		TestUtil.assertToStringEquals("Message", pkt0.getMessage());
 		Assert.assertNull(pkt0.getConsole());
-		Assert.assertEquals("Sender", pkt1.getSender());
-		Assert.assertEquals("Message", pkt1.getMessage());
+		TestUtil.assertToStringEquals("Sender", pkt1.getSender());
+		TestUtil.assertToStringEquals("Message", pkt1.getMessage());
 		Assert.assertEquals(Console.MAIN_SCREEN, pkt1.getConsole());
 	}
 }

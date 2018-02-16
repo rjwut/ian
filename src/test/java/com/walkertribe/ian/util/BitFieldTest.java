@@ -25,9 +25,9 @@ public class BitFieldTest {
 			Assert.assertFalse(field.get(v.ordinal()));
 		}
 
-		Assert.assertEquals(0, field.getByteCount());
+		Assert.assertEquals(1, field.getByteCount());
 		Assert.assertEquals("", field.listActiveBits(ZERO_BITS_VALUES));
-		assertFieldBytes(new byte[] { }, field);
+		assertFieldBytes(new byte[] { (byte) 0 }, field);
 	}
 
 	@Test
@@ -60,18 +60,18 @@ public class BitFieldTest {
 			Assert.assertFalse(field.get(v.ordinal()));
 		}
 
-		Assert.assertEquals(1, field.getByteCount());
+		Assert.assertEquals(2, field.getByteCount());
 		Assert.assertEquals("", field.listActiveBits(EIGHT_BITS_VALUES));
-		assertFieldBytes(new byte[] { (byte) 0 }, field);
+		assertFieldBytes(new byte[] { (byte) 0, (byte) 0 }, field);
 
 		for (EightBits v : EIGHT_BITS_VALUES) {
 			field.set(v.ordinal(), true);
 			Assert.assertTrue(field.get(v.ordinal()));
 		}
 
-		Assert.assertEquals(1, field.getByteCount());
+		Assert.assertEquals(2, field.getByteCount());
 		Assert.assertEquals("V0 V1 V2 V3 V4 V5 V6 V7", field.listActiveBits(EIGHT_BITS_VALUES));
-		assertFieldBytes(new byte[] { (byte) 255 }, field);
+		assertFieldBytes(new byte[] { (byte) 255, (byte) 0 }, field);
 	}
 
 	@Test

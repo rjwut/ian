@@ -75,7 +75,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 
 	@Override
 	protected ArtemisPlayer parseImpl(PacketReader reader) {
-        ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId());
+        ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId(), ObjectType.PLAYER_SHIP);
         player.setWeaponsTarget(reader.readInt(Bit.WEAPONS_TARGET, -1));
         player.setImpulse(reader.readFloat(Bit.IMPULSE, -1));
         player.setSteering(reader.readFloat(Bit.RUDDER, -1));
@@ -143,7 +143,7 @@ public class PlayerShipParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_5_7, 4);
         reader.readObjectUnknown(Bit.UNK_5_8, 1);
         player.setCapitalShipId(reader.readInt(Bit.CAPITAL_SHIP_ID, -1));
-        player.setAccentColor(reader.readInt(Bit.ACCENT_COLOR, -1));
+        player.setAccentColor(reader.readFloat(Bit.ACCENT_COLOR, -1));
         reader.readObjectUnknown(Bit.UNK_6_3, 4);
         return player;
 	}
@@ -223,7 +223,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_5_7)
 				.writeUnknown(Bit.UNK_5_8)
 				.writeInt(Bit.CAPITAL_SHIP_ID, player.getCapitalShipId(), -1)
-				.writeInt(Bit.ACCENT_COLOR, player.getAccentColor(), -1)
+				.writeFloat(Bit.ACCENT_COLOR, player.getAccentColor(), -1)
 				.writeUnknown(Bit.UNK_6_3);
 	}
 }

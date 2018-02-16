@@ -31,7 +31,7 @@ public class ToggleRedAlertPacket extends ValueIntPacket {
     }
 
 	private ToggleRedAlertPacket(PacketReader reader) {
-        super(SubType.TOGGLE_RED_ALERT, reader);
+        super(reader);
 	}
 
 	@Override

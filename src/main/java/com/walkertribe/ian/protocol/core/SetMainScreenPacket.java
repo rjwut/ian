@@ -39,7 +39,7 @@ public class SetMainScreenPacket extends ValueIntPacket {
     }
 
     private SetMainScreenPacket(PacketReader reader) {
-    	super(SubType.MAIN_SCREEN, reader);
+    	super(reader);
     }
 
     /**

@@ -27,25 +27,24 @@ public class GameOverReasonPacket extends SimpleEventPacket {
 		});
 	}
 
-	private List<String> mText;
+	private List<CharSequence> mText = new LinkedList<CharSequence>();
 
 	private GameOverReasonPacket(PacketReader reader) {
     	super(SubType.GAME_OVER_REASON, reader);
-        mText = new LinkedList<String>();
 
         while (reader.hasMore()) {
         	mText.add(reader.readString());
         }
     }
 
-    public GameOverReasonPacket(String... text) {
+    public GameOverReasonPacket(CharSequence... text) {
     	super(SubType.GAME_OVER_REASON);
 
     	if (text.length == 0) {
     		throw new IllegalArgumentException("You must provide a reason");
     	}
 
-    	for (String line : text) {
+    	for (CharSequence line : text) {
     		if (line == null || line.length() == 0) {
     			throw new IllegalArgumentException("No blank lines allowed");
     		}
@@ -58,22 +57,22 @@ public class GameOverReasonPacket extends SimpleEventPacket {
      * The text describing why the game ended. Each String in the List is one
      * line.
      */
-    public List<String> getText() {
-        return new LinkedList<String>(mText);
+    public List<CharSequence> getText() {
+    	return mText;
     }
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		super.writePayload(writer);
 
-		for (String line : mText) {
+		for (CharSequence line : mText) {
 			writer.writeString(line);
 		}
 	}
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		for (String line : mText) {
+		for (CharSequence line : mText) {
 			b.append("\n\t").append(line);
 		}
 	}

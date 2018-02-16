@@ -26,7 +26,7 @@ public class GameMessagePacket extends SimpleEventPacket {
 		});
 	}
 
-    private final String mMessage;
+    private final CharSequence mMessage;
 
     private GameMessagePacket(PacketReader reader) {
         super(SubType.GAME_MESSAGE, reader);
@@ -46,7 +46,7 @@ public class GameMessagePacket extends SimpleEventPacket {
     /**
      * The contents of the "toast" message.
      */
-    public String getMessage() {
+    public CharSequence getMessage() {
         return mMessage;
     }
 

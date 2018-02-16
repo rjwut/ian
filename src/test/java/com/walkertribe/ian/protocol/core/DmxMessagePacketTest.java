@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class DmxMessagePacketTest extends AbstractPacketTester<DmxMessagePacket> {
 	@Test
@@ -37,10 +38,10 @@ public class DmxMessagePacketTest extends AbstractPacketTester<DmxMessagePacket>
 	@Override
 	protected void testPackets(List<DmxMessagePacket> packets) {
 		DmxMessagePacket pkt = packets.get(0);
-		Assert.assertEquals("test1", pkt.getName());
+		TestUtil.assertToStringEquals("test1", pkt.getName());
 		Assert.assertTrue(pkt.isOn());
 		pkt = packets.get(1);
-		Assert.assertEquals("test2", pkt.getName());
+		TestUtil.assertToStringEquals("test2", pkt.getName());
 		Assert.assertFalse(pkt.isOn());
 	}
 }

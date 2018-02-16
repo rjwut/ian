@@ -4,4 +4,5 @@ efbeadde          // header
 00000000          // padding
 10000000          // remaining length = 16
 fec854f7 05000000 // PlayerShipDamagePacket
-00000000 00000000 // unknown
+00000000          // ship index = 0
+0000c03f          // duration = 1.5

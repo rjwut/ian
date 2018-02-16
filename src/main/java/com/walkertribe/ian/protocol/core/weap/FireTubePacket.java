@@ -42,7 +42,7 @@ public class FireTubePacket extends ValueIntPacket {
     }
 
     private FireTubePacket(PacketReader reader) {
-    	super(SubType.FIRE_TUBE, reader);
+    	super(reader);
     }
 
     /**

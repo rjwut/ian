@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class GameOverReasonPacketTest extends AbstractPacketTester<GameOverReasonPacket> {
 	private static final String LINE1 = "This is a test of the GameOverReasonPacket.";
@@ -20,7 +21,7 @@ public class GameOverReasonPacketTest extends AbstractPacketTester<GameOverReaso
 	@Test
 	public void testConstruct() {
 		GameOverReasonPacket pkt = new GameOverReasonPacket(LINE1, LINE2);
-		List<String> lines = pkt.getText();
+		List<CharSequence> lines = pkt.getText();
 		Assert.assertEquals(LINE1, lines.get(0));
 		Assert.assertEquals(LINE2, lines.get(1));
 	}
@@ -42,8 +43,8 @@ public class GameOverReasonPacketTest extends AbstractPacketTester<GameOverReaso
 
 	@Override
 	protected void testPackets(List<GameOverReasonPacket> packets) {
-		List<String> lines = packets.get(0).getText();
-		Assert.assertEquals("Hi!", lines.get(0));
-		Assert.assertEquals("Bye!", lines.get(1));
+		List<CharSequence> lines = packets.get(0).getText();
+		TestUtil.assertToStringEquals("Hi!", lines.get(0));
+		TestUtil.assertToStringEquals("Bye!", lines.get(1));
 	}
 }

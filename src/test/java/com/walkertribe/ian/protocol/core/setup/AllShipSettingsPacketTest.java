@@ -8,7 +8,8 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
-import com.walkertribe.ian.protocol.core.setup.AllShipSettingsPacket.Ship;
+import com.walkertribe.ian.protocol.core.setup.Ship;
+import com.walkertribe.ian.util.TestUtil;
 import com.walkertribe.ian.world.Artemis;
 
 public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSettingsPacket> {
@@ -51,7 +52,7 @@ public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSetti
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructShipNullName() {
-		new Ship(null, 0, 0.0f, DriveType.WARP);
+		new Ship((String) null, 0, 0.0f, DriveType.WARP);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -81,7 +82,7 @@ public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSetti
 
 		for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
 			Ship ship = pkt.getShip(i + 1);
-			Assert.assertEquals("Ship" + i, ship.getName());
+			TestUtil.assertToStringEquals("Ship" + i, ship.getName());
 			Assert.assertEquals(i, ship.getShipType());
 			Assert.assertEquals(DriveType.values()[i % 2], ship.getDrive());
 			Assert.assertEquals(colorInc * i, ship.getAccentColor(), EPSILON);

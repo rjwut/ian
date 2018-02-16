@@ -32,7 +32,7 @@ public class ToggleAutoBeamsPacket extends ValueIntPacket {
 	}
 
 	private ToggleAutoBeamsPacket(PacketReader reader) {
-		super(SubType.TOGGLE_AUTO_BEAMS, reader);
+		super(reader);
 	}
 
 	@Override

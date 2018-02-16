@@ -1,5 +1,6 @@
 package com.walkertribe.ian.protocol.core.setup;
 
+import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
@@ -7,15 +8,21 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
-import com.walkertribe.ian.protocol.core.ValueIntPacket;
+import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Take or relinquish a bridge console.
  * @author dhleong
  */
-public class SetConsolePacket extends ValueIntPacket {
+public class SetConsolePacket extends BaseArtemisPacket {
 	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.SET_CONSOLE, new PacketFactory() {
+    	registry.register(
+    			ConnectionType.CLIENT,
+    			CorePacketType.VALUE_INT,
+    			(byte) SubType.SET_CONSOLE.ordinal(),
+    			new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
 				return SetConsolePacket.class;
@@ -37,7 +44,7 @@ public class SetConsolePacket extends ValueIntPacket {
 	 * @param selected Whether the player is taking this console or not
 	 */
 	public SetConsolePacket(Console console, boolean selected) {
-        super(SubType.SET_CONSOLE);
+        super(ConnectionType.CLIENT, CorePacketType.VALUE_INT);
 
         if (console == null) {
         	throw new IllegalArgumentException("You must specify a console");
@@ -48,7 +55,7 @@ public class SetConsolePacket extends ValueIntPacket {
     }
 
 	private SetConsolePacket(PacketReader reader) {
-        super(SubType.SET_CONSOLE);
+        super(ConnectionType.CLIENT, CorePacketType.VALUE_INT);
         reader.skip(4); // subtype
 		mConsole = Console.values()[reader.readInt()];
 		mSelected = reader.readInt() == 1;

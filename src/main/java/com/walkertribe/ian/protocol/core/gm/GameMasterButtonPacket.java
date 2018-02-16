@@ -43,7 +43,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	}
 
 	private Action mAction;
-	private String mLabel;
+	private CharSequence mLabel;
 	private int mX = -1, mY = -1, mW = -1, mH = -1;
 	private GameMasterButtonClickPacket mClickPacket;
 
@@ -53,7 +53,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	 * a packet to remove all buttons on the screen, specify Action.REMOVE with
 	 * a null label.
 	 */
-	public GameMasterButtonPacket(Action action, String label) {
+	public GameMasterButtonPacket(Action action, CharSequence label) {
         super(ConnectionType.SERVER, TYPE);
 
         if (action == null) {
@@ -151,7 +151,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	 * The label for this button. This method will return null if isRemoveAll()
 	 * returns true.
 	 */
-	public String getLabel() {
+	public CharSequence getLabel() {
 		return mLabel;
 	}
 

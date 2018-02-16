@@ -28,14 +28,14 @@ public class SoundEffectPacket extends SimpleEventPacket {
 		});
 	}
 
-	private String mFilename;
+	private CharSequence mFilename;
 
 	private SoundEffectPacket(PacketReader reader) {
 		super(SubType.SOUND_EFFECT, reader);
 		mFilename = reader.readString();
 	}
 
-	public SoundEffectPacket(String filename) {
+	public SoundEffectPacket(CharSequence filename) {
 		super(SubType.SOUND_EFFECT);
 		mFilename = filename;
 	}
@@ -44,7 +44,7 @@ public class SoundEffectPacket extends SimpleEventPacket {
 	 * Returns the path of the file to play, relative to the Artemis install
 	 * directory.
 	 */
-	public String getFilename() {
+	public CharSequence getFilename() {
 		return mFilename;
 	}
 

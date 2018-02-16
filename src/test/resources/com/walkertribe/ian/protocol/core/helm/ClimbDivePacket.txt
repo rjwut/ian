@@ -3,7 +3,7 @@ efbeadde          // header
 02000000          // origin = client
 00000000          // padding
 0c000000          // remaining length = 12
-3c1d824c 1b000000 // ClimbDivePacket
+3c1d824c 1d000000 // ClimbDivePacket
 ffffffff          // direction = up
 
 efbeadde          // header
@@ -11,5 +11,5 @@ efbeadde          // header
 02000000          // origin = client
 00000000          // padding
 0c000000          // remaining length = 12
-3c1d824c 1b000000 // ClimbDivePacket
+3c1d824c 1d000000 // ClimbDivePacket
 01000000          // direction = down

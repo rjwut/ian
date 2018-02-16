@@ -1,0 +1,9 @@
+efbeadde          // header
+28000000          // packet length = 40
+02000000          // origin = client
+00000000          // padding
+14000000          // remaining length = 20
+aca55103 06000000 // GameMasterTargetLocationPacket
+00000040          // z
+00000000          // y?
+0000803f          // x

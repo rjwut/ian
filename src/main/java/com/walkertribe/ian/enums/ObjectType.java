@@ -12,6 +12,7 @@ import com.walkertribe.ian.world.ArtemisNebula;
 import com.walkertribe.ian.world.ArtemisNpc;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisPlayer;
+import com.walkertribe.ian.world.ArtemisTorpedo;
 
 /**
  * World object types.
@@ -28,7 +29,7 @@ public enum ObjectType {
 	ANOMALY(8, true, ArtemisAnomaly.class, "wreck1"),
 	// 9 is unused
 	NEBULA(10, false, ArtemisNebula.class, null),
-	TORPEDO(11, false, ArtemisGenericObject.class, null),
+	TORPEDO(11, false, ArtemisTorpedo.class, null),
 	BLACK_HOLE(12, false, ArtemisGenericObject.class, null),
 	ASTEROID(13, false, ArtemisGenericObject.class, "asteroid"),
 	GENERIC_MESH(14, true, ArtemisMesh.class, null),

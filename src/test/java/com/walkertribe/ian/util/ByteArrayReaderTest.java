@@ -12,20 +12,20 @@ public class ByteArrayReaderTest {
 	private static final byte[] DEADBEEF = new byte[] { (byte) 0xef, (byte) 0xbe, (byte) 0xad, (byte) 0xde };
 	private static final float DEADBEEF_AS_FLOAT = -6.259853398707798E18f;
 	private static final byte[] BOOLEAN_TEST = new byte[] { 0, 0, 1, 1, 2, 0 };
+	private static final SevenBits[] SEVEN_BITS = SevenBits.values();
 	private static final EightBits[] EIGHT_BITS = EightBits.values();
-	private static final NineBits[] NINE_BITS = NineBits.values();
 	private static final byte[] US_ASCII_STRING = new byte[] { 3, 0, 0, 0, 'H', 'i', '!' };
 	private static final byte[] US_ASCII_STRING_PAST_END = new byte[] { 3, 0, 0, 0, 'H', 'i' };
 	private static final byte[] UTF_16_STRING = new byte[] { 4, 0, 0, 0, 'H', 0, 'i', 0, '!', 0, 0, 0 };
 	private static final byte[] UTF_16_STRING_PAST_END = new byte[] { 4, 0, 0, 0, 'H', 0, 'i', 0, '!', 0, 0 };
 	private static final byte[] UTF_16_STRING_EARLY_NULL = new byte[] { 4, 0, 0, 0, 'H', 0, 0, 0, 'i', 0, '!', 0 };
 
-	private enum EightBits {
-		V0, V1, V2, V3, V4, V5, V6, V7
+	private enum SevenBits {
+		V0, V1, V2, V3, V4, V5, V6
 	}
 
-	private enum NineBits {
-		V0, V1, V2, V3, V4, V5, V6, V7, V8
+	private enum EightBits {
+		V0, V1, V2, V3, V4, V5, V6, V7
 	}
 	
 	@Test
@@ -292,8 +292,8 @@ public class ByteArrayReaderTest {
 	public void testReadBitField() {
 		ByteArrayReader reader = new ByteArrayReader(DEADBEEF);
 		reader.skip(DEADBEEF.length - 1);
-		BitField field = reader.readBitField(EIGHT_BITS.length);
-		Assert.assertEquals("V1 V2 V3 V4 V6 V7", field.listActiveBits(EIGHT_BITS));
+		BitField field = reader.readBitField(SEVEN_BITS.length);
+		Assert.assertEquals("V1 V2 V3 V4 V6", field.listActiveBits(SEVEN_BITS));
 		Assert.assertEquals(0, reader.getBytesLeft());
 	}
 
@@ -301,7 +301,7 @@ public class ByteArrayReaderTest {
 	public void testReadBitFieldPastEndOfArray() {
 		ByteArrayReader reader = new ByteArrayReader(DEADBEEF);
 		reader.skip(DEADBEEF.length - 1);
-		reader.readBitField(NINE_BITS.length);
+		reader.readBitField(EIGHT_BITS.length);
 	}
 
 	@Test
@@ -319,14 +319,14 @@ public class ByteArrayReaderTest {
 	@Test
 	public void testReadUtf16LeString() {
 		ByteArrayReader reader = new ByteArrayReader(UTF_16_STRING);
-		Assert.assertEquals("Hi!", reader.readUtf16LeString());
+		TestUtil.assertToStringEquals("Hi!", reader.readUtf16LeString());
 		Assert.assertEquals(0, reader.getBytesLeft());
 	}
 
 	@Test
 	public void testReadUtf16LeStringEarlyNull() {
 		ByteArrayReader reader = new ByteArrayReader(UTF_16_STRING_EARLY_NULL);
-		Assert.assertEquals("H", reader.readUtf16LeString());
+		TestUtil.assertToStringEquals("H", reader.readUtf16LeString());
 		Assert.assertEquals(0, reader.getBytesLeft());
 	}
 

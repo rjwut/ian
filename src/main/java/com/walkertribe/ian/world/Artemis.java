@@ -16,7 +16,7 @@ public final class Artemis {
 	 * The default amount of coolant the player ship has at start. The amount of
 	 * coolant may change due to side mission rewards or custom scripting.
 	 */
-    public static final int DEFAULT_COOLANT = 8;
+    public static final byte DEFAULT_COOLANT = 8;
 
     /**
      * The maximum amount of coolant that can be applied to any one system.

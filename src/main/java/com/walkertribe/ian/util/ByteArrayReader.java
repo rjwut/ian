@@ -3,7 +3,6 @@ package com.walkertribe.ian.util;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
@@ -181,50 +180,19 @@ public class ByteArrayReader {
 	 * Reads and returns a US ASCII encoded String.
 	 */
 	public String readUsAsciiString() {
-		return readString(Util.US_ASCII, 1, false);
+		int byteCount = readInt();
+		checkOverflow(byteCount);
+		return new String(readBytes(byteCount), Util.US_ASCII);
 	}
 
 	/**
 	 * Reads and returns a UTF-16LE encoded String.
 	 */
-	public String readUtf16LeString() {
-		return readString(Util.UTF16LE, 2, true);
-	}
-
-	/**
-	 * Reads a String in the given Charset, assuming the indicated number of
-	 * bytes per character.
-	 */
-	private String readString(Charset charset, int bytesPerChar, boolean nullTerminated) {
+	public CharSequence readUtf16LeString() {
 		int charCount = readInt();
-		int byteCount = charCount * bytesPerChar;
-		checkOverflow(byteCount);
-		int nullLength = nullTerminated ? bytesPerChar : 0;
-		int endOffset = offset + byteCount - nullLength;
-		byte[] readBytes = Arrays.copyOfRange(bytes, offset, endOffset);
-		offset += byteCount;
-		int i = 0;
-
-		// check for "early" null
-		if (nullTerminated) {
-			for ( ; i < readBytes.length; i += bytesPerChar) {
-				boolean isNull = true;
-
-				for (int j = 0; isNull && j < bytesPerChar; j++) {
-					isNull = readBytes[i + j] == 0;
-				}
-
-				if (isNull) {
-					break;
-				}
-			}
-
-			if (i != readBytes.length) {
-				readBytes = Arrays.copyOfRange(readBytes, 0, i);
-			}
-		}
-
-		return new String(readBytes, charset);
+		int byteCount = charCount * 2;
+		byte[] readBytes = readBytes(byteCount);
+		return new NullTerminatedString(readBytes);
 	}
 
 	private void checkOverflow(int byteCount) {

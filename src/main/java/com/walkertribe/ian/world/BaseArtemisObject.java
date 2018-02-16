@@ -63,7 +63,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 
 	/**
 	 * Puts the given Object property into the indicated map. If the given value
-	 * is null, then the includeUnspecified value dictates the behavor of this
+	 * is null, then the includeUnspecified value dictates the behavior of this
 	 * method. If it is true, the property is recorded in the map as "UNKNOWN".
 	 * Otherwise, it is omitted.
 	 */
@@ -77,7 +77,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 	}
 
 	protected final int mId;
-    public String mName;
+    public CharSequence mName;
     private float mX = Float.MIN_VALUE;
     private float mY = Float.MIN_VALUE;
     private float mZ = Float.MIN_VALUE;
@@ -105,11 +105,11 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
     @Override
-    public String getName() {
+    public CharSequence getName() {
         return mName;
     }
 
-    public void setName(String name) {
+    public void setName(CharSequence name) {
     	mName = name;
     }
 
@@ -145,8 +145,10 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 
 	@Override
     public void updateFrom(ArtemisObject obj, Context ctx) {
-        if (obj.getName() != null) {
-            mName = obj.getName();
+		CharSequence name = obj.getName();
+
+		if (name != null) {
+            mName = name;
         }
 
         float x = obj.getX();
@@ -232,6 +234,16 @@ public abstract class BaseArtemisObject implements ArtemisObject {
         	props.putAll(unknownProps);
     	}
     }
+
+	/**
+	 * Returns true if this object contains any data.
+	 */
+	protected boolean hasData() {
+		return  mName != null ||
+				mX != Float.MIN_VALUE ||
+				mY != Float.MIN_VALUE ||
+				mZ != Float.MIN_VALUE;
+	}
 
     @Override
     public boolean equals(Object other) {

@@ -39,7 +39,7 @@ public class SciScanPacket extends ValueIntPacket {
     }
 
     private SciScanPacket(PacketReader reader) {
-        super(SubType.SCIENCE_SCAN, reader);
+        super(reader);
     }
 
     /**

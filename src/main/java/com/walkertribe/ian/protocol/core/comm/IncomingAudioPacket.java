@@ -36,8 +36,8 @@ public class IncomingAudioPacket extends BaseArtemisPacket {
 
     private final int mId;
     private final AudioMode mMode;
-    private final String mTitle;
-    private final String mFile;
+    private final CharSequence mTitle;
+    private final CharSequence mFile;
 
     private IncomingAudioPacket(PacketReader reader) {
     	super(ConnectionType.SERVER, TYPE);
@@ -88,7 +88,7 @@ public class IncomingAudioPacket extends BaseArtemisPacket {
      * getAudioMode() returns IncomingAudioPacket.Mode.INCOMING; otherwise, it
      * returns null.
      */
-    public String getFileName() {
+    public CharSequence getFileName() {
         return mFile;
     }
     
@@ -97,7 +97,7 @@ public class IncomingAudioPacket extends BaseArtemisPacket {
      * getAudioMode() returns IncomingAudioPacket.Mode.INCOMING; otherwise, it
      * returns null.
      */
-    public String getTitle() {
+    public CharSequence getTitle() {
         return mTitle;
     }
 

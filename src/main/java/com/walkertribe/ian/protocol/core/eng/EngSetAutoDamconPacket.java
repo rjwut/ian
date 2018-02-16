@@ -35,7 +35,7 @@ public class EngSetAutoDamconPacket extends ValueIntPacket {
     }
 
     private EngSetAutoDamconPacket(PacketReader reader) {
-        super(SubType.SET_AUTO_DAMCON, reader);
+        super(reader);
     }
 
     public boolean isAutonomous() {

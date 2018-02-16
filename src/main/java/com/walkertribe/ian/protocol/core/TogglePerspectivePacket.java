@@ -33,7 +33,7 @@ public class TogglePerspectivePacket extends ValueIntPacket {
 	}
 
 	private TogglePerspectivePacket(PacketReader reader) {
-		super(SubType.TOGGLE_PERSPECTIVE, reader);
+		super(reader);
 	}
 
 	@Override

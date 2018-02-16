@@ -75,7 +75,7 @@ public class UpgradesParser extends AbstractObjectParser {
 
 	@Override
 	protected ArtemisPlayer parseImpl(PacketReader reader) {
-		ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId());
+		ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId(), ObjectType.UPGRADES);
 
 		for (Field field : Field.values()) {
 			for (Upgrade upgrade : Upgrade.activation()) {

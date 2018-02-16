@@ -36,16 +36,7 @@ public class WeapParser extends AbstractObjectParser {
 		TUBE_CONTENT_3,
 		TUBE_CONTENT_4,
 		TUBE_CONTENT_5,
-		TUBE_CONTENT_6,
-
-		UNK_4_1,
-		UNK_4_2,
-		UNK_4_3,
-		UNK_4_4,
-		UNK_4_5,
-		UNK_4_6,
-		UNK_4_7,
-		UNK_4_8
+		TUBE_CONTENT_6
 	}
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -108,10 +99,10 @@ public class WeapParser extends AbstractObjectParser {
         	tubeContents[i] = reader.readByte(TUBE_CONTENTS[i], (byte) -1);
         }
 
-        ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId());
+        ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId(), ObjectType.WEAPONS_CONSOLE);
 
         for (int i = 0; i < TORPEDOS.length; i++) {
-        	player.setTorpedoCount(i, torps[i]);
+        	player.setTorpedoCount(OrdnanceType.values()[i], torps[i]);
         }
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {

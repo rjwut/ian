@@ -34,8 +34,8 @@ public class ArtemisMeshTest {
 	public static void assertMesh(ArtemisMesh obj, int id, String name, float x, float y, float z, String mesh,
 			String texture, float red, float green, float blue, float shieldsFront, float shieldsRear) {
 		ArtemisObjectTest.assertObject(obj, id, ObjectType.GENERIC_MESH, name, x, y, z);
-		Assert.assertEquals(mesh, obj.getMesh());
-		Assert.assertEquals(texture, obj.getTexture());
+		TestUtil.assertToStringEquals(mesh, obj.getMesh());
+		TestUtil.assertToStringEquals(texture, obj.getTexture());
 		Assert.assertEquals(red, obj.getRed(), TestUtil.EPSILON);
 		Assert.assertEquals(green, obj.getGreen(), TestUtil.EPSILON);
 		Assert.assertEquals(blue, obj.getBlue(), TestUtil.EPSILON);

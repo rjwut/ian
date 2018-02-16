@@ -3,5 +3,5 @@ efbeadde          // header
 02000000          // origin = client
 00000000          // padding
 0c000000          // remaining length = 12
-3c1d824c 1a000000 // TogglePerspectivePacket
+3c1d824c 1b000000 // TogglePerspectivePacket
 00000000          // unused

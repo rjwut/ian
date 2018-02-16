@@ -1,0 +1,15 @@
+efbeadde          // header
+20000000          // packet length = 32
+02000000          // origin = client
+00000000          // padding
+0c000000          // remaining length = 12
+3c1d824c 12000000 // GameMasterTargetObjectPacket
+01000000          // target = none
+
+efbeadde          // header
+20000000          // packet length = 32
+02000000          // origin = client
+00000000          // padding
+0c000000          // remaining length = 12
+3c1d824c 12000000 // GameMasterTargetObjectPacket
+2f000000          // target = #47

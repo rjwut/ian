@@ -36,8 +36,8 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
 	}
 
     private final Console mConsole;
-    private final String mSender;
-    private final String mMessage;
+    private final CharSequence mSender;
+    private final CharSequence mMessage;
 
     private GameMasterMessagePacket(PacketReader reader) {
         super(ConnectionType.CLIENT, TYPE);
@@ -90,14 +90,14 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
      * The message's sender. This can be any arbitrary String and does not have
      * to match the name of an existing object.
      */
-    public String getSender() {
+    public CharSequence getSender() {
         return mSender;
     }
 
     /**
      * The content of the message being sent.
      */
-    public String getMessage() {
+    public CharSequence getMessage() {
     	return mMessage;
     }
 

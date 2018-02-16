@@ -16,7 +16,7 @@ public class PlayerShipDamagePacketTest extends AbstractPacketTester<PlayerShipD
 
 	@Test
 	public void testConstruct() {
-		new PlayerShipDamagePacket();
+		new PlayerShipDamagePacket(0, 1.5f);
 	}
 
 	@Override

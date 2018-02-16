@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.AudioMode;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class IncomingAudioPacketTest extends AbstractPacketTester<IncomingAudioPacket> {
 	@Test
@@ -27,8 +28,8 @@ public class IncomingAudioPacketTest extends AbstractPacketTester<IncomingAudioP
 		IncomingAudioPacket pkt = packets.get(0);
 		Assert.assertEquals(0, pkt.getAudioId());
 		Assert.assertEquals(AudioMode.INCOMING, pkt.getAudioMode());
-		Assert.assertEquals("Hello", pkt.getTitle());
-		Assert.assertEquals("hello.ogg", pkt.getFileName());
+		TestUtil.assertToStringEquals("Hello", pkt.getTitle());
+		TestUtil.assertToStringEquals("hello.ogg", pkt.getFileName());
 		pkt = packets.get(1);
 		Assert.assertEquals(1, pkt.getAudioId());
 		Assert.assertEquals(AudioMode.PLAYING, pkt.getAudioMode());

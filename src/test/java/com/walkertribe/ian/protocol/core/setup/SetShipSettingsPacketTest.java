@@ -10,6 +10,7 @@ import com.walkertribe.ian.TestContext;
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 import com.walkertribe.ian.vesseldata.MutableFaction;
 import com.walkertribe.ian.vesseldata.MutableVessel;
 import com.walkertribe.ian.vesseldata.MutableVesselData;
@@ -80,14 +81,16 @@ public class SetShipSettingsPacketTest extends AbstractPacketTester<SetShipSetti
 	}
 
 	private void test(SetShipSettingsPacket pkt0, SetShipSettingsPacket pkt1) {
-		Assert.assertEquals(DriveType.WARP, pkt0.getDrive());
-		Assert.assertEquals(1000, pkt0.getHullId());
-		Assert.assertEquals(0.0f, pkt0.getAccentColor(), EPSILON);
-		Assert.assertEquals("Artemis", pkt0.getName());
-		Assert.assertEquals(DriveType.JUMP, pkt1.getDrive());
-		Assert.assertEquals(1001, pkt1.getHullId());
-		Assert.assertEquals(0.875f, pkt1.getAccentColor(), EPSILON);
-		Assert.assertEquals("Diana", pkt1.getName());
+		Ship ship = pkt0.getShip();
+		Assert.assertEquals(DriveType.WARP, ship.getDrive());
+		Assert.assertEquals(1000, ship.getShipType());
+		Assert.assertEquals(0.0f, ship.getAccentColor(), EPSILON);
+		TestUtil.assertToStringEquals("Artemis", ship.getName());
+		ship = pkt1.getShip();
+		Assert.assertEquals(DriveType.JUMP, ship.getDrive());
+		Assert.assertEquals(1001, ship.getShipType());
+		Assert.assertEquals(0.875f, ship.getAccentColor(), EPSILON);
+		TestUtil.assertToStringEquals("Diana", ship.getName());
 	}
 
 	private static Context buildContext() {

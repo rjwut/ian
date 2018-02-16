@@ -9,9 +9,10 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
 /**
  * Sends a keystroke to the server. This should only be done for the game master
  * console, or if keystroke capture has been enabled via the
- * KeyCaptureTogglePacket.
+ * KeyCaptureTogglePacket. The Java AWT
+ * <a href="https://docs.oracle.com/javase/6/docs/api/java/awt/event/KeyEvent.html">KeyEvent class</a>
+ * has constants for the keycodes used by this class.
  * @author rjwut
- * @see {@link java.awt.event.KeyEvent} (for constants)
  */
 public class KeystrokePacket extends ValueIntPacket {
 	public static void register(PacketFactoryRegistry registry) {
@@ -34,7 +35,7 @@ public class KeystrokePacket extends ValueIntPacket {
 	}
 
 	private KeystrokePacket(PacketReader reader) {
-		super(SubType.KEYSTROKE, reader);
+		super(reader);
 	}
 
 	/**

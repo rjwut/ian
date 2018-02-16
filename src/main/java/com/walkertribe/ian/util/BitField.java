@@ -5,11 +5,20 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 /**
+ * <p>
  * Provides easy reading and writing of bits in a bit field. The bytes are
  * little-endian, so in the event that the final byte is not completely
  * utilized, it will be the most significant bits that are left unused. The
  * bits in a bit field are commonly represented as enums in IAN, but BitField
  * does not require this.
+ * </p>
+ * <p>
+ * Note that Artemis will never fully utilize the entire bit field. If the
+ * number of bits actually used is divisible by eight, Artemis will add another
+ * (unused) byte to the end of the field. So a field with eight bits will be
+ * two bytes wide instead of one like you would expect, and the second byte
+ * will always be <code>0x00</code>.
+ * </p>
  * @author rjwut
  */
 public class BitField {
@@ -104,10 +113,12 @@ public class BitField {
 	}
 
 	/**
-	 * Returns the number of bytes required to store the given number of bits in a BitField.
+	 * Returns the number of bytes required to store the given number of bits in a BitField. Note
+	 * that Artemis allocates an extra, unused byte whenever there are no leftover bits in the last
+	 * byte.
 	 */
 	public static int countBytes(int bitCount) {
-		return (bitCount + 7) / 8;
+		return (bitCount + 8) / 8;
 	}
 
 	/**

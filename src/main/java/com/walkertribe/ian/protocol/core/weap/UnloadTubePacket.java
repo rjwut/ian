@@ -41,7 +41,7 @@ public class UnloadTubePacket extends ValueIntPacket {
     }
 
     private UnloadTubePacket(PacketReader reader) {
-    	super(SubType.UNLOAD_TUBE, reader);
+    	super(reader);
     }
 
     /**

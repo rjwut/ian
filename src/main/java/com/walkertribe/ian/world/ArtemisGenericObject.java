@@ -6,7 +6,7 @@ import com.walkertribe.ian.enums.ObjectType;
 /**
  * There are many "generic" objects which are very similar in implementation.
  * They are all handled by this class. Specifically, the objects implemented by
- * this class are: mines, torpedoes, black holes and asteroids.
+ * this class are: mines, black holes, and asteroids.
  * @author dhleong
  */
 public class ArtemisGenericObject extends BaseArtemisObject {

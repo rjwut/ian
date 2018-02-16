@@ -23,29 +23,29 @@ public class PlayerShipDamagePacket extends SimpleEventPacket {
 		});
 	}
 
-    private byte[] unknown0;
-    private byte[] unknown1;
+	private int mShipIndex;
+	private float mDuration;
 
-    private PlayerShipDamagePacket(PacketReader reader) throws ArtemisPacketException {
+	private PlayerShipDamagePacket(PacketReader reader) throws ArtemisPacketException {
         super(SubType.PLAYER_SHIP_DAMAGE, reader);
-        unknown0 = reader.readBytes(4);
-        unknown1 = reader.readBytes(4);
+        mShipIndex = reader.readInt();
+        mDuration = reader.readFloat();
     }
 
-    public PlayerShipDamagePacket() {
+    public PlayerShipDamagePacket(int shipIndex, float duration) {
         super(SubType.PLAYER_SHIP_DAMAGE);
-        unknown0 = new byte[] { 0, 0, 0, 0 };
-        unknown1 = unknown0;
+        mShipIndex = shipIndex;
+        mDuration = duration;
     }
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		super.writePayload(writer);
-		writer.writeBytes(unknown0).writeBytes(unknown1);
+		writer.writeInt(mShipIndex).writeFloat(mDuration);
 	}
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		// do nothing
+		b.append("Ship #" + mShipIndex + " (" + mDuration + " s)");
 	}
 }

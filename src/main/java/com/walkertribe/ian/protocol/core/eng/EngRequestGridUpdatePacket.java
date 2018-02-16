@@ -32,7 +32,7 @@ public class EngRequestGridUpdatePacket extends ValueIntPacket {
     }
 
     private EngRequestGridUpdatePacket(PacketReader reader) {
-    	super(SubType.REQUEST_ENG_GRID_UPDATE, reader);
+    	super(reader);
     }
 
     @Override

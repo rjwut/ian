@@ -41,7 +41,7 @@ public class ClimbDivePacket extends ValueIntPacket {
     }
 
     private ClimbDivePacket(PacketReader reader) {
-        super(SubType.CLIMB_DIVE, reader);
+        super(reader);
     }
 
     public boolean isUp() {

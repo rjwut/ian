@@ -9,8 +9,8 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
 
 /**
  * Request to dock. This can be issued by most player ships to request docking
- * with the nearest base. For fighters, it is a request to dock with the
- * mothership.
+ * with the nearest base. For single-seat craft, it is a request to dock with
+ * the mothership.
  * @author dhleong
  */
 public class HelmRequestDockPacket extends ValueIntPacket {
@@ -34,7 +34,7 @@ public class HelmRequestDockPacket extends ValueIntPacket {
     }
 
 	private HelmRequestDockPacket(PacketReader reader) {
-        super(SubType.REQUEST_DOCK, reader);
+        super(reader);
 	}
 
 	@Override

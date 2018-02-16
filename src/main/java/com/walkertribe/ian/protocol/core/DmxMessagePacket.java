@@ -23,7 +23,7 @@ public class DmxMessagePacket extends SimpleEventPacket {
 		});
 	}
 
-    private final String mName;
+    private final CharSequence mName;
     private final boolean mOn;
 
     private DmxMessagePacket(PacketReader reader) {
@@ -46,7 +46,7 @@ public class DmxMessagePacket extends SimpleEventPacket {
     /**
      * The name of the DMX flag.
      */
-    public String getName() {
+    public CharSequence getName() {
         return mName;
     }
 

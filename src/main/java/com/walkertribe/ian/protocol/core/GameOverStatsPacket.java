@@ -44,7 +44,7 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
         	}
 
         	int value = reader.readInt();
-        	String label = reader.readString();
+        	CharSequence label = reader.readString();
         	rows.add(new Row(label, value));
         } while (true);
 	}
@@ -98,10 +98,10 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 
 
 	public static class Row {
-		private String label;
+		private CharSequence label;
 		private int value;
 
-		private Row(String label, int value) {
+		private Row(CharSequence label, int value) {
 			if (label == null || label.length() == 0) {
 				throw new IllegalArgumentException("You must provide a label");
 			}
@@ -110,7 +110,7 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 			this.value = value;
 		}
 
-		public String getLabel() {
+		public CharSequence getLabel() {
 			return label;
 		}
 

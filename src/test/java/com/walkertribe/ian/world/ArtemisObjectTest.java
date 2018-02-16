@@ -10,7 +10,7 @@ public class ArtemisObjectTest {
 			float z) {
 		Assert.assertEquals(id, obj.getId());
 		Assert.assertEquals(type, obj.getType());
-		Assert.assertEquals(name, obj.getName());
+		TestUtil.assertToStringEquals(name, obj.getName());
 		Assert.assertEquals(x, obj.getX(), TestUtil.EPSILON);
 		Assert.assertEquals(y, obj.getY(), TestUtil.EPSILON);
 		Assert.assertEquals(z, obj.getZ(), TestUtil.EPSILON);

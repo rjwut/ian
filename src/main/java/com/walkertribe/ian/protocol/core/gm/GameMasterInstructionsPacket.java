@@ -36,8 +36,8 @@ public class GameMasterInstructionsPacket extends BaseArtemisPacket {
 		});
 	}
 
-	private String mTitle;
-	private String mContent;
+	private CharSequence mTitle;
+	private CharSequence mContent;
 
 	public GameMasterInstructionsPacket(String title, String content) {
 		super(ConnectionType.SERVER, TYPE);
@@ -55,14 +55,14 @@ public class GameMasterInstructionsPacket extends BaseArtemisPacket {
 	/**
 	 * The title to display above the instructions.
 	 */
-	public String getTitle() {
+	public CharSequence getTitle() {
 		return mTitle;
 	}
 
 	/**
 	 * The actual body text of the instructions.
 	 */
-	public String getContent() {
+	public CharSequence getContent() {
 		return mContent;
 	}
 

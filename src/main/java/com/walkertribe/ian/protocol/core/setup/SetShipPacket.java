@@ -42,7 +42,7 @@ public class SetShipPacket extends ValueIntPacket {
     }
 
     private SetShipPacket(PacketReader reader) {
-        super(SubType.SET_SHIP, reader);
+        super(reader);
     }
 
     public int getShipNumber() {

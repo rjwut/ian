@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class CommsIncomingPacketTest extends AbstractPacketTester<CommsIncomingPacket> {
 	@Test
@@ -55,7 +56,7 @@ public class CommsIncomingPacketTest extends AbstractPacketTester<CommsIncomingP
 	protected void testPackets(List<CommsIncomingPacket> packets) {
 		CommsIncomingPacket pkt = packets.get(0);
 		Assert.assertEquals(0, pkt.getPriority());
-		Assert.assertEquals("DS1", pkt.getFrom());
-		Assert.assertEquals("Hi.\nHow are you?", pkt.getMessage());
+		TestUtil.assertToStringEquals("DS1", pkt.getFrom());
+		TestUtil.assertToStringEquals("Hi.\nHow are you?", pkt.getMessage());
 	}
 }

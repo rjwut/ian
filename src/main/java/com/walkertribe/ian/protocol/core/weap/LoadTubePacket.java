@@ -14,7 +14,7 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.Artemis;
 
 /**
- * Load a type of torpedo into a tube.
+ * Load a type of ordnance into a tube.
  * @author dhleong
  */
 public class LoadTubePacket extends BaseArtemisPacket {
@@ -43,8 +43,7 @@ public class LoadTubePacket extends BaseArtemisPacket {
     private int mUnknown1;
 
     /**
-     * @param tube Index of tube to load, [0 - Artemis.MAX_TUBES)
-     * @param torpedoType OrdnanceType value indicating what to load
+     * Loads the given tube with the indicated ordnance.
      */
     public LoadTubePacket(int tube, OrdnanceType ordnanceType) {
         super(ConnectionType.CLIENT, TYPE);

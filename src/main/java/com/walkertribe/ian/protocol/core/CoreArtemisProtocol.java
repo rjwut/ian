@@ -4,11 +4,11 @@ import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.protocol.AbstractProtocol;
 import com.walkertribe.ian.protocol.core.comm.*;
 import com.walkertribe.ian.protocol.core.eng.*;
-import com.walkertribe.ian.protocol.core.fighter.*;
 import com.walkertribe.ian.protocol.core.gm.*;
 import com.walkertribe.ian.protocol.core.helm.*;
 import com.walkertribe.ian.protocol.core.sci.*;
 import com.walkertribe.ian.protocol.core.setup.*;
+import com.walkertribe.ian.protocol.core.singleseat.*;
 import com.walkertribe.ian.protocol.core.weap.*;
 import com.walkertribe.ian.protocol.core.world.*;
 
@@ -28,21 +28,24 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			ConsoleStatusPacket.class,
 			DmxMessagePacket.class,
 			DestroyObjectPacket.class,
-			GameStartPacket.class,
-			FighterBayStatusPacket.class,
-			FighterLaunchedPacket.class,
+			DockedPacket.class,
+			ExplosionPacket.class,
+			BayStatusPacket.class,
+			SingleSeatLaunchedPacket.class,
 			GameMasterButtonPacket.class,
 			GameMasterInstructionsPacket.class,
 			GameMessagePacket.class,
 			GameOverPacket.class,
 			GameOverReasonPacket.class,
 			GameOverStatsPacket.class,
+			GameStartPacket.class,
 			HeartbeatPacket.class,
 			IncomingAudioPacket.class,
 			IntelPacket.class,
 			JumpBeginPacket.class,
 			JumpEndPacket.class,
 			KeyCaptureTogglePacket.class,
+			KlaxonPacket.class,
 			ObjectUpdatePacket.class,
 			PausePacket.class,
 			PerspectivePacket.class,
@@ -53,8 +56,9 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			WelcomePacket.class,
 
 			// client packets
+			ActivateUpgradePacket.class,
 			AudioCommandPacket.class,
-			CaptainSelectPacket.class,
+			CaptainTargetPacket.class,
 			ClimbDivePacket.class,
 			CommsOutgoingPacket.class,
 			ConvertTorpedoPacket.class,
@@ -63,13 +67,13 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			EngSetAutoDamconPacket.class,
 			EngSetCoolantPacket.class,
 			EngSetEnergyPacket.class,
-			FighterLaunchPacket.class,
+			SingleSeatLaunchPacket.class,
 			FireBeamPacket.class,
 			FireTubePacket.class,
 			GameMasterButtonClickPacket.class,
 			GameMasterMessagePacket.class,
-			GameMasterSelectLocationPacket.class,
-			GameMasterSelectObjectPacket.class,
+			GameMasterTargetLocationPacket.class,
+			GameMasterTargetObjectPacket.class,
 			HelmJumpPacket.class,
 			HelmRequestDockPacket.class,
 			HelmSetClimbDivePacket.class,
@@ -81,17 +85,17 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			LoadTubePacket.class,
 			ReadyPacket.class,
 			SciScanPacket.class,
-			SciSelectPacket.class,
+			SciTargetPacket.class,
 			SetBeamFreqPacket.class,
 			SetConsolePacket.class,
 			SetMainScreenPacket.class,
+			SetShieldsPacket.class,
 			SetShipPacket.class,
 			SetShipSettingsPacket.class,
-			SetWeaponsTargetPacket.class,
 			ToggleAutoBeamsPacket.class,
 			TogglePerspectivePacket.class,
 			ToggleRedAlertPacket.class,
-			ToggleShieldsPacket.class,
+			WeaponsTargetPacket.class,
 			UnloadTubePacket.class
 	};
 

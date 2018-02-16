@@ -10,6 +10,7 @@ import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.util.BitField;
 import com.walkertribe.ian.util.BoolState;
+import com.walkertribe.ian.util.NullTerminatedString;
 import com.walkertribe.ian.util.Util;
 import com.walkertribe.ian.util.Version;
 import com.walkertribe.ian.world.ArtemisObject;
@@ -82,17 +83,9 @@ public class PacketWriter {
 	}
 
 	/**
-	 * Convenience method for startObject(object, object.getType(), bits).
+	 * Convenience method for startObject(object, bits.length).
 	 */
-	public PacketWriter startObject(ArtemisObject object, Enum<?>[] bits) {
-		return startObject(object, object.getType(), bits);
-	}
-
-	/**
-	 * Convenience method for startObject(object, type, bits.length).
-	 */
-	public PacketWriter startObject(ArtemisObject object, ObjectType type,
-			Enum<?>[] bits) {
+	public PacketWriter startObject(ArtemisObject object, ObjectType type, Enum<?>[] bits) {
 		return startObject(object, type, bits.length);
 	}
 
@@ -100,8 +93,7 @@ public class PacketWriter {
 	 * Starts writing a new entry into the packet for the given object,
 	 * overriding the object's type with the specified ObjectType.
 	 */
-	public PacketWriter startObject(ArtemisObject object, ObjectType type,
-			int bitFieldSize) {
+	public PacketWriter startObject(ArtemisObject object, ObjectType type, int bitFieldSize) {
 		assertStarted();
 		obj = object;
 		objType = type;
@@ -116,16 +108,6 @@ public class PacketWriter {
 	public PacketWriter writeByte(byte v) {
 		assertStarted();
 		baos.write(v);
-		return this;
-	}
-
-	/**
-	 * Writes a single byte for the current object. You must invoke
-	 * startObject() before calling this method.
-	 */
-	public PacketWriter writeObjByte(byte v) {
-		assertObjectStarted();
-		baosObj.write(v);
 		return this;
 	}
 
@@ -286,15 +268,14 @@ public class PacketWriter {
 	 * and the terminating null character automatically. You must invoke start()
 	 * before calling this method.
 	 */
-	public PacketWriter writeString(String str) {
+	public PacketWriter writeString(CharSequence str) {
 		writeString(str, baos);
 		return this;
 	}
 
 	/**
 	 * Writes a US-ASCII encoded String. This handles writing the string length
-	 * and the terminating null character automatically. You must invoke start()
-	 * before calling this method.
+	 * automatically. You must invoke start() before calling this method.
 	 */
 	public PacketWriter writeUsAsciiString(String str) {
 		writeUsAsciiString(str, baos);
@@ -304,16 +285,17 @@ public class PacketWriter {
 	/**
 	 * Convenience method for writeString(bit.ordinal(), str).
 	 */
-	public PacketWriter writeString(Enum<?> bit, String str) {
+	public PacketWriter writeString(Enum<?> bit, CharSequence str) {
 		return writeString(bit.ordinal(), str);
 	}
 
 	/**
-	 * If the given String is not null, it is written to the packet, and the
-	 * corresponding bit in the object's bit field is set; otherwise, nothing
-	 * happens. You must invoke startObject() before calling this method.
+	 * If the given NullTerminatedString is not null, it is written to the
+	 * packet, and the corresponding bit in the object's bit field is set;
+	 * otherwise, nothing happens. You must invoke startObject() before calling
+	 * this method.
 	 */
-	public PacketWriter writeString(int bitIndex, String str) {
+	public PacketWriter writeString(int bitIndex, CharSequence str) {
 		assertObjectStarted();
 
 		if (str != null) {
@@ -520,12 +502,27 @@ public class PacketWriter {
 	/**
 	 * Writes a UTF-16LE encoded String into the given ByteArrayOutputStream.
 	 */
-	private void writeString(String v, ByteArrayOutputStream outStream) {
-		int charCount = v.length() + 1;
+	private void writeString(CharSequence v, ByteArrayOutputStream outStream) {
+		int charCount;
+
+		if (v instanceof NullTerminatedString) {
+			charCount = ((NullTerminatedString) v).fullLength();
+		} else {
+			charCount = v.length() + 1;
+		}
+
 		writeInt(charCount, outStream);
-		byte[] charBytes = v.getBytes(Util.UTF16LE);
+		byte[] charBytes = v.toString().getBytes(Util.UTF16LE);
 		outStream.write(charBytes, 0, charBytes.length);
 		writeShort(0, outStream); // terminating null
+
+		if (v instanceof NullTerminatedString) {
+			byte[] garbage = ((NullTerminatedString) v).getGarbage();
+
+			if (garbage.length != 0) {
+				outStream.write(garbage, 0, garbage.length);
+			}
+		}
 	}
 
 	/**

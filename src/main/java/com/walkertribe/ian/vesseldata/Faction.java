@@ -7,7 +7,7 @@ import java.util.Set;
 import com.walkertribe.ian.enums.FactionAttribute;
 
 /**
- * Corresponds to the <hullRace> element in vesselData.xml.
+ * Corresponds to the &lt;hullRace&gt; element in vesselData.xml.
  * @author rjwut
  */
 public class Faction {

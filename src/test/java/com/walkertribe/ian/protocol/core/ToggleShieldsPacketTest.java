@@ -7,20 +7,22 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.protocol.core.SetShieldsPacket.Action;
 
-public class ToggleShieldsPacketTest extends AbstractPacketTester<ToggleShieldsPacket> {
+public class ToggleShieldsPacketTest extends AbstractPacketTester<SetShieldsPacket> {
 	@Test
 	public void test() {
-		execute("core/ToggleShieldsPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/SetShieldsPacket.txt", ConnectionType.CLIENT, 1);
 	}
 
 	@Test
 	public void testConstruct() {
-		new ToggleShieldsPacket();
+		new SetShieldsPacket(Action.TOGGLE);
 	}
 
 	@Override
-	protected void testPackets(List<ToggleShieldsPacket> packets) {
+	protected void testPackets(List<SetShieldsPacket> packets) {
+		// TODO Expand to cover UP and DOWN actions
 		Assert.assertNotNull(packets.get(0));
 	}
 }

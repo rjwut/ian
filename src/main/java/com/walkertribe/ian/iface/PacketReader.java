@@ -404,7 +404,7 @@ public class PacketReader {
 	/**
 	 * Reads a UTF-16LE String from the current packet's payload.
 	 */
-	public String readString() {
+	public CharSequence readString() {
 		return payload.readUtf16LeString();
 	}
 
@@ -418,7 +418,7 @@ public class PacketReader {
 	/**
 	 * Convenience method for readString(bit.ordinal()).
 	 */
-	public String readString(Enum<?> bit) {
+	public CharSequence readString(Enum<?> bit) {
 		return readString(bit.ordinal());
 	}
 
@@ -427,7 +427,7 @@ public class PacketReader {
 	 * indicated bit in the current BitField is on. Otherwise, the pointer is
 	 * not moved, and null is returned.
 	 */
-	public String readString(int bitIndex) {
+	public CharSequence readString(int bitIndex) {
 		return bitField.get(bitIndex) ? readString() : null;
 	}
 

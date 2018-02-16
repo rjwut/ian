@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class GameMessagePacketTest extends AbstractPacketTester<GameMessagePacket> {
 	@Test
@@ -31,6 +32,6 @@ public class GameMessagePacketTest extends AbstractPacketTester<GameMessagePacke
 
 	@Override
 	protected void testPackets(List<GameMessagePacket> packets) {
-		Assert.assertEquals("Hi!", packets.get(0).getMessage());
+		TestUtil.assertToStringEquals("Hi!", packets.get(0).getMessage());
 	}
 }

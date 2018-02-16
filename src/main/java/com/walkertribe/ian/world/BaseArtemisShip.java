@@ -188,4 +188,33 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     	putProp(props, "Turn rate", mTurnRate, -1, includeUnspecified);
     	putProp(props, "Impulse", mImpulse, -1, includeUnspecified);
     }
+
+    /**
+     * Returns true if this object contains any data.
+     */
+    protected boolean hasData() {
+    	if (super.hasData()) {
+    		return true;
+    	}
+
+    	if (
+    			mVelocity != -1 ||
+    			mShieldsFrontMax != -1 ||
+    			mShieldsRearMax != -1 ||
+    			mSteering != -1 ||
+    			mTopSpeed != -1 ||
+    			mTurnRate != -1 ||
+    			mImpulse != -1
+    	) {
+    		return true;
+    	}
+
+    	for (float freq : mShieldFreqs) {
+    		if (freq != -1) {
+    			return true;
+    		}
+    	}
+
+    	return false;
+    }
 }

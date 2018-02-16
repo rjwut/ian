@@ -80,4 +80,11 @@ public abstract class BaseArtemisOrientable extends BaseArtemisObject
     	putProp(props, "Pitch", mPitch, Float.MIN_VALUE, includeUnspecified);
     	putProp(props, "Roll", mRoll, Float.MIN_VALUE, includeUnspecified);
     }
+
+	/**
+	 * Returns true if this object contains any data.
+	 */
+    protected boolean hasData() {
+    	return super.hasData() || mHeading != Float.MIN_VALUE || mPitch != Float.MIN_VALUE || mRoll != Float.MIN_VALUE;
+    }
 }

@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
@@ -9,7 +8,6 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket;
-import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.world.Artemis;
 
 /**
@@ -32,65 +30,6 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
 		});
 	}
 
-	public static class Ship {
-		private String mName;
-		private int mShipType;
-		private float mAccentColor;
-		private DriveType mDrive;
-
-		public Ship(String name, int shipType, float accentColor, DriveType drive) {
-			if (name == null || name.length() == 0) {
-				throw new IllegalArgumentException("You must provide a name");
-			}
-
-			if (accentColor < 0.0f || accentColor >= 1.0f) {
-				throw new IllegalArgumentException("Accent color must be in range [0.0,1.0)");
-			}
-
-			if (drive == null) {
-				throw new IllegalArgumentException("You must provide a drive type");
-			}
-
-			mName = name;
-			mShipType = shipType;
-			mAccentColor = accentColor;
-			mDrive = drive;
-		}
-
-		public String getName() {
-			return mName;
-		}
-
-		public int getShipType() {
-			return mShipType;
-		}
-
-		public Vessel getVessel(Context ctx) {
-			return ctx.getVesselData().getVessel(mShipType);
-		}
-
-		public float getAccentColor() {
-			return mAccentColor;
-		}
-
-		public DriveType getDrive() {
-			return mDrive;
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder b = new StringBuilder();
-        	b	.append(mName)
-    			.append(" (type #")
-    			.append(mShipType)
-    			.append(") [")
-    			.append(mDrive)
-    			.append("] color=")
-    			.append(mAccentColor);
-        	return b.toString();
-		}
-	}
-
 	private final Ship[] mShips;
 
     private AllShipSettingsPacket(PacketReader reader) {
@@ -102,7 +41,7 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
         	int shipType = reader.readInt();
         	float accentColor = reader.readFloat();
         	reader.skip(4); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
-        	String name = reader.readString();
+        	CharSequence name = reader.readString();
         	mShips[i] = new Ship(name, shipType, accentColor, drive);
         }
     }
@@ -140,11 +79,11 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
 		super.writePayload(writer);
 
 		for (Ship ship : mShips) {
-			writer.writeInt(ship.mDrive.ordinal());
-			writer.writeInt(ship.mShipType);
-			writer.writeFloat(ship.mAccentColor);
+			writer.writeInt(ship.getDrive().ordinal());
+			writer.writeInt(ship.getShipType());
+			writer.writeFloat(ship.getAccentColor());
 			writer.writeInt(1); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
-			writer.writeString(ship.mName);
+			writer.writeString(ship.getName());
 		}
 	}
 

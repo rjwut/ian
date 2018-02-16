@@ -41,8 +41,8 @@ public final class JamCrc {
      * Note that even though strings are transmitted in UTF-16LE in the Artemis
      * protocol, checksums are computed in UTF-8. Weirdness.
      */
-    public static int compute(String str) {
-    	return compute(str.getBytes(Util.UTF8));
+    public static int compute(CharSequence str) {
+    	return compute(str.toString().getBytes(Util.UTF8));
     }
 
     private static int reflect(int ref, byte ch) {

@@ -34,7 +34,7 @@ public class IntelPacket extends BaseArtemisPacket {
 	}
 
 	private final int mId;
-	private final String mIntel;
+	private final CharSequence mIntel;
 
 	private IntelPacket(PacketReader reader) {
     	super(ConnectionType.SERVER, TYPE);
@@ -53,7 +53,7 @@ public class IntelPacket extends BaseArtemisPacket {
 	/**
 	 * The intel on that ship, as human-readable text
 	 */
-	public String getIntel() {
+	public CharSequence getIntel() {
 		return mIntel;
 	}
 

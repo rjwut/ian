@@ -2,11 +2,11 @@ package com.walkertribe.ian.protocol.core.gm;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class GameMasterInstructionsPacketTest extends AbstractPacketTester<GameMasterInstructionsPacket> {
 	@Test
@@ -25,7 +25,7 @@ public class GameMasterInstructionsPacketTest extends AbstractPacketTester<GameM
 	}
 	
 	private void test(GameMasterInstructionsPacket pkt) {
-		Assert.assertEquals("Title", pkt.getTitle());
-		Assert.assertEquals("Content", pkt.getContent());
+		TestUtil.assertToStringEquals("Title", pkt.getTitle());
+		TestUtil.assertToStringEquals("Content", pkt.getContent());
 	}
 }

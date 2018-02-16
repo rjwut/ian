@@ -32,7 +32,7 @@ public class HelmToggleReversePacket extends ValueIntPacket {
     }
 
     private HelmToggleReversePacket(PacketReader reader) {
-        super(SubType.TOGGLE_REVERSE, reader);
+        super(reader);
     }
 
     @Override

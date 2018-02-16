@@ -40,7 +40,7 @@ public class HelmSetWarpPacket extends ValueIntPacket {
     }
 
     private HelmSetWarpPacket(PacketReader reader) {
-        super(SubType.WARP, reader);
+        super(reader);
     }
 
     /**

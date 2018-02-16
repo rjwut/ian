@@ -83,7 +83,7 @@ public interface ArtemisObject {
      * The object's name.
      * Unspecified: null
      */
-    public String getName();
+    public CharSequence getName();
 
     /**
 	 * The object's position along the X-axis.

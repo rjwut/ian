@@ -188,10 +188,6 @@ public class SystemManager {
 
     /**
      * Add objects of the given type to the given list 
-     * 
-     * @param dest
-     * @param type One of the ArtemisObject#TYPE_* constants
-     * @return The number of objects added to "dest"
      */
     public synchronized int getObjects(List<ArtemisObject> dest, ObjectType type) {
         int count = 0;
@@ -212,7 +208,6 @@ public class SystemManager {
      *  
      * @param type
      * @return
-     * @see #getObjects(List, int)
      */
     public List<ArtemisObject> getObjects(ObjectType type) {
         List<ArtemisObject> objs = new ArrayList<ArtemisObject>();
@@ -305,7 +300,7 @@ public class SystemManager {
     
     /**
      * Get the first object with the given name
-     * @param type
+     * @param name
      * @return null if no such object or if name is null
      */
     public synchronized ArtemisObject getObjectByName(final String name) {

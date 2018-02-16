@@ -37,7 +37,7 @@ public class ReadyPacket extends ValueIntPacket {
     }
 
     private ReadyPacket(PacketReader reader) {
-    	super(SubType.READY, reader);
+    	super(reader);
     }
 
     @Override

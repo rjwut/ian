@@ -38,6 +38,8 @@ public enum Upgrade {
 	VANGUARD_REFIT_ENG,                       // permanent +10% efficiency all eng systems
 	VANGUARD_REFIT_ALL;                       // permanent +10% boost to all ship systems
 
+	private static final Upgrade[] ALL = values();
+
 	private static final Upgrade[] ANOMALY_UPGRADES = {
 		HIDENS_POWER_CELL,
 		VIGORANIUM_NODULE,
@@ -50,9 +52,9 @@ public enum Upgrade {
 	};
 
 	private static final Upgrade[] ACTIVATION_UPGRADES = Arrays.copyOfRange(
-			values(),
+			ALL,
 			INFUSION_P_COILS.ordinal(),
-			values().length
+			ALL.length
 	);
 
 	public static final int ACTIVATION_UPGRADE_COUNT = ACTIVATION_UPGRADES.length;

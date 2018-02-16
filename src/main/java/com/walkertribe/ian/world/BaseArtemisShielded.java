@@ -102,4 +102,11 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
     	putProp(props, "Shields: fore", mShieldsFront, Float.MIN_VALUE, includeUnspecified);
     	putProp(props, "Shields: aft", mShieldsRear, Float.MIN_VALUE, includeUnspecified);
     }
+
+    /**
+     * Returns true if this object contains any data.
+     */
+    protected boolean hasData() {
+    	return super.hasData() || mHullId != -1 || mShieldsFront != Float.MIN_VALUE || mShieldsRear != Float.MIN_VALUE;
+    }
 }

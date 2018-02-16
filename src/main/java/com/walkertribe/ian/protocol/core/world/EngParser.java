@@ -36,9 +36,7 @@ public class EngParser extends AbstractObjectParser {
 		COOLANT_IMPULSE,
 		COOLANT_WARP_OR_JUMP,
 		COOLANT_FORE_SHIELDS,
-		COOLANT_AFT_SHIELDS,
-
-		UNKNOWN_4_1
+		COOLANT_AFT_SHIELDS;
 	}
 	private static final Bit[] BITS = Bit.values();
 	private static final Bit[] HEAT;
@@ -48,7 +46,7 @@ public class EngParser extends AbstractObjectParser {
 	static {
 		HEAT = Arrays.copyOfRange(BITS, Bit.HEAT_BEAMS.ordinal(), Bit.ENERGY_BEAMS.ordinal());
 		ENERGY = Arrays.copyOfRange(BITS, Bit.ENERGY_BEAMS.ordinal(), Bit.COOLANT_BEAMS.ordinal());
-		COOLANT = Arrays.copyOfRange(BITS, Bit.COOLANT_BEAMS.ordinal(), Bit.UNKNOWN_4_1.ordinal());
+		COOLANT = Arrays.copyOfRange(BITS, Bit.COOLANT_BEAMS.ordinal(), BITS.length);
 	}
 
 	EngParser() {
@@ -62,7 +60,7 @@ public class EngParser extends AbstractObjectParser {
 
 	@Override
 	protected ArtemisPlayer parseImpl(PacketReader reader) {
-        ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId());
+        ArtemisPlayer player = new ArtemisPlayer(reader.getObjectId(), ObjectType.ENGINEERING_CONSOLE);
 
         for (ShipSystem sys : ShipSystem.values()) {
         	if (reader.has(HEAT[sys.ordinal()])) {

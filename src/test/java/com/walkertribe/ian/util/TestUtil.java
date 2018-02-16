@@ -146,4 +146,22 @@ public class TestUtil {
 		Assert.assertEquals(obj.hashCode(), obj.hashCode());
 		Assert.assertEquals(obj.hashCode(), equal.hashCode());
 	}
+
+	/**
+	 * Assert that the value returned by toString() is equal() for both objects. The assertion
+	 * succeeds if both Objects are null, but fails if only one is. This is useful, for instance,
+	 * for checking that two CharSequences represent the same value, even if they are of different
+	 * implementation classes.
+	 */
+	public static void assertToStringEquals(Object expected, Object actual) {
+		if (expected == actual) {
+			return;
+		}
+
+		if (expected == null || actual == null) {
+			Assert.fail("Expected <" + expected + "> but got <" + actual + ">");
+		}
+
+		Assert.assertEquals(expected.toString(), actual.toString());
+	}
 }

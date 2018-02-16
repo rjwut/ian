@@ -12,8 +12,8 @@ import com.walkertribe.ian.model.Model;
  * @author dhleong
  */
 public class ArtemisMesh extends BaseArtemisObject {
-    private String mMesh;
-    private String mTex;
+    private CharSequence mMesh;
+    private CharSequence mTex;
     private float mRed = -1;
     private float mGreen = -1;
     private float mBlue = -1;
@@ -33,7 +33,7 @@ public class ArtemisMesh extends BaseArtemisObject {
      * The 3D mesh filename
      * Unspecified: null
      */
-    public String getMesh() {
+    public CharSequence getMesh() {
         return mMesh;
     }
 
@@ -43,10 +43,10 @@ public class ArtemisMesh extends BaseArtemisObject {
      */
     @Override
     public Model getModel(Context ctx) {
-    	return ctx.getModel(mMesh);
+    	return ctx.getModel(mMesh.toString());
     }
 
-    public void setMesh(String path) {
+    public void setMesh(CharSequence path) {
         mMesh = path;
     }
 
@@ -54,11 +54,11 @@ public class ArtemisMesh extends BaseArtemisObject {
      * The texture filename
      * Unspecified: null
      */
-    public String getTexture() {
+    public CharSequence getTexture() {
         return mTex;
     }
     
-    public void setTexture(String path) {
+    public void setTexture(CharSequence path) {
         mTex = path;
     }
 

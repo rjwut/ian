@@ -41,7 +41,7 @@ public class SetBeamFreqPacket extends ValueIntPacket {
     }
 
     private SetBeamFreqPacket(PacketReader reader) {
-    	super(SubType.SET_BEAM_FREQUENCY, reader);
+    	super(reader);
     }
 
     public BeamFrequency getBeamFrequency() {

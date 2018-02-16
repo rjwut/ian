@@ -47,7 +47,7 @@ public class Version implements Comparable<Version> {
 	 * version history. This constructor can only be used to create legacy
 	 * version numbers (earlier than version 2.1); later ones will throw an
 	 * IllegalArgumentException.
-	 * @see http://artemiswiki.pbworks.com/w/page/53699717/Version%20history
+	 * @see <a href="http://artemiswiki.pbworks.com/w/page/53699717/Version%20history">Artemis version history</a>
 	 */
 	public Version(float version) {
 		if (version < 0) {
@@ -106,28 +106,28 @@ public class Version implements Comparable<Version> {
 	}
 
 	/**
-	 * Convenience method for compareTo(version) < 0.
+	 * Convenience method for compareTo(version) &lt; 0.
 	 */
 	public boolean lt(Version version) {
 		return compareTo(version) < 0;
 	}
 
 	/**
-	 * Convenience method for compareTo(version) > 0.
+	 * Convenience method for compareTo(version) &gt; 0.
 	 */
 	public boolean gt(Version version) {
 		return compareTo(version) > 0;
 	}
 
 	/**
-	 * Convenience method for compareTo(version) <= 0.
+	 * Convenience method for compareTo(version) &lt;= 0.
 	 */
 	public boolean le(Version version) {
 		return compareTo(version) <= 0;
 	}
 
 	/**
-	 * Convenience method for compareTo(version) >= 0.
+	 * Convenience method for compareTo(version) &gt;= 0.
 	 */
 	public boolean ge(Version version) {
 		return compareTo(version) >= 0;

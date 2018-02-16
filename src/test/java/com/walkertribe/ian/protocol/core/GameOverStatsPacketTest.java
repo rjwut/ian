@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
+import com.walkertribe.ian.util.TestUtil;
 
 public class GameOverStatsPacketTest extends AbstractPacketTester<GameOverStatsPacket> {
 	private static final Map<String, Integer> ROWS = new LinkedHashMap<String, Integer>();
@@ -62,10 +63,10 @@ public class GameOverStatsPacketTest extends AbstractPacketTester<GameOverStatsP
 		Assert.assertEquals(1, pkt.getColumnIndex());
 		Iterator<GameOverStatsPacket.Row> iter = pkt.iterator();
 		GameOverStatsPacket.Row row = iter.next();
-		Assert.assertEquals("Hi!", row.getLabel());
+		TestUtil.assertToStringEquals("Hi!", row.getLabel());
 		Assert.assertEquals(7, row.getValue());
 		row = iter.next();
-		Assert.assertEquals("Bye!", row.getLabel());
+		TestUtil.assertToStringEquals("Bye!", row.getLabel());
 		Assert.assertEquals(4, row.getValue());
 		Assert.assertFalse(iter.hasNext());
 	}

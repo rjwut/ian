@@ -79,7 +79,7 @@ public class GameMasterButtonPacketTest extends AbstractPacketTester<GameMasterB
 			GameMasterButtonPacket pkt3,
 			GameMasterButtonPacket pkt4) {
 		Assert.assertEquals(Action.CREATE, pkt1.getAction());
-		Assert.assertEquals("Test", pkt1.getLabel());
+		TestUtil.assertToStringEquals("Test", pkt1.getLabel());
 		Assert.assertFalse(pkt1.isPositioned());
 		Assert.assertFalse(pkt1.isRemoveAll());
 		Assert.assertEquals(-1, pkt1.getHeight());
@@ -89,7 +89,7 @@ public class GameMasterButtonPacketTest extends AbstractPacketTester<GameMasterB
 		Assert.assertEquals(HASH, pkt1.buildClickPacket().getHash());
 		Assert.assertEquals("[GameMasterButtonPacket] CREATE Test", pkt1.toString());
 		Assert.assertEquals(Action.CREATE, pkt2.getAction());
-		Assert.assertEquals("Test", pkt2.getLabel());
+		TestUtil.assertToStringEquals("Test", pkt2.getLabel());
 		Assert.assertTrue(pkt2.isPositioned());
 		Assert.assertFalse(pkt2.isRemoveAll());
 		Assert.assertEquals(30, pkt2.getHeight());
@@ -99,7 +99,7 @@ public class GameMasterButtonPacketTest extends AbstractPacketTester<GameMasterB
 		Assert.assertEquals(HASH, pkt2.buildClickPacket().getHash());
 		Assert.assertEquals("[GameMasterButtonPacket] CREATE Test (0,0 100x30)", pkt2.toString());
 		Assert.assertEquals(Action.REMOVE, pkt3.getAction());
-		Assert.assertEquals("Test", pkt3.getLabel());
+		TestUtil.assertToStringEquals("Test", pkt3.getLabel());
 		Assert.assertFalse(pkt3.isPositioned());
 		Assert.assertFalse(pkt3.isRemoveAll());
 		Assert.assertEquals(-1, pkt3.getHeight());

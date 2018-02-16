@@ -42,7 +42,7 @@ public class ArtemisNpc extends BaseArtemisShip {
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = (byte) -1;
-    private String mIntel;
+    private CharSequence mIntel;
     private final float[] mSysDamage = new float[Artemis.SYSTEM_COUNT];
 
     public ArtemisNpc(int objId) {
@@ -218,11 +218,11 @@ public class ArtemisNpc extends BaseArtemisShip {
      * The intel String for this ship.
      * Unspecified: null
      */
-    public String getIntel() {
+    public CharSequence getIntel() {
     	return mIntel;
     }
 
-    public void setIntel(String intel) {
+    public void setIntel(CharSequence intel) {
     	mIntel = intel;
     }
 

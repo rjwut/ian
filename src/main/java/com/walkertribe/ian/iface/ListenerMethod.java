@@ -38,6 +38,15 @@ public class ListenerMethod {
 	 * listener method.
 	 */
 	private static void validate(Method method) {
+		Class<?> declaringClass = method.getDeclaringClass();
+
+		if (!Modifier.isPublic(declaringClass.getModifiers())) {
+			throw new IllegalArgumentException(
+					"Class " + declaringClass.getName() +
+					" must be public to have listener methods"
+			);
+		}
+
 		if (!Modifier.isPublic(method.getModifiers())) {
 			throw new IllegalArgumentException(
 					"Method " + method.getName() +

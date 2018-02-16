@@ -1,16 +1,20 @@
-Interface for Artemis Networking (IAN)
-======================================
+Interface for *Artemis* Networking (IAN)
+========================================
 [![Build Status](https://secure.travis-ci.org/rjwut/ian.svg)](http://travis-ci.org/rjwut/ian)
 
 **IAN** is an unofficial Java library for communicating with [*Artemis Spaceship Bridge Simulator*](http://www.artemis.eochu.com/) servers and clients.
 
-IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* version 2.4.0. If you need Java library support for previous versions of *Artemis*, please see the list below:
+IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* version 2.4.0. If you need Java library support for previous versions of *Artemis*, please see the version table below:
 
-* *Artemis* v2.3.0: [IAN v3.0.0](https://github.com/rjwut/ian/releases/tag/v3.0.0)
-* *Artemis* v2.1.1: [ArtClientLib v2.6.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.6.0)
-* *Artemis* v2.1: [ArtClientLib v2.4.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.4.0)
-* *Artemis* v2.0: [ArtClientLib v2.3.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.3.0)
-* *Artemis* v1.x: [ArtClientLib v1.x](https://github.com/dhleong/ArtClientLib) (by Daniel Leong)
+*Artemis* | IAN/ArtClientLib
+---: | ---
+2.3.0 | [IAN 3.0.0](https://github.com/rjwut/ian/releases/tag/v3.0.0)
+2.1.1 | [ArtClientLib v2.6.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.6.0)
+2.1 | [ArtClientLib v2.4.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.4.0)
+2.0 | [ArtClientLib v2.3.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.3.0)
+1.x | [ArtClientLib v1.x](https://github.com/dhleong/ArtClientLib)
+
+Note, however, that these previous versions will be missing various bug fixes and enhancements found in the latest version.
 
 This library was originally developed by Daniel Leong and released on GitHub with permission of the developer of *Artemis*, Thom Robertson.
 
@@ -20,8 +24,7 @@ This library was originally developed by Daniel Leong and released on GitHub wit
 
 **Stuff might not work.** There is no official public documentation of the *Artemis* protocol. A library such as IAN is made possible through reverse engineering, requiring careful observation of *Artemis* network traffic and experimentation to learn how game data is formatted. IAN is a very good implementation of the *Artemis* protocol, but under these circumstances it is next to impossible to guarantee that it is 100% accurate. Also, new *Artemis* releases are likely to break this library until a contributor can figure out what changes were made and update things accordingly.
 
-**There is no official support.**
-[Bug reports and feature requests](https://github.com/rjwut/ian/issues) are welcome, and I'm happy to try to answer questions. However, IAN is developed in my spare time, and as such, I can't guarantee support for it. I can't make any promises to address your requests, bug reports or questions in a timely fashion.
+**There is no official support.** [Bug reports and feature requests](https://github.com/rjwut/ian/issues) are welcome, and I'm happy to try to answer questions. However, IAN is developed in my spare time, and as such, I can't guarantee support for it. I can't make any promises to address your requests, bug reports or questions in a timely fashion.
 
 **Use at your own risk.** This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; not even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -36,193 +39,73 @@ This library was originally developed by Daniel Leong and released on GitHub wit
 
 ## Using IAN ##
 
+### Examples ###
+The `com.walkertribe.ian.example` package contains a couple of simple demonstration classes to help you see how to use IAN:
+
+* `ClientDemo`: Toggles your ship's red alert state when shields are raised or lowered.
+* `ProxyDemo`: Stops red alert from being toggled.
+
 ### Connecting to an *Artemis* Server ###
-1. **Tell IAN where to find *Artemis* resource data.** There are sets of data that IAN can read from *Artemis* resource files:
- * A `VesselData` object contains data read from `dat/vesselData.xml`. IAN requires this information and uses it to provide `Faction` and `Vessel` objects.
- * A `Model` object contains data required to draw a 3D mesh of an *Artemis* object. These are loaded from `dat/*.dxs` files, but are only required if you need a `Model` object.
- * A `VesselInternals` object contains data about the system nodes and hallways in a vessel. These are loaded from `dat/*.snt` files, but are only required if you need a `VesselInternals` object.
+1. **Tell IAN where to find *Artemis* resource data.** This involves instantiating an object which implements `Context`. (See the **Locating *Artemis* Resources** section above for details.)
 
- There are several interfaces and classes that can help you with reading *Artemis* resource data:
+2. **Construct a `ThreadedArtemisNetworkInterface` object.** This object implements `ArtemisNetworkInterface` and is responsible for managing the connection to the *Artemis* server. Along with the `Context` you instantiated earlier, you must provide the constructor with the host/IP address and port to which it should connect. (By default, *Artemis* servers listen for connections on port 2010, but this can be changed in *Artemis*'s `artemis.ini` file.) On construction, it will attempt to connect, throwing an `IOException` if it fails.
 
- * `Context`: An interface for classes which can provide instances of `VesselData`, `Model` and `VesselInternals` to IAN.
- * `DefaultContext`: An implementation of `Context` which can parse *Artemis* resource data from an `InputStream`. It delegates the creation of the `InputStream` to a `PathResolver`.
- * `PathResolver`: An interface for classes which can provide an `InputStream` that corresponds to an *Artemis* resource path. It should be noted that IAN does not require a full *Artemis* install to load resources from; at most IAN will only ask for `dat/vesselData.xml`, `dat/*.dxs`, and `dat/*.snt`.
- * `FilePathResolver`: A `PathResolver` implementation that loads resources from the file system relative to a particular directory (such as the *Artemis* install directory).
- * `ClasspathResolver`: A `PathResolver` implementation that loads resources from the classpath (so that you can bundle them inside your JAR).
+3. **Add event listeners.** Next, you must add one or more event listeners to the `ArtemisNetworkInterface` via the `addListener()` method. Event listeners are objects which contain methods marked with the `@Listener` annotation. IAN will notify these listeners when certain events occur. See the **Event Listeners** section below for more details.
 
- You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load *Artemis* resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise classes that use a `Context`.)
+4. **Start the network interface.** Once your listeners are registered, invoke `start()` on the `ArtemisNetworkInterface` object. Once you invoke `start()`, your listeners will start being notified of events.
 
-2. **Construct a `ThreadedArtemisNetworkInterface` object.** This object is responsible for managing the connection to the Artemis server. Along with the `Context` you instantiated earlier, you must provide the constructor with the host/IP address and port to which it should connect. (By default, *Artemis* servers listen for connections on port 2010, but this can be changed in the `artemis.ini` file.) On construction, it will attempt to connect, throwing an `IOException` if it fails.
+5. **Send packets in response to events.** As your listeners receive events, you will inevitably want to send packets back to the Artemis server. To do so, pass an instance of the appropriate class that implements `ArtemisPacket` to the `ArtemisNetworkInterface.send()` method. Here's an example:
 
-3. **Add event listeners.** Next, you must add one or more event listeners to the `ThreadedArtemisNetworkInterface` object via the `addListener()` method. Event listeners are objects which IAN will notify when certain events occur. An event listener can be any `Object` which has one or more methods marked with the `@Listener` annotation. A listener method must be `public`, return `void`, and have exactly one argument of type `ConnectionEvent`, `ArtemisPacket`, `ArtemisObject`, or (more probably) any of their subtypes. Listener methods are invoked by IAN when the corresponding event occurs. For example, if you create a listener method whose argument type is `CommsIncomingPacket`, that method will be invoked every time the comms console receives a text message.
+   ```java
+   private ArtemisNetworkInterface iface;
 
- Note that for efficiency's sake, IAN will only bother to parse packets that your listeners are actually interested in, so don't write a listener with `ArtemisPacket` as its argument type unless you genuinely want to parse every packet.
+   /**
+    * Fire whatever's in the given tube.
+    */
+   private void fireTorpedo(int tubeIndex) {
+     iface.send(new FireTubePacket(tubeIndex));
+   }
+   ```
 
- One important event to listen for is the `ConnectionSuccessEvent`. You shouldn't attempt to send any packets to the server before you receive this event. This may also a good time to send a `SetShipPacket` and a `SetConsolePacket`.
+6. **Disconnect.** To disconnect from the Artemis server, invoke the `ArtemisNetworkInterface.stop()` method. Make sure you do this so that the send and receive threads will be terminated; otherwise, your application won't stop.
 
- It's also likely that you'll want to know when the connection to the server is lost; listening for `DisconnectEvent` will handle that.
+### Locating *Artemis* Resources ###
+Before you can do anything with IAN, you must instantiate an object which can provide it with *Artemis* resource data. There are three major classes of resource data IAN uses:
 
-4. **Start the network interface.** Once your listeners are registered, invoke `start()` on the `ThreadedArtemisNetworkInterface` object. Internally, this spins up two `Thread`s, one to receive and parse incoming packets, and one to send packets. Once you invoke `start()`, your listeners will start being notified of events.
+IAN class | *Artemis* files | Contents
+--- | --- | ---
+`VesselData` | `dat/vesselData.xml` | `Faction`s and `Vessel`s
+`Model` | `dat/*.dxs` | 3D mesh
+`VesselInternals` | `dat/*.snt` | Vessel system nodes and hallways
 
-5. **Send packets in response to events.** As your listeners receive events, you will inevitably want to send packets back to the Artemis server. To do so, construct an instance of the appropriate subclass of `ArtemisPacket`, then pass it into the `ThreadedArtemisNetworkInterface.send()` method. For example, to fire a torpedo, construct a `FireTubePacket` and `send()` it.
+`VesselData` is required for IAN to function. The other two types of resources are only required if you need a `Model` or `VesselInternals` object. Note that incompatibilities may result if the remote machine's version of the resource data differs from IAN's.
 
-6. **Disconnect.** To disconnect from the Artemis server, invoke the `ThreadedArtemisNetworkInterface.stop()` method. Make sure you do this so that the send and receive threads will be terminated; otherwise, your application won't stop.
+IAN provides several interfaces and classes that can help you with reading *Artemis* resource data:
 
-### Example Client ###
-```java
-package com.walkertribe.ian.clientdemo;
+* `Context`: An interface for classes which can provide instances of `VesselData`, `Model` and `VesselInternals` to IAN. You must provide IAN with an instance of a class which implements `Context` before you can connect.
 
-import java.io.IOException;
+* `DefaultContext`: An implementation of `Context` which can parse *Artemis* resource data from an `InputStream` and cache the results for future use. It delegates the creation of the `InputStream` to a `PathResolver`.
 
-import com.walkertribe.ian.Context;
-import com.walkertribe.ian.DefaultContext;
-import com.walkertribe.ian.enums.AlertStatus;
-import com.walkertribe.ian.enums.Console;
-import com.walkertribe.ian.iface.ArtemisNetworkInterface;
-import com.walkertribe.ian.iface.ConnectionSuccessEvent;
-import com.walkertribe.ian.iface.DisconnectEvent;
-import com.walkertribe.ian.iface.Listener;
-import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
-import com.walkertribe.ian.protocol.core.GameOverPacket;
-import com.walkertribe.ian.protocol.core.comm.ToggleRedAlertPacket;
-import com.walkertribe.ian.protocol.core.setup.ReadyPacket;
-import com.walkertribe.ian.protocol.core.setup.SetConsolePacket;
-import com.walkertribe.ian.protocol.core.setup.SetShipPacket;
-import com.walkertribe.ian.util.BoolState;
-import com.walkertribe.ian.util.PlayerShipUpdateListener;
-import com.walkertribe.ian.FilePathResolver;
-import com.walkertribe.ian.world.Artemis;
-import com.walkertribe.ian.world.ArtemisPlayer;
+* `PathResolver`: An interface for classes which can provide an `InputStream` that corresponds to an *Artemis* resource path.
 
-/**
- * <p>
- * This is an example Artemis client which will toggle red alert whenever the
- * shields are raised or lowered. You can use this class as a starting point for
- * your own client.
- * </p>
- * <p>
- * It also demonstrates the use of the PlayerShipUpdateListener class, which is
- * convenient for listening for updates to a player ship by number.
- * </p>
- * @author rjwut
- */
-public class ClientDemo extends PlayerShipUpdateListener {
-    /**
-     * <p>Run with no arguments for usage syntax.</p>
-     */
-    public static void main(String[] args) {
-        if (args.length < 2 || args.length > 3) {
-            System.out.println(
-                    "Usage: ClientDemo {ipOrHostname}[:{port}] {artemisInstallPath} [shipNumber]"
-            );
-            return;
-        }
+* `FilePathResolver`: A `PathResolver` implementation that loads resources from the file system relative to a particular directory. You would typically point this at the *Artemis* install directory, but IAN will only look for `dat/vesselData.xml` (and optionally `dat/*.dxs` and `dat/*.snt`); any other files will be ignored.
 
-        int shipNumber = args.length == 3 ? Integer.parseInt(args[2]) : 1;
+* `ClasspathResolver`: A `PathResolver` implementation that loads resources from the classpath relative to a specific class. This allows you to bundle the needed resources inside your JAR.
 
-        try {
-            new ClientDemo(args[0], args[1], shipNumber);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load *Artemis* resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise classes that use a `Context`.)
 
-    private ArtemisNetworkInterface server;
-    private boolean redAlert = false;
-    private boolean shieldsUp = false;
+### Event Listeners ###
+To make your application react to events, you must write one or more event listeners and register them with your `ThreadedArtemisNetworkInterface` object via the `addListener()` method. An event listener can be any `Object` which has one or more methods marked with the `@Listener` annotation. A listener method must be `public`, return `void`, and have exactly one argument. The type of that argument indicates what sort of events will cause the method to be invoked:
 
-    /**
-     * Starts the client and connects to the server.
-     */
-    public ClientDemo(String host, String artemisInstallPath, int shipNumber) throws IOException {
-        super(shipNumber);
-        System.out.println("Connecting to " + host + "...");
-        int port = Artemis.DEFAULT_PORT;
-        int colonPos = host.indexOf(':');
+* `ConnectionEvent`: IAN connects to or disconnects from a remote machine.
+* `ArtemisPacket`: IAN receives a packet from the remote machine.
+* `ArtemisObject`: IAN receives an `ArtemisObject` inside an `ObjectUpdatePacket`.
 
-        if (colonPos != -1) {
-            port = Integer.parseInt(host.substring(colonPos + 1));
-            host = host.substring(0, colonPos);
-        }
+You should use the most specific subtype you can for the argument type, as IAN will only invoke your listener method when the type of the argument matches. For example, if you write a listener method with an argument of type `CommsIncomingPacket`, it will be invoked only when that packet type is received (when the COMMs station receives an incoming text message). IAN will only bother to parse a packet if a listener is interested in it, so writing your listener methods to specific subtypes can be significantly more efficient. If you write a listener that has `ArtemisPacket` as its argument, IAN will parse all packets it receives because as far as it knows, you're interested in all of them.
 
-        Context ctx = new DefaultContext(new FilePathResolver(artemisInstallPath));
-        server = new ThreadedArtemisNetworkInterface(host, port, ctx);
-        server.addListener(this);
-        server.start();
-        System.out.println("Connected!");
-    }
+One important event to listen for is the `ConnectionSuccessEvent`. You shouldn't attempt to send any packets to the server before you receive this event. This may also a good time to send a `SetShipPacket` and a `SetConsolePacket`.
 
-    /**
-     * We've successfully connected to the server. Select the observer console
-     * on the desired ship and signal our readiness.
-     */
-    @Listener
-    public void onConnectSuccess(ConnectionSuccessEvent event) {
-        server.send(new SetShipPacket(getNumber()));
-        server.send(new SetConsolePacket(Console.OBSERVER, true));
-        server.send(new ReadyPacket());
-        System.out.println("Selected observer console on ship #" + getNumber());
-    }
-
-    /**
-     * The connection to the server has been lost. Print a notification to the
-     * console. If the disconnection appears to be abnormal and we have a stack
-     * trace, print it out. Note that the Listener annotation is not needed
-     * because it is inherited from the superclass.
-     */
-    @Override
-    public void onDisconnect(DisconnectEvent event) {
-        super.onDisconnect(event);
-        System.out.println(event);
-        Exception ex = event.getException();
-
-        if (!event.isNormal() && ex != null) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * Listens for updates to ArtemisPlayer objects. If it finds one, then it
-     * will check the shield and alert status, then toggle red alert if needed.
-     * Note that this method does not have a Listener annotation, because the
-     * superclass has a listener method called
-     * <code>onPlayerObjectUpdated(ArtemisPlayer)</code> that invokes this
-     * method.
-     */
-    @Override
-    public void onShipUpdate(ArtemisPlayer player) {
-        // Update the current alert status
-        AlertStatus alert = player.getAlertStatus();
-
-        if (alert != null) {
-            redAlert = AlertStatus.RED.equals(alert);
-        }
-
-        // Update shield status
-        BoolState shields = player.getShieldsState();
-
-        if (BoolState.isKnown(shields)) {
-            shieldsUp = shields.getBooleanValue();
-        }
-
-        // Toggle alert state if needed
-        if (shieldsUp && !redAlert || !shieldsUp && redAlert) {
-            server.send(new ToggleRedAlertPacket());
-        }
-    }
-
-    /**
-     * The game is over; reset the redAlert and shieldsUp flags. Note that the
-     * Listener annotation is not needed because it is inherited from the
-     * superclass.
-     */
-    @Override
-    public void onGameOver(GameOverPacket pkt) {
-        redAlert = false;
-        shieldsUp = false;
-    }
-}
-```
+It's also likely that you'll want to know when the connection to the server is lost; listening for `DisconnectEvent` will handle that.
 
 ### Creating an *Artemis* Proxy Server ###
 1. **Tell IAN where to find *Artemis* resource files.** This is done in exactly the same way as when you create a client.
@@ -231,220 +114,30 @@ public class ClientDemo extends PlayerShipUpdateListener {
 
 3. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and a `ConnectionType` (`CLIENT` in this case), along with the `Context`. The resulting object will be responsible for managing the connection to the client.
 
-4. **Connect to the *Artemis* server.** This is done exactly the same way as you would for creating an *Artemis* client, as documented above. You now have two `ThreadedArtemisNetworkInterface` objects: one for the client and one for the server.
+4. **Connect to the *Artemis* server.** This is done exactly the same way as you would for creating an *Artemis* client, as documented above. You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
 
-5. **Pass through all packets.** The `proxyTo()` method on `ThreadedArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
+5. **Pass through all packets.** The `proxyTo()` method on `ArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
 
 5. **Add listeners.** Add your listeners to both the client and server objects. Once the listener has caught the packet and extracted whatever information it wants from it, you can either pass the packet along by passing it to `send()`, suppress it (by doing nothing), or even inject your own packets instead (by constructing them and passing them to `send()`). Remember that `proxyTo()` does **not** pass along packets caught by listeners, so it's up to you to `send()` them if you want them passed along. Also, keep in mind that multiple listeners can catch the same packet; be careful not to send it more than once!
 
-6. **When one side disconnects, close the connection to the other side.** Listen for the `DisconnectEvent` from both sides. When you receive it from one side, invoke `ThreadedArtemisNetworkInterface.stop()` on the other connection (or both connections, if that's easier; calling `stop()` on an already closed connection has no effect).
-
-### Example Proxy ###
-```java
-package com.walkertribe.ian.proxydemo;
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-import com.walkertribe.ian.Context;
-import com.walkertribe.ian.DefaultContext;
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.ArtemisNetworkInterface;
-import com.walkertribe.ian.iface.DisconnectEvent;
-import com.walkertribe.ian.iface.Listener;
-import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
-import com.walkertribe.ian.protocol.core.comm.ToggleRedAlertPacket;
-import com.walkertribe.ian.FilePathResolver;
-import com.walkertribe.ian.world.Artemis;
-
-/**
- * <p>
- * This is an example Artemis proxy which disables the client's red alert toggle
- * function. You can use this class as a starting point for your own proxy.
- * </p>
- * <p>
- * A proxy listens on a particular port for a client to connect. Upon receiving
- * a connection, the proxy will then connect to the server and will pass packets
- * between them. The client believes that the proxy is the real server, and the
- * server believes that the proxy is the real client. This allows the proxy to
- * be a "man in the middle" and inspect any packet. It can also, if it chooses,
- * modify or suppress packets, or inject new ones.
- * </p>
- * <p>
- * This is a very simple proxy. There are some additional things to consider:
- * </p>
- * <ul>
- * <li>
- *   This class only accepts a single client connection. Once the client
- *   connects, the proxy stops listening for more connections. If you wish to
- *   accept multiple client connections, you can simply spin up a new proxy each
- *   time a client connects.
- * </li>
- * <li>
- *   If not all clients will be connecting to the same server, you will need
- *   some mechanism for determining which server to connect to. For example,
- *   you could assign a different listener port for each server, and spin up a
- *   proxy for each port.
- * </li>
- * <li>
- *   The proxyTo() method will only automatically pass through packets that
- *   aren't caught by any listener method. If you want a packet that is
- *   processed by a listener method to be passed through, you will need to do so
- *   yourself (by passing it to the send() method on the opposite connection).
- *   Note that it is possible for the same packet to be caught by more than one
- *   listener method; be careful not to send the same packet more than once.
- * </li>
- * </p>
- * @author rjwut
- */
-public class ProxyDemo implements Runnable {
-    /**
-     * <p>Run with no arguments for usage syntax.</p>
-     */
-    public static void main(String[] args) {
-        if (args.length < 2 || args.length > 3) {
-            System.out.println("Usage:");
-            System.out.println("\tProxyDemo {artemisInstallPath} {serverIpOrHostname}[:{port}] [listenerPort]");
-            return;
-        }
-
-    String artemisInstallPath = args[0];
-        String serverAddr = args[1];
-        int port = args.length > 1 ? Integer.parseInt(args[2]) : 2010;
-        new Thread(new ProxyDemo(artemisInstallPath, port, serverAddr)).start();
-    }
-
-    private Context ctx;
-    private int port;
-    private String serverAddr;
-    private int serverPort = Artemis.DEFAULT_PORT;
-
-    /**
-     * Creates a new proxy. It will listen on the given port, and connect to the
-     * server at the indicated address when it receives a client connection.
-     * After construction, you can start the proxy by spinning it up on a
-     * thread.
-     */
-    public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
-        ctx = new DefaultContext(new FilePathResolver(artemisInstallPath));
-        this.port = port;
-        int colonPos = serverAddr.indexOf(':');
-
-        if (colonPos == -1) {
-            this.serverAddr = serverAddr;
-        } else {
-            this.serverAddr = serverAddr.substring(0, colonPos);
-            serverPort = Integer.parseInt(serverAddr.substring(colonPos + 1));
-        }
-    }
-
-    /**
-     * Starts the proxy. The proxy will not begin listening for a client until
-     * this method runs.
-     */
-    @Override
-    public void run() {
-        ServerSocket listener = null;
-
-        try {
-            // Listen for a client connection
-            listener = new ServerSocket(this.port, 0);
-            listener.setSoTimeout(0);
-            System.out.println("Listening for connections on port " + this.port + "...");
-            Socket skt = listener.accept();
-
-            // We've got a connection, build interfaces and listener
-            System.out.println("Received connection from " + skt.getRemoteSocketAddress());
-            ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, ConnectionType.CLIENT, ctx);
-            System.out.println("Connecting to server at " + serverAddr + ":" + serverPort + "...");
-            ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000, ctx);
-            new ProxyListener(server, client);
-            System.out.println("Connection established.");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            // Close connections if we get an exception
-            if (listener != null && !listener.isClosed()) {
-                try {
-                    listener.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * Class which manages the bridge between the server and client and holds
-     * listener methods.
-     * @author rjwut
-     */
-    public class ProxyListener {
-        private ArtemisNetworkInterface server;
-        private ArtemisNetworkInterface client;
-
-        /**
-         * Adds this object as a listener on both the client and the server,
-         * then starts listening to both.
-         */
-        private ProxyListener(ArtemisNetworkInterface server,
-                ArtemisNetworkInterface client) {
-            this.server = server;
-            this.client = client;
-            client.addListener(this); // we're only listening to client packets
-            server.proxyTo(client);
-            client.proxyTo(server);
-            server.start();
-            client.start();
-        }
-
-        /**
-         * If one connection is closed, close the other. (Calling stop() on a
-         * connection which is already closed has no effect, so it's easiest to
-         * just call stop() on both.)
-         */
-        @Listener
-        public void onDisconnect(DisconnectEvent event) {
-            server.stop();
-            client.stop();
-            System.out.println("Disconnect: " + event);
-
-            if (!event.isNormal() && event.getException() != null) {
-                // Abnormal termination, print a stack trace
-                event.getException().printStackTrace();
-            }
-        }
-
-        /**
-         * This method "swallows" ToggleRedAlertPackets. This works because IAN
-         * will only automatically pass along packets which are not caught by
-         * listener methods. Any listener method that wants the packet passed
-         * along must do so manually. This method does not, so the packet is
-         * intercepted by the proxy and the server never receives it.
-         */
-        @Listener
-        public void onPacket(ToggleRedAlertPacket pkt) {
-            System.out.println("Intercepted red alert toggle!");
-        }
-    }
-}
-```
+6. **When one side disconnects, close the connection to the other side.** Listen for the `DisconnectEvent` from both sides. When you receive it from one side, invoke `ArtemisNetworkInterface.stop()` on the other connection (or both connections, if that's easier; calling `stop()` on an already closed connection has no effect).
 
 ### Tracking World State ###
 The most frequently received packets from the server are ones which provide updates on the status of objects in the game world. These updates typically contain only that information which has changed, not the complete state of the object. The `SystemManager` class aggregates the received updates in order to provide an up-to-the-moment view of the game world. To use it, simply construct a new `SystemManager` and add it as a listener to your `ThreadedArtemisNetworkInterface`; it has several listener methods which collect the relevant packets to build the game world. You can then use the various `get*()` methods to retrieve game state from the `SystemManager`.
 
 ### Reading `vesselData.xml` ###
-The `VesselData` class allows you to access the information about the vessels and factions in the game. You can get a reference to a `VesselData` by calling `Context.getVesselData()`. On the `VesselData` object itself, you can invoke `getFaction(int)` or `getVessel(int)` to retrieve the `Faction` or `Vessel` with the corresponding ID, or use the `factionIterator()` or `vesselIterator()` methods to see all of them. The `VesselData` object can be accessed via `Context.getVesselData()`.
+The `vesselData.xml` file contains information about the game's factions and vessels. The `ArtemisShielded` interface includes a `getVessel(Context)` method which will return a `Vessel` object. The `ArtemisBase`, `ArtemisNpc`, and `ArtemisPlayer` classes implement this interface. `Vessel` has a `getFaction()` method which will return the `Faction` corresponding to that `Vessel`.
+
+`Faction` and `Vessel` data can also be retrieved directly from the `VesselData` object, which you can get by calling `Context.getVesselData()`. You can then invoke `getFaction(int)` or `getVessel(int)` to retrieve the `Faction` or `Vessel` with the corresponding ID. You can also iterate all the available `Faction`s or `Vessel`s with the `factionIterator()` and `vesselIterator()` methods.
 
 `DefaultContext` loads resource files on demand and caches them for subsequent requests. If you wish to preload all resources up front, you can do so with the `preloadModels()` and `preloadInternals()` methods.
 
-You should make sure that your code deals gracefully with the possibility that no `Faction` or `Vessel` with a given ID exists (in which case, the `VesselData.get*()` methods will return null). For example, if your `vesselData.xml` file doesn't match the server's, this can occur.
+Note that whenever you attempt to get a reference to a single `Faction` or `Vessel`, IAN may return `null`. This occurs when the `VesselData` contains no `Faction` or `Vessel` that corresponds to the given ID. This may occur when the remote machine's `vesselData.xml` file doesn't match yours. You should make sure that your code handles this scenario gracefully.
 
 ## Acknowledgements ##
-Thanks to Thom Robertson and Incandescent Workshop for creating Artemis, and for so graciously tolerating the community's desire to tinker with their baby.
+Thanks to Thom Robertson and Incandescent Workshop for creating *Artemis*, and for so graciously tolerating the community's desire to tinker with their baby.
 
-Daniel Leong ([@dhleong](https://github.com/dhleong)) created the original version of ArtClientLib and did a lot of the difficult, thankless gruntwork of reverse engineering the Artemis protocol.
+Daniel Leong ([@dhleong](https://github.com/dhleong)) created the original version of ArtClientLib and did a lot of the difficult, thankless gruntwork of reverse engineering the *Artemis* protocol.
 
 Various GitHub users have contributed to IAN by helping to discover and document the protocol, creating pull requests to implement features or bug fixes, or issuing bug reports. Their help is very much appreciated. They are, in alphabetical order:
 * [@abrindam](https://github.com/abrindam)

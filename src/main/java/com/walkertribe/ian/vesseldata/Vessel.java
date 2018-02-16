@@ -12,7 +12,7 @@ import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.model.Model;
 
 /**
- * Corresponds to the <vessel> element in vesselData.xml. Note that this
+ * Corresponds to the &lt;vessel&gt; element in vesselData.xml. Note that this
  * represents an entire class of ships, not an individual one.
  * @author rjwut
  */
@@ -197,7 +197,7 @@ public class Vessel {
 
 	/**
 	 * Returns the initial strength of this Vessel's "player" shields. (This
-	 * appears to only apply to fighters.)
+	 * appears to only apply to single-seat craft.)
 	 */
 	public int getPlayerShields() {
 		return playerShields;
@@ -233,19 +233,17 @@ public class Vessel {
 	}
 
 	/**
-	 * Returns the number of fighters this Vessel has. Only Vessels that were
-	 * declared with the <carrierload> (player ships) or <carrier> (enemy ships)
-	 * elements will have fighters. Note that a vessel does not have to have
-	 * VesselAttribute.CARRIER to have fighters.
+	 * Returns the number of fighters this Vessel has. Only Vessels that were declared with the
+	 * &lt;carrierload&gt; (player ships) or &lt;carrier&gt; (enemy ships) elements will have
+	 * fighters. Note that a vessel does not have to have VesselAttribute.CARRIER to have fighters.
 	 */
 	public int getFighterCount() {
 		return fighterCount;
 	}
 
 	/**
-	 * Returns the number of bombers this Vessel has. Only Vessels that were
-	 * declared with the <carrierload> element will have bombers. As of this
-	 * writing, the only Vessel to have bombers is the TSN Medium Carrier.
+	 * Returns the number of bombers this Vessel has. Only Vessels that were declared with the
+	 * &lt;carrierload&gt; element will have bombers.
 	 */
 	public int getBomberCount() {
 		return bomberCount;
@@ -286,9 +284,9 @@ public class Vessel {
 	/**
 	 * Returns true if this Vessel is capable of launching ordnance; false
 	 * otherwise. To launch ordnance, a player Vessel must storage space for at
-	 * least one torpedo and have at least one torpedo tube or be a fighter
-	 * (which doesn't use the tube loading/unloading system). Other Vessel types
-	 * must have at least one drone port or base torpedo port.
+	 * least one torpedo and have at least one torpedo tube or be a single-seat
+	 * craft (which doesn't use the tube loading/unloading system). Other
+	 * Vessel types must have at least one drone port or base torpedo port.
 	 */
 	public boolean canLaunchOrdnance() {
 		if (is(VesselAttribute.PLAYER)) {

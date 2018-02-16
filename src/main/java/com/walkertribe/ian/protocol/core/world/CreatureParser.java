@@ -29,9 +29,7 @@ public class CreatureParser extends AbstractObjectParser {
     	UNK_2_5,
     	UNK_2_6,
     	UNK_2_7,
-    	UNK_2_8,
-
-    	UNK_3_1;
+    	UNK_2_8;
     }
     private static final int BIT_COUNT = Bit.values().length;
 
@@ -67,7 +65,6 @@ public class CreatureParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_2_6, 4);
         reader.readObjectUnknown(Bit.UNK_2_7, 4);
         reader.readObjectUnknown(Bit.UNK_2_8, 4);
-        reader.readObjectUnknown(Bit.UNK_3_1, 4);
         return creature;
 	}
 
@@ -95,7 +92,6 @@ public class CreatureParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_2_5)
 				.writeUnknown(Bit.UNK_2_6)
 				.writeUnknown(Bit.UNK_2_7)
-				.writeUnknown(Bit.UNK_2_8)
-				.writeUnknown(Bit.UNK_3_1);
+				.writeUnknown(Bit.UNK_2_8);
 	}
 }

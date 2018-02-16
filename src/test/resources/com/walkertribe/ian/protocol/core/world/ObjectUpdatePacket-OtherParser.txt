@@ -1,17 +1,14 @@
 efbeadde // header
-3e000000 // packet length = 62
+3c000000 // packet length = 60
 01000000 // origin = server
 00000000 // padding
-2a000000 // remaining length = 42
+28000000 // remaining length = 40
 f93d8080 // ObjectUpdatePacket
 07       // object type = mine
 02000000 // object ID = 2
-f7       // bit field
+0f       // bit field
 0000803f // x = 1.0
 00000040 // y = 2.0
 00004040 // z = 3.0
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
+05000000 4d00 4900 4e00 4500 0000 // name = MINE
 00000000 // end of array
