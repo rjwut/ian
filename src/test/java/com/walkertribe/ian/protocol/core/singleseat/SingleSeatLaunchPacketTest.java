@@ -12,7 +12,7 @@ import com.walkertribe.ian.protocol.core.singleseat.SingleSeatLaunchPacket;
 public class SingleSeatLaunchPacketTest extends AbstractPacketTester<SingleSeatLaunchPacket> {
 	@Test
 	public void test() {
-		execute("core/fighter/SingleSeatLaunchPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/singleseat/SingleSeatLaunchPacket.txt", ConnectionType.CLIENT, 1);
 	}
 
 	@Test

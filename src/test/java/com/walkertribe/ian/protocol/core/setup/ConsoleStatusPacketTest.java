@@ -77,7 +77,7 @@ public class ConsoleStatusPacketTest extends AbstractPacketTester<ConsoleStatusP
 
 		Assert.assertEquals(
 				"[ConsoleStatusPacket] Ship #1\n\tMain screen: AVAILABLE\n\tHelm: YOURS\n\tWeapons: UNAVAILABLE\n\t" +
-				"Engineering: AVAILABLE\n\tScience: YOURS\n\tCommunications: UNAVAILABLE\n\tFighter: AVAILABLE\n\t" +
+				"Engineering: AVAILABLE\n\tScience: YOURS\n\tCommunications: UNAVAILABLE\n\tSingle-seat craft: AVAILABLE\n\t" +
 				"Data: YOURS\n\tObserver: UNAVAILABLE\n\tCaptain's map: AVAILABLE\n\tGame master: YOURS",
 				pkt.toString()
 		);

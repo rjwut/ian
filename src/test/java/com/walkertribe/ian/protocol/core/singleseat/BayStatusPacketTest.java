@@ -14,7 +14,7 @@ import com.walkertribe.ian.util.TestUtil;
 public class BayStatusPacketTest extends AbstractPacketTester<BayStatusPacket> {
 	@Test
 	public void test() {
-		execute("core/fighter/BayStatusPacket.txt", ConnectionType.SERVER, 3);
+		execute("core/singleseat/BayStatusPacket.txt", ConnectionType.SERVER, 3);
 	}
 
 	@Test
