@@ -10,8 +10,7 @@ public class OtherParser extends AbstractObjectParser {
 	private enum Bit {
     	X,
     	Y,
-    	Z,
-    	NAME
+    	Z
     }
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -31,7 +30,6 @@ public class OtherParser extends AbstractObjectParser {
         obj.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
         obj.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
         obj.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
-        obj.setName(reader.readString(Bit.NAME)); // generic objects aren't usually named, but custom missions might name them
         return obj;
 	}
 
@@ -40,7 +38,6 @@ public class OtherParser extends AbstractObjectParser {
 		ArtemisGenericObject gObj = (ArtemisGenericObject) obj;
     	writer	.writeFloat(Bit.X, gObj.getX(), Float.MIN_VALUE)
 				.writeFloat(Bit.Y, gObj.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, gObj.getZ(), Float.MIN_VALUE)
-				.writeString(Bit.NAME, gObj.getName());
+				.writeFloat(Bit.Z, gObj.getZ(), Float.MIN_VALUE);
 	}
 }
