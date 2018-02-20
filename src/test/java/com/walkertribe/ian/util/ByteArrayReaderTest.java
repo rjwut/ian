@@ -206,30 +206,10 @@ public class ByteArrayReaderTest {
 	}
 
 	@Test
-	public void testReadBoolean() {
-		ByteArrayReader reader = new ByteArrayReader(BOOLEAN_TEST);
-		Assert.assertFalse(reader.readBoolean(1));
-		Assert.assertFalse(reader.readBoolean(2));
-		Assert.assertTrue(reader.readBoolean(1));
-		Assert.assertTrue(reader.readBoolean(2));
-		Assert.assertEquals(0, reader.getBytesLeft());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testReadBooleanNegativeBytes() {
-		new ByteArrayReader(DEADBEEF).readBoolean(-1);
-	}
-
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
-	public void testReadBooleanPastEndOfArray() {
-		new ByteArrayReader(DEADBEEF).readBoolean(DEADBEEF.length + 1);
-	}
-
-	@Test
 	public void testReadBoolState() {
 		ByteArrayReader reader = new ByteArrayReader(BOOLEAN_TEST);
 		Assert.assertEquals(BoolState.FALSE, reader.readBoolState(1));
-		Assert.assertEquals(BoolState.FALSE, reader.readBoolState(2));
+		Assert.assertEquals(BoolState.TRUE, reader.readBoolState(2));
 		Assert.assertEquals(BoolState.TRUE, reader.readBoolState(1));
 		Assert.assertEquals(BoolState.TRUE, reader.readBoolState(2));
 		Assert.assertEquals(0, reader.getBytesLeft());

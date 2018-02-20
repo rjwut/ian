@@ -125,20 +125,11 @@ public class ByteArrayReader {
 	}
 
 	/**
-	 * Reads the given number of bytes, then returns true if the first byte was
-	 * non-zero and false otherwise. All remaining bytes are not considered.
-	 */
-	public boolean readBoolean(int byteCount) {
-		return readBytes(byteCount)[0] != 0;
-	}
-
-	/**
-	 * Reads the given number of bytes, then returns BoolState.TRUE if the first
-	 * byte was non-zero and BoolState.FALSE otherwise. All remaining bytes are
-	 * not considered.
+	 * Reads a BoolState from this ByteArrayReader, consuming the indicated
+	 * number of bytes.
 	 */
 	public BoolState readBoolState(int byteCount) {
-		return BoolState.from(readBoolean(byteCount));
+		return new BoolState(readBytes(byteCount));
 	}
 
 	/**

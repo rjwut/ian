@@ -188,13 +188,11 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_5_2);
 
 		for (ShipSystem sys : ShipSystem.values()) {
-			Bit bit = SYSTEM_DAMAGES[sys.ordinal()];
-			writer.writeFloat(bit, npc.getSystemDamage(sys), -1);
+			writer.writeFloat(SYSTEM_DAMAGES[sys.ordinal()], npc.getSystemDamage(sys), -1);
 		}
 
 		for (BeamFrequency freq : BeamFrequency.values()) {
-			Bit bit = SHLD_FREQS[freq.ordinal()];
-			writer.writeFloat(bit, npc.getShieldFreq(freq), -1);
+			writer.writeFloat(SHLD_FREQS[freq.ordinal()], npc.getShieldFreq(freq), -1);
 		}
 	}
 }

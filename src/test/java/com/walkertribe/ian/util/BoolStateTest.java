@@ -12,12 +12,6 @@ public class BoolStateTest {
 	}
 
 	@Test
-	public void testFrom() {
-		Assert.assertEquals(BoolState.TRUE, BoolState.from(true));
-		Assert.assertEquals(BoolState.FALSE, BoolState.from(false));
-	}
-
-	@Test
 	public void testIsKnown() {
 		Assert.assertTrue(BoolState.isKnown(BoolState.TRUE));
 		Assert.assertTrue(BoolState.isKnown(BoolState.FALSE));
@@ -31,10 +25,5 @@ public class BoolStateTest {
 		Assert.assertFalse(BoolState.safeValue(BoolState.FALSE));
 		Assert.assertFalse(BoolState.safeValue(BoolState.UNKNOWN));
 		Assert.assertFalse(BoolState.safeValue(null));
-	}
-
-	@Test
-	public void makeEclEmmaHappy() {
-		TestUtil.coverEnumValueOf(BoolState.class);
 	}
 }

@@ -52,6 +52,7 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			PlayerShipDamagePacket.class,
 			SkyboxPacket.class,
 			SoundEffectPacket.class,
+			TitleMessage.class,
 			VersionPacket.class,
 			WelcomePacket.class,
 

@@ -149,20 +149,7 @@ public class PacketWriter {
 	 * before calling this method.
 	 */
 	public PacketWriter writeBool(int bitIndex, BoolState v, int byteCount) {
-		assertObjectStarted();
-
-		if (!BoolState.isKnown(v)) {
-			return this;
-		}
-
-		buffer[0] = (byte) (v.getBooleanValue() ? 1 : 0);
-
-		for (int i = 1; i < byteCount; i++) {
-			buffer[i] = 0;
-		}
-
-		bitField.set(bitIndex, true);
-		baosObj.write(buffer, 0, byteCount);
+		writeBytes(bitIndex, v.toByteArray(byteCount));
 		return this;
 	}
 

@@ -90,7 +90,7 @@ public class PlayerShipParser extends AbstractObjectParser {
         player.setEnergy(reader.readFloat(Bit.ENERGY, -1));
 
         if (reader.has(Bit.SHIELD_STATE)) {
-        	player.setShields(reader.readBool(Bit.SHIELD_STATE, 2).getBooleanValue());
+        	player.setShields(reader.readBool(Bit.SHIELD_STATE, 2));
         }
 
         player.setShipNumber(reader.readInt(Bit.SHIP_NUMBER, -1));

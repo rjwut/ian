@@ -272,8 +272,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
         return mShields;
     }
 
-    public void setShields(boolean newState) {
-        mShields = BoolState.from(newState);
+    public void setShields(BoolState newState) {
+        mShields = newState;
     }
 
     /**
@@ -636,6 +636,11 @@ public class ArtemisPlayer extends BaseArtemisShip {
     public BoolState isUpgradeActive(Upgrade upgrade) {
     	assertUpgradeCanBeActivated(upgrade);
     	return mUpgrades.get(upgrade).active;
+    }
+
+    public void setUpgradeActive(Upgrade upgrade, boolean active) {
+    	assertUpgradeCanBeActivated(upgrade);
+    	mUpgrades.get(upgrade).active = BoolState.from(active);
     }
 
     public void setUpgradeActive(Upgrade upgrade, BoolState active) {
