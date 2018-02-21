@@ -14,6 +14,7 @@ public enum VesselAttribute {
 	BASE,
 	FIGHTER,
 	SINGLESEAT,
+	SHUTTLE,
 	SMALL,
 	MEDIUM,
 	LARGE,
