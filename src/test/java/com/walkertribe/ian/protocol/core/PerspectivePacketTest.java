@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.enums.Perspective;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class PerspectivePacketTest extends AbstractPacketTester<PerspectivePacket> {
@@ -17,16 +16,11 @@ public class PerspectivePacketTest extends AbstractPacketTester<PerspectivePacke
 
 	@Test
 	public void testConstruct() {
-		Assert.assertEquals(Perspective.THIRD_PERSON, new PerspectivePacket(Perspective.THIRD_PERSON).getPerspective());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructNull() {
-		new PerspectivePacket(null);
+		new PerspectivePacket();
 	}
 
 	@Override
 	protected void testPackets(List<PerspectivePacket> packets) {
-		Assert.assertEquals(Perspective.THIRD_PERSON, packets.get(0).getPerspective());
+		Assert.assertNotNull(packets.get(0));
 	}
 }

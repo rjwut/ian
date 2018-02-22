@@ -1,15 +1,13 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.Perspective;
 import com.walkertribe.ian.iface.PacketFactory;
 import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 
 /**
- * Notifies clients that the main screen perspective has changed.
+ * Notifies clients that the main screen perspective has been toggled.
  * @author rjwut
  */
 public class PerspectivePacket extends SimpleEventPacket {
@@ -28,38 +26,16 @@ public class PerspectivePacket extends SimpleEventPacket {
 		});
 	}
 
-	private Perspective mPerspective;
-
 	private PerspectivePacket(PacketReader reader) {
     	super(SubType.PERSPECTIVE, reader);
-        mPerspective = Perspective.values()[reader.readInt()];
     }
 
-    public PerspectivePacket(Perspective perspective) {
+    public PerspectivePacket() {
     	super(SubType.PERSPECTIVE);
-
-    	if (perspective == null) {
-    		throw new IllegalArgumentException("You must provide a Perspective");
-    	}
-
-    	mPerspective = perspective;
-    }
-
-    /**
-     * Returns the Perspective specified by this packet.
-     */
-    public Perspective getPerspective() {
-    	return mPerspective;
     }
 
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append(mPerspective.name());
-	}
-
-	@Override
-	protected void writePayload(PacketWriter writer) {
-		super.writePayload(writer);
-		writer.writeInt(mPerspective.ordinal());
+    	// nothing to write here
 	}
 }
