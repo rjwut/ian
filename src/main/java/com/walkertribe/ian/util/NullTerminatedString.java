@@ -18,7 +18,7 @@ public class NullTerminatedString implements CharSequence {
 		List<String> strings = new LinkedList<String>();
 
 		for (NullTerminatedString nts : ntsList) {
-			strings.add(nts.toString());
+			strings.add(nts != null ? nts.toString() : null);
 		}
 
 		return strings;
@@ -31,7 +31,7 @@ public class NullTerminatedString implements CharSequence {
 		List<NullTerminatedString> ntsList = new LinkedList<NullTerminatedString>();
 
 		for (String str : strings) {
-			ntsList.add(new NullTerminatedString(str));
+			ntsList.add(str != null ? new NullTerminatedString(str) : null);
 		}
 
 		return ntsList;
