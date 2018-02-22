@@ -17,7 +17,8 @@ public class CreatureParserTest extends AbstractObjectUpdatePacketTester<Artemis
 	@Override
 	protected void testObjects(List<ArtemisCreature> objects) {
 		ArtemisCreatureTest.assertCreature(objects.get(0), 2, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f,
-				CreatureType.WHALE);
-		ArtemisCreatureTest.assertCreature(objects.get(1), 2, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, null);
+				CreatureType.WHALE, 50, 100);
+		ArtemisCreatureTest.assertCreature(objects.get(1), 2, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, null, 50,
+				100);
 	}
 }

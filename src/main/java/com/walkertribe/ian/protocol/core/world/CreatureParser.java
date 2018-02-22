@@ -28,8 +28,8 @@ public class CreatureParser extends AbstractObjectParser {
     	UNK_2_4,
     	UNK_2_5,
     	UNK_2_6,
-    	UNK_2_7,
-    	UNK_2_8;
+    	HEALTH,
+    	MAX_HEALTH;
     }
     private static final int BIT_COUNT = Bit.values().length;
 
@@ -63,8 +63,8 @@ public class CreatureParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_2_4, 4);
         reader.readObjectUnknown(Bit.UNK_2_5, 4);
         reader.readObjectUnknown(Bit.UNK_2_6, 4);
-        reader.readObjectUnknown(Bit.UNK_2_7, 4);
-        reader.readObjectUnknown(Bit.UNK_2_8, 4);
+        creature.setHealth(reader.readFloat(Bit.HEALTH, Float.MIN_VALUE));
+        creature.setMaxHealth(reader.readFloat(Bit.MAX_HEALTH, Float.MIN_VALUE));
         return creature;
 	}
 
@@ -91,7 +91,7 @@ public class CreatureParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_2_4)
 				.writeUnknown(Bit.UNK_2_5)
 				.writeUnknown(Bit.UNK_2_6)
-				.writeUnknown(Bit.UNK_2_7)
-				.writeUnknown(Bit.UNK_2_8);
+				.writeFloat(Bit.HEALTH, creature.getHealth(), Float.MIN_VALUE)
+				.writeFloat(Bit.MAX_HEALTH, creature.getMaxHealth(), Float.MIN_VALUE);
 	}
 }

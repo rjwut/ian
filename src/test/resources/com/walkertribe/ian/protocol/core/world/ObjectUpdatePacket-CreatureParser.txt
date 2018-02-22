@@ -21,8 +21,8 @@ ffff00   // bit field
 00000000 // unknown
 00000000 // unknown
 00000000 // unknown
-00000000 // unknown
-00000000 // unknown
+00004842 // health = 50.0
+0000c842 // max health = 100.0
 00000000 // end of array
 
 efbeadde // header
@@ -47,6 +47,6 @@ f93d8080 // ObjectUpdatePacket
 00000000 // unknown
 00000000 // unknown
 00000000 // unknown
-00000000 // unknown
-00000000 // unknown
+00004842 // health = 50.0
+0000c842 // max health = 100.0
 00000000 // end of array

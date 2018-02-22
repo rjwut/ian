@@ -12,6 +12,8 @@ import com.walkertribe.ian.model.Model;
  */
 public class ArtemisCreature extends BaseArtemisOrientable {
 	private CreatureType mCreatureType;
+	private float mHealth = Float.MIN_VALUE;
+	private float mMaxHealth = Float.MIN_VALUE;
 
     public ArtemisCreature(int objId) {
         super(objId);
@@ -26,8 +28,8 @@ public class ArtemisCreature extends BaseArtemisOrientable {
 	public Model getModel(Context ctx) {
 		return mCreatureType != null ? mCreatureType.getModel(ctx) : null;
 	}
-
-    @Override
+	
+	@Override
     public void updateFrom(ArtemisObject obj, Context ctx) {
         super.updateFrom(obj, ctx);
         
@@ -38,6 +40,14 @@ public class ArtemisCreature extends BaseArtemisOrientable {
 
             if (creatureType != null) {
                 setCreatureType(creatureType);
+            }
+
+            if (cast.mHealth != Float.MIN_VALUE) {
+            	mHealth = cast.mHealth;
+            }
+
+            if (cast.mMaxHealth != Float.MIN_VALUE) {
+            	mMaxHealth = cast.mMaxHealth;
             }
         }
     }
@@ -53,9 +63,33 @@ public class ArtemisCreature extends BaseArtemisOrientable {
     	mCreatureType = creatureType;
     }
 
+    /**
+     * The health level of this creature.
+     */
+	public float getHealth() {
+		return mHealth;
+	}
+
+	public void setHealth(float health) {
+		mHealth = health;
+	}
+
+    /**
+     * The maximum health level of this creature.
+     */
+	public float getMaxHealth() {
+		return mMaxHealth;
+	}
+
+	public void setMaxHealth(float maxHealth) {
+		mMaxHealth = maxHealth;
+	}
+
     @Override
 	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
     	super.appendObjectProps(props, includeUnspecified);
     	putProp(props, "Creature type", mCreatureType, includeUnspecified);
+    	putProp(props, "Health", mHealth, includeUnspecified);
+    	putProp(props, "Max health", mMaxHealth, includeUnspecified);
     }
 }
