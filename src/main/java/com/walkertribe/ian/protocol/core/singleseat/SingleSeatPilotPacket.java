@@ -18,7 +18,7 @@ import com.walkertribe.ian.util.TextUtil;
  * @author rjwalker
  */
 public class SingleSeatPilotPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.VALUE_FOUR_INTS;
+    private static final PacketType TYPE = CorePacketType.VALUE_FLOAT;
     private static final byte SUBTYPE = 0x07;
     private static final byte[] DEFAULT_UNKNOWN = TextUtil.hexToByteArray("0000803f"); // 1.0f
 
