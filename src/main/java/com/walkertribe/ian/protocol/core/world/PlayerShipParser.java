@@ -139,7 +139,7 @@ public class PlayerShipParser extends AbstractObjectParser {
         player.setReverse(reader.readBool(Bit.REVERSE_STATE, 1));
 
         reader.readObjectUnknown(Bit.UNK_5_5, 4);
-        reader.readObjectUnknown(Bit.UNK_5_6, 5);
+        reader.readObjectUnknown(Bit.UNK_5_6, 1);
         reader.readObjectUnknown(Bit.UNK_5_7, 4);
         reader.readObjectUnknown(Bit.UNK_5_8, 1);
         player.setCapitalShipId(reader.readInt(Bit.CAPITAL_SHIP_ID, -1));
