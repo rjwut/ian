@@ -1,5 +1,7 @@
 package com.walkertribe.ian.protocol.core.setup;
 
+import java.util.Arrays;
+
 import com.walkertribe.ian.enums.ConnectionType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.enums.VesselAttribute;
@@ -38,7 +40,10 @@ public class SetShipSettingsPacket extends BaseArtemisPacket {
 		});
 	}
 
+	private static final byte[] UNKNOWN = new byte[] { (byte) 1, 0, 0, 0 };
+
 	private Ship mShip;
+	private byte[] mUnknown;
 
 	/**
 	 * Use this constructor if you wish to use a Vessel instance from the
@@ -56,6 +61,7 @@ public class SetShipSettingsPacket extends BaseArtemisPacket {
         }
 
 		mShip = new Ship(name, vessel.getId(), color, drive);
+		mUnknown = Arrays.copyOf(UNKNOWN, 4);
 	}
 
 	/**
@@ -72,6 +78,7 @@ public class SetShipSettingsPacket extends BaseArtemisPacket {
 		DriveType drive = DriveType.values()[reader.readInt()];
 		int hullId = reader.readInt();
 		float color = reader.readFloat();
+		mUnknown = reader.readBytes(4);
 		CharSequence name = reader.readString();
 		mShip = new Ship(name, hullId, color, drive);
 	}
@@ -89,6 +96,7 @@ public class SetShipSettingsPacket extends BaseArtemisPacket {
 				.writeInt(mShip.getDrive().ordinal())
 				.writeInt(mShip.getShipType())
 				.writeFloat(mShip.getAccentColor())
+				.writeBytes(mUnknown)
 				.writeString(mShip.getName());
 	}
 
