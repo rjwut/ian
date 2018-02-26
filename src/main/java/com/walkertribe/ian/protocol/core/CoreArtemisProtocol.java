@@ -52,7 +52,7 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			SingleSeatLaunchedPacket.class,
 			SkyboxPacket.class,
 			SoundEffectPacket.class,
-			TitleMessage.class,
+			TitlePacket.class,
 			VersionPacket.class,
 			WelcomePacket.class,
 

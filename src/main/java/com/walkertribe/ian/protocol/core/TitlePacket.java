@@ -9,18 +9,23 @@ import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 
-public class TitleMessage extends BaseArtemisPacket {
+/**
+ * Displays a title message on the main screen. This is transmitted in response
+ * to a <code>&lt;big_message&gt;</code> tag in a scripted mission.
+ * @author rjwut
+ */
+public class TitlePacket extends BaseArtemisPacket {
 	public static void register(PacketFactoryRegistry registry) {
 		registry.register(ConnectionType.SERVER, CorePacketType.BIG_MESS, new PacketFactory() {
 			@Override
 			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return TitleMessage.class;
+				return TitlePacket.class;
 			}
 
 			@Override
 			public ArtemisPacket build(PacketReader reader)
 					throws ArtemisPacketException {
-				return new TitleMessage(reader);
+				return new TitlePacket(reader);
 			}
 		});
 	}
@@ -29,14 +34,14 @@ public class TitleMessage extends BaseArtemisPacket {
 	private CharSequence mSubtitle1;
 	private CharSequence mSubtitle2;
 
-	public TitleMessage(CharSequence title, CharSequence subtitle1, CharSequence subtitle2) {
+	public TitlePacket(CharSequence title, CharSequence subtitle1, CharSequence subtitle2) {
 		super(ConnectionType.SERVER, CorePacketType.BIG_MESS);
 		mTitle = title;
 		mSubtitle1 = subtitle1;
 		mSubtitle2 = subtitle2;
 	}
 
-	public TitleMessage(PacketReader reader) {
+	public TitlePacket(PacketReader reader) {
 		super(ConnectionType.SERVER, CorePacketType.BIG_MESS);
 		mTitle = reader.readString();
 		mSubtitle1 = reader.readString();
