@@ -50,7 +50,7 @@ public abstract class ValueIntPacket extends BaseArtemisPacket {
     	GM_BUTTON_CLICK,         // 15 *
     	UNKNOWN_16,              // 16
     	SHIP_SETUP,              // 17 *
-    	ENG_RESET,               // 18 TODO
+    	ENG_RESET_COOLANT,       // 18 *
     	TOGGLE_REVERSE,          // 19
     	REQUEST_ENG_GRID_UPDATE, // 1a
     	TOGGLE_PERSPECTIVE,      // 1b
