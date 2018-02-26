@@ -8,7 +8,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
 
@@ -23,7 +23,7 @@ public class GameOverStatsPacketTest extends AbstractPacketTester<GameOverStatsP
 
 	@Test
 	public void test() {
-		execute("core/GameOverStatsPacket.txt", ConnectionType.SERVER, 1);
+		execute("core/GameOverStatsPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test

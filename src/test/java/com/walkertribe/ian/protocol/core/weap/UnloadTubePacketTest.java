@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.world.Artemis;
 
 public class UnloadTubePacketTest extends AbstractPacketTester<UnloadTubePacket> {
 	@Test
 	public void test() {
-		execute("core/weap/UnloadTubePacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/weap/UnloadTubePacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test

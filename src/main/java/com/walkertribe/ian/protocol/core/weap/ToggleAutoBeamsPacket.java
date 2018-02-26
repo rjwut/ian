@@ -1,37 +1,23 @@
 package com.walkertribe.ian.protocol.core.weap;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Toggles auto beams on/off.
  * @author rjwut
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.TOGGLE_AUTO_BEAMS)
 public class ToggleAutoBeamsPacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.TOGGLE_AUTO_BEAMS, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return ToggleAutoBeamsPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new ToggleAutoBeamsPacket(reader);
-			}
-		});
-	}
-
 	public ToggleAutoBeamsPacket() {
-		super(SubType.TOGGLE_AUTO_BEAMS, 0);
+		super(0);
 	}
 
-	private ToggleAutoBeamsPacket(PacketReader reader) {
+	public ToggleAutoBeamsPacket(PacketReader reader) {
 		super(reader);
 	}
 

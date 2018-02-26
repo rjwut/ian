@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.OrdnanceType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.world.Artemis;
@@ -13,7 +13,7 @@ import com.walkertribe.ian.world.Artemis;
 public class LoadTubePacketTest extends AbstractPacketTester<LoadTubePacket> {
 	@Test
 	public void test() {
-		execute("core/weap/LoadTubePacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/weap/LoadTubePacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test

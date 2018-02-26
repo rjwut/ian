@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.BoolState;
 
 public class PausePacketTest extends AbstractPacketTester<PausePacket> {
 	@Test
 	public void test() {
-		execute("core/PausePacket.txt", ConnectionType.SERVER, 2);
+		execute("core/PausePacket.txt", Origin.SERVER, 2);
 	}
 
 	@Test

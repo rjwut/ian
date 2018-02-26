@@ -1,39 +1,24 @@
 package com.walkertribe.ian.protocol.core.eng;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.AUTO_DAMCON)
 public class EngAutoDamconUpdatePacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.AUTO_DAMCON, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return EngAutoDamconUpdatePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new EngAutoDamconUpdatePacket(reader);
-			}
-		});
-	}
-
     private final boolean mOn;
 
-    private EngAutoDamconUpdatePacket(PacketReader reader) {
-        super(SubType.AUTO_DAMCON, reader);
-        mOn = reader.readInt() == 1;
+    public EngAutoDamconUpdatePacket(boolean on) {
+        mOn = on;
     }
 
-    public EngAutoDamconUpdatePacket(boolean on) {
-        super(SubType.AUTO_DAMCON);
-        mOn = on;
+    public EngAutoDamconUpdatePacket(PacketReader reader) {
+        super(reader);
+        mOn = reader.readInt() == 1;
     }
 
     /**

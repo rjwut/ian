@@ -1,7 +1,7 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.protocol.AbstractProtocol;
+import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.core.comm.*;
 import com.walkertribe.ian.protocol.core.eng.*;
 import com.walkertribe.ian.protocol.core.gm.*;
@@ -18,7 +18,7 @@ import com.walkertribe.ian.protocol.core.world.*;
  */
 public class CoreArtemisProtocol extends AbstractProtocol {
 	// The packet classes supported by this Protocol
-	private static final Class<?>[] PACKET_CLASSES = {
+	private static final Class<?>[] CLASSES = {
 			// server packets
 			AllShipSettingsPacket.class,
 			BeamFiredPacket.class,
@@ -101,8 +101,10 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			UnloadTubePacket.class
 	};
 
-	@Override
-	public void registerPacketFactories(PacketFactoryRegistry registry) {
-		registerPacketFactories(registry, PACKET_CLASSES);
+	@SuppressWarnings("unchecked")
+	public CoreArtemisProtocol() {
+		for (Class<?> clazz : CLASSES) {
+			register((Class<? extends ArtemisPacket>) clazz);
+		}
 	}
 }

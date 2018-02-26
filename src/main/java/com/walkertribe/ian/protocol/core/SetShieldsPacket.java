@@ -1,55 +1,39 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Handles the three shield packets: shields up, shields down, and toggle shields.
  * @author rjwut
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = {
+		SubType.TOGGLE_SHIELDS, SubType.SHIELDS_UP, SubType.SHIELDS_DOWN
+})
 public class SetShieldsPacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		PacketFactory factory = new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SetShieldsPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SetShieldsPacket(reader);
-			}
-		};
-		register(registry, SubType.TOGGLE_SHIELDS, factory);
-		register(registry, SubType.SHIELDS_UP, factory);
-		register(registry, SubType.SHIELDS_DOWN, factory);
-	}
-
 	public enum Action {
 		TOGGLE(SubType.TOGGLE_SHIELDS),
 		UP(SubType.SHIELDS_UP),
 		DOWN(SubType.SHIELDS_DOWN);
 
-		public static Action fromSubType(SubType subType) {
+		public static Action fromSubType(byte subType) {
 			switch(subType) {
-			case TOGGLE_SHIELDS:
+			case SubType.TOGGLE_SHIELDS:
 				return TOGGLE;
-			case SHIELDS_UP:
+			case SubType.SHIELDS_UP:
 				return UP;
-			case SHIELDS_DOWN:
+			case SubType.SHIELDS_DOWN:
 				return DOWN;
 			default:
 				throw new IllegalArgumentException("SubType " + subType + " not applicable");
 			}
 		}
 
-		private SubType subType;
+		private byte subType;
 
-		private Action(SubType subType) {
+		private Action(byte subType) {
 			this.subType = subType;
 		}
 	}
@@ -62,7 +46,7 @@ public class SetShieldsPacket extends ValueIntPacket {
 		}
 	}
 
-    private SetShieldsPacket(PacketReader reader) {
+    public SetShieldsPacket(PacketReader reader) {
     	super(reader);
     }
 

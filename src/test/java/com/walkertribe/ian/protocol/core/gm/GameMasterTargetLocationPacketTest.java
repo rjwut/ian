@@ -5,13 +5,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class GameMasterTargetLocationPacketTest extends AbstractPacketTester<GameMasterTargetLocationPacket> {
 	@Test
 	public void test() {
-		execute("core/gm/GameMasterTargetLocationPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/gm/GameMasterTargetLocationPacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test

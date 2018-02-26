@@ -1,6 +1,6 @@
 package com.walkertribe.ian.protocol;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 
 /**
  * Any packet received for which no packet listeners have been registered will
@@ -8,8 +8,7 @@ import com.walkertribe.ian.enums.ConnectionType;
  * @author rjwut
  */
 public final class UnparsedPacket extends RawPacket {
-	public UnparsedPacket(ConnectionType connectionType, int packetType,
-			byte[] payload) {
-		super(connectionType, packetType, payload);
+	public UnparsedPacket(Origin origin, int type, byte[] payload) {
+		super(origin, type, payload);
 	}
 }

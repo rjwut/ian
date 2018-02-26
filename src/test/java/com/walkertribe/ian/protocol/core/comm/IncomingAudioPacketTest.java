@@ -7,14 +7,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.walkertribe.ian.enums.AudioMode;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
 
 public class IncomingAudioPacketTest extends AbstractPacketTester<IncomingAudioPacket> {
 	@Test
 	public void testParse() {
-		execute("core/comm/IncomingAudioPacket.txt", ConnectionType.SERVER, 2);
+		execute("core/comm/IncomingAudioPacket.txt", Origin.SERVER, 2);
 	}
 
 	@Test

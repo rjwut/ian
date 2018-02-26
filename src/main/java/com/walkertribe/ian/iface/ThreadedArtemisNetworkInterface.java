@@ -15,10 +15,12 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.walkertribe.ian.Context;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.CompositeProtocol;
 import com.walkertribe.ian.protocol.Protocol;
+import com.walkertribe.ian.protocol.core.CoreArtemisProtocol;
 import com.walkertribe.ian.protocol.core.HeartbeatPacket;
 import com.walkertribe.ian.protocol.core.setup.VersionPacket;
 import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
@@ -30,9 +32,9 @@ import com.walkertribe.ian.util.Version;
  */
 public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface {
 	private Context ctx;
-	private ConnectionType recvType;
-    private ConnectionType sendType;
-    private PacketFactoryRegistry factoryRegistry = new PacketFactoryRegistry();
+	private Origin recvType;
+    private Origin sendType;
+    private Protocol protocol = new CoreArtemisProtocol();
     private ListenerRegistry mListeners = new ListenerRegistry();
     private ReceiverThread mReceiveThread;
     private SenderThread mSendThread;
@@ -69,7 +71,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     	this.ctx = ctx;
     	Socket skt = new Socket();
     	skt.connect(new InetSocketAddress(host, port), timeoutMs);
-    	init(skt, ConnectionType.SERVER);
+    	init(skt, Origin.SERVER);
     }
 
     /**
@@ -87,7 +89,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      * The send/receive streams won't actually be opened until start() is
      * called.
      */
-    public ThreadedArtemisNetworkInterface(Socket skt, ConnectionType connType, Context ctx)
+    public ThreadedArtemisNetworkInterface(Socket skt, Origin connType, Context ctx)
     		throws IOException {
     	if (ctx == null) {
     		throw new IllegalArgumentException("Context is required");
@@ -100,7 +102,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     /**
      * Invoked by constructors to perform common initialization.
      */
-    private void init(Socket skt, ConnectionType connType) throws IOException {
+    private void init(Socket skt, Origin connType) throws IOException {
     	recvType = connType;
     	sendType = connType.opposite();
     	skt.setKeepAlive(true);
@@ -109,18 +111,25 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     }
 
     @Override
-    public ConnectionType getRecvType() {
+    public Origin getRecvType() {
     	return recvType;
     }
 
     @Override
-    public ConnectionType getSendType() {
+    public Origin getSendType() {
     	return sendType;
     }
 
     @Override
 	public void registerProtocol(Protocol protocol) {
-		protocol.registerPacketFactories(factoryRegistry);
+    	if (this.protocol instanceof CompositeProtocol) {
+    		((CompositeProtocol) this.protocol).add(protocol);
+    	} else {
+    		CompositeProtocol composite = new CompositeProtocol();
+    		composite.add(this.protocol);
+    		composite.add(protocol);
+    		this.protocol = composite;
+    	}
 	}
 
     @Override
@@ -319,8 +328,8 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
         public ReceiverThread(final ThreadedArtemisNetworkInterface net, final Socket skt) throws IOException {
             mInterface = net;
             InputStream input = new BufferedInputStream(skt.getInputStream());
-            mReader = new PacketReader(ctx, net.getRecvType(), input,
-            		factoryRegistry, mListeners);
+            mReader = new PacketReader(ctx, net.getRecvType(), input, protocol,
+            		mListeners);
         }
 
         /**

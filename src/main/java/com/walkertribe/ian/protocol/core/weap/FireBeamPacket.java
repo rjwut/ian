@@ -1,38 +1,18 @@
 package com.walkertribe.ian.protocol.core.weap;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Manually fire beams.
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.BEAM_REQUEST)
 public class FireBeamPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.BEAM_REQUEST;
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return FireBeamPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new FireBeamPacket(reader);
-			}
-		});
-	}
-
 	private int mId;
 	private float mX;
 	private float mY;
@@ -43,15 +23,13 @@ public class FireBeamPacket extends BaseArtemisPacket {
      * coordinates on the target at which to fire.
      */
     public FireBeamPacket(ArtemisObject target, float x, float y, float z) {
-        super(ConnectionType.CLIENT, TYPE);
         mId = target.getId();
         mX = x;
         mY = y;
         mZ = z;
     }
 
-    private FireBeamPacket(PacketReader reader) {
-        super(ConnectionType.CLIENT, TYPE);
+    public FireBeamPacket(PacketReader reader) {
         mId = reader.readInt();
         mX = reader.readFloat();
         mY = reader.readFloat();

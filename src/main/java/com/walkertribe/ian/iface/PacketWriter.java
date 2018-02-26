@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.SortedMap;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.util.BitField;
@@ -34,7 +34,7 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 public class PacketWriter {
 	private final OutputStream out;
-	private ConnectionType mConnType;
+	private Origin mConnType;
 	private Version version;
 
 	private int mPacketType;
@@ -75,7 +75,7 @@ public class PacketWriter {
 	/**
 	 * Starts a packet of the given type.
 	 */
-	public PacketWriter start(ConnectionType connType, int packetType) {
+	public PacketWriter start(Origin connType, int packetType) {
 		mConnType = connType;
 		mPacketType = packetType;
 		baos = new ByteArrayOutputStream();

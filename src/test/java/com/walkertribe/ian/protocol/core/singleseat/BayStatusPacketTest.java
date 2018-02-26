@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.protocol.core.singleseat.BayStatusPacket;
 import com.walkertribe.ian.protocol.core.singleseat.BayStatusPacket.Bay;
@@ -14,7 +14,7 @@ import com.walkertribe.ian.util.TestUtil;
 public class BayStatusPacketTest extends AbstractPacketTester<BayStatusPacket> {
 	@Test
 	public void test() {
-		execute("core/singleseat/BayStatusPacket.txt", ConnectionType.SERVER, 3);
+		execute("core/singleseat/BayStatusPacket.txt", Origin.SERVER, 3);
 	}
 
 	@Test

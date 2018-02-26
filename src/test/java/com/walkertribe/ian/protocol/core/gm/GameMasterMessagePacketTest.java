@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
@@ -13,7 +13,7 @@ import com.walkertribe.ian.util.TestUtil;
 public class GameMasterMessagePacketTest extends AbstractPacketTester<GameMasterMessagePacket> {
 	@Test
 	public void test() {
-		execute("core/gm/GameMasterMessagePacket.txt", ConnectionType.CLIENT, 2);
+		execute("core/gm/GameMasterMessagePacket.txt", Origin.CLIENT, 2);
 	}
 
 	@Test

@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.world.ArtemisCreature;
 
 public class SciScanPacketTest extends AbstractPacketTester<SciScanPacket> {
 	@Test
 	public void test() {
-		execute("core/sci/SciScanPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/sci/SciScanPacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test
@@ -22,7 +22,7 @@ public class SciScanPacketTest extends AbstractPacketTester<SciScanPacket> {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNull() {
-		new SciScanPacket(null);
+		new SciScanPacket((ArtemisCreature) null);
 	}
 
 	@Override

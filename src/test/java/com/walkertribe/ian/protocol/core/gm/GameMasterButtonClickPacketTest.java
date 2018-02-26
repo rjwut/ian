@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.JamCrc;
 
@@ -14,7 +14,7 @@ public class GameMasterButtonClickPacketTest extends AbstractPacketTester<GameMa
 
 	@Test
 	public void test() {
-		execute("core/gm/GameMasterButtonClickPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/gm/GameMasterButtonClickPacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test

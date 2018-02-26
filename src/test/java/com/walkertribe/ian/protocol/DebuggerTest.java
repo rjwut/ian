@@ -6,7 +6,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.Debugger;
 import com.walkertribe.ian.iface.OutputStreamDebugger;
@@ -28,13 +28,13 @@ public class DebuggerTest {
 
 	private void exerciseDebugger(Debugger debugger) {
 		debugger.onPacketParseException(new ArtemisPacketException("test"));
-		debugger.onPacketParseException(new ArtemisPacketException(new RuntimeException("test"), ConnectionType.SERVER, 0, new byte[] {}));
+		debugger.onPacketParseException(new ArtemisPacketException(new RuntimeException("test"), Origin.SERVER, 0, new byte[] {}));
 		debugger.onPacketWriteException(new PausePacket(true), new RuntimeException("test"));
-		debugger.onRecvPacketBytes(ConnectionType.SERVER, 0, new byte[] {});
+		debugger.onRecvPacketBytes(Origin.SERVER, 0, new byte[] {});
 		debugger.onRecvParsedPacket(new PausePacket(true));
-		debugger.onRecvUnparsedPacket(new UnknownPacket(ConnectionType.SERVER, 0, new byte[] {}));
+		debugger.onRecvUnparsedPacket(new UnknownPacket(Origin.SERVER, 0, new byte[] {}));
 		debugger.onSendPacket(new PausePacket(true));
-		debugger.onSendPacketBytes(ConnectionType.SERVER, 0, new byte[] {});
+		debugger.onSendPacketBytes(Origin.SERVER, 0, new byte[] {});
 		debugger.warn("test");
 	}
 }

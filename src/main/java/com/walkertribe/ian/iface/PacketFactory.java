@@ -7,13 +7,13 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * Interface for objects which can convert a byte array to a packet.
  * @author rjwut
  */
-public interface PacketFactory {
+public interface PacketFactory<T extends ArtemisPacket> {
 	/**
-	 * Returns the subclass of ArtemisPacket that this PacketFactory can
-	 * produce. Note: It is legal to have more than one factory producing the
-	 * same Class.
+	 * Returns the class of ArtemisPacket that this PacketFactory can produce.
+	 * Note: It is legal to have more than one factory producing the same
+	 * Class.
 	 */
-	public Class<? extends ArtemisPacket> getFactoryClass();
+	public Class<T> getFactoryClass();
 
 	/**
 	 * Returns a packet constructed with a payload read from the given
@@ -21,5 +21,5 @@ public interface PacketFactory {
 	 * This method should throw an ArtemisPacketException if the payload is
 	 * malformed.
 	 */
-	public ArtemisPacket build(PacketReader reader) throws ArtemisPacketException;
+	public T build(PacketReader reader) throws ArtemisPacketException;
 }

@@ -2,16 +2,13 @@ package com.walkertribe.ian.protocol.core.setup;
 
 import java.util.Arrays;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.enums.VesselAttribute;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 import com.walkertribe.ian.vesseldata.Vessel;
@@ -20,26 +17,8 @@ import com.walkertribe.ian.vesseldata.Vessel;
  * Set the name, type and drive of ship your console has selected.
  * @author dhleong
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.SHIP_SETUP)
 public class SetShipSettingsPacket extends BaseArtemisPacket {
-	public static void register(PacketFactoryRegistry registry) {
-    	registry.register(
-    			ConnectionType.CLIENT,
-    			CorePacketType.VALUE_INT,
-    			SubType.SHIP_SETUP,
-    			new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SetShipSettingsPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SetShipSettingsPacket(reader);
-			}
-		});
-	}
-
 	private static final byte[] UNKNOWN = new byte[] { (byte) 1, 0, 0, 0 };
 
 	private Ship mShip;
@@ -50,8 +29,6 @@ public class SetShipSettingsPacket extends BaseArtemisPacket {
 	 * VesselData class.
 	 */
 	public SetShipSettingsPacket(DriveType drive, Vessel vessel, float color, String name) {
-        super(ConnectionType.CLIENT, CorePacketType.VALUE_INT);
-
         if (vessel == null) {
         	throw new IllegalArgumentException("You must specify a Vessel");
         }
@@ -68,12 +45,10 @@ public class SetShipSettingsPacket extends BaseArtemisPacket {
 	 * Use this constructor if you wish to use a hull ID.
 	 */
 	public SetShipSettingsPacket(DriveType drive, int hullId, float color, String name) {
-        super(ConnectionType.CLIENT, CorePacketType.VALUE_INT);
 		mShip = new Ship(name, hullId, color, drive);
     }
 
-	private SetShipSettingsPacket(PacketReader reader) {
-        super(ConnectionType.CLIENT, CorePacketType.VALUE_INT);
+	public SetShipSettingsPacket(PacketReader reader) {
         reader.skip(4); // subtype
 		DriveType drive = DriveType.values()[reader.readInt()];
 		int hullId = reader.readInt();
@@ -92,7 +67,7 @@ public class SetShipSettingsPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer	.writeInt(SubType.SHIP_SETUP.ordinal())
+		writer	.writeInt(SubType.SHIP_SETUP)
 				.writeInt(mShip.getDrive().ordinal())
 				.writeInt(mShip.getShipType())
 				.writeFloat(mShip.getAccentColor())

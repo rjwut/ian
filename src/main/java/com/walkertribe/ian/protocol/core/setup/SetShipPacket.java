@@ -1,11 +1,11 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 import com.walkertribe.ian.world.Artemis;
 
 /**
@@ -13,35 +13,21 @@ import com.walkertribe.ian.world.Artemis;
  * SetConsolePacket.
  * @author dhleong
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.SET_SHIP)
 public class SetShipPacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.SET_SHIP, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SetShipPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SetShipPacket(reader);
-			}
-		});
-	}
-
     /**
      * Selects a ship to use during setup. Note that Artemis ship numbers are
      * one-based.
      */
     public SetShipPacket(int shipNumber) {
-    	super(SubType.SET_SHIP, shipNumber - 1); // underlying packet wants index
+    	super(shipNumber - 1); // underlying packet wants index
 
     	if (shipNumber < 1 || shipNumber > Artemis.SHIP_COUNT) {
     		throw new IllegalArgumentException("Ship number must be between 1 and " + Artemis.SHIP_COUNT);
     	}
     }
 
-    private SetShipPacket(PacketReader reader) {
+    public SetShipPacket(PacketReader reader) {
         super(reader);
     }
 

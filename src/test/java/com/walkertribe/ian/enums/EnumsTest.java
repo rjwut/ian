@@ -43,7 +43,7 @@ public class EnumsTest {
 		ENUMS.add(BaseMessage.class);
 		ENUMS.add(BeamFrequency.class);
 		ENUMS.add(CommsRecipientType.class);
-		ENUMS.add(ConnectionType.class);
+		ENUMS.add(Origin.class);
 		ENUMS.add(Console.class);
 		ENUMS.add(ConsoleStatus.class);
 		ENUMS.add(CreatureType.class);
@@ -149,11 +149,11 @@ public class EnumsTest {
 
 	@Test
 	public void testConnectionType() {
-		Assert.assertEquals(ConnectionType.SERVER, ConnectionType.fromInt(1));
-		Assert.assertEquals(ConnectionType.CLIENT, ConnectionType.fromInt(2));
-		Assert.assertNull(ConnectionType.fromInt(0));
-		Assert.assertEquals(ConnectionType.CLIENT, ConnectionType.SERVER.opposite());
-		Assert.assertEquals(ConnectionType.SERVER, ConnectionType.CLIENT.opposite());
+		Assert.assertEquals(Origin.SERVER, Origin.fromInt(1));
+		Assert.assertEquals(Origin.CLIENT, Origin.fromInt(2));
+		Assert.assertNull(Origin.fromInt(0));
+		Assert.assertEquals(Origin.CLIENT, Origin.SERVER.opposite());
+		Assert.assertEquals(Origin.SERVER, Origin.CLIENT.opposite());
 	}
 
 	@Test

@@ -3,40 +3,21 @@ package com.walkertribe.ian.protocol.core.comm;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.CommsMessage;
 import com.walkertribe.ian.enums.CommsRecipientType;
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Sends a message to another entity.
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.COMMS_MESSAGE)
 public class CommsOutgoingPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.COMMS_MESSAGE;
     public static final int NO_ARG = 0x00730078;
     private static final int NO_ARG_2 = 0x004f005e;
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return CommsOutgoingPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new CommsOutgoingPacket(reader);
-			}
-		});
-	}
 
     private CommsRecipientType mRecipientType;
     private int mRecipientId;
@@ -64,8 +45,6 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
      */
     public CommsOutgoingPacket(ArtemisObject recipient, CommsMessage msg,
             int arg, Context ctx) {
-        super(ConnectionType.CLIENT, TYPE);
-
         if (recipient == null) {
         	throw new IllegalArgumentException("You must provide a recipient");
         }
@@ -106,8 +85,7 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
     	mArg = arg;
     }
 
-    private CommsOutgoingPacket(PacketReader reader) {
-        super(ConnectionType.CLIENT, TYPE);
+    public CommsOutgoingPacket(PacketReader reader) {
         mRecipientType = CommsRecipientType.values()[reader.readInt()];
         mRecipientId = reader.readInt();
         mMsg = mRecipientType.messageFromId(reader.readInt());

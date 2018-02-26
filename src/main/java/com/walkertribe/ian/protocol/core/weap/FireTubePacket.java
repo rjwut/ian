@@ -1,38 +1,24 @@
 package com.walkertribe.ian.protocol.core.weap;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 import com.walkertribe.ian.world.Artemis;
 
 /**
  * Fire whatever's in the given tube.
  * @author dhleong
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.FIRE_TUBE)
 public class FireTubePacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.FIRE_TUBE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return FireTubePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new FireTubePacket(reader);
-			}
-		});
-	}
-
 	/**
 	 * @param tube The index of the tube to fire, [0 - Artemis.MAX_TUBES)
 	 */
     public FireTubePacket(int tube) {
-        super(SubType.FIRE_TUBE, tube);
+        super(tube);
 
         if (tube < 0 || tube >= Artemis.MAX_TUBES) {
         	throw new IndexOutOfBoundsException(
@@ -41,7 +27,7 @@ public class FireTubePacket extends ValueIntPacket {
         }
     }
 
-    private FireTubePacket(PacketReader reader) {
+    public FireTubePacket(PacketReader reader) {
     	super(reader);
     }
 

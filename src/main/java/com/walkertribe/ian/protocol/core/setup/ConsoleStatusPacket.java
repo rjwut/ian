@@ -2,15 +2,11 @@ package com.walkertribe.ian.protocol.core.setup;
 
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.enums.ConsoleStatus;
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.Artemis;
 
@@ -19,42 +15,12 @@ import com.walkertribe.ian.world.Artemis;
  * SetConsolePacket or SetShipPacket.
  * @author dhleong
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.CLIENT_CONSOLES)
 public class ConsoleStatusPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.CLIENT_CONSOLES;
-    
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return ConsoleStatusPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new ConsoleStatusPacket(reader);
-			}
-		});
-	}
-
     private final int shipNumber;
     private final ConsoleStatus[] statuses;
-    
-    private ConsoleStatusPacket(PacketReader reader) {
-    	super(ConnectionType.SERVER, TYPE);
-        shipNumber = reader.readInt();
-        final Console[] consoleValues = Console.values();
-        final ConsoleStatus[] statusValues = ConsoleStatus.values();
-        statuses = new ConsoleStatus[consoleValues.length];
-
-        for (Console console : consoleValues) {
-        	statuses[console.ordinal()] = statusValues[reader.readByte()];
-        }
-    }
 
     public ConsoleStatusPacket(int shipNumber, ConsoleStatus[] statuses) {
-    	super(ConnectionType.SERVER, TYPE);
-
     	if (shipNumber < 1 || shipNumber > Artemis.SHIP_COUNT) {
     		throw new IllegalArgumentException(
     				"Ship number must be between 1 and " + Artemis.SHIP_COUNT
@@ -83,6 +49,17 @@ public class ConsoleStatusPacket extends BaseArtemisPacket {
 
     	this.shipNumber = shipNumber;
     	this.statuses = statuses;
+    }
+    
+    public ConsoleStatusPacket(PacketReader reader) {
+        shipNumber = reader.readInt();
+        final Console[] consoleValues = Console.values();
+        final ConsoleStatus[] statusValues = ConsoleStatus.values();
+        statuses = new ConsoleStatus[consoleValues.length];
+
+        for (Console console : consoleValues) {
+        	statuses[console.ordinal()] = statusValues[reader.readByte()];
+        }
     }
 
     /**

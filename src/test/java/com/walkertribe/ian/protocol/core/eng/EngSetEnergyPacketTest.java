@@ -6,7 +6,7 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
@@ -16,7 +16,7 @@ public class EngSetEnergyPacketTest extends AbstractPacketTester<EngSetEnergyPac
 
 	@Test
 	public void test() {
-		execute("core/eng/EngSetEnergyPacket.txt", ConnectionType.CLIENT, 3);
+		execute("core/eng/EngSetEnergyPacket.txt", Origin.CLIENT, 3);
 	}
 
 	@Test

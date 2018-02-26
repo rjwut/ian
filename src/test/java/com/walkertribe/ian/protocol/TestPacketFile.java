@@ -18,13 +18,13 @@ import java.nio.charset.Charset;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.DefaultContext;
 import com.walkertribe.ian.FilePathResolver;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.Listener;
 import com.walkertribe.ian.iface.ListenerRegistry;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
+import com.walkertribe.ian.protocol.core.CoreArtemisProtocol;
 import com.walkertribe.ian.util.TestUtil;
 import com.walkertribe.ian.util.TextUtil;
 
@@ -68,7 +68,7 @@ public class TestPacketFile {
 	public static void main(String[] args) {
 		Context ctx = new DefaultContext(new FilePathResolver(args[0]));
 		String fileName = args[1];
-		ConnectionType connType = ConnectionType.valueOf(args[2]);
+		Origin connType = Origin.valueOf(args[2]);
 
 		try {
 			new TestPacketFile(new File(fileName), Mode.READ, ctx).test(connType);
@@ -114,7 +114,7 @@ public class TestPacketFile {
 	/**
 	 * Reads the test packet data in the given byte array.
 	 */
-	public TestPacketFile(ConnectionType connType, int pktType, byte[] payload) throws IOException {
+	public TestPacketFile(Origin connType, int pktType, byte[] payload) throws IOException {
 		ByteArrayOutputStream out = null;
 
 		try {
@@ -191,7 +191,7 @@ public class TestPacketFile {
 	 * attempts to parse and re-write the data. If an error occurs, a stack
 	 * trace will be written out to System.err.
 	 */
-	public void test(ConnectionType connType) {
+	public void test(Origin connType) {
 		if (mode != Mode.READ) {
 			throw new IllegalStateException("test() only valid for read mode");
 		}
@@ -204,7 +204,7 @@ public class TestPacketFile {
 				ctx,
 				connType,
 				bais,
-				new PacketFactoryRegistry(),
+				new CoreArtemisProtocol(),
 				listeners
 		);
 		PacketTestDebugger debugger = new PacketTestDebugger();
@@ -243,7 +243,7 @@ public class TestPacketFile {
 	 * no listener will be registered, and all known packets received will be
 	 * emitted as UnparsedPackets.
 	 */
-	public PacketReader toPacketReader(ConnectionType type, boolean parse) {
+	public PacketReader toPacketReader(Origin type, boolean parse) {
 		if (mode != Mode.READ) {
 			throw new IllegalStateException("toPacketReader() only valid for read mode");
 		}
@@ -258,7 +258,7 @@ public class TestPacketFile {
 				ctx,
 				type,
 				new ByteArrayInputStream(bytes),
-				new PacketFactoryRegistry(),
+				new CoreArtemisProtocol(),
 				listeners
 		);
 	}
@@ -266,7 +266,7 @@ public class TestPacketFile {
 	/**
 	 * Returns a PacketWriter of the given type to write packets to the OutputStream.
 	 */
-	public PacketWriter toPacketWriter(ConnectionType type) {
+	public PacketWriter toPacketWriter(Origin type) {
 		if (mode != Mode.WRITE) {
 			throw new IllegalStateException("toPacketWriter() only valid for write mode");
 		}
@@ -341,7 +341,7 @@ public class TestPacketFile {
 		 * Captures the raw bytes of a received packet.
 		 */
 		@Override
-		public void onRecvPacketBytes(ConnectionType connType, int pktType,
+		public void onRecvPacketBytes(Origin connType, int pktType,
 				byte[] payload) {
 			int packetLength = payload.length + 24;
 			in = new byte[packetLength];

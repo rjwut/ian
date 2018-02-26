@@ -2,7 +2,7 @@ package com.walkertribe.ian.protocol;
 
 import java.io.IOException;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.Debugger;
 import com.walkertribe.ian.iface.PacketWriter;
 
@@ -20,7 +20,7 @@ public interface ArtemisPacket {
      * which this packet originates. SERVER means that this packet type is sent
      * by the server; CLIENT means it's sent by the client.
      */
-    public ConnectionType getConnectionType();
+    public Origin getConnectionType();
 
     /**
      * Returns the type value for this packet, specified as the last field of

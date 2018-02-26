@@ -5,13 +5,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class HelmJumpPacketTest extends AbstractPacketTester<HelmJumpPacket> {
 	@Test
 	public void test() {
-		execute("core/helm/HelmJumpPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/helm/HelmJumpPacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test

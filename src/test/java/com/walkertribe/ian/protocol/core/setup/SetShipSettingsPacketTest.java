@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.TestContext;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
@@ -25,7 +25,7 @@ public class SetShipSettingsPacketTest extends AbstractPacketTester<SetShipSetti
 
 	@Test
 	public void test() {
-		execute("core/setup/SetShipSettingsPacket.txt", ConnectionType.CLIENT, 2);
+		execute("core/setup/SetShipSettingsPacket.txt", Origin.CLIENT, 2);
 	}
 
 	@Test

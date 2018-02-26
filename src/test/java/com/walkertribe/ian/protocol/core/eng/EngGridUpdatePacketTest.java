@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.protocol.core.eng.EngGridUpdatePacket.DamconStatus;
 import com.walkertribe.ian.protocol.core.eng.EngGridUpdatePacket.GridDamage;
@@ -15,7 +15,7 @@ import com.walkertribe.ian.util.TestUtil;
 public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdatePacket> {
 	@Test
 	public void testParse() {
-		execute("core/eng/EngGridUpdatePacket.txt", ConnectionType.SERVER, 2);
+		execute("core/eng/EngGridUpdatePacket.txt", Origin.SERVER, 2);
 	}
 
 	@Test

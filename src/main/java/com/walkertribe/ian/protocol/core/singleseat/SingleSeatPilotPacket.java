@@ -1,14 +1,10 @@
 package com.walkertribe.ian.protocol.core.singleseat;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.TextUtil;
 
@@ -17,26 +13,9 @@ import com.walkertribe.ian.util.TextUtil;
  * etc. 
  * @author rjwalker
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_FLOAT, subtype = 0x07)
 public class SingleSeatPilotPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.VALUE_FLOAT;
-    private static final byte SUBTYPE = 0x07;
     private static final byte[] DEFAULT_UNKNOWN = TextUtil.hexToByteArray("0000803f"); // 1.0f
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SUBTYPE,
-				new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SingleSeatPilotPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SingleSeatPilotPacket(reader);
-			}
-		});
-	}
 
     private int mObjectId;
 	private float mRudder = 0.5f;
@@ -49,12 +28,10 @@ public class SingleSeatPilotPacket extends BaseArtemisPacket {
 	private float mOrientW;
 
 	public SingleSeatPilotPacket(int objectId) {
-		super(ConnectionType.CLIENT, TYPE);
 		mObjectId = objectId;
 	}
 
-	private SingleSeatPilotPacket(PacketReader reader) {
-		super(ConnectionType.CLIENT, TYPE);
+	public SingleSeatPilotPacket(PacketReader reader) {
 		reader.skip(4); // subtype
 		mRudder = reader.readFloat();
 		mObjectId = reader.readInt();
@@ -168,7 +145,7 @@ public class SingleSeatPilotPacket extends BaseArtemisPacket {
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		writer
-			.writeInt(SUBTYPE)
+			.writeInt(0x07)
 			.writeFloat(mRudder)
 			.writeInt(mObjectId)
 			.writeUnknown("UNKNOWN", DEFAULT_UNKNOWN)

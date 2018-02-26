@@ -1,55 +1,32 @@
 package com.walkertribe.ian.protocol.core.comm;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.Util;
 
 /**
  * Received when an incoming COMMs message arrives.
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.COMM_TEXT)
 public class CommsIncomingPacket extends BaseArtemisPacket {
 	public static final int MIN_PRIORITY_VALUE = 0;
 	public static final int MAX_PRIORITY_VALUE = 8;
-
-	private static final PacketType TYPE = CorePacketType.COMM_TEXT;
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return CommsIncomingPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new CommsIncomingPacket(reader);
-			}
-		});
-	}
 
     private final int mPriority;
     private final CharSequence mFrom;
     private final CharSequence mMessage;
 
-    private CommsIncomingPacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
+    public CommsIncomingPacket(PacketReader reader) {
         mPriority = reader.readInt();
         mFrom = reader.readString();
         mMessage = Util.caratToNewline(reader.readString());
     }
 
     public CommsIncomingPacket(int priority, CharSequence from, CharSequence message) {
-    	super(ConnectionType.SERVER, TYPE);
-
     	if (priority < MIN_PRIORITY_VALUE || priority > MAX_PRIORITY_VALUE) {
     		throw new IllegalArgumentException("Invalid priority: " + priority);
     	}

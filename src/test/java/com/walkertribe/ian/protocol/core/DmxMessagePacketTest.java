@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
 
 public class DmxMessagePacketTest extends AbstractPacketTester<DmxMessagePacket> {
 	@Test
 	public void test() {
-		execute("core/DmxMessagePacket.txt", ConnectionType.SERVER, 2);
+		execute("core/DmxMessagePacket.txt", Origin.SERVER, 2);
 	}
 
 	@Test

@@ -1,37 +1,21 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
 /**
  * Sent by the server when the game ends.
  * @author rjwut
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_OVER)
 public class GameOverPacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.GAME_OVER, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return GameOverPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new GameOverPacket(reader);
-			}
-		});
-	}
-
-    private GameOverPacket(PacketReader reader) {
-    	super(SubType.GAME_OVER, reader);
+    public GameOverPacket() {
     }
 
-    public GameOverPacket() {
-    	super(SubType.GAME_OVER);
+    public GameOverPacket(PacketReader reader) {
+    	super(reader);
     }
 
     @Override

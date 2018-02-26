@@ -1,10 +1,9 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Toggles between first- and third-person perspectives on the main screen. Note
@@ -12,27 +11,13 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * that you want to switch from the current one to the other.
  * @author rjwut
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.TOGGLE_PERSPECTIVE)
 public class TogglePerspectivePacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.TOGGLE_PERSPECTIVE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return TogglePerspectivePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new TogglePerspectivePacket(reader);
-			}
-		});
-	}
-
 	public TogglePerspectivePacket() {
-		super(SubType.TOGGLE_PERSPECTIVE, 0);
+		super(0);
 	}
 
-	private TogglePerspectivePacket(PacketReader reader) {
+	public TogglePerspectivePacket(PacketReader reader) {
 		super(reader);
 	}
 

@@ -6,13 +6,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.walkertribe.ian.enums.BeamFrequency;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class SetBeamFreqPacketTest extends AbstractPacketTester<SetBeamFreqPacket> {
 	@Test
 	public void test() {
-		execute("core/weap/SetBeamFreqPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/weap/SetBeamFreqPacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test
@@ -22,7 +22,7 @@ public class SetBeamFreqPacketTest extends AbstractPacketTester<SetBeamFreqPacke
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNullBeamFrequency() {
-		new SetBeamFreqPacket(null);
+		new SetBeamFreqPacket((BeamFrequency) null);
 	}
 
 	@Override

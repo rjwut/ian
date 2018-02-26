@@ -1,62 +1,117 @@
 package com.walkertribe.ian.protocol;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.iface.PacketFactory;
+import com.walkertribe.ian.iface.PacketReader;
+import com.walkertribe.ian.util.TextUtil;
 
 /**
  * An abstract Protocol implementation which provides a method to register
- * PacketFactories by providing an array of ArtemisPacket subclasses to
- * register. It assumes a convention that each packet class has a public void
- * static method named "register" that accepts a PacketFactoryRegistry object,
- * which the method will use to register one or more PacketFactory instances to
- * handle that class.
+ * packet classes with the Packet annotation. It assumes that every packet has
+ * a constructor which takes a PacketReader.
  * @author rjwut
  */
 public abstract class AbstractProtocol implements Protocol {
+	Map<Key, Factory<?>> registry = new HashMap<Key, Factory<?>>();
+
+	protected <T extends ArtemisPacket> void register(Class<T> clazz) {
+		Factory<?> factory;
+
+		try {
+			factory = new Factory<T>(clazz);
+		} catch (ReflectiveOperationException ex) {
+			throw new RuntimeException(ex); // shouldn't happen
+		}
+
+		Packet anno = clazz.getAnnotation(Packet.class);
+		int type = BaseArtemisPacket.getHash(anno);
+		byte[] subtypes = anno.subtype();
+
+		if (subtypes.length == 0) {
+			registry.put(new Key(type, null), factory);
+		} else {
+			for (byte subtype : subtypes) {
+				registry.put(new Key(type, subtype), factory);
+			}
+		}
+	}
+
+	@Override
+	public PacketFactory<?> getFactory(int type, Byte subtype) {
+		PacketFactory<?> factory = registry.get(new Key(type, subtype));
+
+		if (factory == null && subtype != null) {
+			// no factory found for that subtype; try without subtype
+			factory = registry.get(new Key(type, null));
+		}
+
+		return factory;
+	}
+
 	/**
-	 * Registers PacketFactories for an array of packet classes. 
+	 * Entries in the registry are stored in a Map using this class as the key.
+	 * @author rjwut
 	 */
-	protected static void registerPacketFactories(PacketFactoryRegistry registry,
-			Class<?>[] packetClasses) {
-		if (registry == null) {
-			throw new IllegalArgumentException("You must provide a registry");
+	private class Key {
+		private int type;
+		private Byte subtype;
+		private int hashCode;
+
+		private Key(int type, Byte subtype) {
+			this.type = type;
+			this.subtype = subtype;
+			hashCode = Objects.hash(Integer.valueOf(type), subtype);
 		}
 
-		if (packetClasses == null) {
-			throw new IllegalArgumentException("You must provide an array of classes");
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+
+			if (!(obj instanceof Key)) {
+				return false;
+			}
+
+			Key that = (Key) obj;
+			return type == that.type && Objects.equals(subtype, that.subtype);
 		}
 
-		for (Class<?> clazz : packetClasses) {
-			Method method;
+		@Override
+		public int hashCode() {
+			return hashCode;
+		}
 
+		public String toString() {
+			return TextUtil.intToHexLE(type) + ":" +
+					(subtype != null ? TextUtil.byteToHex(subtype.byteValue()) : "--");
+		}
+	}
+
+	private class Factory<T extends ArtemisPacket> implements PacketFactory<T> {
+		private Class<T> clazz;
+		private Constructor<T> constructor;
+
+		private Factory(Class<T> clazz) throws ReflectiveOperationException {
+			this.clazz = clazz;
+			constructor = clazz.getDeclaredConstructor(PacketReader.class);
+		}
+
+		@Override
+		public Class<T> getFactoryClass() {
+			return clazz;
+		}
+
+		public T build(PacketReader reader) throws ArtemisPacketException {
 			try {
-				method = clazz.getMethod("register", PacketFactoryRegistry.class);
-			} catch (NoSuchMethodException ex) {
-				throw new IllegalArgumentException(
-						"Class " + clazz +
-						" has no visible register(PacketFactoryRegistry) method",
-						ex
-				);
-			}
-
-			int modifiers = method.getModifiers();
-
-			if (!Modifier.isStatic(modifiers)) {
-				throw new IllegalArgumentException("Method " + method +
-						" must be static");
-			}
-
-			if (!Void.TYPE.equals(method.getReturnType())) {
-				throw new IllegalArgumentException("Method " + method +
-						" must return void");
-			}
-
-			try {
-				method.invoke(null, registry);
-			} catch (IllegalArgumentException ex) {
-				throw new RuntimeException(ex);
+				return constructor.newInstance(reader);
+			} catch (InvocationTargetException ex) {
+				throw new ArtemisPacketException(ex.getCause());
 			} catch (ReflectiveOperationException ex) {
 				throw new RuntimeException(ex);
 			}

@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
 
 public class GameMasterInstructionsPacketTest extends AbstractPacketTester<GameMasterInstructionsPacket> {
 	@Test
 	public void test() {
-		execute("core/gm/GameMasterInstructionsPacket.txt", ConnectionType.SERVER, 1);
+		execute("core/gm/GameMasterInstructionsPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test

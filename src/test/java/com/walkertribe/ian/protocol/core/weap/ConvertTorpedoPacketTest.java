@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.protocol.core.weap.ConvertTorpedoPacket.Direction;
 import com.walkertribe.ian.util.TestUtil;
@@ -13,12 +13,12 @@ import com.walkertribe.ian.util.TestUtil;
 public class ConvertTorpedoPacketTest extends AbstractPacketTester<ConvertTorpedoPacket> {
 	@Test
 	public void test() {
-		execute("core/weap/ConvertTorpedoPacket.txt", ConnectionType.CLIENT, 2);
+		execute("core/weap/ConvertTorpedoPacket.txt", Origin.CLIENT, 2);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testNullDirection() {
-		new ConvertTorpedoPacket(null);
+		new ConvertTorpedoPacket((ConvertTorpedoPacket.Direction) null);
 	}
 
 	@Test

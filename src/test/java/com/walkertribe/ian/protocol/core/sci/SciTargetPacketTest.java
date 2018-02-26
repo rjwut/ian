@@ -5,21 +5,21 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.world.ArtemisCreature;
 
 public class SciTargetPacketTest extends AbstractPacketTester<SciTargetPacket> {
 	@Test
 	public void test() {
-		execute("core/sci/SciTargetPacket.txt", ConnectionType.CLIENT, 2);
+		execute("core/sci/SciTargetPacket.txt", Origin.CLIENT, 2);
 	}
 
 	@Test
 	public void testConstruct() {
 		test(
 				new SciTargetPacket(new ArtemisCreature(47)),
-				new SciTargetPacket(null)
+				new SciTargetPacket((ArtemisCreature) null)
 		);
 	}
 

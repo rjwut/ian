@@ -1,6 +1,6 @@
 package com.walkertribe.ian.protocol;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 
 /**
  * Any packet received that isn't of a type recognized by a registered protocol
@@ -11,8 +11,7 @@ import com.walkertribe.ian.enums.ConnectionType;
  * @author rjwut
  */
 public class UnknownPacket extends RawPacket {
-	public UnknownPacket(ConnectionType connectionType, int packetType,
-			byte[] payload) {
-		super(connectionType, packetType, payload);
+	public UnknownPacket(Origin origin, int type, byte[] payload) {
+		super(origin, type, payload);
 	}
 }

@@ -1,14 +1,11 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.Console;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
@@ -16,26 +13,8 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
  * Take or relinquish a bridge console.
  * @author dhleong
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.SET_CONSOLE)
 public class SetConsolePacket extends BaseArtemisPacket {
-	public static void register(PacketFactoryRegistry registry) {
-    	registry.register(
-    			ConnectionType.CLIENT,
-    			CorePacketType.VALUE_INT,
-    			(byte) SubType.SET_CONSOLE.ordinal(),
-    			new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SetConsolePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SetConsolePacket(reader);
-			}
-		});
-	}
-
 	private Console mConsole;
 	private boolean mSelected;
 
@@ -44,8 +23,6 @@ public class SetConsolePacket extends BaseArtemisPacket {
 	 * @param selected Whether the player is taking this console or not
 	 */
 	public SetConsolePacket(Console console, boolean selected) {
-        super(ConnectionType.CLIENT, CorePacketType.VALUE_INT);
-
         if (console == null) {
         	throw new IllegalArgumentException("You must specify a console");
         }
@@ -54,8 +31,7 @@ public class SetConsolePacket extends BaseArtemisPacket {
         mSelected = selected;
     }
 
-	private SetConsolePacket(PacketReader reader) {
-        super(ConnectionType.CLIENT, CorePacketType.VALUE_INT);
+	public SetConsolePacket(PacketReader reader) {
         reader.skip(4); // subtype
 		mConsole = Console.values()[reader.readInt()];
 		mSelected = reader.readInt() == 1;
@@ -77,7 +53,7 @@ public class SetConsolePacket extends BaseArtemisPacket {
 
 	@Override
     public void writePayload(PacketWriter writer) {
-    	writer	.writeInt(SubType.SET_CONSOLE.ordinal())
+    	writer	.writeInt(SubType.SET_CONSOLE)
     			.writeInt(mConsole.ordinal())
     			.writeInt(mSelected ? 1 : 0);
     }

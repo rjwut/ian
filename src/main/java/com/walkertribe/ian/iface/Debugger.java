@@ -1,6 +1,6 @@
 package com.walkertribe.ian.iface;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.RawPacket;
@@ -15,7 +15,7 @@ public interface Debugger {
 	 * Invoked when a packet has been received, but before it is parsed. This
 	 * allows you to see the raw payload bytes for each packet as it received.
 	 */
-	public void onRecvPacketBytes(ConnectionType connType, int pktType,
+	public void onRecvPacketBytes(Origin connType, int pktType,
 			byte[] payload);
 
 	/**
@@ -52,7 +52,7 @@ public interface Debugger {
 	 * before it is flushed to the OutputStream. This allows you to inspect the
 	 * raw payload bytes for each packet as it is sent.
 	 */
-	public void onSendPacketBytes(ConnectionType connType, int pktType,
+	public void onSendPacketBytes(Origin connType, int pktType,
 			byte[] payload);
 
 	/**

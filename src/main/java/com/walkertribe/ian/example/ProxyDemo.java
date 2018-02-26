@@ -6,7 +6,7 @@ import java.net.Socket;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.DefaultContext;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.ArtemisNetworkInterface;
 import com.walkertribe.ian.iface.DisconnectEvent;
 import com.walkertribe.ian.iface.Listener;
@@ -113,7 +113,7 @@ public class ProxyDemo implements Runnable {
 
             // We've got a connection, build interfaces and listener
             System.out.println("Received connection from " + skt.getRemoteSocketAddress());
-            ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, ConnectionType.CLIENT, ctx);
+            ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, Origin.CLIENT, ctx);
             System.out.println("Connecting to server at " + serverAddr + ":" + serverPort + "...");
             ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000, ctx);
             new ProxyListener(server, client);

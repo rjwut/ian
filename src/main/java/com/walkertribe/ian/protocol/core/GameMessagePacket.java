@@ -1,46 +1,29 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
 /**
  * "Toast" messages sent by the server.
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_MESSAGE)
 public class GameMessagePacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.GAME_MESSAGE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return GameMessagePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new GameMessagePacket(reader);
-			}
-		});
-	}
-
     private final CharSequence mMessage;
 
-    private GameMessagePacket(PacketReader reader) {
-        super(SubType.GAME_MESSAGE, reader);
-        mMessage = reader.readString();
-    }
-
-    public GameMessagePacket(String message) {
-        super(SubType.GAME_MESSAGE);
-
+    public GameMessagePacket(CharSequence message) {
         if (message == null || message.length() == 0) {
         	throw new IllegalArgumentException("You must provide a message");
         }
 
         mMessage = message;
+    }
+
+    public GameMessagePacket(PacketReader reader) {
+        super(reader);
+        mMessage = reader.readString();
     }
 
     /**

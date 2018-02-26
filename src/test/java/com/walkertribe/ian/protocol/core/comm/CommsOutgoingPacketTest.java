@@ -12,7 +12,7 @@ import com.walkertribe.ian.Context;
 import com.walkertribe.ian.DefaultContext;
 import com.walkertribe.ian.enums.BaseMessage;
 import com.walkertribe.ian.enums.CommsRecipientType;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.EnemyMessage;
 import com.walkertribe.ian.enums.OtherMessage;
 import com.walkertribe.ian.enums.PlayerMessage;
@@ -37,7 +37,7 @@ public class CommsOutgoingPacketTest extends AbstractPacketTester<CommsOutgoingP
 
 	@Test
 	public void testParse() {
-		execute("core/comm/CommsOutgoingPacket.txt", ConnectionType.CLIENT, 4);
+		execute("core/comm/CommsOutgoingPacket.txt", Origin.CLIENT, 4);
 	}
 
 	@Test

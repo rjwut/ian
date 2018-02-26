@@ -1,15 +1,11 @@
 package com.walkertribe.ian.protocol.core.gm;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.Console;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
@@ -17,35 +13,11 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
  * to be displayed on a client.
  * @author rjwut
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.GM_TEXT)
 public class GameMasterMessagePacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.GM_TEXT;
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return GameMasterMessagePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new GameMasterMessagePacket(reader);
-			}
-		});
-	}
-
     private final Console mConsole;
     private final CharSequence mSender;
     private final CharSequence mMessage;
-
-    private GameMasterMessagePacket(PacketReader reader) {
-        super(ConnectionType.CLIENT, TYPE);
-        byte console = reader.readByte();
-        mConsole = console != 0 ? Console.values()[console - 1] : null;
-        mSender = reader.readString();
-        mMessage = reader.readString();
-    }
 
     /**
      * A message from the game master that will be received as a normal COMMs
@@ -67,8 +39,6 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
      * are allowed.
      */
     public GameMasterMessagePacket(String sender, String message, Console console) {
-        super(ConnectionType.CLIENT, TYPE);
-
         if (sender == null || sender.length() == 0) {
         	throw new IllegalArgumentException("You must provide a sender");
         }
@@ -84,6 +54,13 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
         mSender = sender;
         mMessage = message;
         mConsole = console;
+    }
+
+    public GameMasterMessagePacket(PacketReader reader) {
+        byte console = reader.readByte();
+        mConsole = console != 0 ? Console.values()[console - 1] : null;
+        mSender = reader.readString();
+        mMessage = reader.readString();
     }
 
     /**

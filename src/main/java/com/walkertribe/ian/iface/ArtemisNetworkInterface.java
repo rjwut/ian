@@ -1,6 +1,6 @@
 package com.walkertribe.ian.iface;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.Protocol;
 import com.walkertribe.ian.protocol.core.CoreArtemisProtocol;
@@ -18,14 +18,14 @@ public interface ArtemisNetworkInterface {
      * ArtemisProtocolException will be thrown if it receives a packet of the
      * wrong type.
      */
-    public ConnectionType getRecvType();
+    public Origin getRecvType();
 
     /**
      * Returns the ConnectionType of the packets this interface can send. An
      * ArtemisProtocolException will be thrown if it is asked to send a packet
      * of the wrong type.
      */
-    public ConnectionType getSendType();
+    public Origin getSendType();
 
     /**
      * Registers the packet types defined by the given Protocol with this

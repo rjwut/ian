@@ -8,10 +8,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.walkertribe.ian.Context;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Protocol;
 import com.walkertribe.ian.protocol.UnknownPacket;
 import com.walkertribe.ian.protocol.UnparsedPacket;
 import com.walkertribe.ian.protocol.core.CorePacketType;
@@ -20,6 +21,7 @@ import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
 import com.walkertribe.ian.util.BitField;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.ByteArrayReader;
+import com.walkertribe.ian.util.JamCrc;
 import com.walkertribe.ian.util.TextUtil;
 import com.walkertribe.ian.util.Version;
 
@@ -33,17 +35,17 @@ public class PacketReader {
 	private static final Set<Integer> REQUIRED_PACKET_TYPES = new HashSet<Integer>();
 
 	static {
-		REQUIRED_PACKET_TYPES.add(CorePacketType.PLAIN_TEXT_GREETING.getHash());
-		REQUIRED_PACKET_TYPES.add(CorePacketType.CONNECTED.getHash());
-		REQUIRED_PACKET_TYPES.add(CorePacketType.HEARTBEAT.getHash());
+		REQUIRED_PACKET_TYPES.add(JamCrc.compute(CorePacketType.PLAIN_TEXT_GREETING));
+		REQUIRED_PACKET_TYPES.add(JamCrc.compute(CorePacketType.CONNECTED));
+		REQUIRED_PACKET_TYPES.add(JamCrc.compute(CorePacketType.HEARTBEAT));
 	}
 
 	private Context ctx;
-	private ConnectionType connType;
+	private Origin origin;
 	private InputStream in;
 	private byte[] intBuffer = new byte[4];
 	private boolean parse = true;
-	private PacketFactoryRegistry factoryRegistry;
+	private Protocol protocol;
 	private ListenerRegistry listenerRegistry;
 	private Version version;
 	private ByteArrayReader payload;
@@ -56,13 +58,12 @@ public class PacketReader {
 	/**
 	 * Wraps the given InputStream with this PacketReader.
 	 */
-	public PacketReader(Context ctx, ConnectionType connType, InputStream in,
-			PacketFactoryRegistry factoryRegistry,
-			ListenerRegistry listenerRegistry) {
+	public PacketReader(Context ctx, Origin connType, InputStream in,
+			Protocol protocol, ListenerRegistry listenerRegistry) {
 		this.ctx = ctx;
-		this.connType = connType;
+		this.origin = connType;
 		this.in = in;
-		this.factoryRegistry = factoryRegistry;
+		this.protocol = protocol;
 		this.listenerRegistry = listenerRegistry;
 	}
 
@@ -120,19 +121,18 @@ public class PacketReader {
 		}
 
 		// connection type
-		final int connectionTypeValue = readIntFromStream();
-		final ConnectionType connectionType = ConnectionType.fromInt(connectionTypeValue);
+		final int originValue = readIntFromStream();
+		final Origin originEnum = Origin.fromInt(originValue);
 
-		if (connectionType == null) {
+		if (originEnum == null) {
 			throw new ArtemisPacketException(
-					"Unknown connection type: " + connectionTypeValue
+					"Unknown origin: " + originValue
 			);
 		}
 
-		if (connectionType != connType) {
+		if (originEnum != origin) {
 			throw new ArtemisPacketException(
-					"Connection type mismatch: expected " + connType +
-					", got " + connectionType
+					"Origin mismatch: expected " + origin + ", got " + originEnum
 			);
 		}
 
@@ -142,7 +142,7 @@ public class PacketReader {
 		if (padding != 0) {
 			throw new ArtemisPacketException(
 					"No empty padding after connection type?",
-					connType
+					origin
 			);
 		}
 
@@ -156,7 +156,7 @@ public class PacketReader {
 					"; expected " + expectedRemainingBytes +
 					" for remaining bytes field, but got " +
 					remainingBytes,
-					connType
+					origin
 			);
 		}
 
@@ -172,24 +172,23 @@ public class PacketReader {
 		try {
 			ByteArrayReader.readBytes(in, remaining, payloadBytes);
 		} catch (InterruptedException ex) {
-			throw new ArtemisPacketException(ex, connType, packetType);
+			throw new ArtemisPacketException(ex, origin, packetType);
 		} catch (IOException ex) {
-			throw new ArtemisPacketException(ex, connType, packetType);
+			throw new ArtemisPacketException(ex, origin, packetType);
 		}
 
-		debugger.onRecvPacketBytes(connType, packetType, payloadBytes);
+		debugger.onRecvPacketBytes(origin, packetType, payloadBytes);
 
 		// Find the PacketFactory that knows how to handle this packet type
-		PacketFactory factory = null;
 		byte subtype = remaining > 0 ? payloadBytes[0] : 0x00;
-
-		if (parse) {
-			factory = factoryRegistry.get(connType, packetType, subtype);
-		}
-
+		PacketFactory<?> factory = null;
 		ParseResult result = new ParseResult();
 		Class<? extends ArtemisPacket> factoryClass;
 		ArtemisPacket packet = null;
+
+		if (parse) {
+			factory = protocol.getFactory(packetType, subtype);
+		}
 
 		if (factory != null) {
 			// We've found a factory that can handle this packet; get the type
@@ -197,7 +196,7 @@ public class PacketReader {
 			factoryClass = factory.getFactoryClass();
 		} else {
 			// No factory can handle this; create an UnknownPacket
-			UnknownPacket unkPkt = new UnknownPacket(connType, packetType, payloadBytes);
+			UnknownPacket unkPkt = new UnknownPacket(origin, packetType, payloadBytes);
 			debugger.onRecvUnparsedPacket(unkPkt);
 			factoryClass = UnknownPacket.class;
 			packet = unkPkt;
@@ -228,9 +227,9 @@ public class PacketReader {
 				try {
 					packet = factory.build(this);
 				} catch (ArtemisPacketException ex) {
-					throw new ArtemisPacketException(ex, connType, packetType, payloadBytes);
+					throw new ArtemisPacketException(ex, origin, packetType, payloadBytes);
 				} catch (RuntimeException ex) {
-					throw new ArtemisPacketException(ex, connType, packetType, payloadBytes);
+					throw new ArtemisPacketException(ex, origin, packetType, payloadBytes);
 				}
 
 				if (packet instanceof VersionPacket) {
@@ -254,7 +253,7 @@ public class PacketReader {
 			}
 		} else {
 			// Nothing is interested in this packet
-			UnparsedPacket unpPkt = new UnparsedPacket(connType, packetType, payloadBytes);
+			UnparsedPacket unpPkt = new UnparsedPacket(origin, packetType, payloadBytes);
 			debugger.onRecvUnparsedPacket(unpPkt);
 			packet = unpPkt;
 			payload.skip(payloadBytes.length);

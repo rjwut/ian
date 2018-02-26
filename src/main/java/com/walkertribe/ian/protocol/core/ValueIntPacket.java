@@ -1,101 +1,87 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 
 /**
  * A superclass for handling VALUE_INT client packets. Note that some packets
  * in the Artemis protocol technically have the valueInt type, but don't
  * actually follow the pattern of having a single int value. It may be that the
  * packets in question evolved over time and needed more values. Those packets
- * do not extend ValueIntPacket but are still mentioned in the SubType enum.
+ * do not extend ValueIntPacket but are still mentioned in the SubType class.
  * @author rjwut
  */
 public abstract class ValueIntPacket extends BaseArtemisPacket {
-    protected static final PacketType TYPE = CorePacketType.VALUE_INT;
-
     /**
      * VALUE_INT client packet subtypes.
-     * The order of these enum values matters! Do not reorder!
-     * Values marked with an asterisk correspond to packet types that don't
-     * extend ValueIntPacket.
      */
-    public enum SubType {
-    	WARP,                    // 00
-    	MAIN_SCREEN,             // 01
-    	WEAPONS_SELECT,          // 02
-    	TOGGLE_AUTO_BEAMS,       // 03
-    	TOGGLE_SHIELDS,          // 04
-    	SHIELDS_UP,              // 05
-    	SHIELDS_DOWN,            // 06
-    	REQUEST_DOCK,            // 07
-    	FIRE_TUBE,               // 08
-    	UNLOAD_TUBE,             // 09
-    	TOGGLE_RED_ALERT,        // 0a
-    	SET_BEAM_FREQUENCY,      // 0b
-    	SET_AUTO_DAMCON,         // 0c
-    	SET_SHIP,                // 0d
-    	SET_CONSOLE,             // 0e *
-    	READY,                   // 0f
-    	SCIENCE_SELECT,          // 10
-    	CAPTAIN_SELECT,          // 11
-    	GM_SELECT,               // 12
-    	SCIENCE_SCAN,            // 13
-    	KEYSTROKE,               // 14
-    	GM_BUTTON_CLICK,         // 15 *
-    	UNKNOWN_16,              // 16
-    	SHIP_SETUP,              // 17 *
-    	ENG_RESET_COOLANT,       // 18 *
-    	TOGGLE_REVERSE,          // 19
-    	REQUEST_ENG_GRID_UPDATE, // 1a
-    	TOGGLE_PERSPECTIVE,      // 1b
-    	ACTIVATE_UPGRADE,        // 1c
-    	CLIMB_DIVE,              // 1d
-    	SINGLE_SEAT_LAUNCH       // 1e
+    public static class SubType {
+    	public static final byte WARP                    = 0x00;
+    	public static final byte MAIN_SCREEN             = 0x01;
+    	public static final byte WEAPONS_SELECT          = 0x02;
+    	public static final byte TOGGLE_AUTO_BEAMS       = 0x03;
+    	public static final byte TOGGLE_SHIELDS          = 0x04;
+    	public static final byte SHIELDS_UP              = 0x05;
+    	public static final byte SHIELDS_DOWN            = 0x06;
+    	public static final byte REQUEST_DOCK            = 0x07;
+    	public static final byte FIRE_TUBE               = 0x08;
+    	public static final byte UNLOAD_TUBE             = 0x09;
+    	public static final byte TOGGLE_RED_ALERT        = 0x0a;
+    	public static final byte SET_BEAM_FREQUENCY      = 0x0b;
+    	public static final byte SET_AUTO_DAMCON         = 0x0c;
+    	public static final byte SET_SHIP                = 0x0d;
+    	public static final byte SET_CONSOLE             = 0x0e;
+    	public static final byte READY                   = 0x0f;
+    	public static final byte SCIENCE_SELECT          = 0x10;
+    	public static final byte CAPTAIN_SELECT          = 0x11;
+    	public static final byte GM_SELECT               = 0x12;
+    	public static final byte SCIENCE_SCAN            = 0x13;
+    	public static final byte KEYSTROKE               = 0x14;
+    	public static final byte GM_BUTTON_CLICK         = 0x15;
+    	public static final byte UNKNOWN_16              = 0x16;
+    	public static final byte SHIP_SETUP              = 0x17;
+    	public static final byte ENG_RESET_COOLANT       = 0x18;
+    	public static final byte TOGGLE_REVERSE          = 0x19;
+    	public static final byte REQUEST_ENG_GRID_UPDATE = 0x1a;
+    	public static final byte TOGGLE_PERSPECTIVE      = 0x1b;
+    	public static final byte ACTIVATE_UPGRADE        = 0x1c;
+    	public static final byte CLIMB_DIVE              = 0x1d;
+    	public static final byte SINGLE_SEAT_LAUNCH      = 0x1e;
+
+    	private SubType() {
+    		// prevent instantiation
+    	}
     }
 
-    protected SubType mSubType;
+    protected byte mSubType;
     protected int mArg = -1;
 
     /**
-     * Use this constructor if the packet has a single int argument that is
-     * written to the payload after the SubType. In this case, you will not need
-     * to override writePayload().
+     * Use this constructor if the class services only one subtype.
      */
-    public ValueIntPacket(SubType subType, int arg) {
-        this(subType);
+    public ValueIntPacket(int arg) {
+        mSubType = getClass().getAnnotation(Packet.class).subtype()[0];
+        mArg = arg;
+    }
+
+    /**
+     * Use this constructor if the class services multiple subtypes.
+     */
+    public ValueIntPacket(byte subType, int arg) {
+        mSubType = subType;
         mArg = arg;
     }
 
     protected ValueIntPacket(PacketReader reader) {
-    	this(SubType.values()[reader.readInt()]);
+    	mSubType = (byte) reader.readInt();
     	mArg = reader.readInt();
-    }
-
-    /**
-     * Common private constructor
-     */
-    private ValueIntPacket(SubType subType) {
-        super(ConnectionType.CLIENT, TYPE);
-        mSubType = subType;
     }
 
     @Override
 	protected final void writePayload(PacketWriter writer) {
-		writer.writeInt(mSubType.ordinal());
+		writer.writeInt(mSubType);
 		writer.writeInt(mArg);
 	}
-
-    /**
-     * Convenience method for coercing the SubType enum to a byte.
-     */
-    protected static void register(PacketFactoryRegistry registry, SubType subType,
-    		PacketFactory factory) {
-    	registry.register(ConnectionType.CLIENT, TYPE, (byte) subType.ordinal(), factory);
-    }
 }

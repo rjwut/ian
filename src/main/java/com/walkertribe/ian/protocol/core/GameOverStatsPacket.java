@@ -4,38 +4,27 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_OVER_STATS)
 public class GameOverStatsPacket extends SimpleEventPacket implements
 		Iterable<GameOverStatsPacket.Row> {
     private static final byte DELIMITER = 0x00;
     private static final byte END_MARKER = (byte) 0xce;
 
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.GAME_OVER_STATS, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return GameOverStatsPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new GameOverStatsPacket(reader);
-			}
-		});
-	}
-
 	private byte columnIndex;
 	private List<Row> rows = new LinkedList<Row>();
 
-	private GameOverStatsPacket(PacketReader reader) {
-    	super(SubType.GAME_OVER_STATS, reader);
+    public GameOverStatsPacket(byte columnIndex) {
+    	this.columnIndex = columnIndex;
+    }
+
+	public GameOverStatsPacket(PacketReader reader) {
+    	super(reader);
         columnIndex = reader.readByte();
 
         do {
@@ -48,11 +37,6 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
         	rows.add(new Row(label, value));
         } while (true);
 	}
-
-    public GameOverStatsPacket(byte columnIndex) {
-    	super(SubType.GAME_OVER_STATS);
-    	this.columnIndex = columnIndex;
-    }
 
     public byte getColumnIndex() {
     	return columnIndex;

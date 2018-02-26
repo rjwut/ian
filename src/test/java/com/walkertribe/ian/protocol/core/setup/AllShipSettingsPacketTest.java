@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.protocol.core.setup.Ship;
@@ -15,7 +15,7 @@ import com.walkertribe.ian.world.Artemis;
 public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSettingsPacket> {
 	@Test
 	public void test() {
-		execute("core/setup/AllShipSettingsPacket.txt", ConnectionType.SERVER, 1);
+		execute("core/setup/AllShipSettingsPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSetti
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNullArray() {
-		new AllShipSettingsPacket(null);
+		new AllShipSettingsPacket((Ship[]) null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

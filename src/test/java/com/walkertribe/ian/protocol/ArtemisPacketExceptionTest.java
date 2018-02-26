@@ -3,7 +3,7 @@ package com.walkertribe.ian.protocol;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 
 public class ArtemisPacketExceptionTest {
 	// Done separately to make SpotBugs happy.
@@ -20,13 +20,13 @@ public class ArtemisPacketExceptionTest {
 
 	@Test
 	public void testRest() {
-		ArtemisPacketException ex = new ArtemisPacketException("test", ConnectionType.SERVER);
-		Assert.assertEquals(ConnectionType.SERVER, ex.getConnectionType());
-		ex = new ArtemisPacketException(new RuntimeException(), ConnectionType.SERVER, 47);
-		Assert.assertEquals(ConnectionType.SERVER, ex.getConnectionType());
+		ArtemisPacketException ex = new ArtemisPacketException("test", Origin.SERVER);
+		Assert.assertEquals(Origin.SERVER, ex.getConnectionType());
+		ex = new ArtemisPacketException(new RuntimeException(), Origin.SERVER, 47);
+		Assert.assertEquals(Origin.SERVER, ex.getConnectionType());
 		Assert.assertEquals(47, ex.getPacketType());
-		ex = new ArtemisPacketException(new RuntimeException(), ConnectionType.SERVER, 47, new byte[] { 47 });
-		Assert.assertEquals(ConnectionType.SERVER, ex.getConnectionType());
+		ex = new ArtemisPacketException(new RuntimeException(), Origin.SERVER, 47, new byte[] { 47 });
+		Assert.assertEquals(Origin.SERVER, ex.getConnectionType());
 		Assert.assertEquals(47, ex.getPacketType());
 		Assert.assertArrayEquals(new byte[] { 47 }, ex.getPayload());
 	}

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.junit.Assert;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.Version;
 
@@ -16,7 +16,7 @@ public class VersionPacketTest extends AbstractPacketTester<VersionPacket> {
 
 	@Test
 	public void test() {
-		execute("core/setup/VersionPacket.txt", ConnectionType.SERVER, 2);
+		execute("core/setup/VersionPacket.txt", Origin.SERVER, 2);
 	}
 
 	@Test

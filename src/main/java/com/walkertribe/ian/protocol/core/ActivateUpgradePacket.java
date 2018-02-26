@@ -1,32 +1,17 @@
 package com.walkertribe.ian.protocol.core;
 
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.Upgrade;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Sent by a client that wishes to activate an upgrade.
  * @author rjwut
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.ACTIVATE_UPGRADE)
 public class ActivateUpgradePacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.ACTIVATE_UPGRADE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return ActivateUpgradePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new ActivateUpgradePacket(reader);
-			}
-		});
-	}
-
 	public ActivateUpgradePacket(Upgrade upgrade) {
 		super(SubType.ACTIVATE_UPGRADE, upgrade != null ? upgrade.getActivationIndex() : -1);
 
@@ -39,15 +24,15 @@ public class ActivateUpgradePacket extends ValueIntPacket {
 		}
 	}
 
+	public ActivateUpgradePacket(PacketReader reader) {
+		super(reader);
+	}
+
 	/**
 	 * The Upgrade to activate
 	 */
 	public Upgrade getUpgrade() {
 		return Upgrade.fromActivationIndex(mArg);
-	}
-
-	private ActivateUpgradePacket(PacketReader reader) {
-		super(reader);
 	}
 
 	@Override

@@ -4,24 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Updates the current status of the single-seat craft bays.
  * @author rjwut
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.CARRIER_RECORD)
 public class BayStatusPacket extends BaseArtemisPacket implements Iterable<BayStatusPacket.Bay> {
-    private static final PacketType TYPE = CorePacketType.CARRIER_RECORD;
-
     public static class Bay {
     	private int id;
     	private CharSequence name;
@@ -91,26 +86,12 @@ public class BayStatusPacket extends BaseArtemisPacket implements Iterable<BaySt
 		}
     }
 
-    public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return BayStatusPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new BayStatusPacket(reader);
-			}
-		});
-	}
-
     private List<Bay> bays = new ArrayList<Bay>();
 
-    private BayStatusPacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
+    public BayStatusPacket() {
+    }
 
+    public BayStatusPacket(PacketReader reader) {
         while (true) {
         	int id = reader.readInt();
 
@@ -123,10 +104,6 @@ public class BayStatusPacket extends BaseArtemisPacket implements Iterable<BaySt
         	int refitTime = reader.readInt();
         	bays.add(new Bay(id, name, className, refitTime));
         }
-    }
-
-    public BayStatusPacket() {
-    	super(ConnectionType.SERVER, TYPE);
     }
 
     /**

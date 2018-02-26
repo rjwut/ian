@@ -1,50 +1,22 @@
 package com.walkertribe.ian.protocol.core.setup;
 
 import com.walkertribe.ian.enums.DriveType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.world.Artemis;
 
 /**
  * Sent by the server to update the names, types and drives for each ship.
  * @author dhleong
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.SHIP_SETTINGS)
 public class AllShipSettingsPacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.SHIP_SETTINGS, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return AllShipSettingsPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new AllShipSettingsPacket(reader);
-			}
-		});
-	}
-
 	private final Ship[] mShips;
-
-    private AllShipSettingsPacket(PacketReader reader) {
-        super(SubType.SHIP_SETTINGS, reader);
-        mShips = new Ship[Artemis.SHIP_COUNT];
-
-        for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
-        	DriveType drive = DriveType.values()[reader.readInt()];
-        	int shipType = reader.readInt();
-        	float accentColor = reader.readFloat();
-        	reader.skip(4); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
-        	CharSequence name = reader.readString();
-        	mShips[i] = new Ship(name, shipType, accentColor, drive);
-        }
-    }
 
     public AllShipSettingsPacket(Ship[] ships) {
         super(SubType.SHIP_SETTINGS);
@@ -68,6 +40,20 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
         }
 
         mShips = ships;
+    }
+
+    public AllShipSettingsPacket(PacketReader reader) {
+        super(reader);
+        mShips = new Ship[Artemis.SHIP_COUNT];
+
+        for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
+        	DriveType drive = DriveType.values()[reader.readInt()];
+        	int shipType = reader.readInt();
+        	float accentColor = reader.readFloat();
+        	reader.skip(4); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
+        	CharSequence name = reader.readString();
+        	mShips[i] = new Ship(name, shipType, accentColor, drive);
+        }
     }
 
     public Ship getShip(int shipNumber) {

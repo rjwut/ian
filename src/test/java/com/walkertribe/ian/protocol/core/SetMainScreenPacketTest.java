@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.MainScreenView;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class SetMainScreenPacketTest extends AbstractPacketTester<SetMainScreenPacket> {
 	@Test
 	public void test() {
-		execute("core/SetMainScreenPacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/SetMainScreenPacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test
@@ -22,7 +22,7 @@ public class SetMainScreenPacketTest extends AbstractPacketTester<SetMainScreenP
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNull() {
-		new SetMainScreenPacket(null);
+		new SetMainScreenPacket((MainScreenView) null);
 	}
 
 	@Override

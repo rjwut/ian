@@ -1,36 +1,17 @@
 package com.walkertribe.ian.protocol.core.world;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.ObjectType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
+@Packet(origin = Origin.SERVER, type = CorePacketType.ATTACK)
 public class BeamFiredPacket extends BaseArtemisPacket {
-	private static final PacketType TYPE = CorePacketType.ATTACK;
 	private static final byte[] DEFAULT_UNKNOWN_VALUE = { 0, 0, 0, 0 };
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return BeamFiredPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new BeamFiredPacket(reader);
-			}
-		});
-	}
 
 	private int mBeamId;
 	private int mBeamPortIndex;
@@ -45,8 +26,11 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 	private byte[] unknown1 = DEFAULT_UNKNOWN_VALUE;
 	private byte[] unknown2 = DEFAULT_UNKNOWN_VALUE;
 
-	private BeamFiredPacket(PacketReader reader) {
-		super(ConnectionType.SERVER, TYPE);
+	public BeamFiredPacket(int beamId) {
+		mBeamId = beamId;
+	}
+
+	public BeamFiredPacket(PacketReader reader) {
 		mBeamId = reader.readInt();
 		unknown1 = reader.readBytes(4);
 		unknown2 = reader.readBytes(4);
@@ -59,11 +43,6 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 		mImpactY = reader.readFloat();
 		mImpactZ = reader.readFloat();
 		mAutoFired = reader.readInt() == 0;
-	}
-
-	public BeamFiredPacket(int beamId) {
-		super(ConnectionType.SERVER, TYPE);
-		mBeamId = beamId;
 	}
 
 	/**

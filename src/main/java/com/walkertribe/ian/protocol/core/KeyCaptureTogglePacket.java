@@ -1,11 +1,10 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
 /**
  * Enables/disables keystroke capture for this console. Note that the game
@@ -13,32 +12,17 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * this packet enables it.
  * @author rjwut
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.KEY_CAPTURE)
 public class KeyCaptureTogglePacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.KEY_CAPTURE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return KeyCaptureTogglePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new KeyCaptureTogglePacket(reader);
-			}
-		});
-	}
-
 	private boolean mEnabled;
 
-	private KeyCaptureTogglePacket(PacketReader reader) {
-		super(SubType.KEY_CAPTURE, reader);
-		mEnabled = reader.readByte() == 1;
+	public KeyCaptureTogglePacket(boolean enabled) {
+		mEnabled = enabled;
 	}
 
-	public KeyCaptureTogglePacket(boolean enabled) {
-		super(SubType.KEY_CAPTURE);
-		mEnabled = enabled;
+	public KeyCaptureTogglePacket(PacketReader reader) {
+		super(reader);
+		mEnabled = reader.readByte() == 1;
 	}
 
 	/**

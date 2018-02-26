@@ -5,13 +5,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class TogglePerspectivePacketTest extends AbstractPacketTester<TogglePerspectivePacket> {
 	@Test
 	public void test() {
-		execute("core/TogglePerspectivePacket.txt", ConnectionType.CLIENT, 1);
+		execute("core/TogglePerspectivePacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test

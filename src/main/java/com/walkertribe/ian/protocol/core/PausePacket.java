@@ -1,39 +1,23 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.util.BoolState;
 
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.PAUSE)
 public class PausePacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.PAUSE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return PausePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new PausePacket(reader);
-			}
-		});
-	}
-
     private final BoolState mPaused;
-    
-    private PausePacket(PacketReader reader) {
-        super(SubType.PAUSE, reader);
-        mPaused = reader.readBool(4);
-    }
 
     public PausePacket(boolean paused) {
-        super(SubType.PAUSE);
     	mPaused = BoolState.from(paused);
+    }
+    
+    public PausePacket(PacketReader reader) {
+        super(reader);
+        mPaused = reader.readBool(4);
     }
 
     public BoolState getPaused() {

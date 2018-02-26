@@ -1,6 +1,6 @@
 package com.walkertribe.ian.protocol;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.util.TextUtil;
 
@@ -13,9 +13,9 @@ import com.walkertribe.ian.util.TextUtil;
 public abstract class RawPacket extends BaseArtemisPacket {
     protected final byte[] mPayload;
 
-    protected RawPacket(ConnectionType connectionType, int packetType,
-    		byte[] payload) {
-    	super(connectionType, packetType);
+    protected RawPacket(Origin origin, int type, byte[] payload) {
+    	mOrigin = origin;
+    	mType = type;
     	mPayload = payload;
     }
 

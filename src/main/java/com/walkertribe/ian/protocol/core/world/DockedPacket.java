@@ -1,44 +1,29 @@
 package com.walkertribe.ian.protocol.core.world;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.DOCKED)
 public class DockedPacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.DOCKED, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return DockedPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new DockedPacket(reader);
-			}
-		});
-	}
-
     private final int mObjectId;
-
-    private DockedPacket(PacketReader reader) {
-        super(SubType.DOCKED, reader);
-        mObjectId = reader.readInt();
-    }
 
     public DockedPacket(ArtemisPlayer player) {
     	this(player.getId());
     }
 
     public DockedPacket(int objectId) {
-        super(SubType.DOCKED);
     	mObjectId = objectId;
+    }
+
+    public DockedPacket(PacketReader reader) {
+        super(reader);
+        mObjectId = reader.readInt();
     }
 
     public int getObjectId() {

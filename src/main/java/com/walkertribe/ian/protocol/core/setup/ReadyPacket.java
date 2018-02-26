@@ -1,11 +1,11 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Signals to the server that this console is ready to join the game. If the
@@ -16,27 +16,13 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
  * updates again.
  * @author dhleong
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.READY)
 public class ReadyPacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.READY, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return ReadyPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new ReadyPacket(reader);
-			}
-		});
-	}
-
     public ReadyPacket() {
-        super(SubType.READY, 0);
+        super(0);
     }
 
-    private ReadyPacket(PacketReader reader) {
+    public ReadyPacket(PacketReader reader) {
     	super(reader);
     }
 

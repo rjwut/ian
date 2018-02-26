@@ -5,13 +5,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class JumpEndPacketTest extends AbstractPacketTester<JumpEndPacket> {
 	@Test
 	public void test() {
-		execute("core/helm/JumpEndPacket.txt", ConnectionType.SERVER, 1);
+		execute("core/helm/JumpEndPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test

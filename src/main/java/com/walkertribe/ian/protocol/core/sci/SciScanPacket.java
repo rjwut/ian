@@ -1,44 +1,30 @@
 package com.walkertribe.ian.protocol.core.sci;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Scans the indicated target.
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.SCIENCE_SCAN)
 public class SciScanPacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.SCIENCE_SCAN, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SciScanPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SciScanPacket(reader);
-			}
-		});
-	}
-
 	/**
 	 * @param target The target to scan
 	 */
     public SciScanPacket(ArtemisObject target) {
-        super(SubType.SCIENCE_SCAN, target != null ? target.getId() : 0);
+        super(target != null ? target.getId() : 0);
 
         if (target == null) {
         	throw new IllegalArgumentException("You must provide a target");
         }
     }
 
-    private SciScanPacket(PacketReader reader) {
+    public SciScanPacket(PacketReader reader) {
         super(reader);
     }
 

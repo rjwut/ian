@@ -1,39 +1,24 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.SKYBOX)
 public class SkyboxPacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.SKYBOX, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SkyboxPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SkyboxPacket(reader);
-			}
-		});
-	}
-
 	private int mSkyboxId;
-
-	private SkyboxPacket(PacketReader reader) {
-        super(SubType.SKYBOX, reader);
-        mSkyboxId = reader.readInt();
-	}
 
     public SkyboxPacket(int skyboxId) {
         super(SubType.SKYBOX);
         mSkyboxId = skyboxId;
     }
+
+	public SkyboxPacket(PacketReader reader) {
+        super(reader);
+        mSkyboxId = reader.readInt();
+	}
 
     public int getSkyboxId() {
     	return mSkyboxId;

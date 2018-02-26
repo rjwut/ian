@@ -5,20 +5,20 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.world.ArtemisCreature;
 
 public class GameMasterTargetObjectPacketTest extends AbstractPacketTester<GameMasterTargetObjectPacket> {
 	@Test
 	public void test() {
-		execute("core/gm/GameMasterTargetObjectPacket.txt", ConnectionType.CLIENT, 2);
+		execute("core/gm/GameMasterTargetObjectPacket.txt", Origin.CLIENT, 2);
 	}
 
 	@Test
 	public void testConstruct() {
 		test(
-				new GameMasterTargetObjectPacket(null),
+				new GameMasterTargetObjectPacket((ArtemisCreature) null),
 				new GameMasterTargetObjectPacket(new ArtemisCreature(47))
 		);
 	}

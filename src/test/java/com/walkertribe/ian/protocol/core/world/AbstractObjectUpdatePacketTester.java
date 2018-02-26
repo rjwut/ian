@@ -3,7 +3,7 @@ package com.walkertribe.ian.protocol.core.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.TestUtil;
 import com.walkertribe.ian.world.ArtemisObject;
@@ -27,7 +27,7 @@ public abstract class AbstractObjectUpdatePacketTester<T extends ArtemisObject> 
 	/**
 	 * Covers the valueOf() method for any inner enums for the declared Class,
 	 * then locates the corresponding test packet file and invokes
-	 * {@link #execute(String, ConnectionType, int)}.
+	 * {@link #execute(String, Origin, int)}.
 	 */
 	@SuppressWarnings("unchecked")
 	protected void execute(Class<? extends ObjectParser> parserClass, int packetCount) {
@@ -42,7 +42,7 @@ public abstract class AbstractObjectUpdatePacketTester<T extends ArtemisObject> 
 
 		execute(
 				"core/world/ObjectUpdatePacket-" + parserClass.getSimpleName() + ".txt",
-				ConnectionType.SERVER,
+				Origin.SERVER,
 				packetCount
 		);
 	}

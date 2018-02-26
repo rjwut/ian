@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.Assert;
 
 import com.walkertribe.ian.Context;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.Debugger;
 import com.walkertribe.ian.iface.OutputStreamDebugger;
@@ -41,7 +41,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 * the packets will be written out to a stream, and the resulting bytes
 	 * compared to the original file.
 	 */
-	protected void execute(String resourcePath, ConnectionType type, int packetCount) {
+	protected void execute(String resourcePath, Origin type, int packetCount) {
 		try {
 			Debugger debugger = buildDebugger();
 			TestPacketFile file = loadTestPacketFile(resourcePath);
@@ -90,7 +90,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 * Given a TestPacketFile and expected ConnectionType, reads the indicated
 	 * number of packets from the file and returns them in a List.  
 	 */
-	protected List<T> readPackets(TestPacketFile file, ConnectionType type,
+	protected List<T> readPackets(TestPacketFile file, Origin type,
 			int packetCount, Debugger debugger) throws ArtemisPacketException {
 		PacketReader reader = buildPacketReader(file, type);
 		List<T> list = new ArrayList<T>(packetCount);
@@ -138,7 +138,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 * Returns a PacketReader that reads the contents of the given
 	 * TestPacketFile.
 	 */
-	protected PacketReader buildPacketReader(TestPacketFile file, ConnectionType type) {
+	protected PacketReader buildPacketReader(TestPacketFile file, Origin type) {
 		return file.toPacketReader(type, true);
 	}
 }

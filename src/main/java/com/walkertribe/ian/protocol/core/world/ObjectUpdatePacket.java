@@ -7,16 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.ObjectType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisPlayer;
@@ -63,9 +59,8 @@ import com.walkertribe.ian.world.ArtemisPlayer;
  *
  * @author rjwut
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.OBJECT_BIT_STREAM)
 public class ObjectUpdatePacket extends BaseArtemisPacket {
-	public static final PacketType TYPE = CorePacketType.OBJECT_BIT_STREAM;
-
 	private static final Map<ObjectType, ObjectParser> PARSERS;
 	private static final ObjectType[] PLAYER_OBJECT_TYPES = {
 			ObjectType.PLAYER_SHIP,
@@ -91,21 +86,6 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 		PARSERS.put(ObjectType.GENERIC_MESH, new GenericMeshParser());
 		PARSERS.put(ObjectType.CREATURE, new CreatureParser());
 		PARSERS.put(ObjectType.DRONE, new DroneParser());
-	}
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return ObjectUpdatePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new ObjectUpdatePacket(reader);
-			}
-		});
 	}
 
 	/**
@@ -165,9 +145,10 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 
 	private List<ArtemisObject> objects = new LinkedList<ArtemisObject>();
 
-	private ObjectUpdatePacket(PacketReader reader) {
-		this();
+	public ObjectUpdatePacket() {
+	}
 
+	public ObjectUpdatePacket(PacketReader reader) {
 		do {
 			ObjectType objectType = ObjectType.fromId(reader.peekByte());
 
@@ -180,10 +161,6 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 		} while (true);
 
 		reader.skip(4);
-	}
-
-	public ObjectUpdatePacket() {
-		super(ConnectionType.SERVER, TYPE);
 	}
 
 	public void addObject(ArtemisObject obj) {

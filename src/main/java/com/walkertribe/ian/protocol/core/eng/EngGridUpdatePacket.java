@@ -3,15 +3,11 @@ package com.walkertribe.ian.protocol.core.eng;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.GridCoord;
 
@@ -20,24 +16,8 @@ import com.walkertribe.ian.util.GridCoord;
  * team status/location.
  * @author dhleong
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.SHIP_SYSTEM_SYNC)
 public class EngGridUpdatePacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.SHIP_SYSTEM_SYNC;
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return EngGridUpdatePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new EngGridUpdatePacket(reader);
-			}
-		});
-	}
-
     private static final byte END_GRID_MARKER = (byte) 0xff;
     private static final byte END_DAMCON_MARKER = (byte) 0xfe;
     private static final int TEAM_NUMBER_OFFSET = 0x0a;
@@ -54,12 +34,10 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
      * being sent in response to a {@link EngRequestGridUpdatePacket} packet.
      */
     public EngGridUpdatePacket(boolean requested) {
-        super(ConnectionType.SERVER, TYPE);
         mRequested = requested;
     }
 
-    private EngGridUpdatePacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
+    public EngGridUpdatePacket(PacketReader reader) {
         mRequested = reader.readByte() == 1;
 
         while (reader.peekByte() != END_GRID_MARKER) {

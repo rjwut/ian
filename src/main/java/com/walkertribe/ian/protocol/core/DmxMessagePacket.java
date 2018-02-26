@@ -1,46 +1,29 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.DMX_MESSAGE)
 public class DmxMessagePacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.DMX_MESSAGE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return DmxMessagePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new DmxMessagePacket(reader);
-			}
-		});
-	}
-
     private final CharSequence mName;
     private final boolean mOn;
 
-    private DmxMessagePacket(PacketReader reader) {
-        super(SubType.DMX_MESSAGE, reader);
-        mName = reader.readString();
-        mOn = reader.readInt() == 1;
-    }
-
     public DmxMessagePacket(String name, boolean on) {
-        super(SubType.DMX_MESSAGE);
-
         if (name == null || name.length() == 0) {
         	throw new IllegalArgumentException("You must provide a name");
         }
 
         mName = name;
         mOn = on;
+    }
+
+    public DmxMessagePacket(PacketReader reader) {
+        super(reader);
+        mName = reader.readString();
+        mOn = reader.readInt() == 1;
     }
 
     /**

@@ -1,43 +1,28 @@
 package com.walkertribe.ian.protocol.core.singleseat;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket;
+import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
 /**
  * Notifies the client that a single-seat craft has been launched.
  * @author rjwut
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.SINGLE_SEAT_LAUNCHED)
 public class SingleSeatLaunchedPacket extends SimpleEventPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.SINGLE_SEAT_LAUNCHED, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return SingleSeatLaunchedPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new SingleSeatLaunchedPacket(reader);
-			}
-		});
-	}
-
     private final int mObjectId;
 
-    private SingleSeatLaunchedPacket(PacketReader reader) {
-        super(SubType.SINGLE_SEAT_LAUNCHED, reader);
-        mObjectId = reader.readInt();
+    public SingleSeatLaunchedPacket(int objectId) {
+    	mObjectId = objectId;
     }
 
-    public SingleSeatLaunchedPacket(int objectId) {
-        super(SubType.SINGLE_SEAT_LAUNCHED);
-    	mObjectId = objectId;
+    public SingleSeatLaunchedPacket(PacketReader reader) {
+        super(reader);
+        mObjectId = reader.readInt();
     }
 
     public int getObjectId() {

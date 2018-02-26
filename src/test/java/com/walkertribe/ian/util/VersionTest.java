@@ -8,10 +8,10 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.core.setup.VersionPacket;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 
 public class VersionTest {
 	private static final Version V1_0 = new Version("1.0");
@@ -161,7 +161,7 @@ public class VersionTest {
 		for (Map.Entry<Version, String> entry : VERSION_PACKETS.entrySet()) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			PacketWriter writer = new PacketWriter(baos);
-			writer.start(ConnectionType.CLIENT, VersionPacket.TYPE.getHash());
+			writer.start(Origin.CLIENT, JamCrc.compute(CorePacketType.CONNECTED));
 			entry.getKey().writeTo(writer);
 			writer.flush(new BaseDebugger());
 			Assert.assertEquals(entry.getValue(), TextUtil.byteArrayToHexString(baos.toByteArray()));

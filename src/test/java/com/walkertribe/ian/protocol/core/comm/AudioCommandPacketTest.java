@@ -6,13 +6,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.walkertribe.ian.enums.AudioCommand;
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class AudioCommandPacketTest extends AbstractPacketTester<AudioCommandPacket> {
 	@Test
 	public void testParse() {
-		execute("core/comm/AudioCommandPacket.txt", ConnectionType.CLIENT, 2);
+		execute("core/comm/AudioCommandPacket.txt", Origin.CLIENT, 2);
 	}
 
 	@Test

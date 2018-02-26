@@ -2,14 +2,34 @@ package com.walkertribe.ian.protocol;
 
 import java.io.IOException;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.Debugger;
 import com.walkertribe.ian.iface.PacketWriter;
+import com.walkertribe.ian.util.JamCrc;
 
 /**
  * Implements common packet functionality.
  */
 public abstract class BaseArtemisPacket implements ArtemisPacket {
+	/**
+	 * Determines the packet type hash specified in the given Packet annotation. 
+	 */
+	public static int getHash(Packet anno) {
+		String typeName = anno.type();
+
+		if (typeName.length() != 0) {
+			return JamCrc.compute(typeName);
+		}
+
+		int type = anno.hash();
+
+		if (type == 0) {
+			throw new RuntimeException("@Packet must have either a type or a hash");
+		}
+
+		return type;
+	}
+
 	/**
 	 * Causes the packet's payload to be written to the given PacketWriter.
 	 */
@@ -21,21 +41,23 @@ public abstract class BaseArtemisPacket implements ArtemisPacket {
      */
     protected abstract void appendPacketDetail(StringBuilder b);
 
-    private final ConnectionType mConnectionType;
-    private final int mType;
+    protected Origin mOrigin;
+    protected int mType;
 
-    public BaseArtemisPacket(ConnectionType connectionType, PacketType packetType) {
-    	this(connectionType, packetType.getHash());
-    }
+    public BaseArtemisPacket() {
+    	Packet anno = getClass().getAnnotation(Packet.class);
 
-    public BaseArtemisPacket(ConnectionType connectionType, int packetType) {
-        mConnectionType = connectionType;
-        mType = packetType;
+    	if (anno != null) {
+        	mOrigin = anno.origin();
+            mType = getHash(anno);
+    	} else if (!(this instanceof RawPacket)) {
+    		throw new RuntimeException(getClass() + " must have a @Packet annotation");
+    	}
     }
 
     @Override
-    public ConnectionType getConnectionType() {
-        return mConnectionType;
+    public Origin getConnectionType() {
+        return mOrigin;
     }
 
     @Override
@@ -45,7 +67,7 @@ public abstract class BaseArtemisPacket implements ArtemisPacket {
 
     @Override
     public final void writeTo(PacketWriter writer, Debugger debugger) throws IOException {
-    	writer.start(mConnectionType, mType);
+    	writer.start(mOrigin, mType);
     	writePayload(writer);
     	writer.flush(debugger);
     }

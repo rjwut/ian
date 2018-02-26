@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.GameType;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class GameStartPacketTest extends AbstractPacketTester<GameStartPacket> {
 	@Test
 	public void test() {
-		execute("core/GameStartPacket.txt", ConnectionType.SERVER, 1);
+		execute("core/GameStartPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test

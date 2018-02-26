@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
 public class SetConsolePacketTest extends AbstractPacketTester<SetConsolePacket> {
 	@Test
 	public void test() {
-		execute("core/setup/SetConsolePacket.txt", ConnectionType.CLIENT, 2);
+		execute("core/setup/SetConsolePacket.txt", Origin.CLIENT, 2);
 	}
 
 	@Test

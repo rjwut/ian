@@ -1,49 +1,25 @@
 package com.walkertribe.ian.protocol.core.gm;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_FLOAT, subtype = 0x06)
 public class GameMasterTargetLocationPacket extends BaseArtemisPacket {
-    private static final PacketType TYPE = CorePacketType.VALUE_FLOAT;
-    private static final byte SUBTYPE = 0x06;
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.CLIENT, TYPE, SUBTYPE,
-				new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return GameMasterTargetLocationPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new GameMasterTargetLocationPacket(reader);
-			}
-		});
-	}
-
     private float mX;
     private float mZ;
     private byte[] mUnknown;
 
     public GameMasterTargetLocationPacket(float x, float z) {
-        super(ConnectionType.CLIENT, TYPE);
         mX = x;
         mZ = z;
         mUnknown = new byte[4];
     }
 
-    private GameMasterTargetLocationPacket(PacketReader reader) {
-    	super(ConnectionType.CLIENT, TYPE);
+    public GameMasterTargetLocationPacket(PacketReader reader) {
     	reader.skip(4); // subtype
     	mZ = reader.readFloat();
     	mUnknown = reader.readBytes(4);
@@ -67,7 +43,7 @@ public class GameMasterTargetLocationPacket extends BaseArtemisPacket {
     @Override
 	protected void writePayload(PacketWriter writer) {
     	writer
-    		.writeInt(SUBTYPE)
+    		.writeInt(0x06) // subtype
     		.writeFloat(mZ)
     		.writeBytes(mUnknown)
     		.writeFloat(mX);

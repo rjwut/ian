@@ -3,7 +3,7 @@ package com.walkertribe.ian.iface;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.RawPacket;
@@ -30,7 +30,7 @@ public class OutputStreamDebugger implements Debugger {
 	}
 
 	@Override
-	public void onRecvPacketBytes(ConnectionType connType, int pktType,
+	public void onRecvPacketBytes(Origin connType, int pktType,
 			byte[] payload) {
 		printPacketBytes(false, connType, pktType, payload);
 	}
@@ -51,7 +51,7 @@ public class OutputStreamDebugger implements Debugger {
 	}
 
 	@Override
-	public void onSendPacketBytes(ConnectionType connType, int pktType,
+	public void onSendPacketBytes(Origin connType, int pktType,
 			byte[] payload) {
 		printPacketBytes(true, connType, pktType, payload);
 	}
@@ -87,7 +87,7 @@ public class OutputStreamDebugger implements Debugger {
 	/**
 	 * Writes the bytes for the given packet to the OutputStream.
 	 */
-	private void printPacketBytes(boolean send, ConnectionType connType,
+	private void printPacketBytes(boolean send, Origin connType,
 			int pktType, byte[] payload) {
 		out.println(
 				name + (send ? "< " : "> ") +

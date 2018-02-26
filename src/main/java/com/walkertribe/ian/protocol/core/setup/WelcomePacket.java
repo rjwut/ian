@@ -1,14 +1,10 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
@@ -16,24 +12,9 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
  * indicates a successful connection to the server.
  * @author rjwut
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.PLAIN_TEXT_GREETING)
 public class WelcomePacket extends BaseArtemisPacket {
-	private static final PacketType TYPE = CorePacketType.PLAIN_TEXT_GREETING;
 	protected static final String MSG = "You have connected to Thom Robertson's Artemis Bridge Simulator.  Please connect with an authorized game client.";
-
-	public static void register(PacketFactoryRegistry registry) {
-		registry.register(ConnectionType.SERVER, TYPE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return WelcomePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new WelcomePacket(reader);
-			}
-		});
-	}
 
 	private String msg;
 
@@ -48,8 +29,6 @@ public class WelcomePacket extends BaseArtemisPacket {
 	 * Uses an arbitrary message you provide.
 	 */
 	public WelcomePacket(String msg) {
-		super(ConnectionType.SERVER, TYPE);
-
 		if (msg == null || msg.length() == 0) {
 			throw new IllegalArgumentException("You must provide a message");
 		}
@@ -57,8 +36,7 @@ public class WelcomePacket extends BaseArtemisPacket {
 		this.msg = msg;
 	}
 
-	private WelcomePacket(PacketReader reader) {
-		super(ConnectionType.SERVER, TYPE);
+	public WelcomePacket(PacketReader reader) {
 		msg = reader.readUsAsciiString();
 	}
 

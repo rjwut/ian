@@ -1,67 +1,35 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.protocol.PacketType;
-import com.walkertribe.ian.util.JamCrc;
-
 /**
- * PacketType implementation for the core Artemis protocol.
+ * Defines the know packet types for the core Artemis protocol.
  * @author rjwut
  */
-public enum CorePacketType implements PacketType {
-	ATTACK,
-	BEAM_REQUEST,
-	BIG_MESS,
-	CARRIER_RECORD,
-	CLIENT_CONSOLES,
-	COMMS_MESSAGE,
-	COMM_TEXT,
-	CONNECTED,
-	CONTROL_MESSAGE,
-	GM_BUTTON,
-	GM_TEXT,
-	HEARTBEAT,
-	INCOMING_MESSAGE,
-	OBJECT_BIT_STREAM,
-	OBJECT_DELETE,
-	OBJECT_TEXT,
-	PLAIN_TEXT_GREETING,
-	SIMPLE_EVENT,
-	SHIP_SYSTEM_SYNC,
-	START_GAME,
-	VALUE_FLOAT,
-	VALUE_FOUR_INTS,
-	VALUE_INT;
+public final class CorePacketType {
+	public static final String ATTACK = "attack";
+	public static final String BEAM_REQUEST = "beamRequest";
+	public static final String BIG_MESS = "bigMess";
+	public static final String CARRIER_RECORD = "carrierRecord";
+	public static final String CLIENT_CONSOLES = "clientConsoles";
+	public static final String COMMS_MESSAGE = "commsMessage";
+	public static final String COMM_TEXT = "commText";
+	public static final String CONNECTED = "connected";
+	public static final String CONTROL_MESSAGE = "controlMessage";
+	public static final String GM_BUTTON = "gmButton";
+	public static final String GM_TEXT = "gmText";
+	public static final String HEARTBEAT = "heartbeat";
+	public static final String INCOMING_MESSAGE = "incomingMessage";
+	public static final String OBJECT_BIT_STREAM = "objectBitStream";
+	public static final String OBJECT_DELETE = "objectDelete";
+	public static final String OBJECT_TEXT = "objectText";
+	public static final String PLAIN_TEXT_GREETING = "plainTextGreeting";
+	public static final String SIMPLE_EVENT = "simpleEvent";
+	public static final String SHIP_SYSTEM_SYNC = "shipSystemSync";
+	public static final String START_GAME = "startGame";
+	public static final String VALUE_FLOAT = "valueFloat";
+	public static final String VALUE_FOUR_INTS = "valueFourInts";
+	public static final String VALUE_INT = "valueInt";
 
-	private String internalName;
-	private int hash;
-
-	CorePacketType() {
-		internalName = constantNameToCamelCase(name());
-		hash = JamCrc.compute(internalName);
-	}
-
-	@Override
-	public String getInternalName() {
-		return internalName;
-	}
-
-	@Override
-	public int getHash() {
-		return hash;
-	}
-
-	/**
-	 * Given a name in constant format (THIS_IS_A_CONSTANT), returns its camelCase equivalent (thisIsAConstant).
-	 */
-	private static String constantNameToCamelCase(String str) {
-		StringBuilder cc = new StringBuilder();
-
-		for (String part : str.split("_")) {
-			char c = part.charAt(0);
-			cc.append(cc.length() == 0 ? Character.toLowerCase(c) : Character.toUpperCase(c));
-			cc.append(part.substring(1, part.length()).toLowerCase());
-		}
-
-		return cc.toString();
+	private CorePacketType() {
+		// prevent instantiation
 	}
 }

@@ -1,46 +1,25 @@
 package com.walkertribe.ian.protocol.core.gm;
 
-import com.walkertribe.ian.enums.ConnectionType;
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
-import com.walkertribe.ian.protocol.PacketType;
+import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
  * Creates or removes a button on the game master console.
  * @author rjwut
  */
+@Packet(origin = Origin.SERVER, type = CorePacketType.GM_BUTTON)
 public class GameMasterButtonPacket extends BaseArtemisPacket {
 	public enum Action {
 		REMOVE,
 		CREATE
 	}
 
-	private static final PacketType TYPE = CorePacketType.GM_BUTTON;
 	private static final int SUBTYPE_POSITIONED = 0x02;
 	private static final int SUBTYPE_REMOVE_ALL = 0x64;
-
-	public static void register(PacketFactoryRegistry registry) {
-		PacketFactory factory = new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return GameMasterButtonPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new GameMasterButtonPacket(reader);
-			}
-		};
-
-		registry.register(ConnectionType.SERVER, TYPE, factory);
-	}
 
 	private Action mAction;
 	private CharSequence mLabel;
@@ -54,8 +33,6 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	 * a null label.
 	 */
 	public GameMasterButtonPacket(Action action, CharSequence label) {
-        super(ConnectionType.SERVER, TYPE);
-
         if (action == null) {
         	throw new IllegalArgumentException("Action is required");
         }
@@ -95,8 +72,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 		mH = h;
 	}
 
-	private GameMasterButtonPacket(PacketReader reader) {
-        super(ConnectionType.SERVER, TYPE);
+	public GameMasterButtonPacket(PacketReader reader) {
         byte subtype = reader.readByte();
         boolean positioned = subtype == SUBTYPE_POSITIONED;
         boolean removeAll = subtype == SUBTYPE_REMOVE_ALL;

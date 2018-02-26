@@ -1,41 +1,27 @@
 package com.walkertribe.ian.protocol.core.gm;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
  * Selects (or deselects) a target on the game master's map.
  * @author rjwut
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.GM_SELECT)
 public class GameMasterTargetObjectPacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.GM_SELECT, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return GameMasterTargetObjectPacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new GameMasterTargetObjectPacket(reader);
-			}
-		});
-	}
-
 	/**
 	 * @param target The target to select, or null to deselect a target
 	 */
     public GameMasterTargetObjectPacket(ArtemisObject target) {
-        super(SubType.GM_SELECT, target == null ? 1 : target.getId());
+        super(target == null ? 1 : target.getId());
     }
 
-    private GameMasterTargetObjectPacket(PacketReader reader) {
+    public GameMasterTargetObjectPacket(PacketReader reader) {
     	super(reader);
     }
 

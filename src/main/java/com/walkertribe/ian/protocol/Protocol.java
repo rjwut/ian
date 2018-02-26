@@ -1,15 +1,16 @@
 package com.walkertribe.ian.protocol;
 
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.iface.PacketFactory;
 
 /**
- * Registers a set of PacketFactories with a PacketFactoryRegistry.
+ * Interface for classes which provide support for a set of packets
  * @author rjwut
  */
 public interface Protocol {
 	/**
-	 * Creates PacketFactory objects for each packet in the protocol and
-	 * registers them with the given PacketFactoryRegistry.
+	 * If this Protocol supports packets with the given type (and optional
+	 * subtype), returns a PacketFactory that can parse it; otherwise returns
+	 * null.
 	 */
-	public void registerPacketFactories(PacketFactoryRegistry registry);
+	public PacketFactory<? extends ArtemisPacket> getFactory(int type, Byte subtype);
 }

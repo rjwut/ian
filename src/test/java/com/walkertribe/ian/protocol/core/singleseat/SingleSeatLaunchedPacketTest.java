@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.protocol.core.singleseat.SingleSeatLaunchedPacket;
 
 public class SingleSeatLaunchedPacketTest extends AbstractPacketTester<SingleSeatLaunchedPacket> {
 	@Test
 	public void test() {
-		execute("core/singleseat/SingleSeatLaunchedPacket.txt", ConnectionType.SERVER, 1);
+		execute("core/singleseat/SingleSeatLaunchedPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test

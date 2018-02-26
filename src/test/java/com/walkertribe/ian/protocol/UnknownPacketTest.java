@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ConnectionType;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.util.TextUtil;
 
 public class UnknownPacketTest extends AbstractPacketTester<UnknownPacket> {
@@ -13,12 +13,12 @@ public class UnknownPacketTest extends AbstractPacketTester<UnknownPacket> {
 
 	@Test
 	public void test() {
-		execute("UnknownPacket.txt", ConnectionType.SERVER, 1);
+		execute("UnknownPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test
 	public void testConstruct() {
-		test(new UnknownPacket(ConnectionType.SERVER, 0xffffffff, TextUtil.hexToByteArray(PAYLOAD)));
+		test(new UnknownPacket(Origin.SERVER, 0xffffffff, TextUtil.hexToByteArray(PAYLOAD)));
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class UnknownPacketTest extends AbstractPacketTester<UnknownPacket> {
 	}
 
 	private void test(UnknownPacket pkt) {
-		Assert.assertEquals(ConnectionType.SERVER, pkt.getConnectionType());
+		Assert.assertEquals(Origin.SERVER, pkt.getConnectionType());
 		Assert.assertEquals(0xffffffff, pkt.getType());
 		Assert.assertEquals(PAYLOAD, TextUtil.byteArrayToHexString(pkt.getPayload()));
 	}

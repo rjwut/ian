@@ -1,10 +1,9 @@
 package com.walkertribe.ian.protocol.core;
 
-import com.walkertribe.ian.iface.PacketFactory;
-import com.walkertribe.ian.iface.PacketFactoryRegistry;
+import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
-import com.walkertribe.ian.protocol.ArtemisPacket;
-import com.walkertribe.ian.protocol.ArtemisPacketException;
+import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Sends a keystroke to the server. This should only be done for the game master
@@ -14,27 +13,13 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
  * has constants for the keycodes used by this class.
  * @author rjwut
  */
+@Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.KEYSTROKE)
 public class KeystrokePacket extends ValueIntPacket {
-	public static void register(PacketFactoryRegistry registry) {
-		register(registry, SubType.KEYSTROKE, new PacketFactory() {
-			@Override
-			public Class<? extends ArtemisPacket> getFactoryClass() {
-				return KeystrokePacket.class;
-			}
-
-			@Override
-			public ArtemisPacket build(PacketReader reader)
-					throws ArtemisPacketException {
-				return new KeystrokePacket(reader);
-			}
-		});
-	}
-
 	public KeystrokePacket(int keycode) {
-		super(SubType.KEYSTROKE, keycode);
+		super(keycode);
 	}
 
-	private KeystrokePacket(PacketReader reader) {
+	public KeystrokePacket(PacketReader reader) {
 		super(reader);
 	}
 
