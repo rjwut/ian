@@ -85,8 +85,8 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     /**
-     * Returns the ship's fleet number.
-     * Unspecified: -1
+     * Returns the ship's fleet number. -1 means no fleet.
+     * Unspecified: -2
      */
     public byte getFleetNumber() {
     	return mFleetNumber;

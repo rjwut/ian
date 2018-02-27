@@ -121,7 +121,7 @@ public class NpcShipParser extends AbstractObjectParser {
 
         reader.readObjectUnknown(Bit.UNK_3_5, 2);
 
-        obj.setFleetNumber(reader.readByte(Bit.FLEET_NUMBER, (byte) -1));
+        obj.setFleetNumber(reader.readByte(Bit.FLEET_NUMBER, (byte) -2));
         obj.setSpecialBits(reader.readInt(Bit.SPECIAL_ABILITIES, -1));
         obj.setSpecialStateBits(reader.readInt(Bit.SPECIAL_STATE, -1));
         obj.setScanLevel(reader.readInt(Bit.SCAN_LEVEL, -1));
@@ -173,7 +173,7 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeFloat(Bit.AFT_SHIELD, npc.getShieldsRear(), Float.MIN_VALUE)
 				.writeFloat(Bit.AFT_SHIELD_MAX, npc.getShieldsRearMax(), -1)
 				.writeUnknown(Bit.UNK_3_5)
-				.writeByte(Bit.FLEET_NUMBER, npc.getFleetNumber(), (byte) -1)
+				.writeByte(Bit.FLEET_NUMBER, npc.getFleetNumber(), (byte) -2)
 				.writeInt(Bit.SPECIAL_ABILITIES, npc.getSpecialBits(), -1)
 				.writeInt(Bit.SPECIAL_STATE, npc.getSpecialStateBits(), -1)
 				.writeInt(Bit.SCAN_LEVEL, npc.getScanLevel(), -1)
