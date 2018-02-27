@@ -5,21 +5,10 @@ package com.walkertribe.ian.enums;
  * @author rjwut 
  */
 public enum EnemyMessage implements CommsMessage {
-	WILL_YOU_SURRENDER("Will you surrender?"),
-	TAUNT_1("[Taunt #1]"),
-	TAUNT_2("[Taunt #2]"),
-	TAUNT_3("[Taunt #3]");
-
-	private String label;
-
-	EnemyMessage(String label) {
-		this.label = label;
-	}
-
-	@Override
-	public String toString() {
-		return label;
-	}
+	WILL_YOU_SURRENDER,
+	TAUNT_1,
+	TAUNT_2,
+	TAUNT_3;
 
 	@Override
 	public boolean hasArgument() {
