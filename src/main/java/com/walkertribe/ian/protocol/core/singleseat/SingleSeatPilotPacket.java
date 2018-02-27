@@ -18,6 +18,7 @@ public class SingleSeatPilotPacket extends BaseArtemisPacket {
     private static final byte[] DEFAULT_UNKNOWN = TextUtil.hexToByteArray("0000803f"); // 1.0f
 
     private int mObjectId;
+    private byte[] mUnknown = DEFAULT_UNKNOWN;
 	private float mRudder = 0.5f;
 	private float mX;
 	private float mY;
@@ -35,7 +36,7 @@ public class SingleSeatPilotPacket extends BaseArtemisPacket {
 		reader.skip(4); // subtype
 		mRudder = reader.readFloat();
 		mObjectId = reader.readInt();
-		reader.readUnknown("UNKNOWN", 4);
+		mUnknown = reader.readBytes(4);
 		mX = reader.readFloat();
 		mY = reader.readFloat();
 		mZ = reader.readFloat();
@@ -148,7 +149,7 @@ public class SingleSeatPilotPacket extends BaseArtemisPacket {
 			.writeInt(0x07)
 			.writeFloat(mRudder)
 			.writeInt(mObjectId)
-			.writeUnknown("UNKNOWN", DEFAULT_UNKNOWN)
+			.writeBytes(mUnknown)
 			.writeFloat(mX)
 			.writeFloat(mY)
 			.writeFloat(mZ)
