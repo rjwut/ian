@@ -263,12 +263,15 @@ public class PacketReader {
 		return result;
 	}
 
+	/**
+	 * Returns the number of unread bytes in the payload.
+	 */
 	public int getBytesLeft() {
 		return payload.getBytesLeft();
 	}
 
 	/**
-	 * Returns true if the packet currently being read has more data; false
+	 * Returns true if the payload currently being read has more data; false
 	 * otherwise.
 	 */
 	public boolean hasMore() {

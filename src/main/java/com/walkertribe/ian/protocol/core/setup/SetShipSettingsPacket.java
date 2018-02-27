@@ -14,7 +14,8 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 import com.walkertribe.ian.vesseldata.Vessel;
 
 /**
- * Set the name, type and drive of ship your console has selected.
+ * Set the name, type and drive of ship your console has selected. This is only
+ * sent by the helm console.
  * @author dhleong
  */
 @Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.SHIP_SETUP)

@@ -6,6 +6,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisGenericObject;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for mines, black holes, and asteroids
+ * @author rjwut
+ */
 public class OtherParser extends AbstractObjectParser {
 	private enum Bit {
     	X,

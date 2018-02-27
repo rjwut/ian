@@ -10,7 +10,8 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
- * Sent by the server when an object is destroyed.
+ * Sent by the server when an object is deleted from the simulation. This
+ * doesn't necessarily mean that an explosion effect should be shown.
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.OBJECT_DELETE)
 public class DestroyObjectPacket extends BaseArtemisPacket {
@@ -31,14 +32,14 @@ public class DestroyObjectPacket extends BaseArtemisPacket {
     }
 
     /**
-     * The ObjectType of the destroyed object
+     * The ObjectType of the deleted object
      */
     public ObjectType getTargetType() {
         return mTargetType;
     }
 
     /**
-     * The destroyed object's ID
+     * The deleted object's ID
      */
     public int getTarget() {
         return mTarget;

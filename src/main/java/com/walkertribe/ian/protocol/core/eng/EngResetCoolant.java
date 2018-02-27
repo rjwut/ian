@@ -10,8 +10,8 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
  * Resets coolant level on all systems to zero. This is sent by the engineering
- * console in response to the user pressing double <kbd>space</kbd> or
- * <kbd>enter</kbd>.
+ * console in response to the user pressing double <kbd>SPACE</kbd> or
+ * <kbd>ENTER</kbd>.
  * @author rjwut
  */
 @Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.ENG_RESET_COOLANT)

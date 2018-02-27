@@ -42,10 +42,16 @@ public class EngSetCoolantPacket extends BaseArtemisPacket {
     	mCoolant = reader.readInt();
     }
 
+    /**
+     * The ship system whose coolant level is being set.
+     */
     public ShipSystem getSystem() {
     	return mSystem;
     }
 
+    /**
+     * The amount of coolant to allocate to this ship system.
+     */
     public int getCoolant() {
     	return mCoolant;
     }

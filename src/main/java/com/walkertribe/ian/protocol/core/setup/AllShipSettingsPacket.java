@@ -56,6 +56,9 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
         }
     }
 
+    /**
+     * Returns the ship with the given number (1-based).
+     */
     public Ship getShip(int shipNumber) {
     	return mShips[shipNumber - 1];
     }

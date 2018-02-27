@@ -63,10 +63,17 @@ public class EngSetEnergyPacket extends BaseArtemisPacket {
     	mSystem = ShipSystem.values()[reader.readInt()];
     }
 
+    /**
+     * The ship system whose energy level is being set.
+     */
     public ShipSystem getSystem() {
     	return mSystem;
     }
 
+    /**
+     * The energy level to set, as a value between 0 and 1 (inclusive), with 0
+     * meaning 0% allocation, and 1 meaning 300% allocation.
+     */
     public float getAllocation() {
     	return mValue;
     }

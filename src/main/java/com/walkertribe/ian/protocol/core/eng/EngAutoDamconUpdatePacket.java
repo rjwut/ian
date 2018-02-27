@@ -8,6 +8,9 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+/**
+ * Notifies the client of the state of autonomous DAMCON.
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.AUTO_DAMCON)
 public class EngAutoDamconUpdatePacket extends SimpleEventPacket {
     private final boolean mOn;

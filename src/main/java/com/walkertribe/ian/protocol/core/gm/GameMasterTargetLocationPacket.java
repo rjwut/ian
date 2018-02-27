@@ -7,6 +7,10 @@ import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 
+/**
+ * Selects a location on the game master's map.
+ * @author rjwut
+ */
 @Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_FLOAT, subtype = 0x06)
 public class GameMasterTargetLocationPacket extends BaseArtemisPacket {
     private float mX;

@@ -49,10 +49,16 @@ public class EngSendDamconPacket extends BaseArtemisPacket {
         mCoord = GridCoord.getInstance(reader.readInt(), reader.readInt(), reader.readInt());
     }
 
+    /**
+     * The number identifying this DAMCON team.
+     */
     public int getTeamNumber() {
     	return mTeamNumber;
     }
 
+    /**
+     * The grid coordinates to which this DAMCON team is travelling. 
+     */
     public GridCoord getDestination() {
     	return mCoord;
     }

@@ -6,6 +6,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisMesh;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for generic meshes
+ * @author rjwut
+ */
 public class GenericMeshParser extends AbstractObjectParser {
 	private enum Bit {
 		X,

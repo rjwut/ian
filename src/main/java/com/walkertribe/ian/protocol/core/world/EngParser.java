@@ -9,6 +9,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
+/**
+ * ObjectParser implementation for engineering console updates
+ * @author rjwut
+ */
 public class EngParser extends AbstractObjectParser {
 	private enum Bit {
 		HEAT_BEAMS,

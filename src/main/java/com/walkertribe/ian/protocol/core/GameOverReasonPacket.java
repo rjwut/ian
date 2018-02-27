@@ -10,6 +10,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+/**
+ * Describes why the game has ended.
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_OVER_REASON)
 public class GameOverReasonPacket extends SimpleEventPacket {
 	private List<CharSequence> mText = new LinkedList<CharSequence>();
@@ -37,8 +41,8 @@ public class GameOverReasonPacket extends SimpleEventPacket {
     }
 
     /**
-     * The text describing why the game ended. Each String in the List is one
-     * line.
+     * The text describing why the game ended. Each CharSequence in the List is
+     * one line.
      */
     public List<CharSequence> getText() {
     	return mText;

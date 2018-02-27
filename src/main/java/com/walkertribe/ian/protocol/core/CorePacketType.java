@@ -1,7 +1,7 @@
 package com.walkertribe.ian.protocol.core;
 
 /**
- * Defines the know packet types for the core Artemis protocol.
+ * Defines the known packet types for the core Artemis protocol.
  * @author rjwut
  */
 public final class CorePacketType {

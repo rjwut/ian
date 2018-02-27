@@ -124,6 +124,10 @@ public class DefaultContext implements Context {
 		return model;
 	}
 
+	/**
+	 * Creates and returns a VesselInternals object loaded from the indicated
+	 * .snt file.
+	 */
 	private VesselInternals loadInternals(String sntPath) {
 		InputStream in = null;
 

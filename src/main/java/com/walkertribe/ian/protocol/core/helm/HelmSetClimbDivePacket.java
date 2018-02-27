@@ -8,7 +8,8 @@ import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 
 /**
- * Set climb/dive.
+ * Changes the ship's trim, causing it to climb, dive or level out.
+ * @author rjwut
  */
 @Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_FLOAT, subtype = 0x02)
 public class HelmSetClimbDivePacket extends BaseArtemisPacket {
@@ -32,6 +33,10 @@ public class HelmSetClimbDivePacket extends BaseArtemisPacket {
     	mPitch = reader.readFloat();
     }
 
+    /**
+     * The desired pitch, as a value between -1 ("hard climb") and 1 ("hard
+     * dive").
+     */
 	public float getPitch() {
 		return mPitch;
 	}

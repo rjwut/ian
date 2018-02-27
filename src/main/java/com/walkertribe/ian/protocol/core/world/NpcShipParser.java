@@ -8,6 +8,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisNpc;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for NPC ships
+ * @author rjwut
+ */
 public class NpcShipParser extends AbstractObjectParser {
 	private enum Bit {
 		NAME,

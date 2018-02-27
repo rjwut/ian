@@ -9,6 +9,10 @@ import com.walkertribe.ian.world.Artemis;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
+/**
+ * ObjectParser implementation for weapons console updates
+ * @author rjwut
+ */
 public class WeapParser extends AbstractObjectParser {
 	private enum Bit {
 		TORP_HOMING,

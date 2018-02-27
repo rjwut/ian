@@ -163,14 +163,23 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 		reader.skip(4);
 	}
 
+	/**
+	 * Add a new object to be updated.
+	 */
 	public void addObject(ArtemisObject obj) {
 		objects.add(obj);
 	}
 
+	/**
+	 * Add a Collection of objects to be updated.
+	 */
 	public void addObjects(Collection<ArtemisObject> objs) {
 		objects.addAll(objs);
 	}
 
+	/**
+	 * Returns the updated objects.
+	 */
 	public List<ArtemisObject> getObjects() {
 		return new LinkedList<ArtemisObject>(objects);
 	}
@@ -207,7 +216,10 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 		writer.writeInt(0);
 	}
 
-	private void writePayloadForObject(PacketWriter writer, ArtemisObject obj, ObjectType type) {
+	/**
+	 * Writes the payload data for an individual object, using the specified ObjectType.
+	 */
+	private static void writePayloadForObject(PacketWriter writer, ArtemisObject obj, ObjectType type) {
 		ObjectParser parser = PARSERS.get(type);
 		writer.startObject(obj, type, parser.getBitCount());
 		parser.write(obj, writer);

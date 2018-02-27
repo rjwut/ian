@@ -8,7 +8,7 @@ public enum Origin {
 	SERVER, CLIENT;
 
 	/**
-	 * Returns the ConnectionType that corresponds to the given int value.
+	 * Returns the Origin that corresponds to the given int value.
 	 */
 	public static final Origin fromInt(int value) {
 		return value == 1 ? SERVER : (value == 2 ? CLIENT : null);
@@ -21,15 +21,15 @@ public enum Origin {
 	}
 
 	/**
-	 * Returns the int value for this ConnectionType.
+	 * Returns the int value for this Origin.
 	 */
 	public int toInt() {
 		return val;
 	}
 
 	/**
-	 * Returns the opposite ConnectionType to this one: SERVER.opposite()
-	 * returns CLIENT and vice-versa.
+	 * Returns the opposite Origin to this one: SERVER.opposite() returns
+	 * CLIENT and vice-versa.
 	 */
 	public Origin opposite() {
 		return this == SERVER ? CLIENT : SERVER;

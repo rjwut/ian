@@ -7,6 +7,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisTorpedo;
 
+/**
+ * ObjectParser implementation for torpedoes
+ * @author rjwut
+ */
 public class TorpedoParser extends AbstractObjectParser {
 	private enum Bit {
     	X,

@@ -29,14 +29,23 @@ public class TitlePacket extends BaseArtemisPacket {
 		mSubtitle2 = reader.readString();
 	}
 
+	/**
+	 * The title to display
+	 */
 	public CharSequence getTitle() {
 		return mTitle;
 	}
 
+	/**
+	 * The first line of the subtitle to display
+	 */
 	public CharSequence getSubtitle1() {
 		return mSubtitle1;
 	}
 
+	/**
+	 * The second line of the subtitle to display
+	 */
 	public CharSequence getSubtitle2() {
 		return mSubtitle2;
 	}

@@ -30,6 +30,9 @@ public class SetBeamFreqPacket extends ValueIntPacket {
     	super(reader);
     }
 
+    /**
+     * The desired beam frequency
+     */
     public BeamFrequency getBeamFrequency() {
     	return BeamFrequency.values()[mArg];
     }

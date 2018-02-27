@@ -30,7 +30,7 @@ public class HelmSetWarpPacket extends ValueIntPacket {
     }
 
     /**
-     * Returns the desired warp factor.
+     * Returns the desired warp factor, between 0 and 4 inclusive.
      */
     public int getWarpFactor() {
     	return mArg;

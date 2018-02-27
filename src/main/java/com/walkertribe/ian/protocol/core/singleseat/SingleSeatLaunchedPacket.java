@@ -25,6 +25,9 @@ public class SingleSeatLaunchedPacket extends SimpleEventPacket {
         mObjectId = reader.readInt();
     }
 
+    /**
+     * The craft's ID.
+     */
     public int getObjectId() {
         return mObjectId;
     }

@@ -34,6 +34,10 @@ public class HelmSetSteeringPacket extends BaseArtemisPacket {
     	mSteering = reader.readFloat();
     }
 
+    /**
+     * The desired rudder position, where 0 is hard to port, 0.5 is rudder
+     * amidships, and 1.0 is hard to starboard.
+     */
     public float getSteering() {
     	return mSteering;
     }

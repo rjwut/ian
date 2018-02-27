@@ -18,5 +18,9 @@ import java.io.InputStream;
  * @author rjwut
  */
 public interface PathResolver {
+	/**
+	 * Returns an InputStream from which the data at the given path can be
+	 * read.
+	 */
 	public InputStream get(String path) throws IOException;
 }

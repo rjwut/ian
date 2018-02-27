@@ -6,6 +6,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisNebula;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for nebulae
+ * @author rjwut
+ */
 public class NebulaParser extends AbstractObjectParser {
 	private enum Bit {
     	X,

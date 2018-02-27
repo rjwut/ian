@@ -31,6 +31,9 @@ public class HelmSetImpulsePacket extends BaseArtemisPacket {
     	mPower = reader.readFloat();
     }
 
+    /**
+     * The desired impulse power, as a value between 0 and 1 inclusive.
+     */
     public float getPower() {
     	return mPower;
     }

@@ -21,14 +21,23 @@ public final class GridCoord implements Comparable<GridCoord> {
         this.z = z;
     }
 
+    /**
+     * The X-coordinate value
+     */
     public int getX() {
     	return x;
     }
 
+    /**
+     * The Y-coordinate value
+     */
     public int getY() {
     	return y;
     }
 
+    /**
+     * The Z-coordinate value
+     */
     public int getZ() {
     	return z;
     }
@@ -47,6 +56,9 @@ public final class GridCoord implements Comparable<GridCoord> {
         return equals(cast.x, cast.y, cast.z);
     }
 
+    /**
+     * Returns true if the given coordinates match those of this object.
+     */
     public final boolean equals(int ox, int oy, int oz) {
         return (x == ox && y == oy && z == oz);
     }

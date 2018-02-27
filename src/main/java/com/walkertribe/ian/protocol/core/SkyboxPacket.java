@@ -6,6 +6,12 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+/**
+ * Indicates which skybox to use. The skybox files are located in the "art"
+ * directory in the Artemis install, under subdirectories whose names are "sb"
+ * followed by a two-digit decimal value, which is the skybox ID.
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.SKYBOX)
 public class SkyboxPacket extends SimpleEventPacket {
 	private int mSkyboxId;
@@ -20,6 +26,9 @@ public class SkyboxPacket extends SimpleEventPacket {
         mSkyboxId = reader.readInt();
 	}
 
+	/**
+	 * The ID of the skybox to use.
+	 */
     public int getSkyboxId() {
     	return mSkyboxId;
     }

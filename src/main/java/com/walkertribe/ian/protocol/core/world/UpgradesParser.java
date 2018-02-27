@@ -7,6 +7,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
+/**
+ * ObjectParser implementation for player ship upgrade updates
+ * @author rjwut
+ */
 public class UpgradesParser extends AbstractObjectParser {
 	/**
 	 * Represents the three fields about an upgrade in a player ship.

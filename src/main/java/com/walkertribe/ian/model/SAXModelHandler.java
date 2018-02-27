@@ -63,10 +63,18 @@ public class SAXModelHandler extends DefaultHandler {
 		}
     }
 
+	/**
+	 * Returns a Map containing all the Vertex objects discovered in the .dxs
+	 * file.
+	 */
 	public Map<String, Vertex> getVertices() {
 		return vertices;
 	};
 
+	/**
+	 * Returns a List containing all the Poly objects discovered in the .dxs
+	 * file.
+	 */
 	public List<Poly> getPolys() {
 		return polys;
 	}

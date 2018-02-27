@@ -11,6 +11,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisObject;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
+/**
+ * ObjectParser implementation for player ships
+ * @author rjwut
+ */
 public class PlayerShipParser extends AbstractObjectParser {
 	private enum Bit {
     	WEAPONS_TARGET,

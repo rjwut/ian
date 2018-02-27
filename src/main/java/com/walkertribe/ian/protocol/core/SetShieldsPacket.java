@@ -13,6 +13,9 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 		SubType.TOGGLE_SHIELDS, SubType.SHIELDS_UP, SubType.SHIELDS_DOWN
 })
 public class SetShieldsPacket extends ValueIntPacket {
+	/**
+	 * What shield action to perform
+	 */
 	public enum Action {
 		TOGGLE(SubType.TOGGLE_SHIELDS),
 		UP(SubType.SHIELDS_UP),

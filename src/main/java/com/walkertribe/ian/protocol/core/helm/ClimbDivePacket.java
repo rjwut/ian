@@ -30,6 +30,10 @@ public class ClimbDivePacket extends ValueIntPacket {
         super(reader);
     }
 
+    /**
+     * Returns true if this is an "up" command. (Otherwise, it's a "down"
+     * command).
+     */
     public boolean isUp() {
     	return mArg == UP;
     }

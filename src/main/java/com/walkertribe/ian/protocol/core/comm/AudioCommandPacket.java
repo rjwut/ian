@@ -16,10 +16,6 @@ public class AudioCommandPacket extends BaseArtemisPacket {
     private int audioId;
     private AudioCommand cmd;
 
-    /**
-     * @param audioId The ID of the audio message to which the command applies
-     * @param cmd The command to issue (PLAY or DELETE)
-     */
     public AudioCommandPacket(int audioId, AudioCommand cmd) {
         if (cmd == null) {
         	throw new IllegalArgumentException("You must provide a command");
@@ -34,10 +30,16 @@ public class AudioCommandPacket extends BaseArtemisPacket {
     	cmd = AudioCommand.values()[reader.readInt()];
     }
 
+    /**
+     * The ID of the audio message to which the command applies.
+     */
     public int getAudioId() {
     	return audioId;
     }
 
+    /**
+     * The action to perform with that message.
+     */
     public AudioCommand getCommand() {
     	return cmd;
     }

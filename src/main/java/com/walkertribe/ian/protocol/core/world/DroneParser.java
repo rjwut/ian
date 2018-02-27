@@ -6,6 +6,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisDrone;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * ObjectParser implementation for Torgoth drones
+ * @author rjwut
+ */
 public class DroneParser extends AbstractObjectParser {
     private enum Bit {
     	UNK_1_1,

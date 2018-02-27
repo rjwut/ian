@@ -16,20 +16,24 @@ import com.walkertribe.ian.util.Version;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
+ * <p>
  * Facilitates writing packets to an OutputStream. This object may be reused to
  * write as many packets as desired to a single OutputStream. To write a packet,
  * follow these steps:
- * 
- * 1. Invoke start().
- * 2. Write the payload data using the write*() methods. Payload data is
- *    buffered by the PacketWriter, not written immediately to the OutputStream.
- * 3. Invoke flush(). The proper values for the fields in the preamble will be
- *    automatically computed and written, followed by the payload. The entire
- *    packet is then flushed to the OutputStream.
- * 
+ * </p>
+ * <ol>
+ * <li>Invoke start().</li>
+ * <li>Write the payload data using the write*() methods. Payload data is
+ * buffered by the PacketWriter, not written immediately to the
+ * OutputStream.</li>
+ * <li>Invoke flush(). The proper values for the fields in the preamble will be
+ * automatically computed and written, followed by the payload. The entire
+ * packet is then flushed to the OutputStream.</li>
+ * </ol>
+ * <p>
  * Once flush() has been called, you can start writing another packet by
  * invoking start() again.
- * 
+ * </p>
  * @author rjwut
  */
 public class PacketWriter {
@@ -251,9 +255,9 @@ public class PacketWriter {
 	}
 
 	/**
-	 * Writes a UTF-16LE encoded String. This handles writing the string length
-	 * and the terminating null character automatically. You must invoke start()
-	 * before calling this method.
+	 * Writes a UTF-16LE encoded CharSequence. This handles writing the
+	 * string length and the terminating null character automatically. You must
+	 * invoke start() before calling this method.
 	 */
 	public PacketWriter writeString(CharSequence str) {
 		writeString(str, baos);
@@ -277,10 +281,10 @@ public class PacketWriter {
 	}
 
 	/**
-	 * If the given NullTerminatedString is not null, it is written to the
-	 * packet, and the corresponding bit in the object's bit field is set;
-	 * otherwise, nothing happens. You must invoke startObject() before calling
-	 * this method.
+	 * If the given CharSequence is not null, it is written to the packet, and
+	 * the corresponding bit in the object's bit field is set; otherwise,
+	 * nothing happens. You must invoke startObject() before calling this
+	 * method.
 	 */
 	public PacketWriter writeString(int bitIndex, CharSequence str) {
 		assertObjectStarted();
@@ -487,7 +491,8 @@ public class PacketWriter {
 	}
 
 	/**
-	 * Writes a UTF-16LE encoded String into the given ByteArrayOutputStream.
+	 * Writes a UTF-16LE encoded CharSequence into the given
+	 * ByteArrayOutputStream.
 	 */
 	private void writeString(CharSequence v, ByteArrayOutputStream outStream) {
 		int charCount;

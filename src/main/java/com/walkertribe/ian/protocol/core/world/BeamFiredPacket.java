@@ -9,6 +9,10 @@ import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * Sent by the server when a beam weapon has been fired.
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.ATTACK)
 public class BeamFiredPacket extends BaseArtemisPacket {
 	private static final byte[] DEFAULT_UNKNOWN_VALUE = { 0, 0, 0, 0 };

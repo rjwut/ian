@@ -10,6 +10,10 @@ import com.walkertribe.ian.protocol.core.SimpleEventPacket;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.world.ArtemisObject;
 
+/**
+ * Sent by the server to indicate that an object is exploding.
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.EXPLOSION)
 public class ExplosionPacket extends SimpleEventPacket {
 	private ObjectType mObjectType;
@@ -36,10 +40,16 @@ public class ExplosionPacket extends SimpleEventPacket {
 		super(reader);
 	}
 
+	/**
+	 * The type of object that is exploding
+	 */
 	public ObjectType getObjectType() {
 		return mObjectType;
 	}
 
+	/**
+	 * The ID of the exploding object
+	 */
 	public int getObjectId() {
 		return mObjectId;
 	}

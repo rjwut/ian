@@ -41,10 +41,20 @@ public class HelmJumpPacket extends BaseArtemisPacket {
         mDistance = reader.readFloat();
     }
 
+    /**
+     * Returns the desired jump heading. This is a value between 0 and 1
+     * (inclusive). Multiply this value by 360 to convert to degrees.
+     * @return
+     */
     public float getHeading() {
     	return mHeading;
     }
 
+    /**
+     * Returns the desired jump distance. This is a value between 0 and 1
+     * (inclusive). Multiply this value by 50,000 to get the distance in game
+     * space units.
+     */
     public float getDistance() {
     	return mDistance;
     }

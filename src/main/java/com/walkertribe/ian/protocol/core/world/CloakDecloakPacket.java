@@ -8,6 +8,11 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+/**
+ * Sent by the server when a ship has cloaked or decloaked. This results in a
+ * green "poof" visual effect in the stock client.
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.CLOAK_DECLOAK)
 public class CloakDecloakPacket extends SimpleEventPacket {
     private final float mX;
@@ -27,14 +32,23 @@ public class CloakDecloakPacket extends SimpleEventPacket {
         mZ = reader.readFloat();
     }
 
+    /**
+     * The X-coordinate where the (un)cloak event occurred.
+     */
     public float getX() {
         return mX;
     }
 
+    /**
+     * The Y-coordinate where the (un)cloak event occurred.
+     */
     public float getY() {
         return mY;
     }
 
+    /**
+     * The Z-coordinate where the (un)cloak event occurred.
+     */
     public float getZ() {
         return mZ;
     }

@@ -5,6 +5,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 
+/**
+ * A superclass for handling SIMPLE_EVENT server packets.
+ * @author rjwut
+ */
 public abstract class SimpleEventPacket extends BaseArtemisPacket {
     /**
      * SIMPLE_EVENT server packet subtypes.

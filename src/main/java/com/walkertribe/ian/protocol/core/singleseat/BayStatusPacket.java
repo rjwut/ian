@@ -46,18 +46,31 @@ public class BayStatusPacket extends BaseArtemisPacket implements Iterable<BaySt
     		this.refitTime = refitTime;
     	}
 
+    	/**
+    	 * Returns the craft's ID.
+    	 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * Returns the craft's name.
+		 */
 		public CharSequence getName() {
 			return name;
 		}
 
+		/**
+		 * Returns the of the craft's class.
+		 */
 		public CharSequence getClassName() {
 			return className;
 		}
 
+		/**
+		 * The amount of time (in seconds) remaining before this craft can be
+		 * relaunched.
+		 */
 		public int getRefitTime() {
 			return refitTime;
 		}

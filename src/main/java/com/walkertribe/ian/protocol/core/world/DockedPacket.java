@@ -9,6 +9,10 @@ import com.walkertribe.ian.protocol.core.SimpleEventPacket;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
+/**
+ * Sent when a player ship docks.
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.DOCKED)
 public class DockedPacket extends SimpleEventPacket {
     private final int mObjectId;
@@ -26,6 +30,9 @@ public class DockedPacket extends SimpleEventPacket {
         mObjectId = reader.readInt();
     }
 
+    /**
+     * The ID of the ship that has docked.
+     */
     public int getObjectId() {
         return mObjectId;
     }

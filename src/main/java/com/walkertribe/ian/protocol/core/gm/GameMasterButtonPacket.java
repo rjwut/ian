@@ -13,6 +13,9 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.GM_BUTTON)
 public class GameMasterButtonPacket extends BaseArtemisPacket {
+	/**
+	 * The action being performed to this GM button.
+	 */
 	public enum Action {
 		REMOVE,
 		CREATE

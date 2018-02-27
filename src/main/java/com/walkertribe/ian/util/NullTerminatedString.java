@@ -117,6 +117,10 @@ public class NullTerminatedString implements CharSequence {
 		return str.subSequence(beginIndex, endIndex);
 	}
 
+	/**
+	 * Returns a new NullTerminatedString with all instances of oldChar
+	 * replaced with newChar and with any garbage data preserved.
+	 */
 	public CharSequence replace(char oldChar, char newChar) {
 		NullTerminatedString newString = new NullTerminatedString(str.replace(oldChar, newChar));
 		newString.garbage = garbage;

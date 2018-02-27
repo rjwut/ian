@@ -7,7 +7,7 @@ import com.walkertribe.ian.protocol.RawPacket;
 
 /**
  * Interface for objects which can be attached to an ArtemisNetworkInterface to
- * get notified of debugging-related events.
+ * get notified of low-level parsing and writing events.
  * @author rjwut
  */
 public interface Debugger {

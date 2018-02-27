@@ -23,6 +23,7 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
     private int mRecipientId;
     private CommsMessage mMsg;
     private int mArg;
+    private int mArg2 = NO_ARG_2;
 
     /**
      * Creates an outgoing message with no argument. If you pass in a
@@ -90,21 +91,33 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
         mRecipientId = reader.readInt();
         mMsg = mRecipientType.messageFromId(reader.readInt());
         mArg = reader.readInt();
-        reader.skip(4);	// arg 2 placeholder
+        mArg2 = reader.readInt();
     }
 
+    /**
+     * The CommsRecipientType value corresponding to the target object.
+     */
     public CommsRecipientType getRecipientType() {
     	return mRecipientType;
     }
 
+    /**
+     * The ID of the target object.
+     */
     public int getRecipientId() {
     	return mRecipientId;
     }
 
+    /**
+     * The enum value representing the message to send.
+     */
     public CommsMessage getMessage() {
     	return mMsg;
     }
 
+    /**
+     * The argument to send with the message.
+     */
 	public int getArgument() {
 		return mArg;
 	}
@@ -115,7 +128,7 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
     			.writeInt(mRecipientId)
     			.writeInt(mMsg.getId())
     			.writeInt(mArg)
-    			.writeInt(NO_ARG_2);
+    			.writeInt(mArg2);
 	}
 
 	@Override

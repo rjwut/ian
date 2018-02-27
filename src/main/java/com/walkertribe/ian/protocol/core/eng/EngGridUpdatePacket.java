@@ -12,7 +12,7 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.GridCoord;
 
 /**
- * Updates damage to the various system grids on the ship, as well as DamCon
+ * Updates damage to the various system grids on the ship, as well as DAMCON
  * team status/location.
  * @author dhleong
  */

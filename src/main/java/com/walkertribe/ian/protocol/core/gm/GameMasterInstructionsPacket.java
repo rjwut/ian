@@ -17,6 +17,9 @@ public class GameMasterInstructionsPacket extends BaseArtemisPacket {
 	private CharSequence mTitle;
 	private CharSequence mContent;
 
+	/**
+	 * Creates new instructions for the game master.
+	 */
 	public GameMasterInstructionsPacket(String title, String content) {
 		mTitle = title;
 		mContent = content;

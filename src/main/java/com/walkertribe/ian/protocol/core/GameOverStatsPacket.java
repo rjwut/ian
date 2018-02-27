@@ -10,6 +10,10 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
+/**
+ * Provides a column of endgame statistics. 
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_OVER_STATS)
 public class GameOverStatsPacket extends SimpleEventPacket implements
 		Iterable<GameOverStatsPacket.Row> {
@@ -38,6 +42,9 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
         } while (true);
 	}
 
+	/**
+	 * The index of the column (0-based).
+	 */
     public byte getColumnIndex() {
     	return columnIndex;
     }
@@ -51,6 +58,9 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 		return rows.iterator();
 	}
 
+    /**
+     * Adds a row of data to this column.
+     */
     public void addRow(String label, int value) {
     	rows.add(new Row(label, value));
     }
@@ -80,7 +90,10 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 		}
 	}
 
-
+	/**
+	 * Represents a single row of data to display in the column.
+	 * @author rjwut
+	 */
 	public static class Row {
 		private CharSequence label;
 		private int value;

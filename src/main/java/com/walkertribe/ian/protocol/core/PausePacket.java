@@ -7,6 +7,10 @@ import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.util.BoolState;
 
+/**
+ * Notifies the client that the game has paused or unpaused.
+ * @author rjwut
+ */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.PAUSE)
 public class PausePacket extends SimpleEventPacket {
     private final BoolState mPaused;

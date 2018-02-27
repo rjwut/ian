@@ -31,6 +31,9 @@ public class SetShipPacket extends ValueIntPacket {
         super(reader);
     }
 
+    /**
+     * The ship number being selected (1-based).
+     */
     public int getShipNumber() {
     	return mArg + 1;
     }
