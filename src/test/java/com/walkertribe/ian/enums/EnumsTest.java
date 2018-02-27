@@ -99,7 +99,7 @@ public class EnumsTest {
 			Assert.assertEquals(ordnance, BaseMessage.build(ordnance).getOrdnanceType());
 		}
 
-		Assert.assertNull(BaseMessage.STAND_BY_FOR_DOCKING.getOrdnanceType());
+		Assert.assertNull(BaseMessage.STAND_BY_FOR_DOCKING_OR_CEASE_OPERATION.getOrdnanceType());
 		Assert.assertNull(BaseMessage.PLEASE_REPORT_STATUS.getOrdnanceType());
 	}
 
