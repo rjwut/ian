@@ -151,8 +151,6 @@ public class PlayerShipParser extends AbstractObjectParser {
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisPlayer player = (ArtemisPlayer) obj;
-		int shipIndex = player.getShipNumber();
-		int shipNumber = shipIndex == -1 ? -1 : shipIndex + 1;
 		writer	.writeInt(Bit.WEAPONS_TARGET, player.getWeaponsTarget(), -1)
 				.writeFloat(Bit.IMPULSE, player.getImpulse(), -1)
 				.writeFloat(Bit.RUDDER, player.getSteering(), -1)
@@ -168,7 +166,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 		writer	.writeByte(Bit.WARP, player.getWarp(), (byte) -1)
 				.writeFloat(Bit.ENERGY, player.getEnergy(), -1)
 				.writeBool(Bit.SHIELD_STATE, player.getShieldsState(), 2)
-				.writeInt(Bit.SHIP_NUMBER, shipNumber, -1)
+				.writeInt(Bit.SHIP_NUMBER, player.getShipNumber(), -1)
 				.writeInt(Bit.SHIP_TYPE, player.getHullId(), -1)
 				.writeFloat(Bit.X, player.getX(), Float.MIN_VALUE)
 				.writeFloat(Bit.Y, player.getY(), Float.MIN_VALUE)

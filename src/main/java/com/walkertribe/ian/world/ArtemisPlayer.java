@@ -111,7 +111,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 	private ObjectType mDeclaredType;
     private TargetingMode mTargetingMode;
 	private AlertStatus mAlertStatus;
-    private BoolState mShields;
+    private BoolState mShields = BoolState.UNKNOWN;
     private int mShipNumber = -1;
 	private final SystemStatus[] mSystems = new SystemStatus[Artemis.SYSTEM_COUNT];
     private final int[] mTorpedos = new int[OrdnanceType.COUNT];
@@ -124,7 +124,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private byte mWarp = -1;
     private BeamFrequency mBeamFreq;
     private DriveType mDriveType;
-    private BoolState mReverse;
+    private BoolState mReverse = BoolState.UNKNOWN;
     private int mScienceTarget = -1;
     private float mScanProgress = -1;
     private int mCaptainTarget = -1;
