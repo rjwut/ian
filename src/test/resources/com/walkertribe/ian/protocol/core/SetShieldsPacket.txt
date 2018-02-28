@@ -3,5 +3,21 @@ efbeadde          // header
 02000000          // origin = client
 00000000          // padding
 0c000000          // remaining length = 12
-3c1d824c 04000000 // SetShieldsPacket
+3c1d824c 04000000 // SetShieldsPacket(TOGGLE)
+00000000          // unused
+
+efbeadde          // header
+20000000          // packet length = 32
+02000000          // origin = client
+00000000          // padding
+0c000000          // remaining length = 12
+3c1d824c 05000000 // SetShieldsPacket(UP)
+00000000          // unused
+
+efbeadde          // header
+20000000          // packet length = 32
+02000000          // origin = client
+00000000          // padding
+0c000000          // remaining length = 12
+3c1d824c 06000000 // SetShieldsPacket(DOWN)
 00000000          // unused
