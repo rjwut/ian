@@ -9,6 +9,7 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * Describes why the game has ended.
@@ -24,7 +25,7 @@ public class GameOverReasonPacket extends SimpleEventPacket {
     	}
 
     	for (CharSequence line : text) {
-    		if (line == null || line.length() == 0) {
+    		if (Util.isBlank(line)) {
     			throw new IllegalArgumentException("No blank lines allowed");
     		}
     	}

@@ -22,7 +22,7 @@ public final class Util {
 	 * the given Set.
 	 */
 	public static String enumSetToString(Set<? extends Enum<?>> set) {
-    	if (set.isEmpty()) {
+    	if (set == null || set.isEmpty()) {
     		return "";
     	}
 
@@ -45,6 +45,10 @@ public final class Util {
 	 */
 	public static boolean containsAny(Collection<?> collection,
 			Object... objs) {
+		if (collection == null) {
+			throw new IllegalArgumentException("Collection to test can't be null");
+		}
+
 		for (Object obj : objs) {
 			if (collection.contains(obj)) {
 				return true;
@@ -52,6 +56,13 @@ public final class Util {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns true if the given CharSequence is null or zero-length.
+	 */
+	public static boolean isBlank(CharSequence str) {
+		return str == null || str.length() == 0;
 	}
 
 	/**

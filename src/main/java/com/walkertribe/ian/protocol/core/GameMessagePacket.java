@@ -5,6 +5,7 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * "Toast" messages sent by the server.
@@ -14,7 +15,7 @@ public class GameMessagePacket extends SimpleEventPacket {
     private final CharSequence mMessage;
 
     public GameMessagePacket(CharSequence message) {
-        if (message == null || message.length() == 0) {
+        if (Util.isBlank(message)) {
         	throw new IllegalArgumentException("You must provide a message");
         }
 

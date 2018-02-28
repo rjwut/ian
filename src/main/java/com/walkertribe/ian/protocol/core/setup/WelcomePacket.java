@@ -6,6 +6,7 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * Sent by the server immediately on connection. The receipt of this packet
@@ -29,7 +30,7 @@ public class WelcomePacket extends BaseArtemisPacket {
 	 * Uses an arbitrary message you provide.
 	 */
 	public WelcomePacket(String msg) {
-		if (msg == null || msg.length() == 0) {
+		if (Util.isBlank(msg)) {
 			throw new IllegalArgumentException("You must provide a message");
 		}
 

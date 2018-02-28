@@ -2,6 +2,7 @@ package com.walkertribe.ian.protocol.core.setup;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.DriveType;
+import com.walkertribe.ian.util.Util;
 import com.walkertribe.ian.vesseldata.Vessel;
 
 /**
@@ -29,7 +30,7 @@ public class Ship {
 	}
 
 	public void setName(CharSequence name) {
-		if (name == null || name.length() == 0) {
+		if (Util.isBlank(name)) {
 			throw new IllegalArgumentException("You must provide a name");
 		}
 

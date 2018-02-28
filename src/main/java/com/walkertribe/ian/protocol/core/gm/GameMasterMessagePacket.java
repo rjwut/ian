@@ -7,6 +7,7 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * A packet sent by the game master console to the server which causes a message
@@ -39,11 +40,11 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
      * are allowed.
      */
     public GameMasterMessagePacket(String sender, String message, Console console) {
-        if (sender == null || sender.length() == 0) {
+        if (Util.isBlank(sender)) {
         	throw new IllegalArgumentException("You must provide a sender");
         }
 
-        if (message == null || message.length() == 0) {
+        if (Util.isBlank(message)) {
         	throw new IllegalArgumentException("You must provide a message");
         }
 

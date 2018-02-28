@@ -6,6 +6,7 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * Creates or removes a button on the game master console.
@@ -44,7 +45,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
         	throw new IllegalArgumentException("Label is required");
         }
 
-        if (label != null && label.length() == 0) {
+        if (action != Action.REMOVE && Util.isBlank(label)) {
         	throw new IllegalArgumentException("Label is required");
         }
 

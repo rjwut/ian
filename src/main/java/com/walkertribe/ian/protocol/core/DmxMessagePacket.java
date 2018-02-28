@@ -5,6 +5,7 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * Updates the state of a DMX flag.
@@ -16,7 +17,7 @@ public class DmxMessagePacket extends SimpleEventPacket {
     private final boolean mOn;
 
     public DmxMessagePacket(String name, boolean on) {
-        if (name == null || name.length() == 0) {
+        if (Util.isBlank(name)) {
         	throw new IllegalArgumentException("You must provide a name");
         }
 

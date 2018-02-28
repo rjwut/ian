@@ -10,6 +10,7 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * Updates the current status of the single-seat craft bays.
@@ -28,11 +29,11 @@ public class BayStatusPacket extends BaseArtemisPacket implements Iterable<BaySt
     			throw new IllegalArgumentException("Bay can't have an ID of 0");
     		}
 
-    		if (name == null || name.length() == 0) {
+    		if (Util.isBlank(name)) {
     			throw new IllegalArgumentException("You must provide a name");
     		}
 
-    		if (className == null || className.length() == 0) {
+    		if (Util.isBlank(className)) {
     			throw new IllegalArgumentException("You must provide a class name");
     		}
 

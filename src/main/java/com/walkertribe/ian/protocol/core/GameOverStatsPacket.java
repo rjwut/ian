@@ -9,6 +9,7 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
+import com.walkertribe.ian.util.Util;
 
 /**
  * Provides a column of endgame statistics. 
@@ -99,7 +100,7 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 		private int value;
 
 		private Row(CharSequence label, int value) {
-			if (label == null || label.length() == 0) {
+			if (Util.isBlank(label)) {
 				throw new IllegalArgumentException("You must provide a label");
 			}
 

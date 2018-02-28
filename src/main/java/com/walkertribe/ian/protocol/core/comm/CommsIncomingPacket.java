@@ -31,11 +31,11 @@ public class CommsIncomingPacket extends BaseArtemisPacket {
     		throw new IllegalArgumentException("Invalid priority: " + priority);
     	}
 
-    	if (from == null || from.length() == 0) {
+    	if (Util.isBlank(from)) {
     		throw new IllegalArgumentException("You must provide a sender name");
     	}
 
-    	if (message == null || message.length() == 0) {
+    	if (Util.isBlank(message)) {
     		throw new IllegalArgumentException("You must provide a message");
     	}
 
