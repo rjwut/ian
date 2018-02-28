@@ -42,7 +42,7 @@ public class SetShieldsPacket extends ValueIntPacket {
 	}
 
 	public SetShieldsPacket(Action action) {
-        super(action != null ? action.subType : null, 0);
+        super(action != null ? action.subType : 0, 0);
 
 		if (action == null) {
 			throw new IllegalArgumentException("You must specify an action");
