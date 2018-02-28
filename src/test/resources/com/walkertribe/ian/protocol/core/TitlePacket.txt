@@ -1,0 +1,9 @@
+efbeadde // header
+48000000 // packet length = 72
+01000000 // origin = server
+00000000 // padding
+34000000 // remaining length = 52
+1a0b2f90 // TitlePacket
+06000000 7400 6500 7300 7400 3100 0000 // title = test1
+06000000 7400 6500 7300 7400 3200 0000 // subtitle1 = test2
+06000000 7400 6500 7300 7400 3300 0000 // subtitle2 = test3
