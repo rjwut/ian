@@ -12,8 +12,7 @@ import com.walkertribe.ian.protocol.RawPacket;
  */
 public class BaseDebugger implements Debugger {
 	@Override
-	public void onRecvPacketBytes(Origin connType, int pktType,
-			byte[] payload) {
+	public void onRecvPacketBytes(Origin origin, int pktType, byte[] payload) {
 		// do nothing
 	}
 
@@ -43,8 +42,7 @@ public class BaseDebugger implements Debugger {
 	}
 
 	@Override
-	public void onSendPacketBytes(Origin connType, int pktType,
-			byte[] payload) {
+	public void onSendPacketBytes(Origin origin, int pktType, byte[] payload) {
 		// do nothing
 	}
 

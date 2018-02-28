@@ -112,7 +112,7 @@ It's also likely that you'll want to know when the connection to the server is l
 
 2. **Listen for a client connection.** Open a `ServerSocket` on the desired port, then call `accept()` on it to listen for a connecting client. The `accept()` method will block until a client connects or it times out, and return a `Socket` object when the client connects. You can set the timeout by calling `ServerSocket.setSoTimeout()`; passing in `0` will cause it to wait indefinitely for a connection.
 
-3. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and a `ConnectionType` (`CLIENT` in this case), along with the `Context`. The resulting object will be responsible for managing the connection to the client.
+3. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and an `Origin` (`CLIENT` in this case), along with the `Context`. The resulting object will be responsible for managing the connection to the client.
 
 4. **Connect to the *Artemis* server.** This is done exactly the same way as you would for creating an *Artemis* client, as documented above. You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
 

@@ -79,7 +79,7 @@ public class IncomingAudioPacket extends BaseArtemisPacket {
     }
 
     @Override
-    public Origin getConnectionType() {
+    public Origin getOrigin() {
         return Origin.SERVER;
     }
     

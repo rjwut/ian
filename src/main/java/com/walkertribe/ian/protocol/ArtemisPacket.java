@@ -16,11 +16,11 @@ public interface ArtemisPacket {
 	public static final int HEADER = 0xdeadbeef;
 
     /**
-     * Returns a ConnectionType value indicating the type of connection from
-     * which this packet originates. SERVER means that this packet type is sent
-     * by the server; CLIENT means it's sent by the client.
+     * Returns an Origin value indicating the type of connection from which
+     * this packet originates. SERVER means that this packet type is sent by
+     * the server; CLIENT means it's sent by the client.
      */
-    public Origin getConnectionType();
+    public Origin getOrigin();
 
     /**
      * Returns the type value for this packet, specified as the last field of

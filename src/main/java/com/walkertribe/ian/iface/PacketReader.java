@@ -58,10 +58,10 @@ public class PacketReader {
 	/**
 	 * Wraps the given InputStream with this PacketReader.
 	 */
-	public PacketReader(Context ctx, Origin connType, InputStream in,
+	public PacketReader(Context ctx, Origin origin, InputStream in,
 			Protocol protocol, ListenerRegistry listenerRegistry) {
 		this.ctx = ctx;
-		this.origin = connType;
+		this.origin = origin;
 		this.in = in;
 		this.protocol = protocol;
 		this.listenerRegistry = listenerRegistry;

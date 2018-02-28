@@ -14,14 +14,14 @@ public interface ArtemisNetworkInterface {
 	public static final Version MIN_VERSION = new Version("2.4");
 
 	/**
-     * Returns the ConnectionType of the packets this interface can receive. An
+     * Returns the Origin of the packets this interface can receive. An
      * ArtemisProtocolException will be thrown if it receives a packet of the
      * wrong type.
      */
     public Origin getRecvType();
 
     /**
-     * Returns the ConnectionType of the packets this interface can send. An
+     * Returns the Origin of the packets this interface can send. An
      * ArtemisProtocolException will be thrown if it is asked to send a packet
      * of the wrong type.
      */

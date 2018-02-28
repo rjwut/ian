@@ -87,19 +87,19 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	}
 
 	/**
-	 * Given a TestPacketFile and expected ConnectionType, reads the indicated
+	 * Given a TestPacketFile and expected Origin, reads the indicated
 	 * number of packets from the file and returns them in a List.  
 	 */
-	protected List<T> readPackets(TestPacketFile file, Origin type,
+	protected List<T> readPackets(TestPacketFile file, Origin origin,
 			int packetCount, Debugger debugger) throws ArtemisPacketException {
-		PacketReader reader = buildPacketReader(file, type);
+		PacketReader reader = buildPacketReader(file, origin);
 		List<T> list = new ArrayList<T>(packetCount);
 
 		for (int i = 0; i < packetCount; i++) {
 			@SuppressWarnings("unchecked")
 			T pkt = (T) reader.readPacket(debugger).getPacket();
 			Assert.assertNotNull(pkt);
-			Assert.assertEquals(type, pkt.getConnectionType());
+			Assert.assertEquals(origin, pkt.getOrigin());
 			Assert.assertFalse(reader.hasMore()); // Any bytes left over?
 			list.add(pkt);
 			pkt.toString();
@@ -138,7 +138,7 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 * Returns a PacketReader that reads the contents of the given
 	 * TestPacketFile.
 	 */
-	protected PacketReader buildPacketReader(TestPacketFile file, Origin type) {
-		return file.toPacketReader(type, true);
+	protected PacketReader buildPacketReader(TestPacketFile file, Origin origin) {
+		return file.toPacketReader(origin, true);
 	}
 }

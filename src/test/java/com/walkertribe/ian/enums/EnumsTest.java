@@ -148,7 +148,7 @@ public class EnumsTest {
 	}
 
 	@Test
-	public void testConnectionType() {
+	public void testOrigin() {
 		Assert.assertEquals(Origin.SERVER, Origin.fromInt(1));
 		Assert.assertEquals(Origin.CLIENT, Origin.fromInt(2));
 		Assert.assertNull(Origin.fromInt(0));

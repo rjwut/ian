@@ -30,9 +30,8 @@ public class OutputStreamDebugger implements Debugger {
 	}
 
 	@Override
-	public void onRecvPacketBytes(Origin connType, int pktType,
-			byte[] payload) {
-		printPacketBytes(false, connType, pktType, payload);
+	public void onRecvPacketBytes(Origin origin, int pktType, byte[] payload) {
+		printPacketBytes(false, origin, pktType, payload);
 	}
 
 	@Override
@@ -51,15 +50,14 @@ public class OutputStreamDebugger implements Debugger {
 	}
 
 	@Override
-	public void onSendPacketBytes(Origin connType, int pktType,
-			byte[] payload) {
-		printPacketBytes(true, connType, pktType, payload);
+	public void onSendPacketBytes(Origin origin, int pktType, byte[] payload) {
+		printPacketBytes(true, origin, pktType, payload);
 	}
 
 	@Override
 	public void onPacketParseException(ArtemisPacketException ex) {
 		byte[] payload = ex.getPayload();
-		err.println(ex.getConnectionType() + ": " +
+		err.println(ex.getOrigin() + ": " +
 				TextUtil.intToHex(ex.getPacketType()) + " " +
 				(payload == null ? "" : TextUtil.byteArrayToHexString(payload))
 		);
@@ -87,13 +85,13 @@ public class OutputStreamDebugger implements Debugger {
 	/**
 	 * Writes the bytes for the given packet to the OutputStream.
 	 */
-	private void printPacketBytes(boolean send, Origin connType,
-			int pktType, byte[] payload) {
+	private void printPacketBytes(boolean send, Origin origin, int pktType,
+			byte[] payload) {
 		out.println(
 				name + (send ? "< " : "> ") +
 				TextUtil.intToHexLE(ArtemisPacket.HEADER) + " " +
 				TextUtil.intToHexLE(payload.length + 24) + " " +
-				TextUtil.intToHexLE(connType.toInt()) + " " +
+				TextUtil.intToHexLE(origin.toInt()) + " " +
 				TextUtil.intToHexLE(0) + " " +
 				TextUtil.intToHexLE(payload.length + 4) + " " +
 				TextUtil.intToHexLE(pktType) + " " +

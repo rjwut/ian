@@ -15,8 +15,7 @@ public interface Debugger {
 	 * Invoked when a packet has been received, but before it is parsed. This
 	 * allows you to see the raw payload bytes for each packet as it received.
 	 */
-	public void onRecvPacketBytes(Origin connType, int pktType,
-			byte[] payload);
+	public void onRecvPacketBytes(Origin origin, int pktType, byte[] payload);
 
 	/**
 	 * Invoked when a packet is successfully parsed. Packets which are not
@@ -52,8 +51,7 @@ public interface Debugger {
 	 * before it is flushed to the OutputStream. This allows you to inspect the
 	 * raw payload bytes for each packet as it is sent.
 	 */
-	public void onSendPacketBytes(Origin connType, int pktType,
-			byte[] payload);
+	public void onSendPacketBytes(Origin origin, int pktType, byte[] payload);
 
 	/**
 	 * Invoked when the interface wishes to report a warning.

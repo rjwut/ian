@@ -56,7 +56,7 @@ public abstract class BaseArtemisPacket implements ArtemisPacket {
     }
 
     @Override
-    public Origin getConnectionType() {
+    public Origin getOrigin() {
         return mOrigin;
     }
 

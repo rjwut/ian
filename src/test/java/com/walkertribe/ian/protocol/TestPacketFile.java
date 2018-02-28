@@ -68,10 +68,10 @@ public class TestPacketFile {
 	public static void main(String[] args) {
 		Context ctx = new DefaultContext(new FilePathResolver(args[0]));
 		String fileName = args[1];
-		Origin connType = Origin.valueOf(args[2]);
+		Origin origin = Origin.valueOf(args[2]);
 
 		try {
-			new TestPacketFile(new File(fileName), Mode.READ, ctx).test(connType);
+			new TestPacketFile(new File(fileName), Mode.READ, ctx).test(origin);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -114,13 +114,13 @@ public class TestPacketFile {
 	/**
 	 * Reads the test packet data in the given byte array.
 	 */
-	public TestPacketFile(Origin connType, int pktType, byte[] payload) throws IOException {
+	public TestPacketFile(Origin origin, int pktType, byte[] payload) throws IOException {
 		ByteArrayOutputStream out = null;
 
 		try {
 			out = new ByteArrayOutputStream();
 			PacketWriter writer = new PacketWriter(out);
-			writer.start(connType, pktType);
+			writer.start(origin, pktType);
 			writer.writeBytes(payload);
 			initRead(new ByteArrayInputStream(out.toByteArray()));
 		} finally {
@@ -187,11 +187,11 @@ public class TestPacketFile {
 	}
 
 	/**
-	 * Given a ConnectionType from which the data in this file originated,
-	 * attempts to parse and re-write the data. If an error occurs, a stack
-	 * trace will be written out to System.err.
+	 * Given an Origin for the data in this file, attempts to parse and
+	 * re-write the data. If an error occurs, a stack trace will be written out
+	 * to System.err.
 	 */
-	public void test(Origin connType) {
+	public void test(Origin origin) {
 		if (mode != Mode.READ) {
 			throw new IllegalStateException("test() only valid for read mode");
 		}
@@ -202,7 +202,7 @@ public class TestPacketFile {
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		PacketReader reader = new PacketReader(
 				ctx,
-				connType,
+				origin,
 				bais,
 				new CoreArtemisProtocol(),
 				listeners
@@ -236,14 +236,14 @@ public class TestPacketFile {
 	}
 
 	/**
-	 * Returns a PacketReader of the given type that will consume the bytes from
-	 * this file. If parse is true, TestPacketFile will register an
+	 * Returns a PacketReader of the given origin that will consume the bytes
+	 * from this file. If parse is true, TestPacketFile will register an
 	 * ArtemisPacket listener to the ListenerRegistry it creates for the
 	 * PacketReader, causing all known packets received to be parsed. Otherwise,
 	 * no listener will be registered, and all known packets received will be
 	 * emitted as UnparsedPackets.
 	 */
-	public PacketReader toPacketReader(Origin type, boolean parse) {
+	public PacketReader toPacketReader(Origin origin, boolean parse) {
 		if (mode != Mode.READ) {
 			throw new IllegalStateException("toPacketReader() only valid for read mode");
 		}
@@ -256,7 +256,7 @@ public class TestPacketFile {
 
 		return new PacketReader(
 				ctx,
-				type,
+				origin,
 				new ByteArrayInputStream(bytes),
 				new CoreArtemisProtocol(),
 				listeners
@@ -341,14 +341,14 @@ public class TestPacketFile {
 		 * Captures the raw bytes of a received packet.
 		 */
 		@Override
-		public void onRecvPacketBytes(Origin connType, int pktType,
+		public void onRecvPacketBytes(Origin origin, int pktType,
 				byte[] payload) {
 			int packetLength = payload.length + 24;
 			in = new byte[packetLength];
 			int offset = 0;
 			offset = writeInt(ArtemisPacket.HEADER, in, offset);
 			offset = writeInt(packetLength, in, offset);
-			offset = writeInt(connType.toInt(), in, offset);
+			offset = writeInt(origin.toInt(), in, offset);
 			offset = writeInt(0, in, offset);
 			offset = writeInt(packetLength - 20, in, offset);
 			offset = writeInt(pktType, in, offset);
@@ -357,7 +357,7 @@ public class TestPacketFile {
 
 		@Override
 		public void onPacketParseException(ArtemisPacketException ex) {
-			System.err.println(ex.getConnectionType() + ": " +
+			System.err.println(ex.getOrigin() + ": " +
 					TextUtil.intToHex(ex.getPacketType()) + " " +
 					TextUtil.byteArrayToHexString(ex.getPayload()));
 			ex.printStackTrace();

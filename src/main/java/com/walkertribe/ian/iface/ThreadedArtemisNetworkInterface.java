@@ -78,33 +78,33 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      * Creates a ThreadedArtemisNetworkInterface instance which will communicate
      * over the given Socket.
      * 
-     * The ConnectionType indicates the expected type of the remote machine; in
-     * other words, it corresponds to the type of packets that are expected to
-     * be received. If IAN is connecting as a client to a remote server,
-     * connType should be ConnectionType.SERVER. (The constructor which accepts
-     * a host and port number simplifies this setup.) If IAN is acting as a
-     * proxy server and has accepted a socket connection from a remote client,
-     * connType should be ConnectionType.CLIENT.
+     * The Origin indicates the expected type of the remote machine; in other
+     * words, it corresponds to the type of packets that are expected to be
+     * received. If IAN is connecting as a client to a remote server, origin
+     * should be Origin.SERVER. (The constructor which accepts a host and port
+     * number simplifies this setup.) If IAN is acting as a proxy server and
+     * has accepted a socket connection from a remote client, origin should be
+     * Origin.CLIENT.
      * 
      * The send/receive streams won't actually be opened until start() is
      * called.
      */
-    public ThreadedArtemisNetworkInterface(Socket skt, Origin connType, Context ctx)
+    public ThreadedArtemisNetworkInterface(Socket skt, Origin origin, Context ctx)
     		throws IOException {
     	if (ctx == null) {
     		throw new IllegalArgumentException("Context is required");
     	}
 
     	this.ctx = ctx;
-    	init(skt, connType);
+    	init(skt, origin);
     }
 
     /**
      * Invoked by constructors to perform common initialization.
      */
-    private void init(Socket skt, Origin connType) throws IOException {
-    	recvType = connType;
-    	sendType = connType.opposite();
+    private void init(Socket skt, Origin origin) throws IOException {
+    	recvType = origin;
+    	sendType = origin.opposite();
     	skt.setKeepAlive(true);
         mSendThread = new SenderThread(this, skt);
         mReceiveThread = new ReceiverThread(this, skt);
@@ -169,7 +169,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
 
     @Override
     public void send(final ArtemisPacket pkt) {
-    	if (pkt.getConnectionType() != sendType) {
+    	if (pkt.getOrigin() != sendType) {
     		throw new IllegalArgumentException(
     				"Can only send " + sendType + " packets"
     		);
@@ -414,7 +414,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
 	public void proxyTo(ArtemisNetworkInterface iface) {
 		if (!iface.getRecvType().equals(getSendType())) {
 			throw new IllegalArgumentException(
-					"Interfaces must be of opposite ConnectionTypes"
+					"Interfaces must be of opposite Origins"
 			);
 		}
 

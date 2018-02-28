@@ -27,7 +27,7 @@ public class UnknownPacketTest extends AbstractPacketTester<UnknownPacket> {
 	}
 
 	private void test(UnknownPacket pkt) {
-		Assert.assertEquals(Origin.SERVER, pkt.getConnectionType());
+		Assert.assertEquals(Origin.SERVER, pkt.getOrigin());
 		Assert.assertEquals(0xffffffff, pkt.getType());
 		Assert.assertEquals(PAYLOAD, TextUtil.byteArrayToHexString(pkt.getPayload()));
 	}

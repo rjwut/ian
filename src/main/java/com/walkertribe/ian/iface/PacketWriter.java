@@ -38,7 +38,7 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 public class PacketWriter {
 	private final OutputStream out;
-	private Origin mConnType;
+	private Origin mOrigin;
 	private Version version;
 
 	private int mPacketType;
@@ -79,8 +79,8 @@ public class PacketWriter {
 	/**
 	 * Starts a packet of the given type.
 	 */
-	public PacketWriter start(Origin connType, int packetType) {
-		mConnType = connType;
+	public PacketWriter start(Origin origin, int packetType) {
+		mOrigin = origin;
 		mPacketType = packetType;
 		baos = new ByteArrayOutputStream();
 		return this;
@@ -428,13 +428,13 @@ public class PacketWriter {
 		baos = null;
 		writeInt(ArtemisPacket.HEADER, out); // header
 		writeInt(payload.length + 24, out);  // packet length
-		writeInt(mConnType.toInt(), out);    // connection type
+		writeInt(mOrigin.toInt(), out);    // connection type
 		writeInt(0, out);                    // padding
 		writeInt(payload.length + 4, out);   // remaining bytes
 		writeInt(mPacketType, out);          // packet type
 		out.write(payload); // payload
 		out.flush();
-		debugger.onSendPacketBytes(mConnType, mPacketType, payload);
+		debugger.onSendPacketBytes(mOrigin, mPacketType, payload);
 	}
 
 	/**

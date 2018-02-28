@@ -9,7 +9,7 @@ import com.walkertribe.ian.enums.Origin;
  */
 public class ArtemisPacketException extends Exception {
     private static final long serialVersionUID = 6305993950844264082L;
-    private Origin connType;
+    private Origin origin;
     private int packetType;
     private byte[] payload;
 
@@ -29,42 +29,42 @@ public class ArtemisPacketException extends Exception {
 
     /**
      * @param string A description of the problem
-     * @param connType The packet's ConnectionType
+     * @param origin The packet's Origin
      */
-    public ArtemisPacketException(String string, Origin connType) {
+    public ArtemisPacketException(String string, Origin origin) {
     	super(string);
-    	this.connType = connType;
+    	this.origin = origin;
     }
 
     /**
      * @param t The exception that caused ArtemisPacketException to be thrown
-     * @param connType The packet's ConnectionType
+     * @param origin The packet's Origin
      * @param packetType The packet's type value
      */
-    public ArtemisPacketException(Throwable t, Origin connType,
+    public ArtemisPacketException(Throwable t, Origin origin,
     		int packetType) {
-        this(t, connType, packetType, null);
+        this(t, origin, packetType, null);
     }
 
     /**
      * @param t The exception that caused ArtemisPacketException to be thrown
-     * @param connType The packet's ConnectionType
+     * @param origin The packet's Origin
      * @param packetType The packet's type value
      * @param payload The packet's payload bytes
      */
-    public ArtemisPacketException(Throwable t, Origin connType,
+    public ArtemisPacketException(Throwable t, Origin origin,
     		int packetType, byte[] payload) {
         super(t);
-        this.connType = connType;
+        this.origin = origin;
         this.packetType = packetType;
         this.payload = payload;
     }
 
     /**
-     * Returns the packet's ConnectionType, or null if unknown.
+     * Returns the packet's Origin, or null if unknown.
      */
-    public Origin getConnectionType() {
-    	return connType;
+    public Origin getOrigin() {
+    	return origin;
     }
 
     /**

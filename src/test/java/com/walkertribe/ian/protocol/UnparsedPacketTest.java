@@ -34,7 +34,7 @@ public class UnparsedPacketTest extends AbstractPacketTester<UnknownPacket> {
 	}
 
 	private void test(UnparsedPacket pkt) {
-		Assert.assertEquals(Origin.SERVER, pkt.getConnectionType());
+		Assert.assertEquals(Origin.SERVER, pkt.getOrigin());
 		Assert.assertEquals(JamCrc.compute(CorePacketType.SIMPLE_EVENT), pkt.getType());
 		Assert.assertEquals(PAYLOAD, TextUtil.byteArrayToHexString(pkt.getPayload()));
 	}
