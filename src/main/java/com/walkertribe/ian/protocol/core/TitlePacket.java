@@ -5,6 +5,7 @@ import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
+import com.walkertribe.ian.util.Util;
 
 /**
  * Displays a title message on the main screen. This is transmitted in response
@@ -18,6 +19,18 @@ public class TitlePacket extends BaseArtemisPacket {
 	private CharSequence mSubtitle2;
 
 	public TitlePacket(CharSequence title, CharSequence subtitle1, CharSequence subtitle2) {
+		if (Util.isBlank(title)) {
+			throw new IllegalArgumentException("You must provide a title");
+		}
+
+		if (Util.isBlank(subtitle1)) {
+			throw new IllegalArgumentException("You must provide a first subtitle line");
+		}
+
+		if (Util.isBlank(subtitle2)) {
+			throw new IllegalArgumentException("You must provide a second subtitle line");
+		}
+
 		mTitle = title;
 		mSubtitle1 = subtitle1;
 		mSubtitle2 = subtitle2;
