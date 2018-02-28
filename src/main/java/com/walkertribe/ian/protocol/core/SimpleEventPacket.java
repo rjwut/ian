@@ -13,7 +13,7 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     /**
      * SIMPLE_EVENT server packet subtypes.
      */
-    public final class SubType {
+    public static final class SubType {
     	public static final byte EXPLOSION            = 0x00;
     	public static final byte KLAXON               = 0x01;
     	public static final byte UNKNOWN_02           = 0x02;
@@ -41,6 +41,10 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte SINGLE_SEAT_DAMAGE   = 0x18;
     	public static final byte UNKNOWN_19           = 0x19;
     	public static final byte DOCKED               = 0x1a;
+
+    	private SubType() {
+    		// prevent instantiation
+    	}
     }
 
     private byte mSubType;
