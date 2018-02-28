@@ -74,7 +74,7 @@ public class ByteArrayReader {
 	 */
 	public ByteArrayReader(byte[] bytes) {
 		if (bytes == null) {
-			throw new NullPointerException("Null byte array not allowed");
+			throw new IllegalArgumentException("Null byte array not allowed");
 		}
 
 		this.bytes = bytes;

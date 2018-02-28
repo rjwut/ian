@@ -76,11 +76,11 @@ public class TestUtil {
 	}
 
 	/**
-	 * It's common practice to create a private constructor on static utility
-	 * methods to prevent them from being instantiated. Unfortunately EclEmma
-	 * complains that the constructor is uncovered because it's never invoked.
-	 * So this will invoke the given class's constructor for you via reflection
-	 * to make EclEmma happy.
+	 * It's common practice to create a private no-arg constructor on static
+	 * utility classes to prevent them from being instantiated. Unfortunately
+	 * EclEmma complains that the constructor is uncovered because it's never
+	 * invoked. So this will invoke the given class's no-arg constructor for
+	 * you via reflection to make EclEmma happy.
 	 */
 	public static <T> void coverPrivateConstructor(Class<T> clazz) {
 		try {
@@ -90,8 +90,6 @@ public class TestUtil {
 		} catch (ReflectiveOperationException ex) {
 			throw new RuntimeException(ex);
 		} catch (SecurityException ex) {
-			throw new RuntimeException(ex);
-		} catch (IllegalArgumentException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
@@ -105,15 +103,15 @@ public class TestUtil {
 	 */
 	public static <T> void testEqualsAndHashCode(T obj, T equal, T... notEqual) {
 		if (obj == null) {
-			throw new NullPointerException("Must specify obj");
+			throw new IllegalArgumentException("Must specify obj");
 		}
 
 		if (equal == null) {
-			throw new NullPointerException("Must specify equal");
+			throw new IllegalArgumentException("Must specify equal");
 		}
 
 		if (notEqual == null || notEqual.length == 0) {
-			throw new NullPointerException("Must specify notEqual");
+			throw new IllegalArgumentException("Must specify notEqual");
 		}
 
 		if (obj == equal) {
@@ -122,7 +120,7 @@ public class TestUtil {
 
 		for (T ne : notEqual) {
 			if (ne == null) {
-				throw new NullPointerException("Can't give a null notEqual value");
+				throw new IllegalArgumentException("Can't give a null notEqual value");
 			}
 
 			if (obj == ne) {

@@ -141,7 +141,7 @@ public class ByteArrayReaderTest {
 		ByteArrayReader.readFloat(DEADBEEF, 1);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorNullByteArray() {
 		new ByteArrayReader(null);
 	}

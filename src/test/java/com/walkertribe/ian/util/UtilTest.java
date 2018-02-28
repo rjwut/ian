@@ -29,7 +29,7 @@ public class UtilTest {
 		Assert.assertFalse(Util.containsAny(SET));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testContainsAnyNullCollection() {
 		Util.containsAny(null, TestEnum.FOO);
 	}
@@ -40,9 +40,9 @@ public class UtilTest {
 		Assert.assertEquals("FOO BAR BAZ", Util.enumSetToString(SET));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testEnumSetToStringNullSet() {
-		Util.enumSetToString(null);
+		Assert.assertEquals("", Util.enumSetToString(null));
 	}
 
 	@Test

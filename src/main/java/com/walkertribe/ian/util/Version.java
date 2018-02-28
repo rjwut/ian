@@ -25,6 +25,10 @@ public class Version implements Comparable<Version> {
 	 * one part.
 	 */
 	public Version(int... parts) {
+		if (parts == null) {
+			throw new IllegalArgumentException("You must provide a version array");
+		}
+
 		if (parts.length < 2) {
 			throw new IllegalArgumentException("Version must have at least two parts");
 		}
@@ -78,6 +82,10 @@ public class Version implements Comparable<Version> {
 	 * create both modern and legacy version numbers.
 	 */
 	public Version(String version) {
+		if (version == null) {
+			throw new IllegalArgumentException("You must provide a version string");
+		}
+
 		String[] strParts = version.split("\\.");
 		mParts = new int[strParts.length];
 

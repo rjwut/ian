@@ -33,7 +33,7 @@ public class VersionTest {
 		Assert.assertEquals("3.0.1", new Version(3, 0, 1).toString());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testIntegersConstructorNullArg() {
 		new Version((int[]) null);
 	}
@@ -73,7 +73,7 @@ public class VersionTest {
 		Assert.assertEquals("2.1.1", V2_1_1.toString());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testStringConstructorNullArg() {
 		new Version((String) null);
 	}
