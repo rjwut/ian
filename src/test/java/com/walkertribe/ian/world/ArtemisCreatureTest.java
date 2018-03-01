@@ -29,6 +29,7 @@ public class ArtemisCreatureTest {
 		assertCreature(obj1, 47, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, CreatureType.WHALE, 50, 100);
 		obj0.updateFrom(obj1, null);
 		assertCreature(obj0, 47, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, CreatureType.WHALE, 50, 100);
+		obj0.updateFrom(new ArtemisDrone(47), null);
 	}
 
 	public static void assertCreature(ArtemisCreature creature, int id, float x, float y, float z, String name,

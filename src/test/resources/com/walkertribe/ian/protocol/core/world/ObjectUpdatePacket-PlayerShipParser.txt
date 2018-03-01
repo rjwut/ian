@@ -1,0 +1,72 @@
+// FULLY-POPULATED
+efbeadde     // header
+c1000000     // packet length = 193
+01000000     // origin = server
+00000000     // padding
+ad000000     // remaining length = 173
+f93d8080     // ObjectUpdatePacket
+01           // object type = player ship
+2f000000     // object ID = 47
+ffffffffff07 // bit field
+
+01000000     // weapons target = cleared
+00000000     // impulse = 0
+0000003f     // rudder = 0.5
+0000803f     // top speed = 1
+0000803f     // turn rate = 1
+00           // auto beams = on
+00           // warp = 0
+00007a44     // energy = 1000
+
+0000         // shields = down
+00000000     // unknown
+e8030000     // hull ID = 1000
+0000803f     // x = 1
+00000040     // y = 2
+00004040     // z = 3
+00008040     // pitch = 4
+0000a040     // roll = 5
+
+0000c040     // heading = 6
+0000e040     // velocity = 7
+0100         // in a nebula?
+08000000 4100 7200 7400 6500 6d00 6900 7300 0000 // name = Artemis
+00004844     // forward shields
+00004844     // max forward shields
+00004844     // aft shields
+00004844     // max aft shields
+
+00000000     // last docked base = 0
+00           // alert status = normal
+00000000     // unknown
+00           // main screen view = fore
+00           // beam frequency = A
+08           // coolant = 8
+01000000     // science target = 1
+01000000     // captain target = 1
+
+00           // drive = warp
+01000000     // scan ID = 1
+00000000     // scan progress = 0
+00           // reverse = false
+00000000     // unknown
+02           // unknown
+ffffffff     // unknown
+00           // ship index = 0
+
+e8030000     // capital ship ID = 1000
+00000000     // accent color = red
+00000000     // unknown
+00000000     // end array
+
+// EMPTY
+efbeadde     // header
+27000000     // packet length = 39 
+01000000     // origin = server
+00000000     // padding
+13000000     // remaining length =  19
+f93d8080     // ObjectUpdatePacket
+01           // object type = player ship
+2f000000     // object ID = 47
+000000000000 // bit field
+00000000     // end array

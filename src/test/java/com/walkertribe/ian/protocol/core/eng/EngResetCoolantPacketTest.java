@@ -8,19 +8,19 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
-public class EngRequestGridUpdatePacketTest extends AbstractPacketTester<EngRequestGridUpdatePacket> {
+public class EngResetCoolantPacketTest extends AbstractPacketTester<EngResetCoolantPacket> {
 	@Test
 	public void testParse() {
-		execute("core/eng/EngRequestGridUpdatePacket.txt", Origin.CLIENT, 1);
+		execute("core/eng/EngResetCoolantPacket.txt", Origin.CLIENT, 1);
 	}
 
 	@Test
 	public void testConstruct() {
-		new EngRequestGridUpdatePacket();
+		new EngResetCoolantPacket();
 	}
 
 	@Override
-	protected void testPackets(List<EngRequestGridUpdatePacket> packets) {
+	protected void testPackets(List<EngResetCoolantPacket> packets) {
 		Assert.assertNotNull(packets.get(0));
 	}
 }
