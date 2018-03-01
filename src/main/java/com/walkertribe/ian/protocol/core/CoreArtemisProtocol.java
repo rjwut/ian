@@ -64,6 +64,7 @@ public class CoreArtemisProtocol extends AbstractProtocol {
 			CommsOutgoingPacket.class,
 			ConvertTorpedoPacket.class,
 			EngRequestGridUpdatePacket.class,
+			EngResetCoolantPacket.class,
 			EngSendDamconPacket.class,
 			EngSetAutoDamconPacket.class,
 			EngSetCoolantPacket.class,

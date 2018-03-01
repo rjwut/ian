@@ -15,8 +15,11 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
  * @author rjwut
  */
 @Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.ENG_RESET_COOLANT)
-public class EngResetCoolant extends BaseArtemisPacket {
-	private EngResetCoolant(PacketReader reader) {
+public class EngResetCoolantPacket extends BaseArtemisPacket {
+	public EngResetCoolantPacket() {
+	}
+
+	public EngResetCoolantPacket(PacketReader reader) {
 		reader.skip(4); // subtype
 	}
 
