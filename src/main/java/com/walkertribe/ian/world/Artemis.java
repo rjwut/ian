@@ -38,7 +38,7 @@ public final class Artemis {
     /**
      * The maximum warp factor player ships can achieve.
      */
-    public static final int MAX_WARP = 4;
+    public static final byte MAX_WARP = 4;
 
     /**
      * The number of available player ships.

@@ -58,7 +58,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 	 * The status of a storable upgrade.
 	 */
 	private class UpgradeStatus {
-		private BoolState active;
+		private BoolState active = BoolState.UNKNOWN;
 		private byte count = -1;
 		private int secondsLeft = -1;
 
@@ -626,7 +626,11 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     public void setWarp(byte warp) {
-		mWarp = warp;
+    	if (warp < -1 || warp > Artemis.MAX_WARP) {
+    		throw new IllegalArgumentException("Invalid warp factor: " + warp);
+    	}
+
+    	mWarp = warp;
 	}
 
     /**
@@ -639,8 +643,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     public void setUpgradeActive(Upgrade upgrade, boolean active) {
-    	assertUpgradeCanBeActivated(upgrade);
-    	mUpgrades.get(upgrade).active = BoolState.from(active);
+    	setUpgradeActive(upgrade, BoolState.from(active));
     }
 
     public void setUpgradeActive(Upgrade upgrade, BoolState active) {
@@ -994,10 +997,11 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	for (int i = 0; i < Artemis.MAX_TUBES; i++) {
     		Tube tube = mTubes[i];
     		putProp(props, "Tube " + i + " state", tube.state, includeUnspecified);
-    		String contentsStr;
 
     		if (tube.state != null && tube.contents != -1) {
-    			if (tube.state == TubeState.UNLOADED) {
+        		String contentsStr;
+
+        		if (tube.state == TubeState.UNLOADED) {
     				contentsStr = "EMPTY";
     			} else {
     				contentsStr = ordValues[tube.contents].name();
