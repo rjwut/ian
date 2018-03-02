@@ -115,7 +115,6 @@ public class WeapParser extends AbstractObjectParser {
         	player.setTubeContentsValue(i, tubeContents[i]);
         }
 
-        // last byte in bit field appears to be unused
         return player;
 	}
 
@@ -144,54 +143,6 @@ public class WeapParser extends AbstractObjectParser {
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
         	byte type = player.getTubeContentsValue(i);
         	writer.writeByte(TUBE_CONTENTS[i], type, (byte) -1);
-        }
-
-        // last byte in bit field appears to be unused
-	}
-
-	@Override
-	public void appendDetail(ArtemisObject obj, StringBuilder b) {
-		ArtemisPlayer player = (ArtemisPlayer) obj;
-		b.append("\nWEAP for player ship #").append(obj.getId()).append(": ");
-
-		for (OrdnanceType type : OrdnanceType.values()) {
-			int count = player.getTorpedoCount(type);
-
-			if (count != -1) {
-				b.append(type).append('=').append(count).append(' ');
-			}
-		}
-
-		for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-			TubeState state = player.getTubeState(i);
-			byte contents = player.getTubeContentsValue(i);
-			float time = player.getTubeCountdown(i);
-
-			if (state == null && contents == -1 && time < 0) {
-				continue;
-			}
-
-			b.append("\n\tTube #").append(i).append(":");
-
-			if (state != null) {
-				b.append(" state=").append(state);
-			}
-
-			if (contents != -1) {
-				String contentsStr;
-
-				if (state == TubeState.UNLOADED) {
-					contentsStr = "EMPTY";
-				} else {
-					contentsStr = OrdnanceType.values()[contents].name();
-				}
-
-				b.append(" contents=").append(contentsStr);
-			}
-
-			if (time >= 0) {
-				b.append(" time=").append(time);
-			}
         }
 	}
 }

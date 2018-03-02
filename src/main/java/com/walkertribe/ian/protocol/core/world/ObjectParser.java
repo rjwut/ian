@@ -28,9 +28,4 @@ public interface ObjectParser {
 	 * Writes the given object to the payload.
 	 */
 	public void write(ArtemisObject obj, PacketWriter writer);
-
-	/**
-	 * Writes the details of the given object to the indicated StringBuilder.
-	 */
-	public void appendDetail(ArtemisObject obj, StringBuilder b);
 }

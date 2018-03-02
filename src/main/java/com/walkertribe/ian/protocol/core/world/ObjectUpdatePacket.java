@@ -229,7 +229,7 @@ public class ObjectUpdatePacket extends BaseArtemisPacket {
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
 		for (ArtemisObject obj : objects) {
-			PARSERS.get(obj.getType()).appendDetail(obj, b);
+			b.append("\nObject #").append(obj.getId()).append(obj);
 		}
 	}
 }

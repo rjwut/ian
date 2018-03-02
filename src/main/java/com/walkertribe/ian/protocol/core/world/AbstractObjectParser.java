@@ -32,9 +32,4 @@ public abstract class AbstractObjectParser implements ObjectParser {
 		obj.setUnknownProps(reader.getUnknownObjectProps());
 		return obj;
 	}
-
-	@Override
-	public void appendDetail(ArtemisObject obj, StringBuilder b) {
-		b.append("\nObject #").append(obj.getId()).append(obj);
-	}
 }
