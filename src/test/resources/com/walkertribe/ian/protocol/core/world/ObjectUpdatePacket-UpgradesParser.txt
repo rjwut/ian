@@ -1,18 +1,105 @@
 efbeadde // header
-43000000 // packet length = 67
+9c000000 // packet length = 156
 01000000 // origin = server
 00000000 // padding
-2f000000 // remaining length = 47
+88000000 // remaining length = 136
 f93d8080 // ObjectUpdatePacket
-0b       // object type = torpedo
-02000000 // object ID = 2
-ff00     // bit field
-0000803f // x = 1.0
-00000040 // y = 2.0
-00004040 // z = 3.0
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
+04       // object type = upgrades
+2f000000 // object ID = 47
+ffffffffffffffffffff0f // bit field
+00       // Infusion P-Coils       inactive
+01       // Hydrogen Ram           active
+00       // Tauron Focusers        inactive
+01       // Carapaction Coils      active
+00       // Polyphasic Capacitors  inactive
+01       // Coolant Reserves       active
+00       // Lateral Array          inactive
+01       // ECM Starpulse          active
+00       // Double Agent           inactive
+01       // Wartime Production     active
+00       // Infusion P-Coils PERM  inactive
+01       // Protonic Verniers      active
+00       // Tauron Focusers PERM   inactive
+01       // Regenerative Pau-Grids active
+00       // Veteran DamCon Teams   inactive
+01       // Cetrocite Heatsinks    active
+00       // Tachyon Scanners       inactive
+01       // Gridscan Overload      active
+00       // Override Authorization inactive
+01       // Resupply Imperatives   active
+00       // Patrol Group           inactive
+01       // Fast Supply            active
+00       // Vanguard Refit (helm)  inactive
+01       // Vanguard Refit (weap)  active
+00       // Vanguard Refit (sci)   inactive
+01       // Vanguard Refit (comm)  active
+00       // Vanguard Refit (eng)   inactive
+01       // Vanguard Refit (all)   active
+00       // Infusion P-Coils       count = 0
+01       // Hydrogen Ram           count = 1
+02       // Tauron Focusers        count = 2
+03       // Carapaction Coils      count = 3
+04       // Polyphasic Capacitors  count = 4
+05       // Coolant Reserves       count = 5
+06       // Lateral Array          count = 6
+07       // ECM Starpulse          count = 7
+08       // Double Agent           count = 8
+09       // Wartime Production     count = 9
+0a       // Infusion P-Coils PERM  count = 10
+0b       // Protonic Verniers      count = 11
+0c       // Tauron Focusers PERM   count = 12
+0d       // Regenerative Pau-Grids count = 13
+0e       // Veteran DamCon Teams   count = 14
+0f       // Cetrocite Heatsinks    count = 15
+10       // Tachyon Scanners       count = 16
+11       // Gridscan Overload      count = 17
+12       // Override Authorization count = 18
+13       // Resupply Imperatives   count = 19
+14       // Patrol Group           count = 20
+15       // Fast Supply            count = 21
+16       // Vanguard Refit (helm)  count = 22
+17       // Vanguard Refit (weap)  count = 23
+18       // Vanguard Refit (sci)   count = 24
+19       // Vanguard Refit (comm)  count = 25
+1a       // Vanguard Refit (eng)   count = 25
+1b       // Vanguard Refit (all)   count = 27
+0000     // Infusion P-Coils       seconds left = 0
+0100     // Hydrogen Ram           seconds left = 1
+0000     // Tauron Focusers        seconds left = 0
+0300     // Carapaction Coils      seconds left = 3
+0000     // Polyphasic Capacitors  seconds left = 0
+0500     // Coolant Reserves       seconds left = 5
+0000     // Lateral Array          seconds left = 0
+0700     // ECM Starpulse          seconds left = 7
+0000     // Double Agent           seconds left = 0
+0900     // Wartime Production     seconds left = 9
+0000     // Infusion P-Coils PERM  seconds left = 0
+0b00     // Protonic Verniers      seconds left = 11
+0000     // Tauron Focusers PERM   seconds left = 0
+0d00     // Regenerative Pau-Grids seconds left = 13
+0000     // Veteran DamCon Teams   seconds left = 0
+0f00     // Cetrocite Heatsinks    seconds left = 15
+0000     // Tachyon Scanners       seconds left = 0
+1100     // Gridscan Overload      seconds left = 17
+0000     // Override Authorization seconds left = 0
+1300     // Resupply Imperatives   seconds left = 19
+0000     // Patrol Group           seconds left = 0
+1500     // Fast Supply            seconds left = 21
+0000     // Vanguard Refit (helm)  seconds left = 0
+1700     // Vanguard Refit (weap)  seconds left = 23
+0000     // Vanguard Refit (sci)   seconds left = 0
+1900     // Vanguard Refit (comm)  seconds left = 25
+0000     // Vanguard Refit (eng)   seconds left = 0
+1b00     // Vanguard Refit (all)   seconds left = 27
+00000000 // end of array
+
+efbeadde // header
+2c000000 // packet length = 44
+01000000 // origin = server
+00000000 // padding
+18000000 // remaining length = 24
+f93d8080 // ObjectUpdatePacket
+04       // object type = upgrades
+2f000000 // object ID = 47
+0000000000000000000000 // bit field
 00000000 // end of array

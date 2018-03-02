@@ -76,7 +76,7 @@ public class ArtemisPlayerTest {
 			UPGRADE_ACTIVE_UNSPECIFIED.put(upgrade, BoolState.UNKNOWN);
 			UPGRADE_COUNT_UNSPECIFIED.put(upgrade, (byte) -1);
 			UPGRADE_SECONDS_LEFT_UNSPECIFIED.put(upgrade, -1);
-			boolean active = i % 2 == 0;
+			boolean active = i % 2 != 0;
 			UPGRADE_ACTIVE.put(upgrade, BoolState.from(active));
 			UPGRADE_COUNT.put(upgrade, (byte) i);
 			UPGRADE_SECONDS_LEFT.put(upgrade, active ? i : 0);
@@ -280,8 +280,7 @@ public class ArtemisPlayerTest {
 	@Test
 	public void testUpdateFromWeap() {
 		ArtemisPlayer obj0 = new ArtemisPlayer(47);
-		assertWeap(obj0, WEAP_ORD_COUNT_UNSPECIFIED, WEAP_TUBE_TIME_UNSPECIFIED,
-				WEAP_TUBE_STATE_UNSPECIFIED, WEAP_TUBE_CONTENTS_UNSPECIFIED);
+		assertUnpopulatedWeap(obj0);
 		ArtemisPlayer obj1 = new ArtemisPlayer(47);
 		buildWeapData(obj1);
 		assertPopulatedWeap(obj1);
@@ -305,7 +304,12 @@ public class ArtemisPlayerTest {
 
 	}
 
-	private static void assertPopulatedWeap(ArtemisPlayer player) {
+	public static void assertUnpopulatedWeap(ArtemisPlayer player) {
+		assertWeap(player, WEAP_ORD_COUNT_UNSPECIFIED, WEAP_TUBE_TIME_UNSPECIFIED,
+				WEAP_TUBE_STATE_UNSPECIFIED, WEAP_TUBE_CONTENTS_UNSPECIFIED);
+	}
+
+	public static void assertPopulatedWeap(ArtemisPlayer player) {
 		assertWeap(player, WEAP_ORD_COUNT, WEAP_TUBE_TIME, WEAP_TUBE_STATE, WEAP_TUBE_CONTENTS);
 	}
 
@@ -425,8 +429,7 @@ public class ArtemisPlayerTest {
 	@Test
 	public void testUpdateFromUpgrades() {
 		ArtemisPlayer obj0 = new ArtemisPlayer(47);
-		assertUpgrades(obj0, UPGRADE_ACTIVE_UNSPECIFIED, UPGRADE_COUNT_UNSPECIFIED,
-				UPGRADE_SECONDS_LEFT_UNSPECIFIED);
+		assertUnpopulatedUpgrades(obj0);
 		ArtemisPlayer obj1 = new ArtemisPlayer(47);
 		buildUpgradeData(obj1);
 		assertPopulatedUpgrades(obj1);
@@ -440,7 +443,7 @@ public class ArtemisPlayerTest {
 		int i = 0;
 
 		for (Upgrade upgrade : Upgrade.activation()) {
-			boolean active = i % 2 == 0;
+			boolean active = i % 2 != 0;
 			player.setUpgradeActive(upgrade, active);
 			player.setUpgradeCount(upgrade, (byte) i);
 			player.setUpgradeSecondsLeft(upgrade, active ? i : 0);
@@ -448,7 +451,12 @@ public class ArtemisPlayerTest {
 		}
 	}
 
-	private static void assertPopulatedUpgrades(ArtemisPlayer player) {
+	public static void assertUnpopulatedUpgrades(ArtemisPlayer player) {
+		assertUpgrades(player, UPGRADE_ACTIVE_UNSPECIFIED, UPGRADE_COUNT_UNSPECIFIED,
+				UPGRADE_SECONDS_LEFT_UNSPECIFIED);
+	}
+
+	public static void assertPopulatedUpgrades(ArtemisPlayer player) {
 		assertUpgrades(player, UPGRADE_ACTIVE, UPGRADE_COUNT, UPGRADE_SECONDS_LEFT);
 	}
 

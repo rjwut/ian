@@ -10,9 +10,20 @@ ff00     // bit field
 0000803f // x = 1.0
 00000040 // y = 2.0
 00004040 // z = 3.0
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
-00000000 // unknown
+00008040 // dx = 4.0
+0000a040 // dy = 5.0
+0000c040 // dz = 6.0
+0b000000 // unknown
+03000000 // ordinance type = EMP
+00000000 // end of array
+
+efbeadde // header
+23000000 // packet length = 35
+01000000 // origin = server
+00000000 // padding
+0f000000 // remaining length = 15
+f93d8080 // ObjectUpdatePacket
+0b       // object type = torpedo
+02000000 // object ID = 2
+0000     // bit field
 00000000 // end of array

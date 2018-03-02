@@ -4,18 +4,20 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.walkertribe.ian.enums.ObjectType;
-import com.walkertribe.ian.world.ArtemisGenericObject;
-import com.walkertribe.ian.world.ArtemisObjectTest;
+import com.walkertribe.ian.enums.OrdnanceType;
+import com.walkertribe.ian.world.ArtemisTorpedo;
+import com.walkertribe.ian.world.ArtemisTorpedoTest;
 
-public class TorpedoParserTest extends AbstractObjectUpdatePacketTester<ArtemisGenericObject> {
+public class TorpedoParserTest extends AbstractObjectUpdatePacketTester<ArtemisTorpedo> {
 	@Test
 	public void test() {
-		execute(TorpedoParser.class, 1);
+		execute(TorpedoParser.class, 2);
 	}
 
 	@Override
-	protected void testObjects(List<ArtemisGenericObject> objects) {
-		ArtemisObjectTest.assertObject(objects.get(0), 2, ObjectType.TORPEDO, null, 1.0f, 2.0f, 3.0f);
+	protected void testObjects(List<ArtemisTorpedo> objects) {
+		ArtemisTorpedoTest.assertTorpedo(objects.get(0), 2, 1f, 2f, 3f, 4f, 5f, 6f, OrdnanceType.EMP);
+		ArtemisTorpedoTest.assertTorpedo(objects.get(1), 2, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE,
+				Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, null);
 	}
 }
