@@ -17,7 +17,7 @@ public class PlayerShipDamagePacketTest extends AbstractPacketTester<PlayerShipD
 	@Test
 	public void testConstruct() {
 		PlayerShipDamagePacket pkt = new PlayerShipDamagePacket(0, 1.5f);
-		Assert.assertEquals(0, pkt.getShipNumber());
+		Assert.assertEquals(0, pkt.getShipIndex());
 		Assert.assertEquals(1.5f, pkt.getDuration(), EPSILON);
 	}
 

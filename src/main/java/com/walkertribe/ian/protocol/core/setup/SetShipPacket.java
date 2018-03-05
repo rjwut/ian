@@ -16,14 +16,14 @@ import com.walkertribe.ian.world.Artemis;
 @Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.SET_SHIP)
 public class SetShipPacket extends ValueIntPacket {
     /**
-     * Selects a ship to use during setup. Note that Artemis ship numbers are
-     * one-based.
+     * Selects a ship to use during setup. Note that Artemis ship indices are
+     * zero-based.
      */
-    public SetShipPacket(int shipNumber) {
-    	super(shipNumber - 1); // underlying packet wants index
+    public SetShipPacket(int shipIndex) {
+    	super(shipIndex);
 
-    	if (shipNumber < 1 || shipNumber > Artemis.SHIP_COUNT) {
-    		throw new IllegalArgumentException("Ship number must be between 1 and " + Artemis.SHIP_COUNT);
+    	if (shipIndex < 0 || shipIndex >= Artemis.SHIP_COUNT) {
+    		throw new IllegalArgumentException("Ship index must be greater than -1 and less than " + Artemis.SHIP_COUNT);
     	}
     }
 
@@ -32,14 +32,14 @@ public class SetShipPacket extends ValueIntPacket {
     }
 
     /**
-     * The ship number being selected (1-based).
+     * The ship index being selected (0-based).
      */
-    public int getShipNumber() {
-    	return mArg + 1;
+    public int getShipIndex() {
+    	return mArg;
     }
 
     @Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append(mArg + 1);
+		b.append(mArg);
 	}
 }

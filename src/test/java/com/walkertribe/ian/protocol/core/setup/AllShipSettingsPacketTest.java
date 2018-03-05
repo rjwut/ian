@@ -24,7 +24,7 @@ public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSetti
 		AllShipSettingsPacket pkt = new AllShipSettingsPacket(ships);
 
 		for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
-			Assert.assertEquals(ships[i], pkt.getShip(i + 1));
+			Assert.assertEquals(ships[i], pkt.getShip(i));
 		}
 	}
 
@@ -81,7 +81,7 @@ public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSetti
 		float colorInc = 1.0f / Artemis.SHIP_COUNT;
 
 		for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
-			Ship ship = pkt.getShip(i + 1);
+			Ship ship = pkt.getShip(i);
 			TestUtil.assertToStringEquals("Ship" + i, ship.getName());
 			Assert.assertEquals(i, ship.getShipType());
 			Assert.assertEquals(DriveType.values()[i % 2], ship.getDrive());

@@ -5,7 +5,7 @@ efbeadde // header
 13000000 // remaining length = 19
 d4e2c619 // ConsoleStatusPacket
 
-01000000 // ship number = 1
+01000000 // ship index = 1
 00 // main screen = available
 01 // helm = yours
 02 // weapons = unavailable

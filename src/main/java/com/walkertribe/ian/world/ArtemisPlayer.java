@@ -112,7 +112,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private TargetingMode mTargetingMode;
 	private AlertStatus mAlertStatus;
     private BoolState mShields = BoolState.UNKNOWN;
-    private int mShipNumber = -1;
+    private int mShipIndex = -1;
 	private final SystemStatus[] mSystems = new SystemStatus[Artemis.SYSTEM_COUNT];
     private final int[] mTorpedos = new int[OrdnanceType.COUNT];
     private final Tube[] mTubes = new Tube[Artemis.MAX_TUBES];
@@ -196,17 +196,17 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
-     * Get this ship's player ship number. Note that this value is one-based, so
-     * the vessel that is named Artemis will have a ship number of 1.
+     * Get this ship's player ship index. Note that this value is zero-based, so
+     * the vessel that is named Artemis will have a ship index of 0.
      * Unspecified: -1
-     * @return int in [1,Artemis.SHIP_COUNT], or -1 if undefined
+     * @return int in [0,Artemis.SHIP_COUNT), or -1 if undefined
      */
-    public int getShipNumber() {
-        return mShipNumber == -1 ? -1 : mShipNumber;
+    public int getShipIndex() {
+        return mShipIndex;
     }
 
-    public void setShipNumber(int shipNumber) {
-    	mShipNumber = shipNumber;
+    public void setShipIndex(int shipIndex) {
+    	mShipIndex = shipIndex;
     }
 
     /**
@@ -732,7 +732,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			mTargetingMode != null ||
     			mAlertStatus != null ||
     			BoolState.isKnown(mShields) ||
-    			mShipNumber != -1 ||
+    			mShipIndex != -1 ||
     			mEnergy != -1 ||
     			mDockingBase != -1 ||
     			mMainScreen != null ||
@@ -860,8 +860,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * upgrades data.
      */
     public void updatePlayerFrom(ArtemisPlayer plr) {
-        if (mShipNumber == -1) {
-            mShipNumber = plr.mShipNumber;
+        if (mShipIndex == -1) {
+            mShipIndex = plr.mShipIndex;
         }
         
         if (plr.mTargetingMode != null) {
@@ -978,7 +978,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	putProp(props, "Targeting mode", mTargetingMode, includeUnspecified);
     	putProp(props, "Alert status", mAlertStatus, includeUnspecified);
     	putProp(props, "Shield state", mShields, includeUnspecified);
-    	putProp(props, "Player ship number", mShipNumber, -1, includeUnspecified);
+    	putProp(props, "Ship index", mShipIndex, -1, includeUnspecified);
 
     	for (ShipSystem system : ShipSystem.values()) {
     		int i = system.ordinal();

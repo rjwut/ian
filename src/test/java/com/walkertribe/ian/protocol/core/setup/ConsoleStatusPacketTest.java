@@ -24,13 +24,13 @@ public class ConsoleStatusPacketTest extends AbstractPacketTester<ConsoleStatusP
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructShipNumberTooLow() {
-		new ConsoleStatusPacket(0, buildConsoleStatusArray(Console.values().length));
+	public void testConstructShipIndexTooLow() {
+		new ConsoleStatusPacket(-1, buildConsoleStatusArray(Console.values().length));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructShipNumberTooHigh() {
-		new ConsoleStatusPacket(Artemis.SHIP_COUNT + 1, buildConsoleStatusArray(Console.values().length));
+	public void testConstructShipIndexTooHigh() {
+		new ConsoleStatusPacket(Artemis.SHIP_COUNT, buildConsoleStatusArray(Console.values().length));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -67,7 +67,7 @@ public class ConsoleStatusPacketTest extends AbstractPacketTester<ConsoleStatusP
 	}
 
 	private void test(ConsoleStatusPacket pkt) {
-		Assert.assertEquals(pkt.getShipNumber(), 1);
+		Assert.assertEquals(pkt.getShipIndex(), 1);
 		Console[] consoleValues = Console.values();
 		ConsoleStatus[] statusValues = ConsoleStatus.values();
 

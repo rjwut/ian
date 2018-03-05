@@ -13,25 +13,25 @@ import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.PLAYER_SHIP_DAMAGE)
 public class PlayerShipDamagePacket extends SimpleEventPacket {
-	private int mShipNumber;
+	private int mShipIndex;
 	private float mDuration;
 
-    public PlayerShipDamagePacket(int shipNumber, float duration) {
-        mShipNumber = shipNumber;
+    public PlayerShipDamagePacket(int shipIndex, float duration) {
+        mShipIndex = shipIndex;
         mDuration = duration;
     }
 
 	public PlayerShipDamagePacket(PacketReader reader) {
 		super(reader);
-        mShipNumber = reader.readInt() + 1;
+        mShipIndex = reader.readInt();
         mDuration = reader.readFloat();
     }
 
 	/**
-	 * The number of the ship being impacted (1-based).
+	 * The index of the ship being impacted (0-based).
 	 */
-	public int getShipNumber() {
-		return mShipNumber;
+	public int getShipIndex() {
+		return mShipIndex;
 	}
 
 	/**
@@ -44,11 +44,11 @@ public class PlayerShipDamagePacket extends SimpleEventPacket {
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		super.writePayload(writer);
-		writer.writeInt(mShipNumber - 1).writeFloat(mDuration);
+		writer.writeInt(mShipIndex).writeFloat(mDuration);
 	}
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append("Ship #" + mShipNumber + " (" + mDuration + " s)");
+		b.append("Ship #" + mShipIndex + " (" + mDuration + " s)");
 	}
 }

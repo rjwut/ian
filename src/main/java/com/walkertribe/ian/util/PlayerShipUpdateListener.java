@@ -9,9 +9,9 @@ import com.walkertribe.ian.world.ArtemisPlayer;
 /**
  * <p>
  * Convenience class for listening for updates to a particular player ship,
- * indicated by ship number. The ship number is usually omitted from updates,
+ * indicated by ship index. The ship index is usually omitted from updates,
  * but the first update will always specify it. This class automates the
- * tactic of noting the ID of the ship with the given number, and using that to
+ * tactic of noting the ID of the ship with the given index, and using that to
  * identify the ship from then on. When an update for the specific ship is
  * received, the onShipUpdate() method is invoked.
  * </p>
@@ -27,19 +27,19 @@ public abstract class PlayerShipUpdateListener {
 	 */
 	public abstract void onShipUpdate(ArtemisPlayer player);
 
-	private int number;
+	private int index;
 	private int id = -1;
 
 	/**
 	 * Creates a PlayerShipUpdateListener that listens for updates to the ship with the given
-	 * number. (For example, by default, Artemis is 1.)
+	 * index. (For example, by default, Artemis is 0.)
 	 */
-	public PlayerShipUpdateListener(int number) {
-		if (number < 1 || number > Artemis.SHIP_COUNT) {
-			throw new IllegalArgumentException("Invalid ship number: " + number);
+	public PlayerShipUpdateListener(int index) {
+		if (index < 0 || index >= Artemis.SHIP_COUNT) {
+			throw new IllegalArgumentException("Invalid ship index: " + index);
 		}
 
-		this.number = number;
+		this.index = index;
 	}
 
 	/**
@@ -50,9 +50,9 @@ public abstract class PlayerShipUpdateListener {
 	public final void onPlayerObjectUpdated(ArtemisPlayer player) {
 		if (id == -1) {
 			// We don't know the ship's ID yet
-			int curNumber = player.getShipNumber();
+			int curIndex = player.getShipIndex();
 
-			if (curNumber == -1 || curNumber != number) {
+			if (curIndex == -1 || curIndex != index) {
 				return; // this isn't the one we want
 			}
 
@@ -79,7 +79,7 @@ public abstract class PlayerShipUpdateListener {
         id = -1; // ship will probably have a different ID next game
 	}
 
-	public int getNumber() {
-		return number;
+	public int getIndex() {
+		return index;
 	}
 }

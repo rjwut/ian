@@ -97,7 +97,7 @@ public class PlayerShipParser extends AbstractObjectParser {
         	player.setShields(reader.readBool(Bit.SHIELD_STATE, 2));
         }
 
-        player.setShipNumber(reader.readInt(Bit.SHIP_INDEX, -2) + 1);
+        player.setShipIndex(reader.readInt(Bit.SHIP_INDEX, -1));
         player.setHullId(reader.readInt(Bit.SHIP_TYPE, -1));
         player.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
         player.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
@@ -167,12 +167,10 @@ public class PlayerShipParser extends AbstractObjectParser {
 			writer.writeByte(Bit.TARGETING_MODE, (byte) targetingMode.ordinal(), (byte) -1);
 		}
 
-		int shipIndex = player.getShipNumber() - 1;
-		shipIndex = shipIndex == -2 ? -1 : shipIndex;
 		writer	.writeByte(Bit.WARP, player.getWarp(), (byte) -1)
 				.writeFloat(Bit.ENERGY, player.getEnergy(), -1)
 				.writeBool(Bit.SHIELD_STATE, player.getShieldsState(), 2)
-				.writeInt(Bit.SHIP_INDEX, shipIndex, -1)
+				.writeInt(Bit.SHIP_INDEX, player.getShipIndex(), -1)
 				.writeInt(Bit.SHIP_TYPE, player.getHullId(), -1)
 				.writeFloat(Bit.X, player.getX(), Float.MIN_VALUE)
 				.writeFloat(Bit.Y, player.getY(), Float.MIN_VALUE)

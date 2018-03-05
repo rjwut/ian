@@ -17,13 +17,13 @@ import com.walkertribe.ian.world.Artemis;
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.CLIENT_CONSOLES)
 public class ConsoleStatusPacket extends BaseArtemisPacket {
-    private final int shipNumber;
+    private final int shipIndex;
     private final ConsoleStatus[] statuses;
 
-    public ConsoleStatusPacket(int shipNumber, ConsoleStatus[] statuses) {
-    	if (shipNumber < 1 || shipNumber > Artemis.SHIP_COUNT) {
+    public ConsoleStatusPacket(int shipIndex, ConsoleStatus[] statuses) {
+    	if (shipIndex < 0 || shipIndex >= Artemis.SHIP_COUNT) {
     		throw new IllegalArgumentException(
-    				"Ship number must be between 1 and " + Artemis.SHIP_COUNT
+    				"Ship index must be greater than -1 and less than " + Artemis.SHIP_COUNT
     		);
     	}
 
@@ -47,12 +47,12 @@ public class ConsoleStatusPacket extends BaseArtemisPacket {
     		}
     	}
 
-    	this.shipNumber = shipNumber;
+    	this.shipIndex = shipIndex;
     	this.statuses = statuses;
     }
     
     public ConsoleStatusPacket(PacketReader reader) {
-        shipNumber = reader.readInt();
+        shipIndex = reader.readInt();
         final Console[] consoleValues = Console.values();
         final ConsoleStatus[] statusValues = ConsoleStatus.values();
         statuses = new ConsoleStatus[consoleValues.length];
@@ -63,10 +63,10 @@ public class ConsoleStatusPacket extends BaseArtemisPacket {
     }
 
     /**
-     * Returns the ship number whose consoles this packet reports.
+     * Returns the ship index whose consoles this packet reports.
      */
-    public int getShipNumber() {
-    	return shipNumber;
+    public int getShipIndex() {
+    	return shipIndex;
     }
 
     /**
@@ -84,7 +84,7 @@ public class ConsoleStatusPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(shipNumber);
+		writer.writeInt(shipIndex);
 
 		for (ConsoleStatus status : statuses) {
 			writer.writeByte((byte) status.ordinal());
@@ -93,7 +93,7 @@ public class ConsoleStatusPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append("Ship #").append(shipNumber);
+		b.append("Ship #").append(shipIndex);
 
 		for (Console console : Console.values()) {
     		ConsoleStatus status = statuses[console.ordinal()];

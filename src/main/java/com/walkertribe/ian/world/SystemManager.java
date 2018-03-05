@@ -139,13 +139,13 @@ public class SystemManager {
             p.updateFrom(o, mCtx);
             
             if (o instanceof ArtemisPlayer) {
-                // just in case we get the ship number AFTER
+                // just in case we get the ship index AFTER
                 //  first creating the object, we store the
-                //  updated ORIGINAL with the new ship number
+                //  updated ORIGINAL with the new ship index
                 ArtemisPlayer plr = (ArtemisPlayer) o;
 
-                if (plr.getShipNumber() != -1) {
-                    mPlayers[plr.getShipNumber() - 1] = (ArtemisPlayer) p;
+                if (plr.getShipIndex() != -1) {
+                    mPlayers[plr.getShipIndex()] = (ArtemisPlayer) p;
                 }
             }
             
@@ -159,8 +159,8 @@ public class SystemManager {
         if (o instanceof ArtemisPlayer) {
             ArtemisPlayer plr = (ArtemisPlayer) o;
 
-            if (plr.getShipNumber() >= 0) {
-                mPlayers[plr.getShipNumber() - 1] = plr;
+            if (plr.getShipIndex() >= 0) {
+                mPlayers[plr.getShipIndex()] = plr;
             }
         }
 
@@ -220,16 +220,16 @@ public class SystemManager {
     }
     
     /**
-     * Get the player ship by number. Ship values range from 1 to 8.
-     * @param shipNumber
+     * Get the player ship by index. Ship values range from 0 to 7.
+     * @param shipIndex
      * @return
      */
-    public ArtemisPlayer getPlayerShip(int shipNumber) {
-        if (shipNumber < 1 || shipNumber > 8) {
-            throw new IllegalArgumentException("Invalid ship number: " + shipNumber);
+    public ArtemisPlayer getPlayerShip(int shipIndex) {
+        if (shipIndex < 0 || shipIndex >= Artemis.SHIP_COUNT) {
+            throw new IllegalArgumentException("Invalid ship index: " + shipIndex);
         }
         
-        return mPlayers[shipNumber - 1];
+        return mPlayers[shipIndex];
     }
     
     /**

@@ -30,7 +30,7 @@ import com.walkertribe.ian.world.ArtemisPlayer;
  * </p>
  * <p>
  * It also demonstrates the use of the PlayerShipUpdateListener class, which is
- * convenient for listening for updates to a player ship by number.
+ * convenient for listening for updates to a player ship by index.
  * </p>
  * @author rjwut
  */
@@ -41,15 +41,15 @@ public class ClientDemo extends PlayerShipUpdateListener {
     public static void main(String[] args) {
         if (args.length < 2 || args.length > 3) {
             System.out.println(
-                    "Usage: ClientDemo {ipOrHostname}[:{port}] {artemisInstallPath} [shipNumber]"
+                    "Usage: ClientDemo {ipOrHostname}[:{port}] {artemisInstallPath} [shipIndex]"
             );
             return;
         }
 
-        int shipNumber = args.length == 3 ? Integer.parseInt(args[2]) : 1;
+        int shipIndex = args.length == 3 ? Integer.parseInt(args[2]) : 0;
 
         try {
-            new ClientDemo(args[0], args[1], shipNumber);
+            new ClientDemo(args[0], args[1], shipIndex);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -62,8 +62,8 @@ public class ClientDemo extends PlayerShipUpdateListener {
     /**
      * Starts the client and connects to the server.
      */
-    public ClientDemo(String host, String artemisInstallPath, int shipNumber) throws IOException {
-        super(shipNumber);
+    public ClientDemo(String host, String artemisInstallPath, int shipIndex) throws IOException {
+        super(shipIndex);
         System.out.println("Connecting to " + host + "...");
         int port = Artemis.DEFAULT_PORT;
         int colonPos = host.indexOf(':');
@@ -86,10 +86,10 @@ public class ClientDemo extends PlayerShipUpdateListener {
      */
     @Listener
     public void onConnectSuccess(ConnectionSuccessEvent event) {
-        server.send(new SetShipPacket(getNumber()));
+        server.send(new SetShipPacket(getIndex()));
         server.send(new SetConsolePacket(Console.OBSERVER, true));
         server.send(new ReadyPacket());
-        System.out.println("Selected observer console on ship #" + getNumber());
+        System.out.println("Selected observer console on ship #" + getIndex());
     }
 
     /**

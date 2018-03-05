@@ -17,22 +17,22 @@ public class SetShipPacketTest extends AbstractPacketTester<SetShipPacket> {
 
 	@Test
 	public void testConstruct() {
-		Assert.assertEquals(2, new SetShipPacket(2).getShipNumber());
+		Assert.assertEquals(1, new SetShipPacket(1).getShipIndex());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructZeroShipNumber() {
-		new SetShipPacket(0);
+	public void testConstructNegativeShipIndex() {
+		new SetShipPacket(-1);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructShipNumberTooLarge() {
-		new SetShipPacket(Artemis.SHIP_COUNT + 1);
+	public void testConstructShipIndexTooLarge() {
+		new SetShipPacket(Artemis.SHIP_COUNT);
 	}
 
 	@Override
 	protected void testPackets(List<SetShipPacket> packets) {
-		Assert.assertEquals(2, packets.get(0).getShipNumber());
+		Assert.assertEquals(1, packets.get(0).getShipIndex());
 	}
 
 }

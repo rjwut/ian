@@ -57,10 +57,10 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
     }
 
     /**
-     * Returns the ship with the given number (1-based).
+     * Returns the ship with the given index (0-based).
      */
-    public Ship getShip(int shipNumber) {
-    	return mShips[shipNumber - 1];
+    public Ship getShip(int shipIndex) {
+    	return mShips[shipIndex];
     }
 
 	@Override

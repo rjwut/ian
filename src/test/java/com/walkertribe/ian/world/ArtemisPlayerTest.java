@@ -188,7 +188,7 @@ public class ArtemisPlayerTest {
 		player.setTargetingMode(TargetingMode.AUTO);
 		player.setAlertStatus(AlertStatus.NORMAL);
 		player.setShields(BoolState.FALSE);
-		player.setShipNumber(1);
+		player.setShipIndex(0);
 		player.setEnergy(1000f);
 		player.setDockingBase(0);
 		player.setMainScreen(MainScreenView.FORE);
@@ -212,19 +212,19 @@ public class ArtemisPlayerTest {
 	}
 
 	public static void assertPopulatedPlayer(ArtemisPlayer player) {
-		assertPlayer(player, TargetingMode.AUTO, AlertStatus.NORMAL, BoolState.FALSE, 1, 1000f, 0, MainScreenView.FORE,
+		assertPlayer(player, TargetingMode.AUTO, AlertStatus.NORMAL, BoolState.FALSE, 0, 1000f, 0, MainScreenView.FORE,
 				(byte) 8, 1, (byte) 0, BeamFrequency.A, DriveType.WARP, BoolState.FALSE, 1, 0f, 1, 1, 1000, 0f);
 	}
 
 	public static void assertPlayer(ArtemisPlayer player, TargetingMode targetingMode, AlertStatus alertStatus,
-			BoolState shields, int shipNumber, float energy, int dockingBase, MainScreenView mainScreen,
+			BoolState shields, int shipIndex, float energy, int dockingBase, MainScreenView mainScreen,
 			byte coolantOrMissiles, int weaponsTarget, byte warp, BeamFrequency beamFreq, DriveType drive,
 			BoolState reverse, int scienceTarget, float scanProgress, int captainTarget, int scanningId,
 			int capitalShipId, float accentColor) {
 		Assert.assertEquals(targetingMode, player.getTargetingMode());
 		Assert.assertEquals(alertStatus, player.getAlertStatus());
 		Assert.assertEquals(shields, player.getShieldsState());
-		Assert.assertEquals(shipNumber, player.getShipNumber());
+		Assert.assertEquals(shipIndex, player.getShipIndex());
 		Assert.assertEquals(energy, player.getEnergy(), TestUtil.EPSILON);
 		Assert.assertEquals(dockingBase, player.getDockingBase());
 		Assert.assertEquals(mainScreen, player.getMainScreen());
