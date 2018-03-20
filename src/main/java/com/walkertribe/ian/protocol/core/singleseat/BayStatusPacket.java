@@ -1,7 +1,6 @@
 package com.walkertribe.ian.protocol.core.singleseat;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.walkertribe.ian.enums.Origin;
@@ -17,7 +16,7 @@ import com.walkertribe.ian.util.Util;
  * @author rjwut
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.CARRIER_RECORD)
-public class BayStatusPacket extends BaseArtemisPacket implements Iterable<BayStatusPacket.Bay> {
+public class BayStatusPacket extends BaseArtemisPacket {
     public static class Bay {
     	private int id;
     	private CharSequence name;
@@ -134,10 +133,12 @@ public class BayStatusPacket extends BaseArtemisPacket implements Iterable<BaySt
     	return bays.size();
     }
 
-    @Override
-	public Iterator<BayStatusPacket.Bay> iterator() {
-		return bays.iterator();
-	}
+    /**
+     * Returns the List of Bays.
+     */
+    public List<Bay> getBays() {
+    	return bays;
+    }
 
     @Override
 	protected void writePayload(PacketWriter writer) {
