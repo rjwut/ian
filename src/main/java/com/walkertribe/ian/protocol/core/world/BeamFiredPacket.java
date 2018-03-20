@@ -1,6 +1,7 @@
 package com.walkertribe.ian.protocol.core.world;
 
 import com.walkertribe.ian.enums.Origin;
+import com.walkertribe.ian.enums.TargetingMode;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
@@ -15,7 +16,7 @@ import com.walkertribe.ian.world.ArtemisObject;
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.ATTACK)
 public class BeamFiredPacket extends BaseArtemisPacket {
-	private static final byte[] DEFAULT_UNKNOWN_VALUE = { 0, 0, 0, 0 };
+	private static final byte[] ZERO = { 0, 0, 0, 0 };
 
 	private int mBeamId;
 	private int mBeamPortIndex;
@@ -26,9 +27,10 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 	private float mImpactX;
 	private float mImpactY;
 	private float mImpactZ;
-	private boolean mAutoFired;
-	private byte[] unknown1 = DEFAULT_UNKNOWN_VALUE;
-	private byte[] unknown2 = DEFAULT_UNKNOWN_VALUE;
+	private TargetingMode mTargetingMode;
+	private int mUnknown1;
+	private int mUnknown2;
+	private byte[] mUnknown3 = ZERO;
 
 	public BeamFiredPacket(int beamId) {
 		mBeamId = beamId;
@@ -36,17 +38,18 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 
 	public BeamFiredPacket(PacketReader reader) {
 		mBeamId = reader.readInt();
-		unknown1 = reader.readBytes(4);
-		unknown2 = reader.readBytes(4);
+		mUnknown1 = reader.readInt();
+		mUnknown2 = reader.readInt();
 		mBeamPortIndex = reader.readInt();
 		mOriginObjectType = ObjectType.fromId(reader.readInt());
 		mTargetObjectType = ObjectType.fromId(reader.readInt());
+		mUnknown3 = reader.readBytes(4);
 		mOriginId = reader.readInt();
 		mTargetId = reader.readInt();
 		mImpactX = reader.readFloat();
 		mImpactY = reader.readFloat();
 		mImpactZ = reader.readFloat();
-		mAutoFired = reader.readInt() == 0;
+		mTargetingMode = TargetingMode.values()[reader.readInt()];
 	}
 
 	/**
@@ -87,6 +90,8 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 
 	public void setOriginObjectType(ObjectType originObjectType) {
 		mOriginObjectType = originObjectType;
+		mUnknown1 = originObjectType == ObjectType.PLAYER_SHIP ? 1 : 0;
+		mUnknown2 = originObjectType == ObjectType.PLAYER_SHIP ? 1200 : 100; // Is this beam strength?
 	}
 
 	/**
@@ -173,31 +178,32 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 	}
 
 	/**
-	 * Returns true if the beam was auto-fired; false if it was fired manually.
+	 * Returns the targeting mode used to fire these beams.
 	 */
-	public boolean isAutoFired() {
-		return mAutoFired;
+	public TargetingMode getTargetingMode() {
+		return mTargetingMode;
 	}
 
-	public void setAutoFired(boolean autoFired) {
-		mAutoFired = autoFired;
+	public void setTargetingMode(TargetingMode targetingMode) {
+		mTargetingMode = targetingMode;
 	}
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		writer
 			.writeInt(mBeamId)
-			.writeBytes(unknown1)
-			.writeBytes(unknown2)
+			.writeInt(mUnknown1)
+			.writeInt(mUnknown2)
 			.writeInt(mBeamPortIndex)
 			.writeInt(mOriginObjectType.getId())
 			.writeInt(mTargetObjectType.getId())
+			.writeBytes(mUnknown3)
 			.writeInt(mOriginId)
 			.writeInt(mTargetId)
 			.writeFloat(mImpactX)
 			.writeFloat(mImpactY)
 			.writeFloat(mImpactZ)
-			.writeInt(mAutoFired ? 0 : 1);
+			.writeInt(mTargetingMode.ordinal());
 	}
 
 	@Override
@@ -210,6 +216,9 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 			.append(" from ship #")
 			.append(mOriginId)
 			.append(" to ship #")
-			.append(mTargetId);
+			.append(mTargetId)
+			.append(" (")
+			.append(mTargetingMode)
+			.append(')');
 	}
 }
