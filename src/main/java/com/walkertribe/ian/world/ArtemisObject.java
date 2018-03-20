@@ -107,6 +107,47 @@ public interface ArtemisObject {
     public abstract void setZ(float z);
 
     /**
+     * The race of this object, as determined from a science scan.
+     * Unspecified: null
+     */
+    public CharSequence getRace();
+    public void setRace(CharSequence race);
+
+    /**
+     * The object's class, as determined from a science scan. This property is referred to as
+     * "artemisClass" to avoid colliding with Object.getClass().
+     * Unspecified: null
+     */
+    public CharSequence getArtemisClass();
+    public void setArtemisClass(CharSequence artemisClass);
+
+    /**
+     * The level 1 scan intel for this object.
+     * Unspecified: null
+     */
+    public CharSequence getIntelLevel1();
+    public void setIntelLevel1(CharSequence intelLevel1);
+
+    /**
+     * The level 2 scan intel for this object.
+     * Unspecified: null
+     */
+    public CharSequence getIntelLevel2();
+    public void setIntelLevel2(CharSequence intelLevel2);
+
+    /**
+     * Returns true if this object's X, Y, and Z properties are all specified.
+     */
+    public abstract boolean hasPosition();
+
+    /**
+     * Returns the distance between this object and the given object. If either
+     * object doesn't have all three components of its coordinates, this method
+     * will throw a RuntimeException.
+     */
+    public abstract float distance(ArtemisObject obj);
+
+    /**
      * Returns the Model object for this ArtemisObject, using the given
      * Context, or null if one cannot be provided.
      */
@@ -130,7 +171,7 @@ public interface ArtemisObject {
      * given object. If any property of the given object is unspecified, this
      * object's corresponding property will not be updated.
      */
-    public void updateFrom(ArtemisObject other, Context ctx);
+    public void updateFrom(ArtemisObject other);
 
     /**
      * Returns a SortedMap containing this object's properties. If

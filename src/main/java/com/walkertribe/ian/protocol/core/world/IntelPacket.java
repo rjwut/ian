@@ -1,5 +1,6 @@
 package com.walkertribe.ian.protocol.core.world;
 
+import com.walkertribe.ian.enums.IntelType;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
@@ -15,20 +16,22 @@ import com.walkertribe.ian.world.ArtemisObject;
 @Packet(origin = Origin.SERVER, type = CorePacketType.OBJECT_TEXT)
 public class IntelPacket extends BaseArtemisPacket {
 	private final int mId;
+	private IntelType mIntelType;
 	private final CharSequence mIntel;
 
-	public IntelPacket(ArtemisObject obj, CharSequence intel) {
-		this(obj.getId(), intel);
+	public IntelPacket(ArtemisObject obj, IntelType type, CharSequence intel) {
+		this(obj.getId(), type, intel);
 	}
 
-	public IntelPacket(int hullId, CharSequence intel) {
+	public IntelPacket(int hullId, IntelType type, CharSequence intel) {
 		mId = hullId;
+		mIntelType = type;
 		mIntel = intel;
 	}
 
 	public IntelPacket(PacketReader reader) {
     	mId = reader.readInt();
-    	reader.readUnknown("Unknown", 1);
+    	mIntelType = IntelType.values()[reader.readByte()];
         mIntel = reader.readString();
     }
 
@@ -40,19 +43,33 @@ public class IntelPacket extends BaseArtemisPacket {
 	}
 
 	/**
+	 * The type of intel received
+	 */
+	public IntelType getIntelType() {
+		return mIntelType;
+	}
+
+	/**
 	 * The intel on that ship, as human-readable text
 	 */
 	public CharSequence getIntel() {
 		return mIntel;
 	}
 
+	/**
+	 * Applies the intel in this packet to the given ArtemisObject.
+	 */
+	public void applyTo(ArtemisObject obj) {
+		mIntelType.set(obj, mIntel);;
+	}
+
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(mId).writeByte((byte) 3).writeString(mIntel);
+		writer.writeInt(mId).writeByte((byte) mIntelType.ordinal()).writeString(mIntel);
 	}
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append("Obj #").append(mId).append(": ").append(mIntel);
+		b.append("Obj #").append(mId).append(": ").append(mIntelType).append('=').append(mIntel);
 	}
 }

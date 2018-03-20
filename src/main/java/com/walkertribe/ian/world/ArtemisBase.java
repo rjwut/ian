@@ -2,7 +2,6 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
-import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 
 /**
@@ -34,8 +33,8 @@ public class ArtemisBase extends BaseArtemisShielded {
 	}
 
     @Override
-    public void updateFrom(ArtemisObject obj, Context ctx) {
-        super.updateFrom(obj, ctx);
+    public void updateFrom(ArtemisObject obj) {
+        super.updateFrom(obj);
         
         if (obj instanceof ArtemisBase) {
             ArtemisBase base = (ArtemisBase) obj;

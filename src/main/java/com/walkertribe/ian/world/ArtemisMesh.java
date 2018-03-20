@@ -126,8 +126,8 @@ public class ArtemisMesh extends BaseArtemisObject {
     }
 
     @Override
-    public void updateFrom(ArtemisObject other, Context ctx) {
-        super.updateFrom(other, ctx);
+    public void updateFrom(ArtemisObject other) {
+        super.updateFrom(other);
 
         if (other instanceof ArtemisMesh) {
             ArtemisMesh m = (ArtemisMesh) other;

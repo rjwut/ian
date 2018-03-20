@@ -177,11 +177,11 @@ public class ArtemisPlayerTest {
 		ArtemisPlayer obj1 = new ArtemisPlayer(47);
 		buildPlayerData(obj1);
 		assertPopulatedPlayer(obj1);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertPopulatedPlayer(obj1);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertPopulatedPlayer(obj0);
-		obj0.updateFrom(new ArtemisCreature(48), null);
+		obj0.updateFrom(new ArtemisCreature(48));
 	}
 
 	private static void buildPlayerData(ArtemisPlayer player) {
@@ -284,9 +284,9 @@ public class ArtemisPlayerTest {
 		ArtemisPlayer obj1 = new ArtemisPlayer(47);
 		buildWeapData(obj1);
 		assertPopulatedWeap(obj1);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertPopulatedWeap(obj1);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertPopulatedWeap(obj0);
 	}
 
@@ -366,9 +366,9 @@ public class ArtemisPlayerTest {
 		ArtemisPlayer obj1 = new ArtemisPlayer(47);
 		buildEngData(obj1);
 		assertPopulatedEng(obj1);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertPopulatedEng(obj1);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertPopulatedEng(obj0);
 	}
 
@@ -433,9 +433,9 @@ public class ArtemisPlayerTest {
 		ArtemisPlayer obj1 = new ArtemisPlayer(47);
 		buildUpgradeData(obj1);
 		assertPopulatedUpgrades(obj1);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertPopulatedUpgrades(obj1);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertPopulatedUpgrades(obj0);
 	}
 

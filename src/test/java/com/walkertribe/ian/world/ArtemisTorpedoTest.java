@@ -21,11 +21,11 @@ public class ArtemisTorpedoTest {
 		obj1.setDy(5f);
 		obj1.setDz(6f);
 		obj1.setOrdnanceType(OrdnanceType.EMP);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertPopulatedTorpedo(obj1);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertPopulatedTorpedo(obj0);
-		obj0.updateFrom(new ArtemisCreature(48), null);
+		obj0.updateFrom(new ArtemisCreature(48));
 		assertPopulatedTorpedo(obj0);
 	}
 

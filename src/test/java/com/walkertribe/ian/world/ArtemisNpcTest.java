@@ -58,7 +58,6 @@ public class ArtemisNpcTest {
 				Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1, -1, -1,
 				SHIELD_FREQS_UNSPECIFIED, -1, -1, -1, -1, (byte) -1, -1, -1, BoolState.UNKNOWN, BoolState.UNKNOWN,
 				(byte) -1, SYS_DAMAGE_UNSPECIFIED);
-		Assert.assertNull(obj0.getIntel());
 		ArtemisNpc obj1 = new ArtemisNpc(47);
 		obj1.setName("TEST");
 		obj1.setX(1f);
@@ -88,21 +87,17 @@ public class ArtemisNpcTest {
 		obj1.setEnemy(BoolState.TRUE);
 		obj1.setSurrendered(BoolState.TRUE);
 		obj1.setFleetNumber((byte) 2);
-		obj1.setIntel("Test");
 
 		for (ShipSystem sys : ShipSystem.values()) {
 			obj1.setSystemDamage(sys, SYS_DAMAGE[sys.ordinal()]);
 		}
 
 		assertAllProps(obj1);
-		Assert.assertEquals("Test", obj1.getIntel());
-		obj1.updateFrom(obj0, CTX);
+		obj1.updateFrom(obj0);
 		assertAllProps(obj1);
-		Assert.assertEquals("Test", obj1.getIntel());
-		obj0.updateFrom(obj1, CTX);
+		obj0.updateFrom(obj1);
 		assertAllProps(obj0);
-		obj0.updateFrom(new ArtemisAnomaly(48), CTX);
-		Assert.assertEquals("Test", obj0.getIntel());
+		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 
 	@Test

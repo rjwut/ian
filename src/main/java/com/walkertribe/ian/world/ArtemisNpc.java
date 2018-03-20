@@ -42,7 +42,6 @@ public class ArtemisNpc extends BaseArtemisShip {
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = (byte) -1;
-    private CharSequence mIntel;
     private final float[] mSysDamage = new float[Artemis.SYSTEM_COUNT];
 
     public ArtemisNpc(int objId) {
@@ -215,18 +214,6 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     /**
-     * The intel String for this ship.
-     * Unspecified: null
-     */
-    public CharSequence getIntel() {
-    	return mIntel;
-    }
-
-    public void setIntel(CharSequence intel) {
-    	mIntel = intel;
-    }
-
-    /**
      * The percentage of damage sustained by a particular system, expressed as
      * a value between 0 and 1.
      * Unspecified: -1
@@ -240,8 +227,8 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     @Override
-    public void updateFrom(ArtemisObject npc, Context ctx) {
-        super.updateFrom(npc, ctx);
+    public void updateFrom(ArtemisObject npc) {
+        super.updateFrom(npc);
         
         // it SHOULD be an ArtemisNpc
         if (npc instanceof ArtemisNpc) {
@@ -272,10 +259,6 @@ public class ArtemisNpc extends BaseArtemisShip {
 
             if (cast.mSpecialState != -1) {
                 setSpecialStateBits(cast.mSpecialState);
-            }
-
-            if (cast.mIntel != null) {
-            	setIntel(cast.mIntel);
             }
 
             for (int i = 0; i < mSysDamage.length; i++) {
@@ -311,7 +294,6 @@ public class ArtemisNpc extends BaseArtemisShip {
     	putProp(props, "Is enemy", mEnemy, includeUnspecified);
     	putProp(props, "Surrendered", mSurrendered, includeUnspecified);
     	putProp(props, "Fleet number", mFleetNumber, -1, includeUnspecified);
-    	putProp(props, "Intel", mIntel, includeUnspecified);
     	ShipSystem[] systems = ShipSystem.values();
 
     	for (int i = 0; i < mSysDamage.length; i++) {

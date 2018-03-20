@@ -26,10 +26,10 @@ public class ArtemisGenericObjectTest {
 		obj1.setY(2.0f);
 		obj1.setZ(3.0f);
 		ArtemisObjectTest.assertObject(obj1, 47, ObjectType.ASTEROID, "A", 1.0f, 2.0f, 3.0f);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		ArtemisObjectTest.assertObject(obj1, 47, ObjectType.ASTEROID, "A", 1.0f, 2.0f, 3.0f);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		ArtemisObjectTest.assertObject(obj0, 47, ObjectType.ASTEROID, "A", 1.0f, 2.0f, 3.0f);
-		obj0.updateFrom(new ArtemisAnomaly(48), null);
+		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 }

@@ -22,11 +22,11 @@ public class ArtemisDroneTest {
 		obj1.setRoll(6.0f);
 		obj1.setSteering(7.0f);
 		assertDrone(obj1, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertDrone(obj1, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertDrone(obj0, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
-		obj0.updateFrom(new ArtemisAnomaly(48), null);
+		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 
 	public static void assertDrone(ArtemisDrone drone, int id, String name, float x, float y, float z, float heading,

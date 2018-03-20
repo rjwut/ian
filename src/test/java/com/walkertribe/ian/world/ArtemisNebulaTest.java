@@ -20,11 +20,11 @@ public class ArtemisNebulaTest {
 		obj1.setGreen(0.5f);
 		obj1.setBlue(0.75f);
 		assertNebula(obj1, 47, "NEBULA", 1f, 2f, 3f, 0.25f, 0.5f, 0.75f);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertNebula(obj1, 47, "NEBULA", 1f, 2f, 3f, 0.25f, 0.5f, 0.75f);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertNebula(obj0, 47, "NEBULA", 1f, 2f, 3f, 0.25f, 0.5f, 0.75f);
-		obj0.updateFrom(new ArtemisAnomaly(48), null);
+		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 
 	public static void assertNebula(ArtemisNebula obj, int id, String name, float x, float y, float z, float red,

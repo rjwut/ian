@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.iface.Listener;
@@ -40,7 +39,6 @@ public class SystemManager {
 
     private static final boolean DEBUG = false;
 
-    private final Context mCtx;
     private final HashMap<Integer, ArtemisObject> mObjects = 
             new HashMap<Integer, ArtemisObject>();
     private OnObjectCountChangeListener mListener = sDummyListener;
@@ -53,8 +51,7 @@ public class SystemManager {
     
     private final ArtemisPlayer[] mPlayers = new ArtemisPlayer[Artemis.SHIP_COUNT];
     
-    public SystemManager(Context ctx) {
-    	mCtx = ctx;
+    public SystemManager() {
         clear();
     }
     
@@ -123,10 +120,10 @@ public class SystemManager {
 
     @Listener
     public void onPacket(IntelPacket pkt) {
-    	ArtemisNpc npc = (ArtemisNpc) mObjects.get(Integer.valueOf(pkt.getId()));
+    	ArtemisObject obj = mObjects.get(Integer.valueOf(pkt.getId()));
 
-    	if (npc != null) {
-    		npc.setIntel(pkt.getIntel());
+    	if (obj != null) {
+    		pkt.applyTo(obj);
     	}
     }
 
@@ -136,7 +133,7 @@ public class SystemManager {
         ArtemisObject p = mObjects.get(id);
 
         if (p != null) {
-            p.updateFrom(o, mCtx);
+            p.updateFrom(o);
             
             if (o instanceof ArtemisPlayer) {
                 // just in case we get the ship index AFTER

@@ -16,11 +16,11 @@ public class ArtemisAnomalyTest {
 		obj1.setY(2.0f);
 		obj1.setZ(3.0f);
 		obj1.setUpgrade(Upgrade.LATERAL_ARRAY);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertAnomaly(obj1, 1.0f, 2.0f, 3.0f, Upgrade.LATERAL_ARRAY);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertAnomaly(obj0, 1.0f, 2.0f, 3.0f, Upgrade.LATERAL_ARRAY);
-		obj0.updateFrom(new ArtemisBase(48), null);
+		obj0.updateFrom(new ArtemisBase(48));
 	}
 
 	public static void assertAnomaly(ArtemisAnomaly obj, float x, float y, float z, Upgrade upgrade) {

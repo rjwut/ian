@@ -70,8 +70,8 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
     }
 
     @Override
-    public void updateFrom(ArtemisObject obj, Context ctx) {
-        super.updateFrom(obj, ctx);
+    public void updateFrom(ArtemisObject obj) {
+        super.updateFrom(obj);
         
         if (obj instanceof BaseArtemisShielded) {
             ArtemisShielded ship = (ArtemisShielded) obj;

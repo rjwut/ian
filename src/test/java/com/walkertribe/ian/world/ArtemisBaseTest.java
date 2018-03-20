@@ -20,11 +20,11 @@ public class ArtemisBaseTest {
 		obj1.setY(2.0f);
 		obj1.setZ(3.0f);
 		assertBase(obj1, 47, "DS1", 47.0f, 0.0f, 0, 1000, 1.0f, 2.0f, 3.0f);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertBase(obj1, 47, "DS1", 47.0f, 0.0f, 0, 1000, 1.0f, 2.0f, 3.0f);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertBase(obj0, 47, "DS1", 47.0f, 0.0f, 0, 1000, 1.0f, 2.0f, 3.0f);
-		obj0.updateFrom(new ArtemisAnomaly(48), null);
+		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 
 	public static void assertBase(ArtemisBase base, int id, String name, float shieldsFront, float shieldsRear,

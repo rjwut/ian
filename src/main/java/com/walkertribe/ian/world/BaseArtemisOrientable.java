@@ -2,8 +2,6 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
-import com.walkertribe.ian.Context;
-
 /**
  * Base implementation for ArtemisOrientable objects.
  * @author rjwut
@@ -49,8 +47,8 @@ public abstract class BaseArtemisOrientable extends BaseArtemisObject
 	}
 
 	@Override
-    public void updateFrom(ArtemisObject obj, Context ctx) {
-		super.updateFrom(obj, ctx);
+    public void updateFrom(ArtemisObject obj) {
+		super.updateFrom(obj);
 
 		if (obj instanceof ArtemisOrientable) {
 			ArtemisOrientable cast = (ArtemisOrientable) obj;

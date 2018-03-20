@@ -25,11 +25,11 @@ public class ArtemisCreatureTest {
 		obj1.setHealth(50);
 		obj1.setMaxHealth(100);
 		assertCreature(obj1, 47, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, CreatureType.WHALE, 50, 100);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertCreature(obj1, 47, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, CreatureType.WHALE, 50, 100);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertCreature(obj0, 47, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, CreatureType.WHALE, 50, 100);
-		obj0.updateFrom(new ArtemisDrone(47), null);
+		obj0.updateFrom(new ArtemisDrone(47));
 	}
 
 	public static void assertCreature(ArtemisCreature creature, int id, float x, float y, float z, String name,

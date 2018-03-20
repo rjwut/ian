@@ -797,8 +797,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     @Override
-    public void updateFrom(ArtemisObject obj, Context ctx) {
-        super.updateFrom(obj, ctx);
+    public void updateFrom(ArtemisObject obj) {
+        super.updateFrom(obj);
         
         if (obj instanceof ArtemisPlayer) {
             ArtemisPlayer plr = (ArtemisPlayer) obj;
@@ -852,7 +852,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * Invokes the superclass's updateFrom() method. Used by split().
      */
     private void superUpdateFrom(ArtemisObject obj) {
-        super.updateFrom(obj, null);
+        super.updateFrom(obj);
     }
 
     /**

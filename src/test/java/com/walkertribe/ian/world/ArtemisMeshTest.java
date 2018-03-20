@@ -24,11 +24,11 @@ public class ArtemisMeshTest {
 		obj1.setBlue(0.75f);
 		obj1.setFakeShields(100, 75);
 		assertMesh(obj1, 47, "MESH", 1f, 2f, 3f, "test.dxs", "test.png", 0.25f, 0.5f, 0.75f, 100, 75);
-		obj1.updateFrom(obj0, null);
+		obj1.updateFrom(obj0);
 		assertMesh(obj1, 47, "MESH", 1f, 2f, 3f, "test.dxs", "test.png", 0.25f, 0.5f, 0.75f, 100, 75);
-		obj0.updateFrom(obj1, null);
+		obj0.updateFrom(obj1);
 		assertMesh(obj0, 47, "MESH", 1f, 2f, 3f, "test.dxs", "test.png", 0.25f, 0.5f, 0.75f, 100, 75);
-		obj0.updateFrom(new ArtemisAnomaly(48), null);
+		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 
 	public static void assertMesh(ArtemisMesh obj, int id, String name, float x, float y, float z, String mesh,
