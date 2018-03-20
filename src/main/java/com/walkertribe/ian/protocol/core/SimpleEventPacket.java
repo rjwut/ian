@@ -41,6 +41,7 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte SINGLE_SEAT_DAMAGE   = 0x18;
     	public static final byte UNKNOWN_19           = 0x19;
     	public static final byte DOCKED               = 0x1a;
+    	public static final byte SMOKE                = 0x1b;
 
     	private SubType() {
     		// prevent instantiation
