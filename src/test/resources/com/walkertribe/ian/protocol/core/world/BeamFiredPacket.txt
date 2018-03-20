@@ -1,0 +1,19 @@
+efbeadde // header
+4c000000 // packet length = 76
+01000000 // origin = server
+00000000 // padding
+38000000 // remaining length = 56
+c4d23fb8 // BeamFiredPacket
+00000000 // ID = 0
+00000000 // unknown
+64000000 // unknown
+01000000 // beam port index = 1
+05000000 // origin type = NPC ship
+01000000 // target type = player ship
+00000000 // unknown
+02000000 // origin ID = 2
+03000000 // target ID = 3
+0000803f // impact X = 1
+00000040 // impact Y = 2
+00004040 // impact Z = 3
+01000000 // targeting mode = manual

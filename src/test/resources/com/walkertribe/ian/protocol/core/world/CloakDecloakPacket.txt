@@ -1,0 +1,9 @@
+efbeadde          // header
+28000000          // packet length = 40
+01000000          // origin = server
+00000000          // padding
+14000000          // remaining length = 20
+fec854f7 07000000 // CloakDecloakPacket
+0000803f // X = 1
+00000040 // Y = 2
+00004040 // Z = 3

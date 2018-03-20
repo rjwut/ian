@@ -1,0 +1,8 @@
+efbeadde          // header
+24000000          // packet length = 36
+02000000          // origin = client
+00000000          // padding
+10000000          // remaining length = 16
+3c1d824c 1f000000 // SingleSeatShootPacket
+e8030000          // shooter ID = 1000
+e9030000          // target ID = 1001
