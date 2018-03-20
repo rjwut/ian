@@ -24,6 +24,7 @@ import com.walkertribe.ian.util.TestUtil;
  */
 public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	protected static final float EPSILON = TestUtil.EPSILON;
+	private static final Debugger DEFAULT_DEBUGGER = TestUtil.DEBUG ? new OutputStreamDebugger("", System.out, System.err) : new BaseDebugger();
 
 	/**
 	 * Invoked by AbstractPacketTester when it has successfully parsed the
@@ -41,11 +42,11 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	 * the packets will be written out to a stream, and the resulting bytes
 	 * compared to the original file.
 	 */
-	protected void execute(String resourcePath, Origin type, int packetCount) {
+	protected void execute(String resourcePath, Origin origin, int packetCount) {
 		try {
-			Debugger debugger = buildDebugger();
+			Debugger debugger = getDebugger();
 			TestPacketFile file = loadTestPacketFile(resourcePath);
-			List<T> list = readPackets(file, type, packetCount, debugger);
+			List<T> list = readPackets(file, origin, packetCount, debugger);
 			testPackets(list); // delegate to subclass
 			ByteArrayOutputStream baos = writePackets(list, debugger);
 			Assert.assertTrue(file.matches(baos)); // output matches input
@@ -128,10 +129,10 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 	}
 
 	/**
-	 * Returns a new Debugger object to use for this test.
+	 * Returns a Debugger object to use for this test.
 	 */
-	protected Debugger buildDebugger() {
-		return TestUtil.DEBUG ? new OutputStreamDebugger("", System.out, System.err) : new BaseDebugger();
+	protected Debugger getDebugger() {
+		return DEFAULT_DEBUGGER;
 	}
 
 	/**
