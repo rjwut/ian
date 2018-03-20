@@ -43,6 +43,7 @@ public abstract class BaseArtemisPacket implements ArtemisPacket {
 
     protected Origin mOrigin;
     protected int mType;
+    private long mTimestamp;
 
     public BaseArtemisPacket() {
     	Packet anno = getClass().getAnnotation(Packet.class);
@@ -53,6 +54,8 @@ public abstract class BaseArtemisPacket implements ArtemisPacket {
     	} else if (!(this instanceof RawPacket)) {
     		throw new RuntimeException(getClass() + " must have a @Packet annotation");
     	}
+
+    	mTimestamp = System.nanoTime();
     }
 
     @Override
@@ -63,6 +66,11 @@ public abstract class BaseArtemisPacket implements ArtemisPacket {
     @Override
     public int getType() {
         return mType;
+    }
+
+    @Override
+    public long getTimestamp() {
+    	return mTimestamp;
     }
 
     @Override

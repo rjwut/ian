@@ -29,6 +29,12 @@ public interface ArtemisPacket {
     public int getType();
 
     /**
+     * Returns a long value representing the value of System.nanoTime() when
+     * this packet was received.
+     */
+    public long getTimestamp();
+
+    /**
      * Writes this packet to the given PacketWriter, then returns the array of
      * bytes that was sent. The given Debugger will be notified of the written
      * packet.
