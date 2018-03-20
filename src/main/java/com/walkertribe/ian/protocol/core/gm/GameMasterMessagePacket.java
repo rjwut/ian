@@ -58,7 +58,7 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
     }
 
     public GameMasterMessagePacket(PacketReader reader) {
-        byte console = reader.readByte();
+        int console = reader.readInt();
         mConsole = console != 0 ? Console.values()[console - 1] : null;
         mSender = reader.readString();
         mMessage = reader.readString();
@@ -92,7 +92,7 @@ public class GameMasterMessagePacket extends BaseArtemisPacket {
     @Override
 	protected void writePayload(PacketWriter writer) {
 		writer
-			.writeByte((byte) (mConsole == null ? 0 : mConsole.ordinal() + 1))
+			.writeInt(mConsole == null ? 0 : mConsole.ordinal() + 1)
 			.writeString(mSender)
 			.writeString(mMessage);
 	}
