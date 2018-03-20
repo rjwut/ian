@@ -36,7 +36,7 @@ public class BayStatusPacketTest extends AbstractPacketTester<BayStatusPacket> {
 		Assert.assertEquals(bayCount, pkt.getBayCount());
 		int id = 1;
 
-		for (Bay bay : pkt) {
+		for (Bay bay : pkt.getBays()) {
 			Assert.assertEquals(id, bay.getId());
 			TestUtil.assertToStringEquals("Fighter " + id, bay.getName());
 			TestUtil.assertToStringEquals("Class " + id, bay.getClassName());
