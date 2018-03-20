@@ -57,7 +57,7 @@ public class ArtemisNpcTest {
 		assertNpc(obj0, 47, ObjectType.NPC_SHIP, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1,
 				Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1, -1, -1,
 				SHIELD_FREQS_UNSPECIFIED, -1, -1, -1, -1, (byte) -1, -1, -1, BoolState.UNKNOWN, BoolState.UNKNOWN,
-				(byte) -1, SYS_DAMAGE_UNSPECIFIED);
+				Byte.MIN_VALUE, SYS_DAMAGE_UNSPECIFIED);
 		ArtemisNpc obj1 = new ArtemisNpc(47);
 		obj1.setName("TEST");
 		obj1.setX(1f);
@@ -129,23 +129,23 @@ public class ArtemisNpcTest {
 	public void testAppendObjectPropsSpecials() {
 		ArtemisNpc obj = new ArtemisNpc(47);
 		SortedMap<String, Object> props = new TreeMap<String, Object>();
-		obj.appendObjectProps(props, true);
-		Assert.assertEquals("UNKNOWN", props.get("Specials"));
-		Assert.assertEquals("UNKNOWN", props.get("Specials active"));
+		obj.appendObjectProps(props);
+		Assert.assertFalse(props.containsKey("Specials"));
+		Assert.assertFalse(props.containsKey("Specials active"));
 		props.clear();
-		obj.appendObjectProps(props, false);
+		obj.appendObjectProps(props);
 		Assert.assertNull(props.get("Specials"));
 		Assert.assertNull(props.get("Specials active"));
 		obj.setSpecialBits(0x00);
 		obj.setSpecialStateBits(0x00);
 		props.clear();
-		obj.appendObjectProps(props, false);
+		obj.appendObjectProps(props);
 		Assert.assertEquals("NONE", props.get("Specials"));
 		Assert.assertEquals("NONE", props.get("Specials active"));
 		obj.setSpecialBits(0x05);
 		obj.setSpecialStateBits(0x01);
 		props.clear();
-		obj.appendObjectProps(props, false);
+		obj.appendObjectProps(props);
 		Assert.assertEquals("STEALTH CLOAK", props.get("Specials"));
 		Assert.assertEquals("STEALTH", props.get("Specials active"));
 		

@@ -46,8 +46,8 @@ public class ArtemisAnomaly extends BaseArtemisObject {
     }
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Upgrade", mUpgrade, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Upgrade", mUpgrade);
     }
 }

@@ -46,8 +46,8 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 	}
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Rudder", mSteering, -1, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Rudder", mSteering, -1);
     }
 }

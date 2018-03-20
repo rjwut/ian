@@ -80,10 +80,10 @@ public class ArtemisNebula extends BaseArtemisObject {
     }
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Red", mRed, -1, includeUnspecified);
-    	putProp(props, "Green", mGreen, -1, includeUnspecified);
-    	putProp(props, "Blue", mBlue, -1, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Red", mRed, -1);
+    	putProp(props, "Green", mGreen, -1);
+    	putProp(props, "Blue", mBlue, -1);
     }
 }

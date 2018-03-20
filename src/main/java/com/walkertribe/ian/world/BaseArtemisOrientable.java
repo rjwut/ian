@@ -71,12 +71,11 @@ public abstract class BaseArtemisOrientable extends BaseArtemisObject
     }
 
 	@Override
-	protected void appendObjectProps(SortedMap<String, Object> props,
-			boolean includeUnspecified) {
-		super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Heading", mHeading, Float.MIN_VALUE, includeUnspecified);
-    	putProp(props, "Pitch", mPitch, Float.MIN_VALUE, includeUnspecified);
-    	putProp(props, "Roll", mRoll, Float.MIN_VALUE, includeUnspecified);
+	protected void appendObjectProps(SortedMap<String, Object> props) {
+		super.appendObjectProps(props);
+    	putProp(props, "Heading", mHeading, Float.MIN_VALUE);
+    	putProp(props, "Pitch", mPitch, Float.MIN_VALUE);
+    	putProp(props, "Roll", mRoll, Float.MIN_VALUE);
     }
 
 	/**

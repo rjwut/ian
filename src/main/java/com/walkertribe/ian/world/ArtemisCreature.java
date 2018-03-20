@@ -86,10 +86,10 @@ public class ArtemisCreature extends BaseArtemisOrientable {
 	}
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Creature type", mCreatureType, includeUnspecified);
-    	putProp(props, "Health", mHealth, includeUnspecified);
-    	putProp(props, "Max health", mMaxHealth, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Creature type", mCreatureType);
+    	putProp(props, "Health", mHealth);
+    	putProp(props, "Max health", mMaxHealth);
     }
 }

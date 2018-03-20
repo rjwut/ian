@@ -97,11 +97,11 @@ public class ArtemisTorpedo extends BaseArtemisObject {
     }
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Δx", mDx, Float.MIN_VALUE, includeUnspecified);
-    	putProp(props, "Δy", mDy, Float.MIN_VALUE, includeUnspecified);
-    	putProp(props, "Δz", mDz, Float.MIN_VALUE, includeUnspecified);
-    	putProp(props, "Ordnance type", mOrdnanceType, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Δx", mDx, Float.MIN_VALUE);
+    	putProp(props, "Δy", mDy, Float.MIN_VALUE);
+    	putProp(props, "Δz", mDz, Float.MIN_VALUE);
+    	putProp(props, "Ordnance type", mOrdnanceType);
     }
 }

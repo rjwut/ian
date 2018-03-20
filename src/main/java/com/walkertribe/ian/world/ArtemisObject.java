@@ -174,11 +174,8 @@ public interface ArtemisObject {
     public void updateFrom(ArtemisObject other);
 
     /**
-     * Returns a SortedMap containing this object's properties. If
-     * includeUnspecified is true, all properties will be included in the map,
-     * even if they're unspecified. Otherwise, only specified properties will be
-     * included. Note that unknown properties that have not been specified will
-     * never be included, even if includeUnspecified is true.
+     * Returns a SortedMap containing this object's properties. Only specified
+     * properties will be included.
      */
-    public SortedMap<String, Object> getProps(boolean includeUnspecified);
+    public SortedMap<String, Object> getProps();
 }

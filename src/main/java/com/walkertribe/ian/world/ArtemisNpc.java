@@ -41,7 +41,7 @@ public class ArtemisNpc extends BaseArtemisShip {
     private int mSpecial = -1, mSpecialState = -1;
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
-    private byte mFleetNumber = (byte) -1;
+    private byte mFleetNumber = Byte.MIN_VALUE;
     private final float[] mSysDamage = new float[Artemis.SYSTEM_COUNT];
 
     public ArtemisNpc(int objId) {
@@ -85,7 +85,7 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     /**
      * Returns the ship's fleet number. -1 means no fleet.
-     * Unspecified: -2
+     * Unspecified: Byte.MIN_VALUE
      */
     public byte getFleetNumber() {
     	return mFleetNumber;
@@ -245,7 +245,7 @@ public class ArtemisNpc extends BaseArtemisShip {
             	mSurrendered = surrendered;
             }
 
-            if (cast.mFleetNumber != (byte) -1) {
+            if (cast.mFleetNumber != Byte.MIN_VALUE) {
             	setFleetNumber(cast.mFleetNumber);
             }
 
@@ -272,33 +272,27 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props,
-			boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Scan level", mScanLevel, -1, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Scan level", mScanLevel, -1);
 
     	if (mSpecial != -1) {
     		String str = Util.enumSetToString(SpecialAbility.fromValue(mSpecial));
     		props.put("Specials", str.length() > 0 ? str : "NONE");
-    	} else if (includeUnspecified) {
-        	props.put("Specials", "UNKNOWN");
     	}
 
     	if (mSpecialState != -1) {
     		String str = Util.enumSetToString(SpecialAbility.fromValue(mSpecialState));
     		props.put("Specials active", str.length() > 0 ? str : "NONE");
-    	} else if (includeUnspecified) {
-        	props.put("Specials active", "UNKNOWN");
     	}
 
-    	putProp(props, "Is enemy", mEnemy, includeUnspecified);
-    	putProp(props, "Surrendered", mSurrendered, includeUnspecified);
-    	putProp(props, "Fleet number", mFleetNumber, -1, includeUnspecified);
+    	putProp(props, "Is enemy", mEnemy);
+    	putProp(props, "Surrendered", mSurrendered);
+    	putProp(props, "Fleet number", mFleetNumber, Byte.MIN_VALUE);
     	ShipSystem[] systems = ShipSystem.values();
 
     	for (int i = 0; i < mSysDamage.length; i++) {
-    		putProp(props, "Damage: " + systems[i], mSysDamage[i],
-    				-1, includeUnspecified);
+    		putProp(props, "Damage: " + systems[i], mSysDamage[i], -1);
     	}
     }
 }

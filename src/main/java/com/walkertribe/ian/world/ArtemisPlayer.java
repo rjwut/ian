@@ -973,30 +973,30 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Targeting mode", mTargetingMode, includeUnspecified);
-    	putProp(props, "Alert status", mAlertStatus, includeUnspecified);
-    	putProp(props, "Shield state", mShields, includeUnspecified);
-    	putProp(props, "Ship index", mShipIndex, -1, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Targeting mode", mTargetingMode);
+    	putProp(props, "Alert status", mAlertStatus);
+    	putProp(props, "Shield state", mShields);
+    	putProp(props, "Ship index", mShipIndex, -1);
 
     	for (ShipSystem system : ShipSystem.values()) {
     		int i = system.ordinal();
-    		putProp(props, "System heat: " + system, mSystems[i].heat, -1, includeUnspecified);
-    		putProp(props, "System energy: " + system, mSystems[i].energy, -1, includeUnspecified);
-    		putProp(props, "System coolant: " + system, mSystems[i].coolant, -1, includeUnspecified);
+    		putProp(props, "System heat: " + system, mSystems[i].heat, -1);
+    		putProp(props, "System energy: " + system, mSystems[i].energy, -1);
+    		putProp(props, "System coolant: " + system, mSystems[i].coolant, -1);
     	}
 
     	OrdnanceType[] ordValues = OrdnanceType.values();
 
     	for (OrdnanceType ordnanceType : ordValues) {
     		int i = ordnanceType.ordinal();
-    		putProp(props, "Ordnance count: " + ordnanceType, mTorpedos[i], -1, includeUnspecified);
+    		putProp(props, "Ordnance count: " + ordnanceType, mTorpedos[i], -1);
     	}
 
     	for (int i = 0; i < Artemis.MAX_TUBES; i++) {
     		Tube tube = mTubes[i];
-    		putProp(props, "Tube " + i + " state", tube.state, includeUnspecified);
+    		putProp(props, "Tube " + i + " state", tube.state);
 
     		if (tube.state != null && tube.contents != -1) {
         		String contentsStr;
@@ -1007,35 +1007,35 @@ public class ArtemisPlayer extends BaseArtemisShip {
     				contentsStr = ordValues[tube.contents].name();
     			}
 
-    			putProp(props, "Tube " + i + " contents", contentsStr, includeUnspecified);
+    			putProp(props, "Tube " + i + " contents", contentsStr);
     		}
 
-    		putProp(props, "Tube " + i + " countdown", tube.secondsLeft, -1, includeUnspecified);
+    		putProp(props, "Tube " + i + " countdown", tube.secondsLeft, -1);
     	}
 
-    	putProp(props, "Energy", mEnergy, -1, includeUnspecified);
-    	putProp(props, "Docking base", mDockingBase, -1, includeUnspecified);
-    	putProp(props, "Main screen view", mMainScreen, includeUnspecified);
-    	putProp(props, "Coolant", mAvailableCoolantOrMissiles, -1, includeUnspecified);
-    	putProp(props, "Warp", mWarp, -1, includeUnspecified);
-    	putProp(props, "Beam frequency", mBeamFreq, includeUnspecified);
-    	putProp(props, "Drive type", mDriveType, includeUnspecified);
-    	putProp(props, "Reverse", mReverse, includeUnspecified);
-    	putProp(props, "Scan target", mScienceTarget, -1, includeUnspecified);
-    	putProp(props, "Scan progress", mScanProgress, -1, includeUnspecified);
-    	putProp(props, "Scan object ID", mScanningId, -1, includeUnspecified);
-    	putProp(props, "Weapons target", mWeaponsTarget, -1, includeUnspecified);
-    	putProp(props, "Captain target", mCaptainTarget, -1, includeUnspecified);
+    	putProp(props, "Energy", mEnergy, -1);
+    	putProp(props, "Docking base", mDockingBase, -1);
+    	putProp(props, "Main screen view", mMainScreen);
+    	putProp(props, "Coolant", mAvailableCoolantOrMissiles, -1);
+    	putProp(props, "Warp", mWarp, -1);
+    	putProp(props, "Beam frequency", mBeamFreq);
+    	putProp(props, "Drive type", mDriveType);
+    	putProp(props, "Reverse", mReverse);
+    	putProp(props, "Scan target", mScienceTarget, -1);
+    	putProp(props, "Scan progress", mScanProgress, -1);
+    	putProp(props, "Scan object ID", mScanningId, -1);
+    	putProp(props, "Weapons target", mWeaponsTarget, -1);
+    	putProp(props, "Captain target", mCaptainTarget, -1);
 
     	for (Upgrade upgrade : Upgrade.activation()) {
     		UpgradeStatus status = mUpgrades.get(upgrade);
-        	putProp(props, "Upgrades: " + upgrade + ": active", status.active, includeUnspecified);
-        	putProp(props, "Upgrades: " + upgrade + ": count", status.count, -1, includeUnspecified);
-        	putProp(props, "Upgrades: " + upgrade + ": time", status.secondsLeft, -1, includeUnspecified);
+        	putProp(props, "Upgrades: " + upgrade + ": active", status.active);
+        	putProp(props, "Upgrades: " + upgrade + ": count", status.count, -1);
+        	putProp(props, "Upgrades: " + upgrade + ": time", status.secondsLeft, -1);
     	}
 
-    	putProp(props, "Capital ship ID", mCapitalShipId, -1, includeUnspecified);
-    	putProp(props, "Accent color", mAccentColor, -1, includeUnspecified);
+    	putProp(props, "Capital ship ID", mCapitalShipId, -1);
+    	putProp(props, "Accent color", mAccentColor, -1);
     }
 
     /**

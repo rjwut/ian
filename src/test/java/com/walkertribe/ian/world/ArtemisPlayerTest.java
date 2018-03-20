@@ -110,7 +110,7 @@ public class ArtemisPlayerTest {
 		ArtemisPlayer player = new ArtemisPlayer(47);
 		player.setTubeState(0, TubeState.UNLOADED);
 		SortedMap<String, Object> props = new TreeMap<String, Object>();
-		player.appendObjectProps(props, true);
+		player.appendObjectProps(props);
 		Assert.assertNull(props.get("Tube 0 contents"));
 
 		// state = UNLOADED, contents = null
@@ -118,7 +118,7 @@ public class ArtemisPlayerTest {
 		player.setTubeState(0, TubeState.UNLOADED);
 		player.setTubeContents(0, null);
 		props = new TreeMap<String, Object>();
-		player.appendObjectProps(props, true);
+		player.appendObjectProps(props);
 		Assert.assertEquals("EMPTY", props.get("Tube 0 contents"));
 
 		// state = LOADING, contents = HOMING
@@ -126,7 +126,7 @@ public class ArtemisPlayerTest {
 		player.setTubeState(0, TubeState.LOADING);
 		player.setTubeContents(0, OrdnanceType.HOMING);
 		props = new TreeMap<String, Object>();
-		player.appendObjectProps(props, true);
+		player.appendObjectProps(props);
 		Assert.assertEquals("HOMING", props.get("Tube 0 contents"));
 	}
 

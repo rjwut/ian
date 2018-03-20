@@ -170,22 +170,21 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     }
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Velocity", mVelocity, -1, includeUnspecified);
-    	putProp(props, "Shields: fore max", mShieldsFrontMax, -1, includeUnspecified);
-    	putProp(props, "Shields: aft max", mShieldsRearMax, -1, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Velocity", mVelocity, -1);
+    	putProp(props, "Shields: fore max", mShieldsFrontMax, -1);
+    	putProp(props, "Shields: aft max", mShieldsRearMax, -1);
     	BeamFrequency[] freqs = BeamFrequency.values();
 
     	for (int i = 0; i < mShieldFreqs.length; i++) {
-    		putProp(props, "Shield frequency " + freqs[i], mShieldFreqs[i],
-    				-1, includeUnspecified);
+    		putProp(props, "Shield frequency " + freqs[i], mShieldFreqs[i], -1);
     	}
 
-    	putProp(props, "Rudder", mSteering, -1, includeUnspecified);
-    	putProp(props, "Top speed", mTopSpeed, -1, includeUnspecified);
-    	putProp(props, "Turn rate", mTurnRate, -1, includeUnspecified);
-    	putProp(props, "Impulse", mImpulse, -1, includeUnspecified);
+    	putProp(props, "Rudder", mSteering, -1);
+    	putProp(props, "Top speed", mTopSpeed, -1);
+    	putProp(props, "Turn rate", mTurnRate, -1);
+    	putProp(props, "Impulse", mImpulse, -1);
     }
 
     /**

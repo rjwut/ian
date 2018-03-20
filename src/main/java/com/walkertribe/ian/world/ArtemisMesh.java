@@ -163,14 +163,14 @@ public class ArtemisMesh extends BaseArtemisObject {
     }
 
     @Override
-	public void appendObjectProps(SortedMap<String, Object> props, boolean includeUnspecified) {
-    	super.appendObjectProps(props, includeUnspecified);
-    	putProp(props, "Mesh", mMesh, includeUnspecified);
-    	putProp(props, "Texture", mTex, includeUnspecified);
-    	putProp(props, "Red", mRed, -1, includeUnspecified);
-    	putProp(props, "Green", mGreen, -1, includeUnspecified);
-    	putProp(props, "Blue", mBlue, -1, includeUnspecified);
-    	putProp(props, "Shields: fore", mShieldsFront, Float.MIN_VALUE, includeUnspecified);
-    	putProp(props, "Shields: aft", mShieldsRear, Float.MIN_VALUE, includeUnspecified);
+	public void appendObjectProps(SortedMap<String, Object> props) {
+    	super.appendObjectProps(props);
+    	putProp(props, "Mesh", mMesh);
+    	putProp(props, "Texture", mTex);
+    	putProp(props, "Red", mRed, -1);
+    	putProp(props, "Green", mGreen, -1);
+    	putProp(props, "Blue", mBlue, -1);
+    	putProp(props, "Shields: fore", mShieldsFront, Float.MIN_VALUE);
+    	putProp(props, "Shields: aft", mShieldsRear, Float.MIN_VALUE);
     }
 }
