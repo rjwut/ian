@@ -52,7 +52,7 @@ import com.walkertribe.ian.world.Artemis;
  *   Note that it is possible for the same packet to be caught by more than one
  *   listener method; be careful not to send the same packet more than once.
  * </li>
- * </p>
+ * </ul>
  * @author rjwut
  */
 public class ProxyDemo implements Runnable {
