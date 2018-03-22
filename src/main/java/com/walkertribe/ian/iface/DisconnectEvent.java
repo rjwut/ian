@@ -26,13 +26,6 @@ public class DisconnectEvent extends ConnectionEvent {
 		REMOTE_DISCONNECT(true),
 
 		/**
-		 * IAN received a packet with an unexpected format. This would typically
-		 * be caused by a bug in IAN or in a protocol extension being used by a
-		 * custom proxy.
-		 */
-		PACKET_PARSE_EXCEPTION(false),
-
-		/**
 		 * An I/O exception occurred. The {@link #exception} property may have
 		 * more information, but this is generally an external problem that
 		 * IAN can't do anything about.

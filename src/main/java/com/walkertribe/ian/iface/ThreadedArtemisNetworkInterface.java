@@ -373,23 +373,15 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                     }
                 } catch (final ArtemisPacketException ex) {
                 	mDebugger.onPacketParseException(ex);
+                	Throwable cause = ex.getCause();
 
-                	if (mRunning) {
-                    	Throwable cause = ex.getCause();
-
-                    	if (cause instanceof EOFException || cause instanceof SocketException) {
-                    		// Parse failed because the connection was lost
-                    		mInterface.disconnectCause = DisconnectEvent.Cause.REMOTE_DISCONNECT;
-                        	mInterface.exception = (Exception) cause;
-                    	} else {
-                        	mInterface.disconnectCause = DisconnectEvent.Cause.PACKET_PARSE_EXCEPTION;
-                        	mInterface.exception = ex;
-                    	}
-
+                	if (mRunning && (cause instanceof EOFException || cause instanceof SocketException)) {
+                		// Parse failed because the connection was lost
+                		mInterface.disconnectCause = DisconnectEvent.Cause.REMOTE_DISCONNECT;
+                    	mInterface.exception = (Exception) cause;
                         end();
-                    }
-
-                    break;
+                        break;
+                	}
                 }
             }
             
