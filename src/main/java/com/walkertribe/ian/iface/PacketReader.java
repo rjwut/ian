@@ -41,7 +41,7 @@ public class PacketReader {
 	}
 
 	private Context ctx;
-	private Origin origin;
+	private Origin requiredOrigin;
 	private InputStream in;
 	private byte[] intBuffer = new byte[4];
 	private boolean parse = true;
@@ -56,12 +56,14 @@ public class PacketReader {
 	private SortedMap<String, byte[]> unknownObjectProps;
 
 	/**
-	 * Wraps the given InputStream with this PacketReader.
+	 * Wraps the given InputStream with this PacketReader. The requiredOrigin
+	 * parameter may be omitted; if it is not, any packet read that does not
+	 * have the same Origin will cause an ArtemisPacketException.
 	 */
-	public PacketReader(Context ctx, Origin origin, InputStream in,
+	public PacketReader(Context ctx, Origin requiredOrigin, InputStream in,
 			Protocol protocol, ListenerRegistry listenerRegistry) {
 		this.ctx = ctx;
-		this.origin = origin;
+		this.requiredOrigin = requiredOrigin;
 		this.in = in;
 		this.protocol = protocol;
 		this.listenerRegistry = listenerRegistry;
@@ -122,17 +124,17 @@ public class PacketReader {
 
 		// connection type
 		final int originValue = readIntFromStream();
-		final Origin originEnum = Origin.fromInt(originValue);
+		final Origin origin = Origin.fromInt(originValue);
 
-		if (originEnum == null) {
+		if (origin == null) {
 			throw new ArtemisPacketException(
 					"Unknown origin: " + originValue
 			);
 		}
 
-		if (originEnum != origin) {
+		if (requiredOrigin != null && origin != requiredOrigin) {
 			throw new ArtemisPacketException(
-					"Origin mismatch: expected " + origin + ", got " + originEnum
+					"Origin mismatch: expected " + requiredOrigin + ", got " + origin
 			);
 		}
 
