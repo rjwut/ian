@@ -2,6 +2,7 @@ package com.walkertribe.ian.util;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -15,6 +16,21 @@ public final class Util {
 
 	private Util() {
 		// prevent instantiation
+	}
+
+	/**
+	 * Split the given String consisting of space-separated tokens into a Set of String tokens.
+	 */
+	public static Set<String> splitSpaceDelimited(String list) {
+		Set<String> attrs = new LinkedHashSet<String>();
+
+		for (String attr : list.split(" ")) {
+			if (attr.length() != 0) {
+				attrs.add(attr);
+			}
+		}
+
+		return attrs;
 	}
 
 	/**

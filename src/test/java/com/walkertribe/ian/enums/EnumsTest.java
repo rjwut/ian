@@ -19,6 +19,7 @@ import com.walkertribe.ian.util.TestUtil;
 import com.walkertribe.ian.util.Util;
 import com.walkertribe.ian.vesseldata.Faction;
 import com.walkertribe.ian.vesseldata.Vessel;
+import com.walkertribe.ian.vesseldata.VesselAttribute;
 import com.walkertribe.ian.world.ArtemisBase;
 import com.walkertribe.ian.world.ArtemisCreature;
 import com.walkertribe.ian.world.ArtemisNpc;
@@ -62,7 +63,6 @@ public class EnumsTest {
 		ENUMS.add(TargetingMode.class);
 		ENUMS.add(TubeState.class);
 		ENUMS.add(Upgrade.class);
-		ENUMS.add(VesselAttribute.class);
 
 		MESSAGE_HAS_ARGUMENT.add(OtherMessage.GO_DEFEND);
 

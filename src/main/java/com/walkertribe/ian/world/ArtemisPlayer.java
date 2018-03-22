@@ -16,9 +16,9 @@ import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.enums.TargetingMode;
 import com.walkertribe.ian.enums.TubeState;
 import com.walkertribe.ian.enums.Upgrade;
-import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.vesseldata.Vessel;
+import com.walkertribe.ian.vesseldata.VesselAttribute;
 
 /**
  * A player ship.

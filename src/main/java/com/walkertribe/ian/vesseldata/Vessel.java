@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.OrdnanceType;
-import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.model.Model;
 
 /**
@@ -22,7 +21,7 @@ public class Vessel {
 	private int side;
 	private String name;
 	String description;
-	private Set<VesselAttribute> attributes;
+	private Set<String> attributes;
 	List<Art> artList = new ArrayList<Art>();
 	private String dxsPaths;
 	String internalDataFile;
@@ -103,11 +102,11 @@ public class Vessel {
 	}
 
 	/**
-	 * Returns true if this Vessel has all the given VesselAttributes; false
+	 * Returns true if this Vessel has all the given attributes; false
 	 * otherwise.
 	 */
-	public boolean is(VesselAttribute... attrs) {
-		for (VesselAttribute attr : attrs) {
+	public boolean is(String... attrs) {
+		for (String attr : attrs) {
 			if (!attributes.contains(attr)) {
 				return false;
 			}

@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.FactionAttribute;
-import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.util.TestUtil;
 
 import org.junit.Before;
@@ -92,7 +91,7 @@ public class VesselDataTest {
 	}
 
 	private static void testVessel(Vessel vessel, String name, int side,
-			int foreShield, int aftShield, VesselAttribute... attrs) {
+			int foreShield, int aftShield, String... attrs) {
 		assertEquals(name, vessel.getName());
 		assertEquals(side, vessel.getSide());
 		assertEquals(foreShield, vessel.getForeShields());

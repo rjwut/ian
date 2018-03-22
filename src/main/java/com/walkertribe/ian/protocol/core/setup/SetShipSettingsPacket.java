@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.DriveType;
-import com.walkertribe.ian.enums.VesselAttribute;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
@@ -12,6 +11,7 @@ import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 import com.walkertribe.ian.vesseldata.Vessel;
+import com.walkertribe.ian.vesseldata.VesselAttribute;
 
 /**
  * Set the name, type and drive of ship your console has selected. This is only
