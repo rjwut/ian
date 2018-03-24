@@ -19,11 +19,6 @@ public class GameMasterTargetLocationPacketTest extends AbstractPacketTester<Gam
 		test(new GameMasterTargetLocationPacket(1.0f, 2.0f));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructNullSender() {
-		new GameMasterMessagePacket(null, "Message");
-	}
-
 	@Override
 	protected void testPackets(List<GameMasterTargetLocationPacket> packets) {
 		test(packets.get(0));

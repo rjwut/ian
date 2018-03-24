@@ -1,6 +1,7 @@
 package com.walkertribe.ian.protocol.core.gm;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,35 +19,42 @@ public class GameMasterMessagePacketTest extends AbstractPacketTester<GameMaster
 
 	@Test
 	public void testConstruct() {
-		test(
-				new GameMasterMessagePacket("Sender", "Message"),
-				new GameMasterMessagePacket("Sender", "Message", Console.MAIN_SCREEN)
-		);
+		GameMasterMessagePacket pkt0 = new GameMasterMessagePacket();
+		pkt0.setRecipient(0, true);
+		pkt0.setSender("Sender");
+		pkt0.setMessage("Message");
+		GameMasterMessagePacket pkt1 = new GameMasterMessagePacket();
+		pkt1.setRecipient(1, true);
+		pkt1.setRecipient(2, true);
+		pkt1.setConsole(Console.MAIN_SCREEN);
+		pkt1.setSender("Sender");
+		pkt1.setMessage("Message");
+		test(pkt0, pkt1);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructNullSender() {
-		new GameMasterMessagePacket(null, "Message");
+	public void testNullSender() {
+		new GameMasterMessagePacket().setSender(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructBlankSender() {
-		new GameMasterMessagePacket("", "Message");
+	public void testBlankSender() {
+		new GameMasterMessagePacket().setSender("");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructNullMessage() {
-		new GameMasterMessagePacket("Sender", null);
+	public void testNullMessage() {
+		new GameMasterMessagePacket().setMessage(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructBlankMessage() {
-		new GameMasterMessagePacket("Sender", "");
+	public void testBlankMessage() {
+		new GameMasterMessagePacket().setMessage("");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructInvalidConsole() {
-		new GameMasterMessagePacket("Sender", "Message", Console.CAPTAINS_MAP);
+	public void testInvalidConsole() {
+		new GameMasterMessagePacket().setConsole(Console.CAPTAINS_MAP);
 	}
 
 	@Override
@@ -55,9 +63,16 @@ public class GameMasterMessagePacketTest extends AbstractPacketTester<GameMaster
 	}
 
 	private void test(GameMasterMessagePacket pkt0, GameMasterMessagePacket pkt1) {
+		Set<Integer> recipients = pkt0.getRecipients();
+		Assert.assertEquals(1, recipients.size());
+		Assert.assertTrue(recipients.contains(0));
 		TestUtil.assertToStringEquals("Sender", pkt0.getSender());
 		TestUtil.assertToStringEquals("Message", pkt0.getMessage());
 		Assert.assertNull(pkt0.getConsole());
+		recipients = pkt1.getRecipients();
+		Assert.assertEquals(2, recipients.size());
+		Assert.assertTrue(recipients.contains(1));
+		Assert.assertTrue(recipients.contains(2));
 		TestUtil.assertToStringEquals("Sender", pkt1.getSender());
 		TestUtil.assertToStringEquals("Message", pkt1.getMessage());
 		Assert.assertEquals(Console.MAIN_SCREEN, pkt1.getConsole());

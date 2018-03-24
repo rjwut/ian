@@ -140,6 +140,14 @@ public class PacketWriter {
 	}
 
 	/**
+	 * Writes a BoolState.
+	 */
+	public PacketWriter writeBool(BoolState v, int byteCount) {
+		writeBytes(v.toByteArray(byteCount));
+		return this;
+	}
+
+	/**
 	 * Convenience method for writeBool(bit.ordinal(), v, byteCount).
 	 */
 	public PacketWriter writeBool(Enum<?> bit, BoolState v, int byteCount) {
