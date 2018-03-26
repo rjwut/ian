@@ -90,6 +90,15 @@ public class SAXVesselDataHandler extends DefaultHandler {
 		String value = attrs.getValue(name);
 		return value != null ? Integer.parseInt(value) : 0;
 	}
+	
+	/**
+	 * Converts an XML attribute to a String value; or "" if the attribute is not
+	 * found.
+	 */
+	private static String parseString(Attributes attrs, String name) {
+            String value = attrs.getValue(name);
+            return value != null ? value : "";
+        }
 
 	/**
 	 * Extracts the x, y, and z attributes and writes them to the given
@@ -320,12 +329,36 @@ public class SAXVesselDataHandler extends DefaultHandler {
 	 * Parser for <torpedo_storage> elements.
 	 */
 	private class TorpedoStorageParser implements Parser {
+            
+            String[] ordnanceStrings = {"trp","nuk","min","emp","shk","bea","pro","tag"};
+            
 		@Override
 		public void parse(Attributes attrs) {
-			OrdnanceType type = OrdnanceType.values()[parseInt(attrs, "type")];
+                    OrdnanceType type = null;
+                    try {
+			type = OrdnanceType.values()[parseInt(attrs, "type")];
+                    } catch (Exception e) {
+                        System.out.println("OrdnanceType not an integer, trying the v2.7 method now.");
+                        String t = parseString(attrs, "type");
+                        try {
+                            
+                            for (int i = 0; i < ordnanceStrings.length; i++) {
+                                if (ordnanceStrings[i].equals(t)) {
+                                    type = OrdnanceType.values()[i];
+                                }
+                            }
+                            System.out.println("v2.7 method worked.");
+                            
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            System.out.println(t + " is not a valid ordnance type.");
+                        }
+                    }
+                    if (type != null) {
 			Integer amount = Integer.valueOf(attrs.getValue("amount"));
 			vessel.torpedoStorage.put(type, amount);
 			vessel.totalTorpedoStorage += amount.intValue();
+                    }
 		}
 	}
 
