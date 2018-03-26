@@ -17,7 +17,7 @@ public class AnomalyParser extends AbstractObjectParser {
 		Y,
 		Z,
 		UPGRADE,
-		UNKNOWN_1_5,
+		SCAN,
 		UNKNOWN_1_6
 	}
 	private static final int BIT_COUNT = Bit.values().length;
@@ -42,7 +42,10 @@ public class AnomalyParser extends AbstractObjectParser {
         	anomaly.setUpgrade(Upgrade.fromAnomalyIndex(reader.readInt()));
         }
 
-        reader.readObjectUnknown(Bit.UNKNOWN_1_5, 4);
+        if (reader.has(Bit.SCAN)) {
+            anomaly.setScanBits(reader.readInt(Bit.SCAN, 0));
+        }
+
         reader.readObjectUnknown(Bit.UNKNOWN_1_6, 4);
         return anomaly;
 	}
@@ -60,7 +63,12 @@ public class AnomalyParser extends AbstractObjectParser {
 			writer.writeInt(Bit.UPGRADE, upgrade.getAnomalyIndex(), -1);
 		}
 
-		writer.writeUnknown(Bit.UNKNOWN_1_5);
+		Integer scan = anomaly.getScanBits();
+
+		if (scan != null) {
+			writer.writeInt(Bit.SCAN, scan, 1);
+		}
+
 		writer.writeUnknown(Bit.UNKNOWN_1_6);
 	}
 }

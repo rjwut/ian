@@ -16,6 +16,7 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     private float mTopSpeed = -1;
     private float mTurnRate = -1;
     private float mImpulse = -1;
+    private byte mSide = -1;
 
     public BaseArtemisShip(int objId) {
         super(objId);
@@ -124,6 +125,17 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
         mImpulse = impulseSlider;
     }
 
+    /**
+     * The side this ship is on. There is no side 0. Biomechs are side 30.
+     */
+    public byte getSide() {
+    	return mSide;
+    }
+
+    public void setSide(byte side) {
+    	mSide = side;
+    }
+
     @Override
     public void updateFrom(ArtemisObject obj) {
         super.updateFrom(obj);
@@ -159,6 +171,10 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
             	mImpulse = ship.mImpulse;
             }
 
+            if (ship.mSide != -1) {
+            	mSide = ship.mSide;
+            }
+
             for (int i = 0; i < mShieldFreqs.length; i++) {
             	float value = ship.mShieldFreqs[i];
 
@@ -185,6 +201,7 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     	putProp(props, "Top speed", mTopSpeed, -1);
     	putProp(props, "Turn rate", mTurnRate, -1);
     	putProp(props, "Impulse", mImpulse, -1);
+    	putProp(props, "Side", mSide, -1);
     }
 
     /**
@@ -202,7 +219,8 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     			mSteering != -1 ||
     			mTopSpeed != -1 ||
     			mTurnRate != -1 ||
-    			mImpulse != -1
+    			mImpulse != -1 ||
+    			mSide != -1
     	) {
     		return true;
     	}

@@ -32,10 +32,10 @@ cdcccc3e     // velocity = 0.4
 02           // fleet number = 2
 05000000     // special abilities = STEALTH CLOAK
 01000000     // active special abilities = STEALTH
-02000000     // scan level = 2
-00000000     // unknown
-00000000     // unknown
-00           // unknown
+02000000     // scan level 1 bits
+02000000     // scan level 2 bits
+11111111     // map visibility
+01           // side = 1
 00           // unknown
 00           // unknown
 00           // unknown

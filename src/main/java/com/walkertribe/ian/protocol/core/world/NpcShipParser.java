@@ -41,10 +41,10 @@ public class NpcShipParser extends AbstractObjectParser {
 		SPECIAL_ABILITIES,
 		SPECIAL_STATE,
 
-		SCAN_LEVEL,
-		UNK_4_2,
-		UNK_4_3,
-		UNK_4_4,
+		SINGLE_SCAN,
+		DOUBLE_SCAN,
+		VISIBILITY,
+		SIDE,
 		UNK_4_5,
 		UNK_4_6,
 		UNK_4_7,
@@ -128,11 +128,21 @@ public class NpcShipParser extends AbstractObjectParser {
         obj.setFleetNumber(reader.readByte(Bit.FLEET_NUMBER, Byte.MIN_VALUE));
         obj.setSpecialBits(reader.readInt(Bit.SPECIAL_ABILITIES, -1));
         obj.setSpecialStateBits(reader.readInt(Bit.SPECIAL_STATE, -1));
-        obj.setScanLevel(reader.readInt(Bit.SCAN_LEVEL, -1));
 
-        reader.readObjectUnknown(Bit.UNK_4_2, 4);
-        reader.readObjectUnknown(Bit.UNK_4_3, 4);
-        reader.readObjectUnknown(Bit.UNK_4_4, 1);
+        if (reader.has(Bit.SINGLE_SCAN)) {
+            obj.setScanLevelBits(1, reader.readInt(Bit.SINGLE_SCAN, 0));
+        }
+
+        if (reader.has(Bit.DOUBLE_SCAN)) {
+            obj.setScanLevelBits(2, reader.readInt(Bit.SINGLE_SCAN, 0));
+        }
+
+        if (reader.has(Bit.VISIBILITY)) {
+            obj.setVisibilityBits(reader.readInt(Bit.VISIBILITY, 0));
+        }
+
+        obj.setSide(reader.readByte(Bit.SIDE, (byte) -1));
+
         reader.readObjectUnknown(Bit.UNK_4_5, 1);
         reader.readObjectUnknown(Bit.UNK_4_6, 1);
         reader.readObjectUnknown(Bit.UNK_4_7, 1);
@@ -179,12 +189,29 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_3_5)
 				.writeByte(Bit.FLEET_NUMBER, npc.getFleetNumber(), Byte.MIN_VALUE)
 				.writeInt(Bit.SPECIAL_ABILITIES, npc.getSpecialBits(), -1)
-				.writeInt(Bit.SPECIAL_STATE, npc.getSpecialStateBits(), -1)
-				.writeInt(Bit.SCAN_LEVEL, npc.getScanLevel(), -1)
-				.writeUnknown(Bit.UNK_4_2)
-				.writeUnknown(Bit.UNK_4_3)
-				.writeUnknown(Bit.UNK_4_4)
-				.writeUnknown(Bit.UNK_4_5)
+				.writeInt(Bit.SPECIAL_STATE, npc.getSpecialStateBits(), -1);
+
+		Integer scanLevel = npc.getScanLevelBits(1);
+
+		if (scanLevel != null) {
+			writer.writeInt(Bit.SINGLE_SCAN, scanLevel, 1);
+		}
+
+		scanLevel = npc.getScanLevelBits(2);
+
+		if (scanLevel != null) {
+			writer.writeInt(Bit.DOUBLE_SCAN, scanLevel, 1);
+		}
+
+		Integer visibility = npc.getVisibilityBits();
+
+		if (visibility != null) {
+			writer.writeInt(Bit.VISIBILITY, visibility, 1);
+		}
+
+		writer.writeByte(Bit.SIDE, npc.getSide(), (byte) -1);
+
+		writer	.writeUnknown(Bit.UNK_4_5)
 				.writeUnknown(Bit.UNK_4_6)
 				.writeUnknown(Bit.UNK_4_7)
 				.writeUnknown(Bit.UNK_4_8)

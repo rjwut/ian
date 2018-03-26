@@ -56,7 +56,7 @@ public class ArtemisNpcTest {
 		ArtemisNpc obj0 = new ArtemisNpc(47);
 		assertNpc(obj0, 47, ObjectType.NPC_SHIP, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1,
 				Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1, -1, -1,
-				SHIELD_FREQS_UNSPECIFIED, -1, -1, -1, -1, (byte) -1, -1, -1, BoolState.UNKNOWN, BoolState.UNKNOWN,
+				SHIELD_FREQS_UNSPECIFIED, -1, -1, -1, -1, null, null, -1, -1, BoolState.UNKNOWN, BoolState.UNKNOWN,
 				Byte.MIN_VALUE, SYS_DAMAGE_UNSPECIFIED);
 		ArtemisNpc obj1 = new ArtemisNpc(47);
 		obj1.setName("TEST");
@@ -81,7 +81,8 @@ public class ArtemisNpcTest {
 		obj1.setTopSpeed(0.8f);
 		obj1.setTurnRate(0.15f);
 		obj1.setImpulse(0.7f);
-		obj1.setScanLevel((byte) 2);
+		obj1.setScanLevelBits(1, 2);
+		obj1.setScanLevelBits(2, 2);
 		obj1.setSpecialBits(0x05);
 		obj1.setSpecialStateBits(0x01);
 		obj1.setEnemy(BoolState.TRUE);
@@ -153,22 +154,21 @@ public class ArtemisNpcTest {
 
 	public static void assertAllProps(ArtemisNpc npc) {
 		assertNpc(npc, 47, ObjectType.NPC_SHIP, "TEST", 1f, 2f, 3f, 2000, 100f, 47f, 0.3f, 0.2f, 0.1f, 0.4f, 100, 100,
-				SHIELD_FREQS, 0.2f, 0.8f, 0.15f, 0.7f, (byte) 2, 0x05, 0x01, BoolState.TRUE, BoolState.TRUE, (byte) 2,
+				SHIELD_FREQS, 0.2f, 0.8f, 0.15f, 0.7f, 2, 2, 0x05, 0x01, BoolState.TRUE, BoolState.TRUE, (byte) 2,
 				SYS_DAMAGE);
 	}
 
 	private static void assertNpc(ArtemisNpc npc, int id, ObjectType type, String name, float x, float y, float z,
 			int hullId, float shieldsFront, float shieldsRear, float heading, float pitch, float roll, float velocity,
 			float shieldsFrontMax, float shieldsRearMax, float[] shieldFreqs, float steering, float topSpeed,
-			float turnRate, float impulse, byte scanLevel, int special, int specialState, BoolState enemy,
-			BoolState surrendered, byte fleetNumber, float[] sysDamage) {
+			float turnRate, float impulse, Integer scanLevel1, Integer scanLevel2, int special, int specialState,
+			BoolState enemy, BoolState surrendered, byte fleetNumber, float[] sysDamage) {
 		ArtemisShieldedTest.assertShielded(npc, id, type, name, x, y, z, hullId, shieldsFront, shieldsRear);
 		ArtemisOrientableTest.assertOrientable(npc, heading, pitch, roll);
 		BaseArtemisShipTest.assertShip(npc, velocity, shieldsFrontMax, shieldsRearMax, shieldFreqs, steering, topSpeed,
 				turnRate, impulse);
-		Assert.assertEquals(scanLevel, npc.getScanLevel());
-		Assert.assertTrue(npc.isScanned(scanLevel));
-		Assert.assertFalse(npc.isScanned((byte) (scanLevel + 1)));
+		Assert.assertEquals(scanLevel1, npc.getScanLevelBits(1));
+		Assert.assertEquals(scanLevel2, npc.getScanLevelBits(2));
 		Assert.assertEquals(special, npc.getSpecialBits());
 		Assert.assertEquals(specialState, npc.getSpecialStateBits());
 

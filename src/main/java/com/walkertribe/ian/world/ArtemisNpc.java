@@ -10,6 +10,7 @@ import com.walkertribe.ian.enums.FactionAttribute;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.util.BoolState;
+import com.walkertribe.ian.util.TextUtil;
 import com.walkertribe.ian.util.Util;
 import com.walkertribe.ian.vesseldata.Vessel;
 
@@ -33,11 +34,10 @@ import com.walkertribe.ian.vesseldata.Vessel;
  * @author dhleong
  */
 public class ArtemisNpc extends BaseArtemisShip {
-    // scan levels... only 2 for now
-    public static final byte SCAN_LEVEL_BASIC = 1;
-    public static final byte SCAN_LEVEL_FULL  = 2;
+	public static final int MAX_SCAN_LEVEL = 2;
 
-    private int mScanLevel = -1;
+    private Integer[] mScanLevels = new Integer[MAX_SCAN_LEVEL];
+    private Integer mVisibility;
     private int mSpecial = -1, mSpecialState = -1;
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
@@ -194,23 +194,100 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     /**
-     * The scan level for this ship.
+     * Returns the scan level for this ship for the indicated side: 0 = not scanned, 1 = scanned
+     * once, 2 = scanned twice.
      * Unspecified: -1
      */
-    public int getScanLevel() {
-        return mScanLevel;
-    }
+    public int getScanLevel(int side) {
+    	int scanLevel = 0;
+    	int bit = 1 << side;
 
-    public void setScanLevel(int scanLevel) {
-        mScanLevel = scanLevel;
+    	for (Integer level : mScanLevels) {
+    		if (level == null) {
+    			return -1;
+    		}
+
+    		if ((level & bit) == 0) {
+    			break;
+    		}
+
+    		scanLevel++;
+    	}
+
+    	return scanLevel;
     }
 
     /**
-     * Returns true if this ship has been scanned at the given level or higher;
-     * false otherwise.
+     * Sets the scan level for this ship for the indicated side.
      */
-    public boolean isScanned(byte scanLevel) {
-        return mScanLevel >= scanLevel;
+    public void setScanLevel(int side, int scanLevel) {
+    	if (scanLevel == -1) {
+    		return;
+    	}
+
+    	if (scanLevel < -1 || scanLevel > MAX_SCAN_LEVEL) {
+    		throw new IllegalArgumentException("Invalid scan level");
+    	}
+
+    	int bit = 1 << side;
+
+    	for (int i = 0; i < scanLevel; i++) {
+    		Integer level = mScanLevels[i];
+
+    		if (level == null) {
+    			level = 0;
+    		}
+
+    		level |= bit;
+    		mScanLevels[i] = level;
+    	}
+    }
+
+    /**
+     * Returns the raw bits for the indicated scan level.
+     */
+    public Integer getScanLevelBits(int level) {
+    	return mScanLevels[level - 1];
+    }
+
+    /**
+     * Sets the raw bits for the indicated scan level.
+     */
+    public void setScanLevelBits(int level, int bits) {
+    	mScanLevels[level - 1] = bits;
+    }
+
+    /**
+     * Returns whether this ship is visible to the given side on map screens.
+     * Unspecified: UNKNOWN
+     */
+    public BoolState getVisibility(int side) {
+    	return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
+    }
+
+    /**
+     * Sets the visibility of this ship for the indicated side.
+     */
+    public void setVisibility(int side, boolean visible) {
+    	if (mVisibility == null) {
+    		mVisibility = 0;
+    	}
+
+    	mVisibility |= 1 << side;
+    }
+
+    /**
+     * Returns the raw bits for visibility.
+     */
+    public Integer getVisibilityBits() {
+    	return mVisibility;
+    }
+
+    /**
+     * Sets the raw bits for visibility.
+     */
+    public void setVisibilityBits(int bits) {
+    	mVisibility = bits;
     }
 
     /**
@@ -249,8 +326,12 @@ public class ArtemisNpc extends BaseArtemisShip {
             	setFleetNumber(cast.mFleetNumber);
             }
 
-            if (cast.mScanLevel != -1) {
-                setScanLevel(cast.mScanLevel);
+            for (int i = 0; i < MAX_SCAN_LEVEL; i++) {
+            	Integer scanLevel = cast.mScanLevels[i];
+
+            	if (scanLevel != null) {
+            		mScanLevels[i] = scanLevel;
+            	}
             }
 
             if (cast.mSpecial != -1) {
@@ -274,7 +355,14 @@ public class ArtemisNpc extends BaseArtemisShip {
     @Override
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
-    	putProp(props, "Scan level", mScanLevel, -1);
+
+    	for (int i = 0; i < MAX_SCAN_LEVEL; i++) {
+    		Integer scanLevel = mScanLevels[i];
+
+    		if (scanLevel != null) {
+        		putProp(props, "Scan level " + (i + 1) + " bits", TextUtil.intToHex(mScanLevels[i]));
+    		}
+    	}
 
     	if (mSpecial != -1) {
     		String str = Util.enumSetToString(SpecialAbility.fromValue(mSpecial));
