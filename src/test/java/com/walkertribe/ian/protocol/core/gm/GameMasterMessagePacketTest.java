@@ -23,6 +23,7 @@ public class GameMasterMessagePacketTest extends AbstractPacketTester<GameMaster
 		pkt0.setRecipient(0, true);
 		pkt0.setSender("Sender");
 		pkt0.setMessage("Message");
+		pkt0.setConsole(null);
 		GameMasterMessagePacket pkt1 = new GameMasterMessagePacket();
 		pkt1.setRecipient(1, true);
 		pkt1.setRecipient(2, true);
