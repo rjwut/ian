@@ -56,11 +56,7 @@ public class OutputStreamDebugger implements Debugger {
 
 	@Override
 	public void onPacketParseException(ArtemisPacketException ex) {
-		byte[] payload = ex.getPayload();
-		err.println(ex.getOrigin() + ": " +
-				TextUtil.intToHex(ex.getPacketType()) + " " +
-				(payload == null ? "" : TextUtil.byteArrayToHexString(payload))
-		);
+		ex.printPacketDump(err);
 		ex.printStackTrace(err);
 	}
 

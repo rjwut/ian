@@ -1,6 +1,9 @@
 package com.walkertribe.ian.protocol;
 
+import java.io.PrintStream;
+
 import com.walkertribe.ian.enums.Origin;
+import com.walkertribe.ian.util.TextUtil;
 
 /**
  * Thrown when IAN encounters a problem while attempting to read or write a
@@ -79,6 +82,22 @@ public class ArtemisPacketException extends Exception {
      */
     public byte[] getPayload() {
     	return payload;
+    }
+
+    /**
+     * Dumps the packet bytes to System.err.
+     */
+    public void printPacketDump() {
+    	printPacketDump(System.err);
+    }
+
+    /**
+     * Dumps the packet bytes to the given PrintStream.
+     */
+    public void printPacketDump(PrintStream err) {
+		err.println(origin + ": " + TextUtil.intToHex(packetType) + " " +
+				(payload == null ? "" : TextUtil.byteArrayToHexString(payload))
+		);
     }
 
     /**

@@ -14,6 +14,7 @@ import com.walkertribe.ian.iface.Debugger;
 import com.walkertribe.ian.iface.OutputStreamDebugger;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
+import com.walkertribe.ian.iface.ParseResult;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.util.TestUtil;
@@ -88,8 +89,17 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 		List<T> list = new ArrayList<T>(packetCount);
 
 		for (int i = 0; i < packetCount; i++) {
+			ParseResult result = reader.readPacket(debugger);
+			ArtemisPacketException ex = result.getException();
+
+			if (ex != null) {
+				ex.printPacketDump();
+				ex.printStackTrace();
+				Assert.fail("Exception thrown while parsing: " + ex.getMessage());
+			}
+
 			@SuppressWarnings("unchecked")
-			T pkt = (T) reader.readPacket(debugger).getPacket();
+			T pkt = (T) result.getPacket();
 			Assert.assertNotNull(pkt);
 			Assert.assertEquals(origin, pkt.getOrigin());
 			Assert.assertFalse(reader.hasMore()); // Any bytes left over?

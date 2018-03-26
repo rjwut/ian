@@ -347,9 +347,7 @@ public class TestPacketFile {
 
 		@Override
 		public void onPacketParseException(ArtemisPacketException ex) {
-			System.err.println(ex.getOrigin() + ": " +
-					TextUtil.intToHex(ex.getPacketType()) + " " +
-					TextUtil.byteArrayToHexString(ex.getPayload()));
+			ex.printPacketDump();
 			ex.printStackTrace();
 		}
 
