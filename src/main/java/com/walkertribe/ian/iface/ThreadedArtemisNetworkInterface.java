@@ -335,9 +335,14 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                 try {
                     // read packet
                 	final ParseResult result = mReader.readPacket(mInterface.mDebugger);
-                    final ArtemisPacket pkt = result.getPacket();
+
+                	if (result.getException() != null) {
+                		handlePacketException(result.getException());
+                	}
 
                     if (mRunning) {
+                    	final ArtemisPacket pkt = result.getPacket();
+
                     	// Handle certain packets specially
                     	if (pkt instanceof WelcomePacket) {
                     		sender.onPacket((WelcomePacket) pkt);
@@ -353,28 +358,56 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                     	if (!result.isInterestingPacket()) {
                     		// No listeners were interested in the packet
                     		// itself, so pass it to any proxy targets.
-                    		for (ArtemisNetworkInterface target : proxyTargets) {
-                    			target.send(pkt);
-                    		}
+                    		forwardToProxyTargets(pkt);
                     	}
                     }
                 } catch (final ArtemisPacketException ex) {
-                	mDebugger.onPacketParseException(ex);
-                	Throwable cause = ex.getCause();
-
-                	if (mRunning && (cause instanceof EOFException || cause instanceof SocketException)) {
-                		// Parse failed because the connection was lost
-                		mInterface.disconnectCause = DisconnectEvent.Cause.REMOTE_DISCONNECT;
-                    	mInterface.exception = (Exception) cause;
-                        end();
-                        break;
-                	}
+                	handlePacketException(ex);
                 }
             }
             
             mInterface.stop();
         }
 
+        /**
+         * An exception occurred while parsing; inform the debugger, then
+         * determine whether it was fatal. If it was, shut down the connection.
+         * If it wasn't, pass the packet along to any proxy targets.
+         */
+        private void handlePacketException(ArtemisPacketException ex) {
+        	mDebugger.onPacketParseException(ex);
+
+        	if (mRunning && ex.getPayload() == null) {
+        		// Exception is fatal; shut down connection
+            	Throwable cause = ex.getCause();
+
+            	if (cause instanceof EOFException || cause instanceof SocketException) {
+            		mInterface.disconnectCause = DisconnectEvent.Cause.REMOTE_DISCONNECT;
+            	} else {
+            		mInterface.disconnectCause = DisconnectEvent.Cause.PACKET_PARSE_EXCEPTION;
+            	}
+
+            	mInterface.exception = (Exception) cause;
+            	end();
+        	} else {
+        		// We can continue; convert data to an UnknownPacket and
+        		// forward it to proxy targets.
+        		forwardToProxyTargets(ex.toUnknownPacket());
+        	}
+        }
+
+        /**
+         * Transmits the given packet to any proxy targets.
+         */
+        private void forwardToProxyTargets(ArtemisPacket pkt) {
+    		for (ArtemisNetworkInterface target : proxyTargets) {
+    			target.send(pkt);
+    		}
+        }
+
+        /**
+         * Requests that the receiver thread be shut down.
+         */
         public void end() {
             mRunning = false;
         }

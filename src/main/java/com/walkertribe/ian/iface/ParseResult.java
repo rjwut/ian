@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.walkertribe.ian.protocol.ArtemisPacket;
+import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
 import com.walkertribe.ian.world.ArtemisObject;
 
@@ -15,6 +16,7 @@ public class ParseResult {
 	private ArtemisPacket packet;
 	private List<ListenerMethod> interestedPacketListeners = Collections.emptyList();
 	private List<ListenerMethod> interestedObjectListeners = Collections.emptyList();
+	private ArtemisPacketException exception;
 
 	ParseResult() {
 		// make constructor accessible only to the package
@@ -47,6 +49,26 @@ public class ParseResult {
 	 */
 	void setObjectListeners(List<ListenerMethod> listeners) {
 		interestedObjectListeners = listeners;
+	}
+
+	/**
+	 * Return any exception that occurred while parsing the packet. Note that
+	 * this doesn't handle exceptions that occur before the payload is read,
+	 * since in that case, IAN will not have gotten far enough along to even
+	 * produce a ParseResult.
+	 */
+	public ArtemisPacketException getException() {
+		return exception;
+	}
+
+	/**
+	 * Sets the exception that occurred during the parsing of this packet. This
+	 * is only for non-fatal exceptions. A fatal exception (one occuring before
+	 * the payload can be read) should cause the exception to be thrown
+	 * instead.
+	 */
+	void setException(ArtemisPacketException exception) {
+		this.exception = exception;
 	}
 
 	/**

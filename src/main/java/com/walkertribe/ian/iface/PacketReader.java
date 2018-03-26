@@ -219,9 +219,13 @@ public class PacketReader {
 				try {
 					packet = factory.build(this);
 				} catch (ArtemisPacketException ex) {
-					throw new ArtemisPacketException(ex, origin, packetType, payloadBytes);
+					result.setException(new ArtemisPacketException(ex, origin, packetType, payloadBytes));
 				} catch (RuntimeException ex) {
-					throw new ArtemisPacketException(ex, origin, packetType, payloadBytes);
+					result.setException(new ArtemisPacketException(ex, origin, packetType, payloadBytes));
+				}
+
+				if (packet == null) {
+					return result; // an exception occurred during payload parsing
 				}
 
 				if (packet instanceof VersionPacket) {

@@ -80,4 +80,20 @@ public class ArtemisPacketException extends Exception {
     public byte[] getPayload() {
     	return payload;
     }
+
+    /**
+     * Convert the data in this exception to an UnknownPacket. An
+     * IllegalStateException will occur if the Origin or payload is null.
+     */
+	public UnknownPacket toUnknownPacket() {
+		if (origin == null) {
+			throw new IllegalStateException("Unknown origin");
+		}
+
+		if (payload == null) {
+			throw new IllegalStateException("Unknown payload");
+		}
+
+		return new UnknownPacket(origin, packetType, payload);
+	}
 }
