@@ -35,7 +35,6 @@ public class NpcShipParserTest extends AbstractObjectUpdatePacketTester<ArtemisN
 		Assert.assertEquals(BoolState.FALSE, npc.isUsingSpecialAbility(SpecialAbility.STEALTH, ctx));
 	}
 
-	@Override
 	protected Context getContext() {
 		return ArtemisNpcTest.buildContext();
 	}

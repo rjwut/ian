@@ -35,7 +35,7 @@ This library was originally developed by Daniel Leong and released on GitHub wit
 **You can help make IAN better.** There are several ways that you can assist in IAN's development:
 * Found a bug or missing feature? [Check to see if I already know about it.](https://github.com/rjwut/ian/issues) If not, you can [submit a new issue](https://github.com/rjwut/ian/issues/new).
 * Handy with a packet sniffer? Join in the effort to [document the *Artemis* protocol](https://github.com/artemis-nerds/protocol-docs).
-* Are you a Java developer? Feel free to implement a feature or bug fix yourself! Fork the repository, apply the changes to your copy, then submit a pull request.
+* Feel free to implement a feature or bug fix yourself! Fork the repository, apply the changes to your copy, then submit a pull request. Note, however, that any one version of IAN targets a specific version of *Artemis*, so be sure you aren't writing something that will be incompatible with the targeted version.
 
 ## Using IAN ##
 
@@ -46,15 +46,13 @@ The `com.walkertribe.ian.example` package contains a couple of simple demonstrat
 * `ProxyDemo`: Stops red alert from being toggled.
 
 ### Connecting to an *Artemis* Server ###
-1. **Tell IAN where to find *Artemis* resource data.** This involves instantiating an object which implements `Context`. (See the **Locating *Artemis* Resources** section above for details.)
+1. **Construct a `ThreadedArtemisNetworkInterface` object.** This object implements `ArtemisNetworkInterface` and is responsible for managing the connection to the *Artemis* server. You must provide the constructor with the host/IP address and port to which it should connect. (By default, *Artemis* servers listen for connections on port 2010, but this can be changed in *Artemis*'s `artemis.ini` file.) On construction, it will attempt to connect, throwing an `IOException` if it fails.
 
-2. **Construct a `ThreadedArtemisNetworkInterface` object.** This object implements `ArtemisNetworkInterface` and is responsible for managing the connection to the *Artemis* server. Along with the `Context` you instantiated earlier, you must provide the constructor with the host/IP address and port to which it should connect. (By default, *Artemis* servers listen for connections on port 2010, but this can be changed in *Artemis*'s `artemis.ini` file.) On construction, it will attempt to connect, throwing an `IOException` if it fails.
+2. **Add event listeners.** Next, you must add one or more event listeners to the `ArtemisNetworkInterface` via the `addListener()` method. Event listeners are objects which contain methods marked with the `@Listener` annotation. IAN will notify these listeners when certain events occur. See the **Event Listeners** section below for more details.
 
-3. **Add event listeners.** Next, you must add one or more event listeners to the `ArtemisNetworkInterface` via the `addListener()` method. Event listeners are objects which contain methods marked with the `@Listener` annotation. IAN will notify these listeners when certain events occur. See the **Event Listeners** section below for more details.
+3. **Start the network interface.** Once your listeners are registered, invoke `start()` on the `ArtemisNetworkInterface` object. Once you invoke `start()`, your listeners will start being notified of events.
 
-4. **Start the network interface.** Once your listeners are registered, invoke `start()` on the `ArtemisNetworkInterface` object. Once you invoke `start()`, your listeners will start being notified of events.
-
-5. **Send packets in response to events.** As your listeners receive events, you will inevitably want to send packets back to the Artemis server. To do so, pass an instance of the appropriate class that implements `ArtemisPacket` to the `ArtemisNetworkInterface.send()` method. Here's an example:
+4. **Send packets in response to events.** As your listeners receive events, you will inevitably want to send packets back to the Artemis server. To do so, pass an instance of the appropriate class that implements `ArtemisPacket` to the `ArtemisNetworkInterface.send()` method. Here's an example:
 
    ```java
    private ArtemisNetworkInterface iface;
@@ -67,10 +65,10 @@ The `com.walkertribe.ian.example` package contains a couple of simple demonstrat
    }
    ```
 
-6. **Disconnect.** To disconnect from the Artemis server, invoke the `ArtemisNetworkInterface.stop()` method. Make sure you do this so that the send and receive threads will be terminated; otherwise, your application won't stop.
+5. **Disconnect.** To disconnect from the Artemis server, invoke the `ArtemisNetworkInterface.stop()` method. Make sure you do this so that the send and receive threads will be terminated; otherwise, your application won't stop.
 
 ### Locating *Artemis* Resources ###
-Before you can do anything with IAN, you must instantiate an object which can provide it with *Artemis* resource data. There are three major classes of resource data IAN uses:
+Some operations require data which is obtained from *Artemis* resource files. There are three major classes of resource data IAN can make use of:
 
 IAN class | *Artemis* files | Contents
 --- | --- | ---
@@ -78,21 +76,21 @@ IAN class | *Artemis* files | Contents
 `Model` | `dat/*.dxs` | 3D mesh
 `VesselInternals` | `dat/*.snt` | Vessel system nodes and hallways
 
-`VesselData` is required for IAN to function. The other two types of resources are only required if you need a `Model` or `VesselInternals` object. Note that incompatibilities may result if the remote machine's version of the resource data differs from IAN's.
+All three of these resource types are optional: as long as you don't need the particular functionality that is dependent on these resource files, IAN can run without them. Note that incompatibilities may result if the remote machine's version of the resource data differs from IAN's.
 
 IAN provides several interfaces and classes that can help you with reading *Artemis* resource data:
 
-* `Context`: An interface for classes which can provide instances of `VesselData`, `Model` and `VesselInternals` to IAN. You must provide IAN with an instance of a class which implements `Context` before you can connect.
+* `Context`: An interface for classes which can provide instances of `VesselData`, `Model` and `VesselInternals` to IAN. Any method that requires data from *Artemis* resource files will ask for an object which implements `Context`.
 
 * `DefaultContext`: An implementation of `Context` which can parse *Artemis* resource data from an `InputStream` and cache the results for future use. It delegates the creation of the `InputStream` to a `PathResolver`.
 
 * `PathResolver`: An interface for classes which can provide an `InputStream` that corresponds to an *Artemis* resource path.
 
-* `FilePathResolver`: A `PathResolver` implementation that loads resources from the file system relative to a particular directory. You would typically point this at the *Artemis* install directory, but IAN will only look for `dat/vesselData.xml` (and optionally `dat/*.dxs` and `dat/*.snt`); any other files will be ignored.
+* `FilePathResolver`: A `PathResolver` implementation that loads resources from the file system relative to a particular directory. You would typically point this at the *Artemis* install directory, but at most IAN will only look for `dat/vesselData.xml`, `dat/*.dxs`, and `dat/*.snt`; any other files will be ignored.
 
 * `ClasspathResolver`: A `PathResolver` implementation that loads resources from the classpath relative to a specific class. This allows you to bundle the needed resources inside your JAR.
 
-You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load *Artemis* resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise classes that use a `Context`.)
+You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load *Artemis* resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise code that uses a `Context`.)
 
 ### Event Listeners ###
 To make your application react to events, you must write one or more event listeners and register them with your `ThreadedArtemisNetworkInterface` object via the `addListener()` method. An event listener can be any `Object` which has one or more methods marked with the `@Listener` annotation. A listener method must be `public`, return `void`, and have exactly one argument. The type of that argument indicates what sort of events will cause the method to be invoked:
@@ -108,15 +106,13 @@ One important event to listen for is the `ConnectionSuccessEvent`. You shouldn't
 It's also likely that you'll want to know when the connection to the server is lost; listening for `DisconnectEvent` will handle that.
 
 ### Creating an *Artemis* Proxy Server ###
-1. **Tell IAN where to find *Artemis* resource files.** This is done in exactly the same way as when you create a client.
+1. **Listen for a client connection.** Open a `ServerSocket` on the desired port, then call `accept()` on it to listen for a connecting client. The `accept()` method will block until a client connects or it times out, and return a `Socket` object when the client connects. You can set the timeout by calling `ServerSocket.setSoTimeout()`; passing in `0` will cause it to wait indefinitely for a connection.
 
-2. **Listen for a client connection.** Open a `ServerSocket` on the desired port, then call `accept()` on it to listen for a connecting client. The `accept()` method will block until a client connects or it times out, and return a `Socket` object when the client connects. You can set the timeout by calling `ServerSocket.setSoTimeout()`; passing in `0` will cause it to wait indefinitely for a connection.
+2. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and an `Origin` (`CLIENT` in this case). The resulting object will be responsible for managing the connection to the client.
 
-3. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and an `Origin` (`CLIENT` in this case), along with the `Context`. The resulting object will be responsible for managing the connection to the client.
+3. **Connect to the *Artemis* server.** This is done exactly the same way as you would for creating an *Artemis* client, as documented above. You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
 
-4. **Connect to the *Artemis* server.** This is done exactly the same way as you would for creating an *Artemis* client, as documented above. You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
-
-5. **Pass through all packets.** The `proxyTo()` method on `ArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
+4. **Pass through all packets.** The `proxyTo()` method on `ArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
 
 5. **Add listeners.** Add your listeners to both the client and server objects. Once the listener has caught the packet and extracted whatever information it wants from it, you can either pass the packet along by passing it to `send()`, suppress it (by doing nothing), or even inject your own packets instead (by constructing them and passing them to `send()`). Remember that `proxyTo()` does **not** pass along packets caught by listeners, so it's up to you to `send()` them if you want them passed along. Also, keep in mind that multiple listeners can catch the same packet; be careful not to send it more than once!
 

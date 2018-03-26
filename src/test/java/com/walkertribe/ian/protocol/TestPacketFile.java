@@ -15,9 +15,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import com.walkertribe.ian.Context;
-import com.walkertribe.ian.DefaultContext;
-import com.walkertribe.ian.FilePathResolver;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.Listener;
@@ -66,18 +63,16 @@ public class TestPacketFile {
 	 * - Connection type for the packets in the file (SERVER or CLIENT)
 	 */
 	public static void main(String[] args) {
-		Context ctx = new DefaultContext(new FilePathResolver(args[0]));
 		String fileName = args[1];
 		Origin origin = Origin.valueOf(args[2]);
 
 		try {
-			new TestPacketFile(new File(fileName), Mode.READ, ctx).test(origin);
+			new TestPacketFile(new File(fileName), Mode.READ).test(origin);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	private Context ctx;                // created from path to Artemis install
 	private Mode mode;                  // READ or WRITE
 	private byte[] bytes;               // bytes read in on read mode
 	private OutputStream os;            // destination stream for write mode
@@ -86,9 +81,7 @@ public class TestPacketFile {
 	/**
 	 * Opens the named File (read or write).
 	 */
-	public TestPacketFile(File file, Mode mode, Context ctx) throws IOException {
-		this.ctx = ctx;
-
+	public TestPacketFile(File file, Mode mode) throws IOException {
 		if (mode == Mode.READ) {
 			initRead(new FileInputStream(file));
 		} else if (mode == Mode.WRITE) {
@@ -99,8 +92,7 @@ public class TestPacketFile {
 	/**
 	 * Reads test packet data from the given URL.
 	 */
-	public TestPacketFile(URL url, Context ctx) throws IOException {
-		this.ctx = ctx;
+	public TestPacketFile(URL url) throws IOException {
 		initRead(url.openStream());
 	}
 
@@ -201,7 +193,6 @@ public class TestPacketFile {
 		listeners.register(this);
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		PacketReader reader = new PacketReader(
-				ctx,
 				origin,
 				bais,
 				new CoreArtemisProtocol(),
@@ -255,7 +246,6 @@ public class TestPacketFile {
 		}
 
 		return new PacketReader(
-				ctx,
 				origin,
 				new ByteArrayInputStream(bytes),
 				new CoreArtemisProtocol(),

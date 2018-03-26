@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.junit.Assert;
 
-import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.BaseDebugger;
 import com.walkertribe.ian.iface.Debugger;
@@ -70,21 +69,13 @@ public abstract class AbstractPacketTester<T extends ArtemisPacket> {
 		TestPacketFile file = null;
 
 		try {
-			file = new TestPacketFile(url, getContext());
+			file = new TestPacketFile(url);
 		} catch (NullPointerException ex) {
 			// Test packet file now found
 			Assert.fail("Test packet file not found: " + resourcePath);
 		}
 
 		return file;
-	}
-
-	/**
-	 * Returns a Context instance to use for this test. The default
-	 * implementation returns null.
-	 */
-	protected Context getContext() {
-		return null;
 	}
 
 	/**

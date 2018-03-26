@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.walkertribe.ian.Context;
-import com.walkertribe.ian.DefaultContext;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.ArtemisNetworkInterface;
 import com.walkertribe.ian.iface.DisconnectEvent;
 import com.walkertribe.ian.iface.Listener;
 import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
 import com.walkertribe.ian.protocol.core.comm.ToggleRedAlertPacket;
-import com.walkertribe.ian.FilePathResolver;
 import com.walkertribe.ian.world.Artemis;
 
 /**
@@ -72,7 +69,6 @@ public class ProxyDemo implements Runnable {
         new Thread(new ProxyDemo(artemisInstallPath, port, serverAddr)).start();
     }
 
-    private Context ctx;
     private int port;
     private String serverAddr;
     private int serverPort = Artemis.DEFAULT_PORT;
@@ -84,7 +80,6 @@ public class ProxyDemo implements Runnable {
      * thread.
      */
     public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
-        ctx = new DefaultContext(new FilePathResolver(artemisInstallPath));
         this.port = port;
         int colonPos = serverAddr.indexOf(':');
 
@@ -113,9 +108,9 @@ public class ProxyDemo implements Runnable {
 
             // We've got a connection, build interfaces and listener
             System.out.println("Received connection from " + skt.getRemoteSocketAddress());
-            ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, Origin.CLIENT, ctx);
+            ThreadedArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface(skt, Origin.CLIENT);
             System.out.println("Connecting to server at " + serverAddr + ":" + serverPort + "...");
-            ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000, ctx);
+            ThreadedArtemisNetworkInterface server = new ThreadedArtemisNetworkInterface(serverAddr, serverPort, 2000);
             new ProxyListener(server, client);
             System.out.println("Connection established.");
         } catch (IOException ex) {

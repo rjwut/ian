@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.protocol.ArtemisPacket;
@@ -40,7 +39,6 @@ public class PacketReader {
 		REQUIRED_PACKET_TYPES.add(JamCrc.compute(CorePacketType.HEARTBEAT));
 	}
 
-	private Context ctx;
 	private Origin requiredOrigin;
 	private InputStream in;
 	private byte[] intBuffer = new byte[4];
@@ -60,20 +58,12 @@ public class PacketReader {
 	 * parameter may be omitted; if it is not, any packet read that does not
 	 * have the same Origin will cause an ArtemisPacketException.
 	 */
-	public PacketReader(Context ctx, Origin requiredOrigin, InputStream in,
+	public PacketReader(Origin requiredOrigin, InputStream in,
 			Protocol protocol, ListenerRegistry listenerRegistry) {
-		this.ctx = ctx;
 		this.requiredOrigin = requiredOrigin;
 		this.in = in;
 		this.protocol = protocol;
 		this.listenerRegistry = listenerRegistry;
-	}
-
-	/**
-	 * Returns the Context associated with this PacketReader.
-	 */
-	public Context getContext() {
-		return ctx;
 	}
 
 	/**

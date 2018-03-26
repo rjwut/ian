@@ -2,8 +2,6 @@ package com.walkertribe.ian.example;
 
 import java.io.IOException;
 
-import com.walkertribe.ian.Context;
-import com.walkertribe.ian.DefaultContext;
 import com.walkertribe.ian.enums.AlertStatus;
 import com.walkertribe.ian.enums.Console;
 import com.walkertribe.ian.iface.ArtemisNetworkInterface;
@@ -18,7 +16,6 @@ import com.walkertribe.ian.protocol.core.setup.SetConsolePacket;
 import com.walkertribe.ian.protocol.core.setup.SetShipPacket;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.PlayerShipUpdateListener;
-import com.walkertribe.ian.FilePathResolver;
 import com.walkertribe.ian.world.Artemis;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
@@ -73,8 +70,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
             host = host.substring(0, colonPos);
         }
 
-        Context ctx = new DefaultContext(new FilePathResolver(artemisInstallPath));
-        server = new ThreadedArtemisNetworkInterface(host, port, ctx);
+        server = new ThreadedArtemisNetworkInterface(host, port);
         server.addListener(this);
         server.start();
         System.out.println("Connected!");

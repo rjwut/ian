@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.ArtemisPacketException;
@@ -31,7 +30,6 @@ import com.walkertribe.ian.util.Version;
  * each stream.
  */
 public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface {
-	private Context ctx;
 	private Origin recvType;
     private Origin sendType;
     private Protocol protocol = new CoreArtemisProtocol();
@@ -50,9 +48,9 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      * constructor causes IAN to wait forever for a connection; a separate
      * constructor is provided for specifying a timeout.
      */
-    public ThreadedArtemisNetworkInterface(String host, int port, Context ctx)
+    public ThreadedArtemisNetworkInterface(String host, int port)
     		throws IOException {
-    	this(host, port, 0, ctx);
+    	this(host, port, 0);
     }
 
     /**
@@ -62,13 +60,8 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      * the connection to be established before throwing an exception; 0 means
      * "wait forever."
      */
-    public ThreadedArtemisNetworkInterface(String host, int port, int timeoutMs, Context ctx) 
+    public ThreadedArtemisNetworkInterface(String host, int port, int timeoutMs) 
             throws IOException {
-    	if (ctx == null) {
-    		throw new IllegalArgumentException("Context is required");
-    	}
-
-    	this.ctx = ctx;
     	Socket skt = new Socket();
     	skt.connect(new InetSocketAddress(host, port), timeoutMs);
     	init(skt, Origin.SERVER);
@@ -89,13 +82,8 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      * The send/receive streams won't actually be opened until start() is
      * called.
      */
-    public ThreadedArtemisNetworkInterface(Socket skt, Origin origin, Context ctx)
+    public ThreadedArtemisNetworkInterface(Socket skt, Origin origin)
     		throws IOException {
-    	if (ctx == null) {
-    		throw new IllegalArgumentException("Context is required");
-    	}
-
-    	this.ctx = ctx;
     	init(skt, origin);
     }
 
@@ -328,8 +316,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
         public ReceiverThread(final ThreadedArtemisNetworkInterface net, final Socket skt) throws IOException {
             mInterface = net;
             InputStream input = new BufferedInputStream(skt.getInputStream());
-            mReader = new PacketReader(ctx, net.getRecvType(), input, protocol,
-            		mListeners);
+            mReader = new PacketReader(net.getRecvType(), input, protocol, mListeners);
         }
 
         /**
