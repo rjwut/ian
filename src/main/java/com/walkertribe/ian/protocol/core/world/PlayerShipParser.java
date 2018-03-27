@@ -58,7 +58,7 @@ public class PlayerShipParser extends AbstractObjectParser {
     	SCAN_PROGRESS,
     	REVERSE_STATE,
     	UNK_5_5,
-    	UNK_5_6,
+    	SIDE,
     	UNK_5_7,
     	UNK_5_8,
 
@@ -143,7 +143,9 @@ public class PlayerShipParser extends AbstractObjectParser {
         player.setReverse(reader.readBool(Bit.REVERSE_STATE, 1));
 
         reader.readObjectUnknown(Bit.UNK_5_5, 4);
-        reader.readObjectUnknown(Bit.UNK_5_6, 1);
+
+        player.setSide(reader.readByte(Bit.SIDE, (byte) -1));
+
         reader.readObjectUnknown(Bit.UNK_5_7, 4);
         reader.readObjectUnknown(Bit.UNK_5_8, 1);
         player.setCapitalShipId(reader.readInt(Bit.CAPITAL_SHIP_ID, -1));
@@ -221,7 +223,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 				.writeFloat(Bit.SCAN_PROGRESS, player.getScanProgress(), -1)
 				.writeBool(Bit.REVERSE_STATE, player.getReverseState(), 1)
 				.writeUnknown(Bit.UNK_5_5)
-				.writeUnknown(Bit.UNK_5_6)
+				.writeByte(Bit.SIDE, player.getSide(), (byte) -1)
 				.writeUnknown(Bit.UNK_5_7)
 				.writeUnknown(Bit.UNK_5_8)
 				.writeInt(Bit.CAPITAL_SHIP_ID, player.getCapitalShipId(), -1)
