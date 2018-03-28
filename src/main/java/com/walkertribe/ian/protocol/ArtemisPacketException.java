@@ -58,9 +58,7 @@ public class ArtemisPacketException extends Exception {
     public ArtemisPacketException(Throwable t, Origin origin,
     		int packetType, byte[] payload) {
         super(t);
-        this.origin = origin;
-        this.packetType = packetType;
-        this.payload = payload;
+        appendParsingDetails(origin, packetType, payload);
     }
 
     /**
@@ -82,6 +80,15 @@ public class ArtemisPacketException extends Exception {
      */
     public byte[] getPayload() {
     	return payload;
+    }
+
+    /**
+     * Adds the Origin, packet type and payload to this exception.
+     */
+    public void appendParsingDetails(Origin origin, int packetType, byte[] payload) {
+        this.origin = origin;
+        this.packetType = packetType;
+        this.payload = payload;
     }
 
     /**

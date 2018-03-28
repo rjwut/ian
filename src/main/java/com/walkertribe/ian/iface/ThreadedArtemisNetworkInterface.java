@@ -389,10 +389,6 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
 
             	mInterface.exception = (Exception) cause;
             	end();
-        	} else {
-        		// We can continue; convert data to an UnknownPacket and
-        		// forward it to proxy targets.
-        		forwardToProxyTargets(ex.toUnknownPacket());
         	}
         }
 

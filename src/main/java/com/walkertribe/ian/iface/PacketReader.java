@@ -220,6 +220,7 @@ public class PacketReader {
 					packet = factory.build(this);
 				} catch (ArtemisPacketException ex) {
 					result.setException(ex);
+					ex.appendParsingDetails(origin, packetType, payloadBytes);
 				} catch (RuntimeException ex) {
 					result.setException(new ArtemisPacketException(ex, origin, packetType, payloadBytes));
 				}
