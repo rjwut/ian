@@ -102,6 +102,10 @@ public class ParseResult {
 	 * Fire the listeners that were interested in this packet or its contents.
 	 */
 	public void fireListeners() {
+		if (packet == null) {
+			return;
+		}
+
 		for (ListenerMethod method : interestedPacketListeners) {
 			method.offer(packet);
 		}
