@@ -1,6 +1,5 @@
 package com.walkertribe.ian.protocol.core.setup;
 
-import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
@@ -47,12 +46,7 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
         mShips = new Ship[Artemis.SHIP_COUNT];
 
         for (int i = 0; i < Artemis.SHIP_COUNT; i++) {
-        	DriveType drive = DriveType.values()[reader.readInt()];
-        	int shipType = reader.readInt();
-        	float accentColor = reader.readFloat();
-        	reader.skip(4); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
-        	CharSequence name = reader.readString();
-        	mShips[i] = new Ship(name, shipType, accentColor, drive);
+        	mShips[i] = Ship.read(reader);
         }
     }
 
@@ -68,11 +62,7 @@ public class AllShipSettingsPacket extends SimpleEventPacket {
 		super.writePayload(writer);
 
 		for (Ship ship : mShips) {
-			writer.writeInt(ship.getDrive().ordinal());
-			writer.writeInt(ship.getShipType());
-			writer.writeFloat(ship.getAccentColor());
-			writer.writeInt(1); // RJW: UNKNOWN INT (always seems to be 1 0 0 0)
-			writer.writeString(ship.getName());
+			ship.write(writer);
 		}
 	}
 
