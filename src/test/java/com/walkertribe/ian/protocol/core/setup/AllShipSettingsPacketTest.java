@@ -50,12 +50,10 @@ public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSetti
 		new AllShipSettingsPacket(buildShips(Artemis.SHIP_COUNT + 1, false));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
 	public void testConstructShipNullName() {
 		new Ship((String) null, 0, 0.0f, DriveType.WARP);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
 	public void testConstructShipEmptyName() {
 		new Ship("", 0, 0.0f, DriveType.WARP);
 	}

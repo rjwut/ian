@@ -76,12 +76,10 @@ public class SetShipSettingsPacketTest extends AbstractPacketTester<SetShipSetti
 		new SetShipSettingsPacket(DriveType.WARP, 0, 1.0f, "Artemis");
 	}
 
-	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNullName() {
 		new SetShipSettingsPacket(DriveType.WARP, 0, 0.0f, null);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
 	public void testConstructBlankName() {
 		new SetShipSettingsPacket(DriveType.WARP, 0, 0.0f, "");
 	}
