@@ -134,7 +134,7 @@ public class NpcShipParser extends AbstractObjectParser {
         }
 
         if (reader.has(Bit.DOUBLE_SCAN)) {
-            obj.setScanLevelBits(2, reader.readInt(Bit.SINGLE_SCAN, 0));
+            obj.setScanLevelBits(2, reader.readInt(Bit.DOUBLE_SCAN, 0));
         }
 
         if (reader.has(Bit.VISIBILITY)) {
