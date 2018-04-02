@@ -6,15 +6,15 @@ import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
 /**
- * Sent by the server when the simulation ends (victory, player's ship is destroyed, etc.).
+ * Sent by the server when the "End Game" button is clicked on the statistics page.
  * @author rjwut
  */
-@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_OVER)
-public class GameOverPacket extends SimpleEventPacket {
-    public GameOverPacket() {
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.END_GAME)
+public class EndGamePacket extends SimpleEventPacket {
+    public EndGamePacket() {
     }
 
-    public GameOverPacket(PacketReader reader) {
+    public EndGamePacket(PacketReader reader) {
     	super(reader);
     }
 

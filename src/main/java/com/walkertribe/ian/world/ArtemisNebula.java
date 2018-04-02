@@ -12,6 +12,7 @@ public class ArtemisNebula extends BaseArtemisObject {
     private float mRed = -1;
     private float mGreen = -1;
     private float mBlue = -1;
+    private byte mNebulaType = -1;
 
 	public ArtemisNebula(int objId) {
         super(objId);
@@ -23,7 +24,7 @@ public class ArtemisNebula extends BaseArtemisObject {
 	}
 
     /**
-     * The red channel value for the color.
+     * The red channel value for the color. The color is visible on 3D screens; 2D screens use nebula type.
      * Unspecified: -1
      */
     public float getRed() {
@@ -35,7 +36,7 @@ public class ArtemisNebula extends BaseArtemisObject {
     }
 
     /**
-     * The green channel value for the color.
+     * The green channel value for the color. The color is visible on 3D screens; 2D screens use nebula type.
      * Unspecified: -1
      */
     public float getGreen() {
@@ -47,7 +48,7 @@ public class ArtemisNebula extends BaseArtemisObject {
     }
 
     /**
-     * The blue channel value for the color.
+     * The blue channel value for the color. The color is visible on 3D screens; 2D screens use nebula type.
      * Unspecified: -1
      */
     public float getBlue() {
@@ -56,6 +57,18 @@ public class ArtemisNebula extends BaseArtemisObject {
 
     public void setBlue(float blue) {
     	mBlue = blue;
+    }
+
+    /**
+     * The type of nebula this is (1, 2, or 3). This affects the color of the nebula on 2D screens; 3D screens use RGB.
+     * Unspecified: -1
+     */
+    public byte getNebulaType() {
+    	return mNebulaType;
+    }
+
+    public void setNebulaType(byte nebulaType) {
+    	mNebulaType = nebulaType;
     }
 
     @Override
@@ -76,6 +89,10 @@ public class ArtemisNebula extends BaseArtemisObject {
             if (n.mBlue != -1) {
             	mBlue = n.mBlue;
             }
+
+            if (n.mNebulaType != -1) {
+            	mNebulaType = n.mNebulaType;
+            }
         }
     }
 
@@ -85,5 +102,6 @@ public class ArtemisNebula extends BaseArtemisObject {
     	putProp(props, "Red", mRed, -1);
     	putProp(props, "Green", mGreen, -1);
     	putProp(props, "Blue", mBlue, -1);
+    	putProp(props, "Nebula type", mNebulaType, -1);
     }
 }

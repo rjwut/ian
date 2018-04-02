@@ -1,7 +1,9 @@
 package com.walkertribe.ian.protocol.core.world;
 
+import com.walkertribe.ian.enums.AnomalyType;
+import com.walkertribe.ian.enums.BeaconMode;
+import com.walkertribe.ian.enums.CreatureType;
 import com.walkertribe.ian.enums.ObjectType;
-import com.walkertribe.ian.enums.Upgrade;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.world.ArtemisAnomaly;
@@ -16,9 +18,11 @@ public class AnomalyParser extends AbstractObjectParser {
 		X,
 		Y,
 		Z,
-		UPGRADE,
+		TYPE,
 		SCAN,
-		UNKNOWN_1_6
+		UNKNOWN_1_6,
+		BEACON_TYPE,
+		BEACON_MODE
 	}
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -38,8 +42,8 @@ public class AnomalyParser extends AbstractObjectParser {
         anomaly.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
         anomaly.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
 
-        if (reader.has(Bit.UPGRADE)) {
-        	anomaly.setUpgrade(Upgrade.fromAnomalyIndex(reader.readInt()));
+        if (reader.has(Bit.TYPE)) {
+        	anomaly.setAnomalyType(AnomalyType.values()[reader.readInt()]);
         }
 
         if (reader.has(Bit.SCAN)) {
@@ -47,6 +51,15 @@ public class AnomalyParser extends AbstractObjectParser {
         }
 
         reader.readObjectUnknown(Bit.UNKNOWN_1_6, 4);
+
+        if (reader.has(Bit.BEACON_TYPE)) {
+        	anomaly.setBeaconType(CreatureType.values()[reader.readByte()]);
+        }
+
+        if (reader.has(Bit.BEACON_MODE)) {
+        	anomaly.setBeaconMode(BeaconMode.values()[reader.readByte()]);
+        }
+
         return anomaly;
 	}
 
@@ -57,10 +70,10 @@ public class AnomalyParser extends AbstractObjectParser {
 		writer.writeFloat(Bit.Y, anomaly.getY(), Float.MIN_VALUE);
 		writer.writeFloat(Bit.Z, anomaly.getZ(), Float.MIN_VALUE);
 
-		Upgrade upgrade = anomaly.getUpgrade();
+		AnomalyType anomalyType = anomaly.getAnomalyType();
 
-		if (upgrade != null) {
-			writer.writeInt(Bit.UPGRADE, upgrade.getAnomalyIndex(), -1);
+		if (anomalyType != null) {
+			writer.writeInt(Bit.TYPE, anomalyType.ordinal(), -1);
 		}
 
 		Integer scan = anomaly.getScanBits();
@@ -70,5 +83,17 @@ public class AnomalyParser extends AbstractObjectParser {
 		}
 
 		writer.writeUnknown(Bit.UNKNOWN_1_6);
+
+		CreatureType beaconType = anomaly.getBeaconType();
+
+		if (beaconType != null) {
+			writer.writeByte(Bit.BEACON_TYPE, (byte) beaconType.ordinal(), (byte) -1);
+		}
+
+		BeaconMode beaconMode = anomaly.getBeaconMode();
+
+		if (beaconMode != null) {
+			writer.writeByte(Bit.BEACON_MODE, (byte) beaconMode.ordinal(), (byte) -1);
+		}
 	}
 }

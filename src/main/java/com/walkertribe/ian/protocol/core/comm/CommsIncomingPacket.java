@@ -1,5 +1,8 @@
 package com.walkertribe.ian.protocol.core.comm;
 
+import java.util.Set;
+
+import com.walkertribe.ian.enums.CommFilter;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.iface.PacketReader;
 import com.walkertribe.ian.iface.PacketWriter;
@@ -13,22 +16,20 @@ import com.walkertribe.ian.util.Util;
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.COMM_TEXT)
 public class CommsIncomingPacket extends BaseArtemisPacket {
-	public static final int MIN_PRIORITY_VALUE = 0;
-	public static final int MAX_PRIORITY_VALUE = 8;
 
-    private final int mPriority;
+    private final Set<CommFilter> mFilters;
     private final CharSequence mFrom;
     private final CharSequence mMessage;
 
     public CommsIncomingPacket(PacketReader reader) {
-        mPriority = reader.readInt();
+    	mFilters = CommFilter.fromInt(reader.readShort());
         mFrom = reader.readString();
         mMessage = Util.caratToNewline(reader.readString());
     }
 
-    public CommsIncomingPacket(int priority, CharSequence from, CharSequence message) {
-    	if (priority < MIN_PRIORITY_VALUE || priority > MAX_PRIORITY_VALUE) {
-    		throw new IllegalArgumentException("Invalid priority: " + priority);
+    public CommsIncomingPacket(Set<CommFilter> filters, CharSequence from, CharSequence message) {
+    	if (filters == null) {
+    		throw new IllegalArgumentException("You must provide a filter Set");
     	}
 
     	if (Util.isBlank(from)) {
@@ -39,17 +40,16 @@ public class CommsIncomingPacket extends BaseArtemisPacket {
     		throw new IllegalArgumentException("You must provide a message");
     	}
 
-    	mPriority = priority;
+    	mFilters = filters;
     	mFrom = from;
     	mMessage = message;
     }
 
     /**
-     * Returns the message priority, with lower values having higher priority.
-     * @return An integer between 0 and 8, inclusive
+     * Returns true if this message matches the given CommFilter.
      */
-    public int getPriority() {
-        return mPriority;
+    public boolean matches(CommFilter filter) {
+        return mFilters.contains(filter);
     }
 
     /**
@@ -71,7 +71,7 @@ public class CommsIncomingPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeInt(mPriority);
+		writer.writeShort(CommFilter.toInt(mFilters));
 		writer.writeString(mFrom);
 		writer.writeString(Util.newlineToCarat(mMessage));
 	}

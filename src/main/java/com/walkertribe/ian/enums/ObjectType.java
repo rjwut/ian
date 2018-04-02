@@ -19,22 +19,22 @@ import com.walkertribe.ian.world.ArtemisTorpedo;
  * @author rjwut
  */
 public enum ObjectType {
-	PLAYER_SHIP(1, true, ArtemisPlayer.class, null),
-	WEAPONS_CONSOLE(2, false, ArtemisPlayer.class, null),
-	ENGINEERING_CONSOLE(3, false, ArtemisPlayer.class, null),
-	UPGRADES(4, false, ArtemisPlayer.class, null),
-	NPC_SHIP(5, true, ArtemisNpc.class, null),
-	BASE(6, true, ArtemisBase.class, null),
-	MINE(7, false, ArtemisGenericObject.class, "mine"),
-	ANOMALY(8, true, ArtemisAnomaly.class, "wreck1"),
-	// 9 is unused
-	NEBULA(10, false, ArtemisNebula.class, null),
-	TORPEDO(11, false, ArtemisTorpedo.class, null),
-	BLACK_HOLE(12, false, ArtemisGenericObject.class, null),
-	ASTEROID(13, false, ArtemisGenericObject.class, "asteroid"),
-	GENERIC_MESH(14, true, ArtemisMesh.class, null),
-	CREATURE(15, true, ArtemisCreature.class, null),
-	DRONE(16, false, ArtemisDrone.class, "drone1");
+	PLAYER_SHIP(0x01, true, ArtemisPlayer.class, null),
+	WEAPONS_CONSOLE(0x02, false, ArtemisPlayer.class, null),
+	ENGINEERING_CONSOLE(0x03, false, ArtemisPlayer.class, null),
+	UPGRADES(0x04, false, ArtemisPlayer.class, null),
+	NPC_SHIP(0x05, true, ArtemisNpc.class, null),
+	BASE(0x06, true, ArtemisBase.class, null),
+	MINE(0x07, false, ArtemisGenericObject.class, "mine"),
+	ANOMALY(0x08, true, ArtemisAnomaly.class, "wreck1"),
+	// 0x09 is unused
+	NEBULA(0x0a, false, ArtemisNebula.class, null),
+	TORPEDO(0x0b, false, ArtemisTorpedo.class, null),
+	BLACK_HOLE(0x0c, false, ArtemisGenericObject.class, null),
+	ASTEROID(0x0d, false, ArtemisGenericObject.class, "asteroid"),
+	GENERIC_MESH(0x0e, true, ArtemisMesh.class, null),
+	CREATURE(0x0f, true, ArtemisCreature.class, null),
+	DRONE(0x10, false, ArtemisDrone.class, "drone1");
 
 	static final float MODEL_SCALE = 0.05f;
 

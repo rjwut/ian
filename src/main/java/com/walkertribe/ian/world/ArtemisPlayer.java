@@ -7,7 +7,9 @@ import java.util.SortedMap;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.AlertStatus;
+import com.walkertribe.ian.enums.BeaconMode;
 import com.walkertribe.ian.enums.BeamFrequency;
+import com.walkertribe.ian.enums.CreatureType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.enums.MainScreenView;
 import com.walkertribe.ian.enums.ObjectType;
@@ -117,6 +119,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private final int[] mTorpedos = new int[OrdnanceType.COUNT];
     private final Tube[] mTubes = new Tube[Artemis.MAX_TUBES];
     private float mEnergy = -1;
+    private byte mNebulaType = -1;
     private int mDockingBase = -1;
     private MainScreenView mMainScreen;
     private byte mAvailableCoolantOrMissiles = -1;
@@ -125,6 +128,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private BeamFrequency mBeamFreq;
     private DriveType mDriveType;
     private BoolState mReverse = BoolState.UNKNOWN;
+    private float mClimbDive = Float.MIN_VALUE;
     private int mScienceTarget = -1;
     private float mScanProgress = -1;
     private int mCaptainTarget = -1;
@@ -132,6 +136,9 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private Map<Upgrade, UpgradeStatus> mUpgrades = new LinkedHashMap<Upgrade, UpgradeStatus>(Upgrade.ACTIVATION_UPGRADE_COUNT);
     private int mCapitalShipId = -1;
     private float mAccentColor = -1;
+    private float mEmergencyJumpCooldown = -1;
+    private CreatureType mBeaconType;
+    private BeaconMode mBeaconMode;
 
     public ArtemisPlayer(int objId) {
         super(objId);
@@ -288,6 +295,23 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
+     * The type of the nebula the ship is in, or 0 if not in a nebula. Nebula
+     * types can be 1, 2, or 3.
+     * Unspecified: -1
+     */
+    public byte getNebulaType() {
+    	return mNebulaType;
+    }
+
+    public void setNebulaType(byte nebulaType) {
+    	if (nebulaType < -1 || nebulaType > 3) {
+    		throw new IllegalArgumentException("Invalid nebula type: " + nebulaType);
+    	}
+
+    	mNebulaType = nebulaType;
+    }
+
+    /**
      * Get the ID of the base at which we're docking. Note that this property is
      * only updated in a packet when the docking process commences; undocking
      * does not update this property. However, if an existing ArtemisPlayer
@@ -325,6 +349,18 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     public void setReverse(BoolState reverse) {
         mReverse = reverse;
+    }
+
+    /**
+     * Whether ship ship is climbing (-1), diving (1), or leveling out (0).
+     * Unknown: Float.MIN_VALUE
+     */
+    public float getClimbDive() {
+    	return mClimbDive;
+    }
+
+    public void setClimbDive(float climbDive) {
+    	mClimbDive = climbDive;
     }
 
     /**
@@ -694,6 +730,19 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
+     * Returns progress remaining toward being ready to do an emergency jump.
+     * Values range between 0.0 (ready to jump) and 1.0 (just jumped).
+     * Unspecified: -1
+     */
+    public float getEmergencyJumpCooldown() {
+    	return mEmergencyJumpCooldown;
+    }
+
+    public void setEmergencyJumpCooldown(float emergencyJumpCooldown) {
+    	mEmergencyJumpCooldown = emergencyJumpCooldown;
+    }
+
+    /**
      * Returns the ID of the capital ship with which this ship can dock. Only
      * applies to single-seat craft.
      * Unspecified: -1
@@ -704,6 +753,28 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     public void setCapitalShipId(int capitalShipId) {
     	mCapitalShipId = capitalShipId;
+    }
+
+    /**
+     * The type of creature the next beacon launched will be configured to affect.
+     */
+    public CreatureType getBeaconType() {
+    	return mBeaconType;
+    }
+
+    public void setBeaconType(CreatureType beaconType) {
+    	mBeaconType = beaconType;
+    }
+
+    /**
+     * The mode for the next launched beacon (attract/repel).
+     */
+    public BeaconMode getBeaconMode() {
+    	return mBeaconMode;
+    }
+
+    public void setBeaconMode(BeaconMode beaconMode) {
+    	mBeaconMode = beaconMode;
     }
 
     /**
@@ -734,6 +805,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			BoolState.isKnown(mShields) ||
     			mShipIndex != -1 ||
     			mEnergy != -1 ||
+    			mNebulaType != -1 ||
     			mDockingBase != -1 ||
     			mMainScreen != null ||
     			mAvailableCoolantOrMissiles != -1 ||
@@ -742,12 +814,16 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			mBeamFreq != null ||
     			mDriveType != null ||
     			BoolState.isKnown(mReverse) ||
+    			mClimbDive != Float.MIN_VALUE ||
     			mScienceTarget != -1 ||
     			mScanProgress != -1 ||
     			mCaptainTarget != -1 ||
     			mScanningId != -1 ||
     			mCapitalShipId != -1 ||
-    			mAccentColor != -1;
+    			mAccentColor != -1 ||
+    			mEmergencyJumpCooldown != -1 ||
+    			mBeaconType != null ||
+    			mBeaconMode != null;
     }
 
     /**
@@ -897,7 +973,11 @@ public class ArtemisPlayer extends BaseArtemisShip {
         if (plr.mEnergy != -1) {
             mEnergy = plr.mEnergy;
         }
-        
+
+        if (plr.mNebulaType != -1) {
+        	mNebulaType = plr.mNebulaType;
+        }
+
         if (plr.mAvailableCoolantOrMissiles != -1) {
             mAvailableCoolantOrMissiles = plr.mAvailableCoolantOrMissiles;
         }
@@ -914,6 +994,10 @@ public class ArtemisPlayer extends BaseArtemisShip {
             mReverse = plr.mReverse;
         }
         
+        if (plr.mClimbDive != Float.MIN_VALUE) {
+        	mClimbDive = plr.mClimbDive;
+        }
+
         if (plr.mScienceTarget != -1) {
             mScienceTarget = plr.mScienceTarget;
         }
@@ -930,12 +1014,24 @@ public class ArtemisPlayer extends BaseArtemisShip {
             mScanningId = plr.mScanningId;
         }
 
+        if (plr.mCapitalShipId != -1) {
+        	mCapitalShipId = plr.mCapitalShipId;
+        }
+
         if (plr.mAccentColor != -1) {
         	mAccentColor = plr.mAccentColor;
         }
 
-        if (plr.mCapitalShipId != -1) {
-        	mCapitalShipId = plr.mCapitalShipId;
+        if (plr.mEmergencyJumpCooldown != -1) {
+        	mEmergencyJumpCooldown = plr.mEmergencyJumpCooldown;
+        }
+
+        if (plr.mBeaconType != null) {
+        	mBeaconType = plr.mBeaconType;
+        }
+
+        if (plr.mBeaconMode != null) {
+        	mBeaconMode = plr.mBeaconMode;
         }
     }
 
@@ -1014,12 +1110,14 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	}
 
     	putProp(props, "Energy", mEnergy, -1);
+    	putProp(props, "Nebula type", mNebulaType, -1);
     	putProp(props, "Docking base", mDockingBase, -1);
     	putProp(props, "Main screen view", mMainScreen);
     	putProp(props, "Coolant", mAvailableCoolantOrMissiles, -1);
     	putProp(props, "Warp", mWarp, -1);
     	putProp(props, "Beam frequency", mBeamFreq);
     	putProp(props, "Drive type", mDriveType);
+    	putProp(props, "Climb/dive", mClimbDive, -1);
     	putProp(props, "Reverse", mReverse);
     	putProp(props, "Scan target", mScienceTarget, -1);
     	putProp(props, "Scan progress", mScanProgress, -1);
@@ -1036,6 +1134,9 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     	putProp(props, "Capital ship ID", mCapitalShipId, -1);
     	putProp(props, "Accent color", mAccentColor, -1);
+    	putProp(props, "Emergency jump cooldown", mEmergencyJumpCooldown, -1);
+    	putProp(props, "Beacon type", mBeaconType);
+    	putProp(props, "Beacon mode", mBeaconMode);
     }
 
     /**

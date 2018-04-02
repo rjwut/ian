@@ -1,13 +1,13 @@
 // FULLY-POPULATED
 efbeadde     // header
-c1000000     // packet length = 193
+c2000000     // packet length = 194
 01000000     // origin = server
 00000000     // padding
-ad000000     // remaining length = 173
+ae000000     // remaining length = 174
 f93d8080     // ObjectUpdatePacket
 01           // object type = player ship
 2f000000     // object ID = 47
-ffffffffff07 // bit field
+ffffffffff1f // bit field
 
 01000000     // weapons target = cleared
 00000000     // impulse = 0
@@ -29,7 +29,7 @@ e8030000     // hull ID = 1000
 
 0000c040     // heading = 6
 0000e040     // velocity = 7
-0100         // in a nebula?
+01           // nebula type = 1
 08000000 4100 7200 7400 6500 6d00 6900 7300 0000 // name = Artemis
 00004844     // forward shields
 00004844     // max forward shields
@@ -57,6 +57,8 @@ ffffffff     // unknown
 e8030000     // capital ship ID = 1000
 00000000     // accent color = red
 00000000     // unknown
+04           // beacon type = piranha
+01           // beacon mode = repel
 00000000     // end array
 
 // EMPTY

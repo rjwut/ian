@@ -84,11 +84,18 @@ public class BitField {
 	}
 
 	/**
-	 * Returns a space-delimited list of the names of the enum values that
-	 * correspond to active bits in this BitField. This can be useful for
-	 * debugging purposes.
+	 * Convenience method for listActiveBits(bits, ' ').
 	 */
 	public String listActiveBits(Enum<?>[] bits) {
+		return listActiveBits(bits, ' ');
+	}
+
+	/**
+	 * Returns a delimited list of the names of the enum values that correspond
+	 * to active bits in this BitField. This can be useful for debugging
+	 * purposes.
+	 */
+	public String listActiveBits(Enum<?>[] bits, char delimiter) {
 		StringBuilder list = new StringBuilder();
 
 		for (int i = 0; i < bytes.length; i++) {
@@ -100,7 +107,7 @@ public class BitField {
 				if (bitIndex < bits.length) {
 					if ((b & (0x01 << j)) != 0) {
 						if (list.length() != 0) {
-							list.append(' ');
+							list.append(delimiter);
 						}
 
 						list.append(bits[bitIndex].name());

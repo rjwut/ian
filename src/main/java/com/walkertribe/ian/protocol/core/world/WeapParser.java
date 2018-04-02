@@ -20,25 +20,28 @@ public class WeapParser extends AbstractObjectParser {
 		TORP_MINE,
 		TORP_EMP,
 		TORP_PSHOCK,
-		UNK_1_6,
+		TORP_BEACON,
+		TORP_PROBE,
+		TORP_TAG,
+
 		TUBE_TIME_1,
 		TUBE_TIME_2,
-
 		TUBE_TIME_3,
 		TUBE_TIME_4,
 		TUBE_TIME_5,
 		TUBE_TIME_6,
 		TUBE_STATE_1,
 		TUBE_STATE_2,
+
 		TUBE_STATE_3,
 		TUBE_STATE_4,
-
 		TUBE_STATE_5,
 		TUBE_STATE_6,
 		TUBE_CONTENT_1,
 		TUBE_CONTENT_2,
 		TUBE_CONTENT_3,
 		TUBE_CONTENT_4,
+
 		TUBE_CONTENT_5,
 		TUBE_CONTENT_6
 	}
@@ -46,7 +49,7 @@ public class WeapParser extends AbstractObjectParser {
 
 	private static final Bit[] TORPEDOS = {
         Bit.TORP_HOMING, Bit.TORP_NUKE, Bit.TORP_MINE, Bit.TORP_EMP,
-        Bit.TORP_PSHOCK
+        Bit.TORP_PSHOCK, Bit.TORP_BEACON, Bit.TORP_PROBE, Bit.TORP_TAG
     };
 
     private static final Bit[] TUBE_TIMES = {
@@ -84,8 +87,6 @@ public class WeapParser extends AbstractObjectParser {
         for (int i = 0; i < torps.length; i++) {
             torps[i] = (reader.readByte(TORPEDOS[i], (byte) -1));
         }
-
-        reader.readObjectUnknown(Bit.UNK_1_6, 1);
            
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
             tubeTimes[i] = reader.readFloat(TUBE_TIMES[i], -1);
@@ -127,8 +128,6 @@ public class WeapParser extends AbstractObjectParser {
 			OrdnanceType type = ordTypes[i];
 			writer.writeByte(TORPEDOS[i], (byte) player.getTorpedoCount(type), (byte) -1);
 		}
-
-        writer.writeUnknown(Bit.UNK_1_6);
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
             writer.writeFloat(TUBE_TIMES[i], player.getTubeCountdown(i), -1);

@@ -9,8 +9,8 @@ import com.walkertribe.ian.enums.BeamFrequency;
  */
 public abstract class BaseArtemisShip extends BaseArtemisShielded {
     private float mVelocity = -1;
-    private float mShieldsFrontMax = -1;
-    private float mShieldsRearMax = -1;
+    private float mShieldsFrontMax = Float.MIN_VALUE;
+    private float mShieldsRearMax = Float.MIN_VALUE;
     private final float[] mShieldFreqs = new float[5];
     private float mSteering = -1;
     private float mTopSpeed = -1;
@@ -77,7 +77,7 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 
     /**
      * The maximum strength of the forward shield.
-     * Unspecified: -1
+     * Unspecified: Float.MIN_VALUE
      */
     public float getShieldsFrontMax() {
         return mShieldsFrontMax;
@@ -89,7 +89,7 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     
     /**
      * The maximum strength of the aft shield.
-     * Unspecified: -1
+     * Unspecified: Float.MIN_VALUE
      */
     public float getShieldsRearMax() {
         return mShieldsRearMax;

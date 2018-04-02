@@ -20,8 +20,8 @@ public class BayStatusPacketTest extends AbstractPacketTester<BayStatusPacket> {
 	@Test
 	public void testConstruct() {
 		BayStatusPacket pkt = new BayStatusPacket();
-		pkt.addBay(new Bay(1, "Fighter 1", "Class 1", 257));
-		pkt.addBay(new Bay(2, "Fighter 2", "Class 2", 0));
+		pkt.addBay(new Bay(1, 0, "Fighter 1", "Class 1", 257));
+		pkt.addBay(new Bay(2, 1, "Fighter 2", "Class 2", 0));
 		test(pkt, 2);
 	}
 
@@ -38,6 +38,7 @@ public class BayStatusPacketTest extends AbstractPacketTester<BayStatusPacket> {
 
 		for (Bay bay : pkt.getBays()) {
 			Assert.assertEquals(id, bay.getId());
+			Assert.assertEquals(id - 1, bay.getNumber());
 			TestUtil.assertToStringEquals("Fighter " + id, bay.getName());
 			TestUtil.assertToStringEquals("Class " + id, bay.getClassName());
 			Assert.assertEquals(id++ == 1 ? 257 : 0, bay.getRefitTime());
@@ -46,45 +47,46 @@ public class BayStatusPacketTest extends AbstractPacketTester<BayStatusPacket> {
 
 	@Test
 	public void testBay() {
-		BayStatusPacket.Bay bay = new Bay(1, "Test", "Class", 200);
+		BayStatusPacket.Bay bay = new Bay(1, 2, "Test", "Class", 200);
 		Assert.assertEquals(1, bay.getId());
+		Assert.assertEquals(2, bay.getNumber());
 		Assert.assertEquals("Test", bay.getName());
 		Assert.assertEquals("Class", bay.getClassName());
 		Assert.assertEquals(200, bay.getRefitTime());
-		Assert.assertEquals("#1: Test (Class): 200", bay.toString());
+		Assert.assertEquals("#1 in bay 2: Test (Class): 200", bay.toString());
 		TestUtil.testEqualsAndHashCode(bay,
-				new Bay(1, "Test", "Class", 200),
-				new Bay(2, "Test", "Class", 200)
+				new Bay(1, 0, "Test", "Class", 200),
+				new Bay(2, 1, "Test", "Class", 200)
 		);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testBayZeroId() {
-		new Bay(0, "Name", "Class", 0);
+		new Bay(0, 0, "Name", "Class", 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testBayNullName() {
-		new Bay(1, null, "Class", 0);
+		new Bay(1, 0, null, "Class", 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testBayEmptyName() {
-		new Bay(1, "", "Class", 0);
+		new Bay(1, 0, "", "Class", 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testBayNullClass() {
-		new Bay(1, "Name", null, 0);
+		new Bay(1, 0, "Name", null, 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testBayEmptyClass() {
-		new Bay(1, "Name", "", 0);
+		new Bay(1, 0, "Name", "", 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testBayNegativeRefit() {
-		new Bay(1, "Name", "Class", -1);
+		new Bay(1, 0, "Name", "Class", -1);
 	}
 }

@@ -17,7 +17,8 @@ public class NebulaParser extends AbstractObjectParser {
     	Z,
     	RED,
     	GREEN,
-    	BLUE;
+    	BLUE,
+    	TYPE;
     }
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -39,6 +40,7 @@ public class NebulaParser extends AbstractObjectParser {
         obj.setRed(reader.readFloat(Bit.RED, -1));
         obj.setGreen(reader.readFloat(Bit.GREEN, -1));
         obj.setBlue(reader.readFloat(Bit.BLUE, -1));
+        obj.setNebulaType(reader.readByte(Bit.TYPE, (byte) -1));
         return obj;
 	}
 
@@ -50,6 +52,7 @@ public class NebulaParser extends AbstractObjectParser {
 				.writeFloat(Bit.Z, nObj.getZ(), Float.MIN_VALUE)
 				.writeFloat(Bit.RED, nObj.getRed(), -1)
 				.writeFloat(Bit.GREEN, nObj.getGreen(), -1)
-				.writeFloat(Bit.BLUE, nObj.getBlue(), -1);
+				.writeFloat(Bit.BLUE, nObj.getBlue(), -1)
+				.writeByte(Bit.TYPE, nObj.getNebulaType(), (byte) -1);
 	}
 }

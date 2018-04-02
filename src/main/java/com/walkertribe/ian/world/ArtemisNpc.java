@@ -42,6 +42,10 @@ public class ArtemisNpc extends BaseArtemisShip {
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = Byte.MIN_VALUE;
+    private float mTargetX = Float.MIN_VALUE;
+    private float mTargetY = Float.MIN_VALUE;
+    private float mTargetZ = Float.MIN_VALUE;
+    private BoolState mTagged = BoolState.UNKNOWN;
     private final float[] mSysDamage = new float[Artemis.SYSTEM_COUNT];
 
     public ArtemisNpc(int objId) {
@@ -291,6 +295,54 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     /**
+     * Target's X-coordinate
+     * Unspecified: Float.MIN_VALUE
+     */
+    public float getTargetX() {
+    	return mTargetX;
+    }
+
+    public void setTargetX(float targetX) {
+    	mTargetX = targetX;
+    }
+
+    /**
+     * Target's Y-coordinate
+     * Unspecified: Float.MIN_VALUE
+     */
+    public float getTargetY() {
+    	return mTargetY;
+    }
+
+    public void setTargetY(float targetY) {
+    	mTargetY = targetY;
+    }
+
+    /**
+     * Target's Z-coordinate
+     * Unspecified: Float.MIN_VALUE
+     */
+    public float getTargetZ() {
+    	return mTargetZ;
+    }
+
+    public void setTargetZ(float targetZ) {
+    	mTargetZ = targetZ;
+    }
+
+    /**
+     * Is the NPC tagged?
+     * Unspecified: UNKNOWN
+     */
+    public BoolState isTagged() {
+    	return mTagged;
+    }
+
+    public void setTagged(BoolState tagged) {
+    	mTagged = tagged;
+    }
+
+    /**
      * The percentage of damage sustained by a particular system, expressed as
      * a value between 0 and 1.
      * Unspecified: -1
@@ -342,6 +394,22 @@ public class ArtemisNpc extends BaseArtemisShip {
                 setSpecialStateBits(cast.mSpecialState);
             }
 
+            if (cast.mTargetX != Float.MIN_VALUE) {
+            	mTargetX = cast.mTargetX;
+            }
+
+            if (cast.mTargetY != Float.MIN_VALUE) {
+            	mTargetY = cast.mTargetY;
+            }
+
+            if (cast.mTargetZ != Float.MIN_VALUE) {
+            	mTargetZ = cast.mTargetZ;
+            }
+
+            if (BoolState.isKnown(cast.mTagged)) {
+            	mTagged = cast.mTagged;
+            }
+
             for (int i = 0; i < mSysDamage.length; i++) {
             	float value = cast.mSysDamage[i];
 
@@ -377,6 +445,10 @@ public class ArtemisNpc extends BaseArtemisShip {
     	putProp(props, "Is enemy", mEnemy);
     	putProp(props, "Surrendered", mSurrendered);
     	putProp(props, "Fleet number", mFleetNumber, Byte.MIN_VALUE);
+    	putProp(props, "Target X", mTargetX, Float.MIN_VALUE);
+    	putProp(props, "Target Y", mTargetY, Float.MIN_VALUE);
+    	putProp(props, "Target Z", mTargetZ, Float.MIN_VALUE);
+    	putProp(props, "Tagged", mTagged);
     	ShipSystem[] systems = ShipSystem.values();
 
     	for (int i = 0; i < mSysDamage.length; i++) {

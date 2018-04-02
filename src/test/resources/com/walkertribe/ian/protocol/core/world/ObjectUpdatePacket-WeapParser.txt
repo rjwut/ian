@@ -1,18 +1,20 @@
 efbeadde // header
-4f000000 // packet length = 79
+51000000 // packet length = 81
 01000000 // origin = server
 00000000 // padding
-3b000000 // remaining length = 59
+3d000000 // remaining length = 61
 f93d8080 // ObjectUpdatePacket
 02       // object type = weapons
 2f000000 // object ID = 47
-ffffff00 // bit field
+ffffff03 // bit field
 00       // homing = 0
 01       // nukes = 1
 02       // mines = 2
 03       // EMPs = 3
 04       // Pshocks = 4
-00       // unknown
+05       // beacons = 5
+06       // probes = 6
+07       // tags = 7
 00000000 // tube 0 time = 0.0
 0000803f // tube 1 time = 1.0
 00000040 // tube 2 time = 2.0
@@ -30,7 +32,7 @@ ffffff00 // bit field
 02       // tube 2 content = mine
 03       // tube 3 content = EMP
 00       // tube 4 content = empty
-00       // tube 5 content = homing
+05       // tube 5 content = beacon
 00000000 // end of array
 
 efbeadde // header

@@ -6,6 +6,7 @@ import com.walkertribe.ian.iface.PacketWriter;
 import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.protocol.core.ButtonClickPacket;
 import com.walkertribe.ian.util.Util;
 
 /**
@@ -28,7 +29,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	private Action mAction;
 	private CharSequence mLabel;
 	private int mX = -1, mY = -1, mW = -1, mH = -1;
-	private GameMasterButtonClickPacket mClickPacket;
+	private ButtonClickPacket mClickPacket;
 
 	/**
 	 * Creates or removes a game master button; use Action.CREATE or
@@ -53,7 +54,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
         mLabel = label;
 
         if (action == Action.CREATE) {
-        	mClickPacket = new GameMasterButtonClickPacket(mLabel);
+        	mClickPacket = new ButtonClickPacket(mLabel);
         }
 	}
 
@@ -93,7 +94,7 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
         	mLabel = reader.readString();
 
         	if (mAction == Action.CREATE) {
-            	mClickPacket = new GameMasterButtonClickPacket(mLabel);
+            	mClickPacket = new ButtonClickPacket(mLabel);
         	}
         }
 
@@ -136,11 +137,11 @@ public class GameMasterButtonPacket extends BaseArtemisPacket {
 	}
 
 	/**
-	 * Returns the GameMasterButtonClickPacket that should be sent when the user
-	 * clicks the button described by this packet, or null if this packet does
-	 * not describe a button's creation.
+	 * Returns the ButtonClickPacket that should be sent when the user clicks
+	 * the button described by this packet, or null if this packet does not
+	 * describe a button's creation.
 	 */
-	public GameMasterButtonClickPacket buildClickPacket() {
+	public ButtonClickPacket buildClickPacket() {
 		return mClickPacket;
 	}
 

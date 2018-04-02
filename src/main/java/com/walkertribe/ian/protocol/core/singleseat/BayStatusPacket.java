@@ -17,13 +17,14 @@ import com.walkertribe.ian.util.Util;
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.CARRIER_RECORD)
 public class BayStatusPacket extends BaseArtemisPacket {
-    public static class Bay {
+    public static class Bay implements Comparable<Bay> {
     	private int id;
+    	private int number;
     	private CharSequence name;
     	private CharSequence className;
     	private int refitTime;
 
-    	public Bay(int id, CharSequence name, CharSequence className, int refitTime) {
+    	public Bay(int id, int bayNumber, CharSequence name, CharSequence className, int refitTime) {
     		if (id == 0) {
     			throw new IllegalArgumentException("Bay can't have an ID of 0");
     		}
@@ -41,6 +42,7 @@ public class BayStatusPacket extends BaseArtemisPacket {
     		}
 
     		this.id = id;
+    		this.number = bayNumber;
     		this.name = name;
     		this.className = className;
     		this.refitTime = refitTime;
@@ -51,6 +53,13 @@ public class BayStatusPacket extends BaseArtemisPacket {
     	 */
 		public int getId() {
 			return id;
+		}
+
+		/**
+		 * Returns the number of this bay.
+		 */
+		public int getNumber() {
+			return number;
 		}
 
 		/**
@@ -95,7 +104,12 @@ public class BayStatusPacket extends BaseArtemisPacket {
 
 		@Override
 		public String toString() {
-			return "#" + id + ": " + name + " (" + className + "): " + refitTime;
+			return "#" + id + " in bay " + number + ": " + name + " (" + className + "): " + refitTime;
+		}
+
+		@Override
+		public int compareTo(Bay other) {
+			return number - other.number;
 		}
     }
 
@@ -112,10 +126,11 @@ public class BayStatusPacket extends BaseArtemisPacket {
         		break;
         	}
 
+        	int bayNumber = reader.readInt();
         	CharSequence name = reader.readString();
         	CharSequence className = reader.readString();
         	int refitTime = reader.readInt();
-        	bays.add(new Bay(id, name, className, refitTime));
+        	bays.add(new Bay(id, bayNumber, name, className, refitTime));
         }
     }
 
@@ -145,6 +160,7 @@ public class BayStatusPacket extends BaseArtemisPacket {
     	for (Bay bay : bays) {
     		writer
     			.writeInt(bay.id)
+    			.writeInt(bay.number)
     			.writeString(bay.name)
     			.writeString(bay.className)
     			.writeInt(bay.refitTime);

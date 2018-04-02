@@ -11,7 +11,10 @@ public enum BaseMessage implements CommsMessage {
 	BUILD_NUKES,
 	BUILD_MINES,
 	BUILD_EMPS,
-	BUILD_PSHOCKS;
+	BUILD_PSHOCKS,
+	BUILD_BEACONS,
+	BUILD_PROBES,
+	BUILD_TAGS;
 
 	private static final int BUILD_HOMING_MISSILES_ORDINAL = BUILD_HOMING_MISSILES.ordinal();
 

@@ -291,7 +291,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
         public void onPacket(final VersionPacket pkt) {
             final Version version = pkt.getVersion();
 
-            if (version.lt(ArtemisNetworkInterface.MIN_VERSION)) {
+            if (version.lt(ArtemisNetworkInterface.MIN_VERSION) || version.ge(ArtemisNetworkInterface.MAX_VERSION_EXCLUSIVE)) {
             	mInterface.mListeners.fire(new DisconnectEvent(
             			DisconnectEvent.Cause.UNSUPPORTED_SERVER_VERSION,
             			null

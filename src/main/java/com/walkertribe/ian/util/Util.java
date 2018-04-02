@@ -21,16 +21,35 @@ public final class Util {
 	/**
 	 * Split the given String consisting of space-separated tokens into a Set of String tokens.
 	 */
-	public static Set<String> splitSpaceDelimited(String list) {
+	public static Set<String> splitSpaceDelimited(CharSequence list) {
 		Set<String> attrs = new LinkedHashSet<String>();
 
-		for (String attr : list.split(" ")) {
+		for (String attr : list.toString().split(" ")) {
 			if (attr.length() != 0) {
 				attrs.add(attr);
 			}
 		}
 
 		return attrs;
+	}
+
+	/**
+	 * Reverses splitSpaceDelimited().
+	 */
+	public static String joinSpaceDelimited(Collection<String> strings) {
+		StringBuilder b = new StringBuilder();
+		boolean first = true;
+
+		for (String string : strings) {
+			if (!first) {
+				b.append(' ');
+			}
+
+			b.append(string);
+			first = false;
+		}
+
+		return b.toString();
 	}
 
 	/**

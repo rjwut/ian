@@ -21,12 +21,7 @@ public abstract class AbstractObjectParser implements ObjectParser {
 
 	@Override
 	public final ArtemisObject parse(PacketReader reader) {
-		byte typeId = reader.hasMore() ? reader.readByte() : 0;
-
-		if (typeId == 0) {
-			return null; // no more objects to parse
-		}
-
+		reader.skip(1); // type
 		reader.startObject(objectType, getBitCount());
 		ArtemisObject obj = parseImpl(reader);
 		obj.setUnknownProps(reader.getUnknownObjectProps());

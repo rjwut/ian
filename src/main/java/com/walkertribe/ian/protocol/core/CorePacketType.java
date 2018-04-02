@@ -10,6 +10,7 @@ public final class CorePacketType {
 	public static final String BIG_MESS = "bigMess";
 	public static final String CARRIER_RECORD = "carrierRecord";
 	public static final String CLIENT_CONSOLES = "clientConsoles";
+	public static final String COMMS_BUTTON = "commsButton";
 	public static final String COMMS_MESSAGE = "commsMessage";
 	public static final String COMM_TEXT = "commText";
 	public static final String CONNECTED = "connected";
@@ -17,6 +18,7 @@ public final class CorePacketType {
 	public static final String GM_BUTTON = "gmButton";
 	public static final String GM_TEXT = "gmText";
 	public static final String HEARTBEAT = "heartbeat";
+	public static final String IDLE_TEXT = "idleText";
 	public static final String INCOMING_MESSAGE = "incomingMessage";
 	public static final String OBJECT_BIT_STREAM = "objectBitStream";
 	public static final String OBJECT_DELETE = "objectDelete";

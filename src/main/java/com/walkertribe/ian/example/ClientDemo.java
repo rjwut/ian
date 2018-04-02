@@ -9,7 +9,7 @@ import com.walkertribe.ian.iface.ConnectionSuccessEvent;
 import com.walkertribe.ian.iface.DisconnectEvent;
 import com.walkertribe.ian.iface.Listener;
 import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
-import com.walkertribe.ian.protocol.core.GameOverPacket;
+import com.walkertribe.ian.protocol.core.EndGamePacket;
 import com.walkertribe.ian.protocol.core.comm.ToggleRedAlertPacket;
 import com.walkertribe.ian.protocol.core.setup.ReadyPacket;
 import com.walkertribe.ian.protocol.core.setup.SetConsolePacket;
@@ -141,7 +141,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
      * superclass.
      */
     @Override
-    public void onGameOver(GameOverPacket pkt) {
+    public void onGameOver(EndGamePacket pkt) {
         redAlert = false;
         shieldsUp = false;
     }

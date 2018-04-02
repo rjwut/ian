@@ -48,23 +48,26 @@ public class NpcShipParser extends AbstractObjectParser {
 		UNK_4_5,
 		UNK_4_6,
 		UNK_4_7,
-		UNK_4_8,
+		TARGET_X,
 
-		UNK_5_1,
-		UNK_5_2,
+		TARGET_Y,
+		TARGET_Z,
+		TAGGED,
+		UNK_5_4,
 		BEAM_SYSTEM_DAMAGE,
 		TORPEDO_SYSTEM_DAMAGE,
 		SENSOR_SYSTEM_DAMAGE,
 		MANEUVER_SYSTEM_DAMAGE,
+
 		IMPULSE_SYSTEM_DAMAGE,
 		WARP_SYSTEM_DAMAGE,
-
 		FORE_SHIELD_SYSTEM_DAMAGE,
 		AFT_SHIELD_SYSTEM_DAMAGE,
 		SHIELD_FREQUENCY_A,
 		SHIELD_FREQUENCY_B,
 		SHIELD_FREQUENCY_C,
 		SHIELD_FREQUENCY_D,
+
 		SHIELD_FREQUENCY_E
 	}
 	private static final int BIT_COUNT = Bit.values().length;
@@ -116,7 +119,7 @@ public class NpcShipParser extends AbstractObjectParser {
         obj.setVelocity(reader.readFloat(Bit.VELOCITY, -1));
         obj.setSurrendered(reader.readBool(Bit.SURRENDERED, 1));
 
-        reader.readObjectUnknown(Bit.UNK_2_8, 2);
+        reader.readObjectUnknown(Bit.UNK_2_8, 1);
 
         obj.setShieldsFront(reader.readFloat(Bit.FORE_SHIELD, Float.MIN_VALUE));
         obj.setShieldsFrontMax(reader.readFloat(Bit.FORE_SHIELD_MAX, -1));
@@ -134,7 +137,7 @@ public class NpcShipParser extends AbstractObjectParser {
         }
 
         if (reader.has(Bit.DOUBLE_SCAN)) {
-            obj.setScanLevelBits(2, reader.readInt(Bit.SINGLE_SCAN, 0));
+            obj.setScanLevelBits(2, reader.readInt(Bit.DOUBLE_SCAN, 0));
         }
 
         if (reader.has(Bit.VISIBILITY)) {
@@ -146,9 +149,13 @@ public class NpcShipParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_4_5, 1);
         reader.readObjectUnknown(Bit.UNK_4_6, 1);
         reader.readObjectUnknown(Bit.UNK_4_7, 1);
-        reader.readObjectUnknown(Bit.UNK_4_8, 4);
-        reader.readObjectUnknown(Bit.UNK_5_1, 4);
-        reader.readObjectUnknown(Bit.UNK_5_2, 4);
+
+        obj.setTargetX(reader.readFloat(Bit.TARGET_X, Float.MIN_VALUE));
+        obj.setTargetY(reader.readFloat(Bit.TARGET_Y, Float.MIN_VALUE));
+        obj.setTargetZ(reader.readFloat(Bit.TARGET_Z, Float.MIN_VALUE));
+        obj.setTagged(reader.readBool(Bit.TAGGED, 1));
+
+        reader.readObjectUnknown(Bit.UNK_5_4, 1);
 
         // system damage
         for (ShipSystem sys : ShipSystem.values()) {
@@ -209,14 +216,15 @@ public class NpcShipParser extends AbstractObjectParser {
 			writer.writeInt(Bit.VISIBILITY, visibility, 1);
 		}
 
-		writer.writeByte(Bit.SIDE, npc.getSide(), (byte) -1);
-
-		writer	.writeUnknown(Bit.UNK_4_5)
+		writer	.writeByte(Bit.SIDE, npc.getSide(), (byte) -1)
+				.writeUnknown(Bit.UNK_4_5)
 				.writeUnknown(Bit.UNK_4_6)
 				.writeUnknown(Bit.UNK_4_7)
-				.writeUnknown(Bit.UNK_4_8)
-				.writeUnknown(Bit.UNK_5_1)
-				.writeUnknown(Bit.UNK_5_2);
+				.writeFloat(Bit.TARGET_X, npc.getTargetX(), Float.MIN_VALUE)
+				.writeFloat(Bit.TARGET_Y, npc.getTargetY(), Float.MIN_VALUE)
+				.writeFloat(Bit.TARGET_Z, npc.getTargetZ(), Float.MIN_VALUE)
+				.writeBool(Bit.TAGGED, npc.isTagged(), 1)
+				.writeUnknown(Bit.UNK_5_4);
 
 		for (ShipSystem sys : ShipSystem.values()) {
 			writer.writeFloat(SYSTEM_DAMAGES[sys.ordinal()], npc.getSystemDamage(sys), -1);

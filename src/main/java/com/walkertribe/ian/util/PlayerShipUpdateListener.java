@@ -2,7 +2,7 @@ package com.walkertribe.ian.util;
 
 import com.walkertribe.ian.iface.DisconnectEvent;
 import com.walkertribe.ian.iface.Listener;
-import com.walkertribe.ian.protocol.core.GameOverPacket;
+import com.walkertribe.ian.protocol.core.EndGamePacket;
 import com.walkertribe.ian.world.Artemis;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
@@ -70,7 +70,7 @@ public abstract class PlayerShipUpdateListener {
 	}
 
 	@Listener
-	public void onGameOver(GameOverPacket pkt) {
+	public void onGameOver(EndGamePacket pkt) {
         id = -1; // ship will probably have a different ID next game
 	}
 

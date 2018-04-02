@@ -167,7 +167,7 @@ public class EnumsTest {
 
 		for (CreatureType type : CreatureType.values()) {
 			Model model = type.getModel(ctx);
-			Assert.assertEquals(type != CreatureType.CLASSIC, model != null);
+			Assert.assertEquals(type != CreatureType.TYPHON, model != null);
 		}
 	}
 

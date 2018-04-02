@@ -1,7 +1,9 @@
 package com.walkertribe.ian.protocol.core.world;
 
 import com.walkertribe.ian.enums.AlertStatus;
+import com.walkertribe.ian.enums.BeaconMode;
 import com.walkertribe.ian.enums.BeamFrequency;
+import com.walkertribe.ian.enums.CreatureType;
 import com.walkertribe.ian.enums.DriveType;
 import com.walkertribe.ian.enums.MainScreenView;
 import com.walkertribe.ian.enums.ObjectType;
@@ -37,7 +39,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 
     	HEADING,
     	VELOCITY,
-    	UNK_3_3,
+    	NEBULA_TYPE,
     	NAME,
     	FORE_SHIELDS,
     	FORE_SHIELDS_MAX,
@@ -57,14 +59,16 @@ public class PlayerShipParser extends AbstractObjectParser {
     	SCAN_OBJECT_ID,
     	SCAN_PROGRESS,
     	REVERSE_STATE,
-    	UNK_5_5,
+    	CLIMB_DIVE,
     	SIDE,
     	UNK_5_7,
     	UNK_5_8,
 
     	CAPITAL_SHIP_ID,
     	ACCENT_COLOR,
-    	UNK_6_3
+    	EMERGENCY_JUMP_COOLDOWN,
+    	BEACON_TYPE,
+    	BEACON_MODE
     }
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -106,9 +110,7 @@ public class PlayerShipParser extends AbstractObjectParser {
         player.setRoll(reader.readFloat(Bit.ROLL, Float.MIN_VALUE));
         player.setHeading(reader.readFloat(Bit.HEADING, Float.MIN_VALUE));
         player.setVelocity(reader.readFloat(Bit.VELOCITY, -1));
-
-        reader.readObjectUnknown(Bit.UNK_3_3, 2);
-
+        player.setNebulaType(reader.readByte(Bit.NEBULA_TYPE, (byte) -1));
         player.setName(reader.readString(Bit.NAME));
         player.setShieldsFront(reader.readFloat(Bit.FORE_SHIELDS, Float.MIN_VALUE));
         player.setShieldsFrontMax(reader.readFloat(Bit.FORE_SHIELDS_MAX, -1));
@@ -141,16 +143,23 @@ public class PlayerShipParser extends AbstractObjectParser {
         player.setScanObjectId(reader.readInt(Bit.SCAN_OBJECT_ID, -1));
         player.setScanProgress(reader.readFloat(Bit.SCAN_PROGRESS, -1));
         player.setReverse(reader.readBool(Bit.REVERSE_STATE, 1));
-
-        reader.readObjectUnknown(Bit.UNK_5_5, 4);
-
+        player.setClimbDive(reader.readFloat(Bit.CLIMB_DIVE, Float.MIN_VALUE));
         player.setSide(reader.readByte(Bit.SIDE, (byte) -1));
 
         reader.readObjectUnknown(Bit.UNK_5_7, 4);
         reader.readObjectUnknown(Bit.UNK_5_8, 1);
         player.setCapitalShipId(reader.readInt(Bit.CAPITAL_SHIP_ID, -1));
         player.setAccentColor(reader.readFloat(Bit.ACCENT_COLOR, -1));
-        reader.readObjectUnknown(Bit.UNK_6_3, 4);
+        player.setEmergencyJumpCooldown(reader.readFloat(Bit.EMERGENCY_JUMP_COOLDOWN, -1));
+
+        if (reader.has(Bit.BEACON_TYPE)) {
+            player.setBeaconType(CreatureType.values()[reader.readByte()]);
+        }
+
+        if (reader.has(Bit.BEACON_MODE)) {
+        	player.setBeaconMode(BeaconMode.values()[reader.readByte()]);
+        }
+
         return player;
 	}
 
@@ -181,7 +190,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 				.writeFloat(Bit.ROLL, player.getRoll(), Float.MIN_VALUE)
 				.writeFloat(Bit.HEADING, player.getHeading(), Float.MIN_VALUE)
 				.writeFloat(Bit.VELOCITY, player.getVelocity(), -1)
-				.writeUnknown(Bit.UNK_3_3)
+				.writeByte(Bit.NEBULA_TYPE, player.getNebulaType(), (byte) -1)
 				.writeString(Bit.NAME, player.getName())
 				.writeFloat(Bit.FORE_SHIELDS, player.getShieldsFront(), Float.MIN_VALUE)
 				.writeFloat(Bit.FORE_SHIELDS_MAX, player.getShieldsFrontMax(), -1)
@@ -222,12 +231,24 @@ public class PlayerShipParser extends AbstractObjectParser {
 		writer	.writeInt(Bit.SCAN_OBJECT_ID, player.getScanObjectId(), -1)
 				.writeFloat(Bit.SCAN_PROGRESS, player.getScanProgress(), -1)
 				.writeBool(Bit.REVERSE_STATE, player.getReverseState(), 1)
-				.writeUnknown(Bit.UNK_5_5)
+				.writeFloat(Bit.CLIMB_DIVE, player.getClimbDive(), Float.MIN_VALUE)
 				.writeByte(Bit.SIDE, player.getSide(), (byte) -1)
 				.writeUnknown(Bit.UNK_5_7)
 				.writeUnknown(Bit.UNK_5_8)
 				.writeInt(Bit.CAPITAL_SHIP_ID, player.getCapitalShipId(), -1)
 				.writeFloat(Bit.ACCENT_COLOR, player.getAccentColor(), -1)
-				.writeUnknown(Bit.UNK_6_3);
+				.writeFloat(Bit.EMERGENCY_JUMP_COOLDOWN, player.getEmergencyJumpCooldown(), -1);
+
+		CreatureType beaconType = player.getBeaconType();
+
+		if (beaconType != null) {
+			writer.writeByte(Bit.BEACON_TYPE, (byte) beaconType.ordinal(), (byte) -1);
+		}
+
+		BeaconMode beaconMode = player.getBeaconMode();
+
+		if (beaconMode != null) {
+			writer.writeByte(Bit.BEACON_MODE, (byte) beaconMode.ordinal(), (byte) -1);
+		}
 	}
 }
