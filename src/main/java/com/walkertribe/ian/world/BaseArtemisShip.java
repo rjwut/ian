@@ -159,11 +159,11 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
                 mTurnRate = ship.mTurnRate;
             }
             
-            if (ship.mShieldsFrontMax != -1) {
+            if (ship.mShieldsFrontMax != Float.MIN_VALUE) {
                 mShieldsFrontMax = ship.mShieldsFrontMax;
             }
 
-            if (ship.mShieldsRearMax != -1) {
+            if (ship.mShieldsRearMax != Float.MIN_VALUE) {
                 mShieldsRearMax = ship.mShieldsRearMax;
             }
 
@@ -189,8 +189,8 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
     	putProp(props, "Velocity", mVelocity, -1);
-    	putProp(props, "Shields: fore max", mShieldsFrontMax, -1);
-    	putProp(props, "Shields: aft max", mShieldsRearMax, -1);
+    	putProp(props, "Shields: fore max", mShieldsFrontMax, Float.MIN_VALUE);
+    	putProp(props, "Shields: aft max", mShieldsRearMax, Float.MIN_VALUE);
     	BeamFrequency[] freqs = BeamFrequency.values();
 
     	for (int i = 0; i < mShieldFreqs.length; i++) {
@@ -214,8 +214,8 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 
     	if (
     			mVelocity != -1 ||
-    			mShieldsFrontMax != -1 ||
-    			mShieldsRearMax != -1 ||
+    			mShieldsFrontMax != Float.MIN_VALUE ||
+    			mShieldsRearMax != Float.MIN_VALUE ||
     			mSteering != -1 ||
     			mTopSpeed != -1 ||
     			mTurnRate != -1 ||

@@ -1117,7 +1117,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	putProp(props, "Warp", mWarp, -1);
     	putProp(props, "Beam frequency", mBeamFreq);
     	putProp(props, "Drive type", mDriveType);
-    	putProp(props, "Climb/dive", mClimbDive, -1);
+    	putProp(props, "Climb/dive", mClimbDive, Float.MIN_VALUE);
     	putProp(props, "Reverse", mReverse);
     	putProp(props, "Scan target", mScienceTarget, -1);
     	putProp(props, "Scan progress", mScanProgress, -1);

@@ -55,9 +55,9 @@ public class ArtemisNpcTest {
 	public void testUpdateFrom() {
 		ArtemisNpc obj0 = new ArtemisNpc(47);
 		assertNpc(obj0, 47, ObjectType.NPC_SHIP, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1,
-				Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1, -1, -1,
-				SHIELD_FREQS_UNSPECIFIED, -1, -1, -1, -1, null, null, -1, -1, BoolState.UNKNOWN, BoolState.UNKNOWN,
-				Byte.MIN_VALUE, SYS_DAMAGE_UNSPECIFIED);
+				Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1,
+				Float.MIN_VALUE, Float.MIN_VALUE, SHIELD_FREQS_UNSPECIFIED, -1, -1, -1, -1, null, null, -1, -1,
+				BoolState.UNKNOWN, BoolState.UNKNOWN, Byte.MIN_VALUE, SYS_DAMAGE_UNSPECIFIED);
 		ArtemisNpc obj1 = new ArtemisNpc(47);
 		obj1.setName("TEST");
 		obj1.setX(1f);
