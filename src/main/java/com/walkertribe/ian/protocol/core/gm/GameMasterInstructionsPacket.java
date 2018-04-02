@@ -12,7 +12,7 @@ import com.walkertribe.ian.protocol.core.CorePacketType;
  * "Instructions" button at the upper-left of the stock client.
  * @author rjwut
  */
-@Packet(origin = Origin.SERVER, type = CorePacketType.GM_TEXT, subtype = 0x63)
+@Packet(origin = Origin.SERVER, type = CorePacketType.GM_BUTTON, subtype = 0x63)
 public class GameMasterInstructionsPacket extends BaseArtemisPacket {
 	private CharSequence mTitle;
 	private CharSequence mContent;

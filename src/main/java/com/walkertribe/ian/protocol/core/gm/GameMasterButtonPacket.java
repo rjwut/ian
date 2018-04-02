@@ -13,7 +13,7 @@ import com.walkertribe.ian.util.Util;
  * Creates or removes a button on the game master console.
  * @author rjwut
  */
-@Packet(origin = Origin.SERVER, type = CorePacketType.GM_BUTTON)
+@Packet(origin = Origin.SERVER, type = CorePacketType.GM_BUTTON, subtype = { 0x00, 0x01, 0x02, 0x64 })
 public class GameMasterButtonPacket extends BaseArtemisPacket {
 	/**
 	 * The action being performed to this GM button.
