@@ -38,6 +38,8 @@ public class ExplosionPacket extends SimpleEventPacket {
 
 	public ExplosionPacket(PacketReader reader) {
 		super(reader);
+		mObjectType = ObjectType.fromId(reader.readInt());
+		mObjectId = reader.readInt();
 	}
 
 	/**
@@ -57,7 +59,7 @@ public class ExplosionPacket extends SimpleEventPacket {
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		super.writePayload(writer);
-		writer.writeByte((byte) mObjectType.getId()).writeInt(mObjectId);
+		writer.writeInt(mObjectType.getId()).writeInt(mObjectId);
 	}
 
 	@Override

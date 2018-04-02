@@ -60,7 +60,7 @@ public class NullTerminatedString implements CharSequence {
 		str = new String(Arrays.copyOfRange(bytes, 0, i), Util.UTF16LE);
 
 		if (i < bytes.length - 2) {
-			garbage = Arrays.copyOfRange(bytes, i, bytes.length); // null was early
+			garbage = Arrays.copyOfRange(bytes, i + 2, bytes.length); // null was early
 		} else {
 			garbage = new byte[0];
 		}

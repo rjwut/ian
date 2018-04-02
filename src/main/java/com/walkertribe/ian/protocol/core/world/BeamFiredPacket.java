@@ -41,8 +41,10 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 		mUnknown1 = reader.readInt();
 		mUnknown2 = reader.readInt();
 		mBeamPortIndex = reader.readInt();
-		mOriginObjectType = ObjectType.fromId(reader.readInt());
-		mTargetObjectType = ObjectType.fromId(reader.readInt());
+		int id = reader.readInt();
+		mOriginObjectType = id != 0 ? ObjectType.fromId(id) : null;
+		id = reader.readInt();
+		mTargetObjectType = id != 0 ? ObjectType.fromId(id) : null;
 		mUnknown3 = reader.readBytes(4);
 		mOriginId = reader.readInt();
 		mTargetId = reader.readInt();
@@ -77,8 +79,8 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 	 * Convenience method that calls setOriginObjectType() and setOriginId().
 	 */
 	public void setOrigin(ArtemisObject obj) {
-		setOriginObjectType(obj.getType());
-		setOriginId(obj.getId());
+		setOriginObjectType(obj != null ? obj.getType() : null);
+		setOriginId(obj != null ? obj.getId() : 0);
 	}
 
 	/**
@@ -98,8 +100,8 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 	 * Convenience method that calls setTargetObjectType() and setTargetId().
 	 */
 	public void setTarget(ArtemisObject obj) {
-		setTargetObjectType(obj.getType());
-		setTargetId(obj.getId());
+		setTargetObjectType(obj != null ? obj.getType() : null);
+		setTargetId(obj != null ? obj.getId() : 0);
 	}
 
 	/**
@@ -195,8 +197,8 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 			.writeInt(mUnknown1)
 			.writeInt(mUnknown2)
 			.writeInt(mBeamPortIndex)
-			.writeInt(mOriginObjectType.getId())
-			.writeInt(mTargetObjectType.getId())
+			.writeInt(mOriginObjectType != null ? mOriginObjectType.getId() : 0)
+			.writeInt(mTargetObjectType != null ? mTargetObjectType.getId() : 0)
 			.writeBytes(mUnknown3)
 			.writeInt(mOriginId)
 			.writeInt(mTargetId)

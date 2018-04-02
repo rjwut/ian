@@ -225,9 +225,12 @@ public class PacketReader {
 					result.setException(new ArtemisPacketException(ex, origin, packetType, payloadBytes));
 				}
 
-				if (packet == null) {
-					debugger.onPacketParseException(result.getException());
-					return result; // an exception occurred during payload parsing
+				ArtemisPacketException parseException = result.getException();
+
+				if (parseException != null) {
+					 // an exception occurred during payload parsing
+					debugger.onPacketParseException(parseException);
+					return result;
 				}
 
 				if (packet instanceof VersionPacket) {
