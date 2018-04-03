@@ -51,10 +51,6 @@ public abstract class AbstractProtocol implements Protocol {
 		}
 	}
 
-	/**
-	 * Returns the PacketFactory capable of parsing a packet of the given type
-	 * and optional subtype, or null if no such PacketFactory exists.
-	 */
 	@Override
 	public PacketFactory<?> getFactory(int type, Byte subtype) {
 		PacketFactory<?> factory = registry.get(new Key(type, subtype));
