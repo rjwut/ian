@@ -3,6 +3,8 @@ package com.walkertribe.ian.protocol.udp;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import com.walkertribe.ian.iface.ArtemisNetworkInterface;
+import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
 import com.walkertribe.ian.util.ByteArrayReader;
 import com.walkertribe.ian.util.Util;
 
@@ -51,6 +53,24 @@ public class Server {
 	 */
 	public String getHostName() {
 		return hostName;
+	}
+
+	/**
+	 * Returns an ArtemisNetworkInterface object that connects to this server.
+	 * This method will block until the server responds or an exception is
+	 * thrown.
+	 */
+	public ArtemisNetworkInterface connect(int port) throws IOException {
+		return connect(port, 0);
+	}
+
+	/**
+	 * Returns an ArtemisNetworkInterface object that connects to this server.
+	 * This method will block until the server responds, an exception is
+	 * thrown, or the timeout elapses.
+	 */
+	public ArtemisNetworkInterface connect(int port, int timeoutMs) throws IOException {
+		return new ThreadedArtemisNetworkInterface(ip, port, timeoutMs);
 	}
 
 	/**
