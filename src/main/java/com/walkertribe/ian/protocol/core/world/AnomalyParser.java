@@ -20,7 +20,7 @@ public class AnomalyParser extends AbstractObjectParser {
 		Z,
 		TYPE,
 		SCAN,
-		UNKNOWN_1_6,
+		UNK_1_6,
 		BEACON_TYPE,
 		BEACON_MODE
 	}
@@ -50,7 +50,7 @@ public class AnomalyParser extends AbstractObjectParser {
             anomaly.setScanBits(reader.readInt(Bit.SCAN, 0));
         }
 
-        reader.readObjectUnknown(Bit.UNKNOWN_1_6, 4);
+        reader.readObjectUnknown(Bit.UNK_1_6, 4);
 
         if (reader.has(Bit.BEACON_TYPE)) {
         	anomaly.setBeaconType(CreatureType.values()[reader.readByte()]);
@@ -82,7 +82,7 @@ public class AnomalyParser extends AbstractObjectParser {
 			writer.writeInt(Bit.SCAN, scan, 1);
 		}
 
-		writer.writeUnknown(Bit.UNKNOWN_1_6);
+		writer.writeUnknown(Bit.UNK_1_6);
 
 		CreatureType beaconType = anomaly.getBeaconType();
 
