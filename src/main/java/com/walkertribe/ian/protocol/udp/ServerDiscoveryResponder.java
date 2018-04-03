@@ -20,43 +20,38 @@ public class ServerDiscoveryResponder implements Runnable {
 	private byte[] buffer = new byte[1];
 	private byte[] response;
 
-	public static void main(String[] args) throws IOException {
-		final ServerDiscoveryResponder responder = new ServerDiscoveryResponder();
-		new Thread(responder).start();
-		ServerDiscoveryRequester.Listener listener = new ServerDiscoveryRequester.Listener() {
-			@Override
-			public void onDiscovered(Server server) {
-				System.out.println("DISCOVERED: " + server);
-			}
-
-			@Override
-			public void onStop() {
-				System.out.println("Stopped");
-				responder.stop();
-			}
-		};
-		ServerDiscoveryRequester requester = new ServerDiscoveryRequester(listener, 5000);
-		new Thread(requester).start();
-	}
-
 	/**
 	 * Listen for server discovery requests, guessing the best PrivateNetworkAddress to use.
 	 */
 	public ServerDiscoveryResponder() throws IOException {
-		this(PrivateNetworkAddress.guessBestPrivateNetworkAddress());
+		init(PrivateNetworkAddress.guessBestPrivateNetworkAddress());
 	}
 
 	/**
-	 * Listen for server discovery requests on the indicated PrivateNetworkAddress.
+	 * Listen for server discovery requests, reporting the given IP and host name.
 	 */
-	public ServerDiscoveryResponder(PrivateNetworkAddress addr) throws IOException {
+	public ServerDiscoveryResponder(String ip, String hostName) throws IOException {
+		init(ip, hostName);
+	}
+
+	/**
+	 * Initializes the ServerDiscoveryResponder using the given PrivateNetworkAddress.
+	 */
+	private void init(PrivateNetworkAddress addr) throws IOException {
 		if (addr == null) {
-			throw new IllegalArgumentException("You must provide an address");
+			throw new IOException("No suitable network interface found");
 		}
 
+		init(addr.getIp(), addr.getHostName());
+	}
+
+	/**
+	 * Initializes the ServerDiscoveryResponder using the given IP and host name.
+	 */
+	private void init(String ip, String hostName) throws IOException {
 		skt = new DatagramSocket(PORT);
 		skt.setSoTimeout(1000);
-		response = new Server(addr.getIp(), addr.getHostName()).toByteArray();
+		response = new Server(ip, hostName).toByteArray();
 	}
 
 	@Override
