@@ -19,7 +19,8 @@ public class ServerDiscoveryRequester implements Runnable {
 	private static final byte[] DATA = new byte[] { ENQ };
 
 	/**
-	 * Interface for an object which is notified when a server is discovered.
+	 * Interface for an object which is notified when a server is discovered or
+	 * the discovery process ends.
 	 */
 	public interface Listener {
 		/**
@@ -38,7 +39,6 @@ public class ServerDiscoveryRequester implements Runnable {
 	private DatagramSocket skt;
 	private InetAddress defaultBroadcastAddr;
 	private byte[] buffer = new byte[255];
-	private Exception lastException;
 
 	/**
 	 * Sets up a new ServerDiscoveryRequester that will notified the given
@@ -46,7 +46,7 @@ public class ServerDiscoveryRequester implements Runnable {
 	 * listen for responses for the indicated amount of time, then shut
 	 * down.
 	 */
-	public ServerDiscoveryRequester(Listener listener, int timeoutMs) {
+	public ServerDiscoveryRequester(Listener listener, int timeoutMs) throws UnknownHostException {
 		if (listener == null) {
 			throw new IllegalArgumentException("You must provide a listener");
 		}
@@ -57,12 +57,7 @@ public class ServerDiscoveryRequester implements Runnable {
 
 		this.listener = listener;
 		this.timeoutMs = timeoutMs;
-
-		try {
-			defaultBroadcastAddr = InetAddress.getByName("255.255.255.255");
-		} catch (UnknownHostException ex) {
-			// no problem, we just won't do this one
-		}
+		defaultBroadcastAddr = InetAddress.getByName("255.255.255.255");
 	}
 
 	@Override
@@ -70,22 +65,7 @@ public class ServerDiscoveryRequester implements Runnable {
 		try {
 			skt = new DatagramSocket();
 			skt.setBroadcast(true);
-			boolean sent = false;
-
-			if (defaultBroadcastAddr != null) {
-				sent = send(defaultBroadcastAddr);
-			}
-
-			/*
-			for (PrivateNetworkAddress addr : PrivateNetworkAddress.findAll()) {
-				sent = send(addr.getBroadcastAddress()) || sent;
-			}
-			*/
-
-			if (!sent) {
-				throw new RuntimeException("Could not send broadcast", lastException);
-			}
-
+			skt.send(new DatagramPacket(DATA, 1, defaultBroadcastAddr, ServerDiscoveryResponder.PORT));
 			long endTime = System.currentTimeMillis() + timeoutMs;
 
 			do {
@@ -111,21 +91,6 @@ public class ServerDiscoveryRequester implements Runnable {
 			skt.close();
 			skt = null;
 			listener.onStop();
-		}
-	}
-
-	/**
-	 * Sends a request broadcast to the given address.
-	 */
-	private boolean send(InetAddress addr) {
-		DatagramPacket pkt = new DatagramPacket(DATA, 1, addr, ServerDiscoveryResponder.PORT);
-
-		try {
-			skt.send(pkt);
-			return true;
-		} catch (Exception ex) {
-			lastException = ex;
-			return false;
 		}
 	}
 }
