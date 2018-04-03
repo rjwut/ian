@@ -8,19 +8,19 @@ package com.walkertribe.ian.protocol.udp;
 public enum PrivateNetworkType {
 	CLASS_A {
 		@Override
-		public boolean match(byte[] addr) {
+		protected boolean match(byte[] addr) {
 			return addr.length == 4 && addr[0] == 10;
 		}
 	},
 	CLASS_B {
 		@Override
-		public boolean match(byte[] addr) {
+		protected boolean match(byte[] addr) {
 			return addr.length == 4 && addr[0] == 172 && addr[1] > 15 && addr[1] < 32;
 		}
 	},
 	CLASS_C {
 		@Override
-		public boolean match(byte[] addr) {
+		protected boolean match(byte[] addr) {
 			return addr.length == 4 && addr[0] == 192 && addr[1] == 168;
 		}
 	};
@@ -39,5 +39,8 @@ public enum PrivateNetworkType {
 		return null;
 	}
 
-	public abstract boolean match(byte[] addr);
+	/**
+	 * Returns true if the given address matches this private network type.
+	 */
+	protected abstract boolean match(byte[] addr);
 }
