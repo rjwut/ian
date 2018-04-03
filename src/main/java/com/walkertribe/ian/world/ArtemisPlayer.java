@@ -295,8 +295,9 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
-     * The type of the nebula the ship is in, or 0 if not in a nebula. Nebula
-     * types can be 1, 2, or 3.
+     * The type of the nebula the ship is in, or 0 if not in a nebula. The
+     * known nebula types art 1, 2, and 3; but other values have been observed,
+     * such as 38 and -127. It is unknown what these other values mean.
      * Unspecified: -1
      */
     public byte getNebulaType() {
@@ -304,10 +305,6 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     public void setNebulaType(byte nebulaType) {
-    	if (nebulaType < -1 || nebulaType > 3) {
-    		throw new IllegalArgumentException("Invalid nebula type: " + nebulaType);
-    	}
-
     	mNebulaType = nebulaType;
     }
 

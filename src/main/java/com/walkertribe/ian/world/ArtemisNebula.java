@@ -60,7 +60,8 @@ public class ArtemisNebula extends BaseArtemisObject {
     }
 
     /**
-     * The type of nebula this is (1, 2, or 3). This affects the color of the nebula on 2D screens; 3D screens use RGB.
+     * The type of nebula this is. This affects the color of the nebula on 2D screens; 3D screens use RGB. The known
+     * nebula types are 1, 2, and 3.
      * Unspecified: -1
      */
     public byte getNebulaType() {
