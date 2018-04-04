@@ -24,9 +24,11 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 	public static List<PrivateNetworkAddress> findAll() throws SocketException {
 		List<PrivateNetworkAddress> list = new ArrayList<PrivateNetworkAddress>();
 		Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
+		int ifaceIndex = -1;
 
 		while (ifaces.hasMoreElements()) {
 			NetworkInterface iface = ifaces.nextElement();
+			ifaceIndex++;
 
 			if (iface.isLoopback() || !iface.isUp()) {
 				continue; // we don't want loopback interfaces or interfaces that are down
@@ -35,13 +37,13 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 			List<InterfaceAddress> ifaceAddrs = iface.getInterfaceAddresses(); 
 			int len = ifaceAddrs.size();
 
-			for (int i = 0; i < len; i++) {
-				InterfaceAddress ifaceAddr = ifaceAddrs.get(i);
+			for (int addrIndex = 0; addrIndex < len; addrIndex++) {
+				InterfaceAddress ifaceAddr = ifaceAddrs.get(addrIndex);
 				InetAddress addr = ifaceAddr.getAddress();
 				PrivateNetworkType type = PrivateNetworkType.from(addr.getAddress());
 
 				if (type != null) {
-					list.add(new PrivateNetworkAddress(iface, ifaceAddr, type, i));
+					list.add(new PrivateNetworkAddress(iface, ifaceAddr, type, ifaceIndex, addrIndex));
 				}
 			}
 		}
@@ -52,11 +54,16 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 	private NetworkInterface iface;
 	private InterfaceAddress addr;
 	private PrivateNetworkType type;
+	private int ifaceIndex;
 	private int addrIndex;
 
-	private PrivateNetworkAddress(NetworkInterface iface, InterfaceAddress addr, PrivateNetworkType type, int addrIndex) {
+	private PrivateNetworkAddress(NetworkInterface iface, InterfaceAddress addr, PrivateNetworkType type,
+			int ifaceIndex, int addrIndex) {
 		this.iface = iface;
 		this.addr = addr;
+		this.type = type;
+		this.ifaceIndex = ifaceIndex;
+		this.addrIndex = addrIndex;
 	}
 
 	/**
@@ -118,7 +125,8 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 		int c = type.ordinal() - that.type.ordinal(); // prefer higher-class types
 
 		if (c == 0) {
-			c = iface.getIndex() - that.iface.getIndex(); // prefer earlier-listed interfaces
+			c = iface.getIndex() - that.ifaceIndex; // prefer earlier-listed interfaces
+			// Note: iface.getIndex() would work, but isn't available before Android API level 19
 		}
 
 		if (c == 0) {
