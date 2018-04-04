@@ -5,20 +5,27 @@ import java.util.SortedMap;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.model.Model;
+import com.walkertribe.ian.util.BoolState;
 
 /**
  * This is a custom-rendered mesh in the game world. These are typically
  * inserted by scripts for non-interactive objects.
  * @author dhleong
  */
-public class ArtemisMesh extends BaseArtemisObject {
+public class ArtemisMesh extends BaseArtemisOrientable {
+	private float mRollDelta = Float.NaN;
+	private float mPitchDelta = Float.NaN;
+	private float mHeadingDelta = Float.NaN;
     private CharSequence mMesh;
     private CharSequence mTex;
-    private float mRed = -1;
-    private float mGreen = -1;
-    private float mBlue = -1;
-    private float mShieldsFront = Float.MIN_VALUE;
-    private float mShieldsRear = Float.MIN_VALUE;
+    private float mPushRadius = Float.NaN;
+    private BoolState mBlockFire = BoolState.UNKNOWN;
+    private float mScale = Float.NaN;
+    private float mRed = Float.NaN;
+    private float mGreen = Float.NaN;
+    private float mBlue = Float.NaN;
+    private float mShieldsFront = Float.NaN;
+    private float mShieldsRear = Float.NaN;
 
     public ArtemisMesh(int objId) {
         super(objId);
@@ -27,6 +34,30 @@ public class ArtemisMesh extends BaseArtemisObject {
     @Override
     public ObjectType getType() {
         return ObjectType.GENERIC_MESH;
+    }
+
+    public float getRollDelta() {
+    	return mRollDelta;
+    }
+
+    public void setRollDelta(float rollDelta) {
+    	mRollDelta = rollDelta;
+    }
+
+    public float getPitchDelta() {
+    	return mPitchDelta;
+    }
+
+    public void setPitchDelta(float pitchDelta) {
+    	mPitchDelta = pitchDelta;
+    }
+
+    public float getHeadingDelta() {
+    	return mHeadingDelta;
+    }
+
+    public void setHeadingDelta(float headingDelta) {
+    	mHeadingDelta = headingDelta;
     }
 
     /**
@@ -62,9 +93,33 @@ public class ArtemisMesh extends BaseArtemisObject {
         mTex = path;
     }
 
+    public float getPushRadius() {
+    	return mPushRadius;
+    }
+
+    public void setPushRadius(float pushRadius) {
+    	mPushRadius = pushRadius;
+    }
+
+    public BoolState getBlockFire() {
+    	return mBlockFire;
+    }
+
+    public void setBlockFire(BoolState blockFire) {
+    	mBlockFire = blockFire;
+    }
+
+    public float getScale() {
+    	return mScale;
+    }
+
+    public void setScale(float scale) {
+    	mScale = scale;
+    }
+
     /**
      * The red channel value for the color.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getRed() {
     	return mRed;
@@ -76,7 +131,7 @@ public class ArtemisMesh extends BaseArtemisObject {
 
     /**
      * The green channel value for the color.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getGreen() {
     	return mGreen;
@@ -88,7 +143,7 @@ public class ArtemisMesh extends BaseArtemisObject {
 
     /**
      * The blue channel value for the color.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getBlue() {
     	return mBlue;
@@ -101,7 +156,7 @@ public class ArtemisMesh extends BaseArtemisObject {
     /**
      * Returns the strength of the mesh's forward shields. These are supposedly
      * "fake" shields, since meshes can't actually be targeted.
-     * Unspecified: Float.MIN_VALUE
+     * Unspecified: Float.NaN
      */
     public float getShieldsFront() {
         return mShieldsFront;
@@ -110,7 +165,7 @@ public class ArtemisMesh extends BaseArtemisObject {
     /**
      * Returns the strength of the mesh's aft shields. These are supposedly
      * "fake" shields, since meshes can't actually be targeted.
-     * Unspecified: Float.MIN_VALUE
+     * Unspecified: Float.NaN
      */
     public float getShieldsRear() {
         return mShieldsRear;
@@ -132,6 +187,18 @@ public class ArtemisMesh extends BaseArtemisObject {
         if (other instanceof ArtemisMesh) {
             ArtemisMesh m = (ArtemisMesh) other;
 
+            if (!Float.isNaN(m.mRollDelta)) {
+            	mRollDelta = m.mRollDelta;
+            }
+
+            if (!Float.isNaN(m.mPitchDelta)) {
+            	mPitchDelta = m.mPitchDelta;
+            }
+
+            if (!Float.isNaN(m.mHeadingDelta)) {
+            	mHeadingDelta = m.mHeadingDelta;
+            }
+
             if (m.mMesh != null) {
             	mMesh = m.mMesh;
             }
@@ -140,23 +207,35 @@ public class ArtemisMesh extends BaseArtemisObject {
             	mTex = m.mTex;
             }
 
-            if (m.mRed != -1) {
+            if (!Float.isNaN(m.mPushRadius)) {
+            	mPushRadius = m.mPushRadius;
+            }
+
+            if (BoolState.isKnown(m.mBlockFire)) {
+            	mBlockFire = m.mBlockFire;
+            }
+
+            if (!Float.isNaN(m.mScale)) {
+            	mScale = m.mScale;
+            }
+
+            if (!Float.isNaN(m.mRed)) {
             	mRed = m.mRed;
             }
 
-            if (m.mGreen != -1) {
+            if (!Float.isNaN(m.mGreen)) {
             	mGreen = m.mGreen;
             }
 
-            if (m.mBlue != -1) {
+            if (!Float.isNaN(m.mBlue)) {
             	mBlue = m.mBlue;
             }
 
-            if (m.mShieldsFront != Float.MIN_VALUE) {
+            if (!Float.isNaN(m.mShieldsFront)) {
                 mShieldsFront = m.mShieldsFront;
             }
             
-            if (m.mShieldsRear != Float.MIN_VALUE) {
+            if (!Float.isNaN(m.mShieldsRear)) {
                 mShieldsRear = m.mShieldsRear;
             }
         }
@@ -165,12 +244,18 @@ public class ArtemisMesh extends BaseArtemisObject {
     @Override
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
+    	putProp(props, "Roll delta", mRollDelta);
+    	putProp(props, "Pitch delta", mPitchDelta);
+    	putProp(props, "Heading delta", mHeadingDelta);
     	putProp(props, "Mesh", mMesh);
     	putProp(props, "Texture", mTex);
-    	putProp(props, "Red", mRed, -1);
-    	putProp(props, "Green", mGreen, -1);
-    	putProp(props, "Blue", mBlue, -1);
-    	putProp(props, "Shields: fore", mShieldsFront, Float.MIN_VALUE);
-    	putProp(props, "Shields: aft", mShieldsRear, Float.MIN_VALUE);
+    	putProp(props, "Push radius", mPushRadius);
+    	putProp(props, "Block fire", mBlockFire);
+    	putProp(props, "Scale", mScale);
+    	putProp(props, "Red", mRed);
+    	putProp(props, "Green", mGreen);
+    	putProp(props, "Blue", mBlue);
+    	putProp(props, "Shields: fore", mShieldsFront);
+    	putProp(props, "Shields: aft", mShieldsRear);
     }
 }

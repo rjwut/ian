@@ -1,6 +1,5 @@
 package com.walkertribe.ian.world;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -28,16 +27,12 @@ import com.walkertribe.ian.vesseldata.MutableVessel;
 import com.walkertribe.ian.vesseldata.MutableVesselData;
 
 public class ArtemisPlayerTest {
-	public static final int[] WEAP_ORD_COUNT_UNSPECIFIED = new int[OrdnanceType.COUNT];
-	public static final float[] WEAP_TUBE_TIME_UNSPECIFIED = new float[Artemis.MAX_TUBES];
 	public static final TubeState[] WEAP_TUBE_STATE_UNSPECIFIED = new TubeState[Artemis.MAX_TUBES];
 	public static final OrdnanceType[] WEAP_TUBE_CONTENTS_UNSPECIFIED = new OrdnanceType[Artemis.MAX_TUBES];
 	public static final int[] WEAP_ORD_COUNT = new int[OrdnanceType.COUNT];
 	public static final float[] WEAP_TUBE_TIME = new float[Artemis.MAX_TUBES];
 	public static final TubeState[] WEAP_TUBE_STATE = new TubeState[Artemis.MAX_TUBES];
 	public static final OrdnanceType[] WEAP_TUBE_CONTENTS = new OrdnanceType[Artemis.MAX_TUBES];
-	public static final float[] ENG_FLOATS_UNSPECIFIED = new float[Artemis.SYSTEM_COUNT];
-	public static final byte[] ENG_BYTES_UNSPECIFIED = new byte[Artemis.SYSTEM_COUNT];
 	public static final float[] ENG_FLOATS = new float[Artemis.SYSTEM_COUNT];
 	public static final byte[] ENG_BYTES = new byte[Artemis.SYSTEM_COUNT];
 	public static final Map<Upgrade, BoolState> UPGRADE_ACTIVE_UNSPECIFIED = new HashMap<Upgrade, BoolState>();
@@ -48,10 +43,6 @@ public class ArtemisPlayerTest {
 	public static final Map<Upgrade, Integer> UPGRADE_SECONDS_LEFT = new HashMap<Upgrade, Integer>();
 
 	static {
-		Arrays.fill(WEAP_ORD_COUNT_UNSPECIFIED, -1);
-		Arrays.fill(WEAP_TUBE_TIME_UNSPECIFIED, -1f);
-		Arrays.fill(ENG_FLOATS_UNSPECIFIED, -1f);
-		Arrays.fill(ENG_BYTES_UNSPECIFIED, (byte) -1);
 		float part = 1.0f / Artemis.SYSTEM_COUNT;
 
 		for (byte i = 0; i < Artemis.SYSTEM_COUNT; i++) {
@@ -207,8 +198,25 @@ public class ArtemisPlayerTest {
 	}
 
 	public static void assertUnpopulatedPlayer(ArtemisPlayer player) {
-		assertPlayer(player, null, null, BoolState.UNKNOWN, -1, -1f, -1, null, (byte) -1, -1, (byte) -1, null, null,
-				BoolState.UNKNOWN, -1, -1f, -1, -1, -1, -1f);
+		Assert.assertNull(player.getTargetingMode());
+		Assert.assertNull(player.getAlertStatus());
+		Assert.assertTrue(!BoolState.isKnown(player.getShieldsState()));
+		Assert.assertEquals(-1, player.getShipIndex());
+		Assert.assertTrue(Float.isNaN(player.getEnergy()));
+		Assert.assertEquals(-1, player.getDockingBase());
+		Assert.assertNull(player.getMainScreen());
+		Assert.assertEquals(-1, player.getAvailableCoolantOrMissiles());
+		Assert.assertEquals(-1, player.getWeaponsTarget());
+		Assert.assertEquals(-1, player.getWarp());
+		Assert.assertNull(player.getBeamFrequency());
+		Assert.assertNull(player.getDriveType());
+		Assert.assertTrue(!BoolState.isKnown(player.getReverseState()));
+		Assert.assertEquals(-1, player.getScienceTarget());
+		Assert.assertTrue(Float.isNaN(player.getScanProgress()));
+		Assert.assertEquals(-1, player.getCaptainTarget());
+		Assert.assertEquals(-1, player.getScanObjectId());
+		Assert.assertEquals(-1, player.getCapitalShipId());
+		Assert.assertTrue(Float.isNaN(player.getAccentColor()));
 	}
 
 	public static void assertPopulatedPlayer(ArtemisPlayer player) {
@@ -301,12 +309,19 @@ public class ArtemisPlayerTest {
 			player.setTubeContents(i, state != TubeState.UNLOADED ? OrdnanceType.values()[i % OrdnanceType.COUNT] : null);
 			player.setTubeCountdown(i, i);
 		}
-
 	}
 
 	public static void assertUnpopulatedWeap(ArtemisPlayer player) {
-		assertWeap(player, WEAP_ORD_COUNT_UNSPECIFIED, WEAP_TUBE_TIME_UNSPECIFIED,
-				WEAP_TUBE_STATE_UNSPECIFIED, WEAP_TUBE_CONTENTS_UNSPECIFIED);
+		for (OrdnanceType type : OrdnanceType.values()) {
+			Assert.assertEquals(-1, player.getTorpedoCount(type));
+		}
+
+		for (int i = 0; i < Artemis.MAX_TUBES; i++) {
+			Assert.assertTrue(Float.isNaN(player.getTubeCountdown(i)));
+			Assert.assertNull(player.getTubeState(i));
+			Assert.assertNull(player.getTubeState(i));
+			Assert.assertNull(player.getTubeContents(i));
+		}
 	}
 
 	public static void assertPopulatedWeap(ArtemisPlayer player) {
@@ -320,8 +335,13 @@ public class ArtemisPlayerTest {
 		}
 
 		for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-			Assert.assertEquals(tubeTimes[i], player.getTubeCountdown(i), TestUtil.EPSILON);
-			Assert.assertEquals(tubeStates[i], player.getTubeState(i));
+			TubeState state = player.getTubeState(i);
+
+			if (state != null && state != TubeState.UNLOADED) {
+				Assert.assertEquals(tubeTimes[i], player.getTubeCountdown(i), TestUtil.EPSILON);
+			}
+
+			Assert.assertEquals(tubeStates[i], state);
 			Assert.assertEquals(tubeStates[i], player.getTubeState(i));
 			Assert.assertEquals(tubeContents[i], player.getTubeContents(i));
 		}
@@ -362,7 +382,7 @@ public class ArtemisPlayerTest {
 	@Test
 	public void testUpdateFromEng() {
 		ArtemisPlayer obj0 = new ArtemisPlayer(47);
-		assertEng(obj0, ENG_FLOATS_UNSPECIFIED, ENG_FLOATS_UNSPECIFIED, ENG_BYTES_UNSPECIFIED);
+		assertUnpopulatedEng(obj0);
 		ArtemisPlayer obj1 = new ArtemisPlayer(47);
 		buildEngData(obj1);
 		assertPopulatedEng(obj1);
@@ -378,6 +398,14 @@ public class ArtemisPlayerTest {
 			player.setSystemHeat(sys, ENG_FLOATS[index]);
 			player.setSystemEnergyAsPercent(sys, ENG_FLOATS[index] * Artemis.MAX_ENERGY_ALLOCATION_PERCENT);
 			player.setSystemCoolant(sys, ENG_BYTES[index]);
+		}
+	}
+
+	public static void assertUnpopulatedEng(ArtemisPlayer player) {
+		for (ShipSystem system : ShipSystem.values()) {
+			Assert.assertTrue(Float.isNaN(player.getSystemHeat(system)));
+			Assert.assertTrue(Float.isNaN(player.getSystemEnergy(system)));
+			Assert.assertEquals(-1, player.getSystemCoolant(system));
 		}
 	}
 
@@ -452,8 +480,11 @@ public class ArtemisPlayerTest {
 	}
 
 	public static void assertUnpopulatedUpgrades(ArtemisPlayer player) {
-		assertUpgrades(player, UPGRADE_ACTIVE_UNSPECIFIED, UPGRADE_COUNT_UNSPECIFIED,
-				UPGRADE_SECONDS_LEFT_UNSPECIFIED);
+		for (Upgrade upgrade : Upgrade.activation()) {
+			Assert.assertTrue(!BoolState.isKnown(player.isUpgradeActive(upgrade)));
+			Assert.assertEquals(-1, player.getUpgradeCount(upgrade));
+			Assert.assertEquals(-1, player.getUpgradeSecondsLeft(upgrade));
+		}
 	}
 
 	public static void assertPopulatedUpgrades(ArtemisPlayer player) {

@@ -31,17 +31,19 @@ public class ArtemisPlayer extends BaseArtemisShip {
 	 * The status of a single ordnance tube.
 	 */
 	private class Tube {
-		private float secondsLeft = -1f;
+		private boolean hasSecondsLeft = false;
+		private float secondsLeft = Float.NaN; // sometimes NaN comes from the server (!)
 		private TubeState state;
 		private byte contents = -1;
 
 		private boolean hasData() {
-			return secondsLeft != -1 || state != null || contents != -1;
+			return hasSecondsLeft || state != null || contents != -1;
 		}
 
 		private void updateFrom(Tube other) {
-			if (other.secondsLeft != -1) {
+			if (other.hasSecondsLeft) {
 				secondsLeft = other.secondsLeft;
+				hasSecondsLeft = true;
 			}
 
 			if (other.state != null) {
@@ -87,20 +89,20 @@ public class ArtemisPlayer extends BaseArtemisShip {
 	 * The status of a ship system.
 	 */
 	private class SystemStatus {
-		private float energy = -1;
-		private float heat = -1;
+		private float energy = Float.NaN;
+		private float heat = Float.NaN;
 		private int coolant = -1;
 
 		private boolean hasData() {
-			return energy != -1 || heat != -1 || coolant != -1;
+			return !Float.isNaN(energy) || !Float.isNaN(heat) || coolant != -1;
 		}
 
 		private void updateFrom(SystemStatus other) {
-			if (other.energy != -1) {
+			if (!Float.isNaN(other.energy)) {
 				energy = other.energy;
 			}
 
-			if (other.heat != -1) {
+			if (!Float.isNaN(other.heat)) {
 				heat = other.heat;
 			}
 
@@ -118,7 +120,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 	private final SystemStatus[] mSystems = new SystemStatus[Artemis.SYSTEM_COUNT];
     private final int[] mTorpedos = new int[OrdnanceType.COUNT];
     private final Tube[] mTubes = new Tube[Artemis.MAX_TUBES];
-    private float mEnergy = -1;
+    private float mEnergy = Float.NaN;
     private byte mNebulaType = -1;
     private int mDockingBase = -1;
     private MainScreenView mMainScreen;
@@ -128,15 +130,15 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private BeamFrequency mBeamFreq;
     private DriveType mDriveType;
     private BoolState mReverse = BoolState.UNKNOWN;
-    private float mClimbDive = Float.MIN_VALUE;
+    private float mClimbDive = Float.NaN;
     private int mScienceTarget = -1;
-    private float mScanProgress = -1;
+    private float mScanProgress = Float.NaN;
     private int mCaptainTarget = -1;
     private int mScanningId = -1;
     private Map<Upgrade, UpgradeStatus> mUpgrades = new LinkedHashMap<Upgrade, UpgradeStatus>(Upgrade.ACTIVATION_UPGRADE_COUNT);
     private int mCapitalShipId = -1;
-    private float mAccentColor = -1;
-    private float mEmergencyJumpCooldown = -1;
+    private float mAccentColor = Float.NaN;
+    private float mEmergencyJumpCooldown = Float.NaN;
     private CreatureType mBeaconType;
     private BeaconMode mBeaconMode;
 
@@ -192,7 +194,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     /**
      * The ship's energy reserves.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getEnergy() {
         return mEnergy;
@@ -235,7 +237,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     /**
      * The energy allocation level for a system, as a value between 0 (no energy
      * allocated) and 1 (maximum energy allocated).
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getSystemEnergy(ShipSystem sys) {
         return mSystems[sys.ordinal()].energy;
@@ -258,7 +260,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     /**
      * The heat level for a system.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getSystemHeat(ShipSystem sys) {
     	return mSystems[sys.ordinal()].heat;
@@ -350,7 +352,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     /**
      * Whether ship ship is climbing (-1), diving (1), or leveling out (0).
-     * Unknown: Float.MIN_VALUE
+     * Unspecified: Float.NaN
      */
     public float getClimbDive() {
     	return mClimbDive;
@@ -433,9 +435,18 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
+     * Returns true if the indicated tube has a specified countdown value. This
+     * is needed because sometimes the server sends NaN for this value.
+     */
+    public boolean isTubeHasCountdown(int tubeIndex) {
+    	return mTubes[tubeIndex].hasSecondsLeft;
+    }
+
+    /**
      * Returns the number of seconds until the current (un)load operation is
      * complete.
-     * Unspecified: -1
+     * Unspecified: isTubeHasCountdown(tubeIndex) == false (because sometimes the
+     * server sends NaN)
      */
     public float getTubeCountdown(int tubeIndex) {
         return mTubes[tubeIndex].secondsLeft;
@@ -443,6 +454,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     public void setTubeCountdown(int tubeIndex, float seconds) {
     	mTubes[tubeIndex].secondsLeft = seconds;
+    	mTubes[tubeIndex].hasSecondsLeft = true;
     }
 
     /**
@@ -599,7 +611,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     /**
      * The progress of the current scan, as a value between 0 and 1.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getScanProgress() {
         return mScanProgress;
@@ -716,7 +728,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     /**
      * Returns this ship's accent hue as a float value between 0 and 1.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getAccentColor() {
     	return mAccentColor;
@@ -729,7 +741,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     /**
      * Returns progress remaining toward being ready to do an emergency jump.
      * Values range between 0.0 (ready to jump) and 1.0 (just jumped).
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getEmergencyJumpCooldown() {
     	return mEmergencyJumpCooldown;
@@ -801,7 +813,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			mAlertStatus != null ||
     			BoolState.isKnown(mShields) ||
     			mShipIndex != -1 ||
-    			mEnergy != -1 ||
+    			!Float.isNaN(mEnergy) ||
     			mNebulaType != -1 ||
     			mDockingBase != -1 ||
     			mMainScreen != null ||
@@ -811,14 +823,14 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			mBeamFreq != null ||
     			mDriveType != null ||
     			BoolState.isKnown(mReverse) ||
-    			mClimbDive != Float.MIN_VALUE ||
+    			!Float.isNaN(mClimbDive) ||
     			mScienceTarget != -1 ||
-    			mScanProgress != -1 ||
+    			!Float.isNaN(mScanProgress) ||
     			mCaptainTarget != -1 ||
     			mScanningId != -1 ||
     			mCapitalShipId != -1 ||
-    			mAccentColor != -1 ||
-    			mEmergencyJumpCooldown != -1 ||
+    			!Float.isNaN(mAccentColor) ||
+    			!Float.isNaN(mEmergencyJumpCooldown) ||
     			mBeaconType != null ||
     			mBeaconMode != null;
     }
@@ -967,7 +979,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
             mShields = plr.mShields;
         }
 
-        if (plr.mEnergy != -1) {
+        if (!Float.isNaN(plr.mEnergy)) {
             mEnergy = plr.mEnergy;
         }
 
@@ -991,7 +1003,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
             mReverse = plr.mReverse;
         }
         
-        if (plr.mClimbDive != Float.MIN_VALUE) {
+        if (!Float.isNaN(plr.mClimbDive)) {
         	mClimbDive = plr.mClimbDive;
         }
 
@@ -999,7 +1011,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
             mScienceTarget = plr.mScienceTarget;
         }
 
-        if (plr.mScanProgress != -1) {
+        if (!Float.isNaN(plr.mScanProgress)) {
             mScanProgress = plr.mScanProgress;
         }
 
@@ -1015,11 +1027,11 @@ public class ArtemisPlayer extends BaseArtemisShip {
         	mCapitalShipId = plr.mCapitalShipId;
         }
 
-        if (plr.mAccentColor != -1) {
+        if (!Float.isNaN(plr.mAccentColor)) {
         	mAccentColor = plr.mAccentColor;
         }
 
-        if (plr.mEmergencyJumpCooldown != -1) {
+        if (!Float.isNaN(plr.mEmergencyJumpCooldown)) {
         	mEmergencyJumpCooldown = plr.mEmergencyJumpCooldown;
         }
 
@@ -1075,8 +1087,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     	for (ShipSystem system : ShipSystem.values()) {
     		int i = system.ordinal();
-    		putProp(props, "System heat: " + system, mSystems[i].heat, -1);
-    		putProp(props, "System energy: " + system, mSystems[i].energy, -1);
+    		putProp(props, "System heat: " + system, mSystems[i].heat);
+    		putProp(props, "System energy: " + system, mSystems[i].energy);
     		putProp(props, "System coolant: " + system, mSystems[i].coolant, -1);
     	}
 
@@ -1103,10 +1115,10 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			putProp(props, "Tube " + i + " contents", contentsStr);
     		}
 
-    		putProp(props, "Tube " + i + " countdown", tube.secondsLeft, -1);
+    		putProp(props, "Tube " + i + " countdown", tube.secondsLeft);
     	}
 
-    	putProp(props, "Energy", mEnergy, -1);
+    	putProp(props, "Energy", mEnergy);
     	putProp(props, "Nebula type", mNebulaType, -1);
     	putProp(props, "Docking base", mDockingBase, -1);
     	putProp(props, "Main screen view", mMainScreen);
@@ -1114,10 +1126,10 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	putProp(props, "Warp", mWarp, -1);
     	putProp(props, "Beam frequency", mBeamFreq);
     	putProp(props, "Drive type", mDriveType);
-    	putProp(props, "Climb/dive", mClimbDive, Float.MIN_VALUE);
+    	putProp(props, "Climb/dive", mClimbDive);
     	putProp(props, "Reverse", mReverse);
     	putProp(props, "Scan target", mScienceTarget, -1);
-    	putProp(props, "Scan progress", mScanProgress, -1);
+    	putProp(props, "Scan progress", mScanProgress);
     	putProp(props, "Scan object ID", mScanningId, -1);
     	putProp(props, "Weapons target", mWeaponsTarget, -1);
     	putProp(props, "Captain target", mCaptainTarget, -1);
@@ -1130,8 +1142,8 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	}
 
     	putProp(props, "Capital ship ID", mCapitalShipId, -1);
-    	putProp(props, "Accent color", mAccentColor, -1);
-    	putProp(props, "Emergency jump cooldown", mEmergencyJumpCooldown, -1);
+    	putProp(props, "Accent color", mAccentColor);
+    	putProp(props, "Emergency jump cooldown", mEmergencyJumpCooldown);
     	putProp(props, "Beacon type", mBeaconType);
     	putProp(props, "Beacon mode", mBeaconMode);
     }

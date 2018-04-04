@@ -10,8 +10,7 @@ public class ArtemisMeshTest {
 	@Test
 	public void testUpdateFrom() {
 		ArtemisMesh obj0 = new ArtemisMesh(47);
-		assertMesh(obj0, 47, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, null, null, -1, -1, -1,
-				Float.MIN_VALUE, Float.MIN_VALUE);
+		assertUnknownMesh(obj0, 47);
 		ArtemisMesh obj1 = new ArtemisMesh(47);
 		obj1.setName("MESH");
 		obj1.setX(1f);
@@ -29,6 +28,17 @@ public class ArtemisMeshTest {
 		obj0.updateFrom(obj1);
 		assertMesh(obj0, 47, "MESH", 1f, 2f, 3f, "test.dxs", "test.png", 0.25f, 0.5f, 0.75f, 100, 75);
 		obj0.updateFrom(new ArtemisAnomaly(48));
+	}
+
+	public static void assertUnknownMesh(ArtemisMesh obj, int id) {
+		ArtemisObjectTest.assertUnknownObject(obj, id, ObjectType.GENERIC_MESH);
+		Assert.assertNull(obj.getMesh());
+		Assert.assertNull(obj.getTexture());
+		Assert.assertTrue(Float.isNaN(obj.getRed()));
+		Assert.assertTrue(Float.isNaN(obj.getGreen()));
+		Assert.assertTrue(Float.isNaN(obj.getBlue()));
+		Assert.assertTrue(Float.isNaN(obj.getShieldsFront()));
+		Assert.assertTrue(Float.isNaN(obj.getShieldsRear()));
 	}
 
 	public static void assertMesh(ArtemisMesh obj, int id, String name, float x, float y, float z, String mesh,

@@ -9,7 +9,7 @@ import com.walkertribe.ian.enums.ObjectType;
  * @author rjwut
  */
 public class ArtemisDrone extends BaseArtemisOrientable {
-	private float mSteering = -1;
+	private float mSteering = Float.NaN;
 
 	public ArtemisDrone(int objId) {
 		super(objId);
@@ -23,6 +23,7 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 	/**
 	 * Current rudder position for the drone, as a value between 0 (hard port)
 	 * and 1 (hard starboard).
+	 * Unspecified: Float.NaN
 	 */
 	public float getSteering() {
 		return mSteering;
@@ -39,7 +40,7 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 		if (other instanceof ArtemisDrone) {
 			ArtemisDrone drone = (ArtemisDrone) other;
 
-			if (drone.mSteering != -1) {
+			if (!Float.isNaN(drone.mSteering)) {
 				mSteering = drone.mSteering;
 			}
 		}
@@ -48,6 +49,6 @@ public class ArtemisDrone extends BaseArtemisOrientable {
     @Override
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
-    	putProp(props, "Rudder", mSteering, -1);
+    	putProp(props, "Rudder", mSteering);
     }
 }

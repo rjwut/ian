@@ -31,17 +31,17 @@ public class OtherParser extends AbstractObjectParser {
 	protected ArtemisGenericObject parseImpl(PacketReader reader) {
         final ArtemisGenericObject obj = new ArtemisGenericObject(reader.getObjectId());
         obj.setType(reader.getObjectType());
-        obj.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        obj.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        obj.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+        obj.setX(reader.readFloat(Bit.X));
+        obj.setY(reader.readFloat(Bit.Y));
+        obj.setZ(reader.readFloat(Bit.Z));
         return obj;
 	}
 
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisGenericObject gObj = (ArtemisGenericObject) obj;
-    	writer	.writeFloat(Bit.X, gObj.getX(), Float.MIN_VALUE)
-				.writeFloat(Bit.Y, gObj.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, gObj.getZ(), Float.MIN_VALUE);
+    	writer	.writeFloat(Bit.X, gObj.getX())
+				.writeFloat(Bit.Y, gObj.getY())
+				.writeFloat(Bit.Z, gObj.getZ());
 	}
 }

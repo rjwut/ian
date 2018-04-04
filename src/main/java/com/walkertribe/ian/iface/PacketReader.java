@@ -389,19 +389,19 @@ public class PacketReader {
 	}
 
 	/**
-	 * Convenience method for readFloat(bit.ordinal(), defaultValue).
+	 * Convenience method for readFloat(bit.ordinal()).
 	 */
-	public float readFloat(Enum<?> bit, float defaultValue) {
-		return readFloat(bit.ordinal(), defaultValue);
+	public float readFloat(Enum<?> bit) {
+		return readFloat(bit.ordinal());
 	}
 
 	/**
 	 * Reads a float from the current packet's payload if the indicated bit in
-	 * the current BitField is on. Otherwise, the pointer is not moved, and the
-	 * given default value is returned.
+	 * the current BitField is on. Otherwise, the pointer is not moved, and
+	 * Float.NaN is returned instead.
 	 */
-	public float readFloat(int bitIndex, float defaultValue) {
-		return bitField.get(bitIndex) ? readFloat() : defaultValue;
+	public float readFloat(int bitIndex) {
+		return bitField.get(bitIndex) ? readFloat() : Float.NaN;
 	}
 
 	/**

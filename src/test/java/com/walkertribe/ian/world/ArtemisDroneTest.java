@@ -10,29 +10,28 @@ public class ArtemisDroneTest {
 	@Test
 	public void testUpdateFrom() {
 		ArtemisDrone obj0 = new ArtemisDrone(47);
-		assertDrone(obj0, 47, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE,
-				Float.MIN_VALUE, -1);
+		assertUnknownDrone(obj0, 47);
 		ArtemisDrone obj1 = new ArtemisDrone(47);
 		obj1.setName("DRONE");
 		obj1.setX(1.0f);
 		obj1.setY(2.0f);
 		obj1.setZ(3.0f);
 		obj1.setHeading(4.0f);
-		obj1.setPitch(5.0f);
-		obj1.setRoll(6.0f);
-		obj1.setSteering(7.0f);
-		assertDrone(obj1, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
+		assertDrone(obj1, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f);
 		obj1.updateFrom(obj0);
-		assertDrone(obj1, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
+		assertDrone(obj1, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f);
 		obj0.updateFrom(obj1);
-		assertDrone(obj0, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
+		assertDrone(obj0, 47, "DRONE", 1.0f, 2.0f, 3.0f, 4.0f);
 		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 
-	public static void assertDrone(ArtemisDrone drone, int id, String name, float x, float y, float z, float heading,
-			float pitch, float roll, float steering) {
+	public static void assertUnknownDrone(ArtemisDrone drone, int id) {
+		ArtemisObjectTest.assertUnknownObject(drone, id, ObjectType.DRONE);
+		ArtemisOrientableTest.assertUnknownOrientable(drone);
+	}
+
+	public static void assertDrone(ArtemisDrone drone, int id, String name, float x, float y, float z, float heading) {
 		ArtemisObjectTest.assertObject(drone, id, ObjectType.DRONE, name, x, y, z);
-		ArtemisOrientableTest.assertOrientable(drone, heading, pitch, roll);
-		Assert.assertEquals(steering, drone.getSteering(), TestUtil.EPSILON);
+		Assert.assertEquals(heading, drone.getHeading(), TestUtil.EPSILON);
 	}
 }

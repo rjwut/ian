@@ -9,9 +9,9 @@ import com.walkertribe.ian.enums.ObjectType;
  * @author rjwut
  */
 public class ArtemisNebula extends BaseArtemisObject {
-    private float mRed = -1;
-    private float mGreen = -1;
-    private float mBlue = -1;
+    private float mRed = Float.NaN;
+    private float mGreen = Float.NaN;
+    private float mBlue = Float.NaN;
     private byte mNebulaType = -1;
 
 	public ArtemisNebula(int objId) {
@@ -25,7 +25,7 @@ public class ArtemisNebula extends BaseArtemisObject {
 
     /**
      * The red channel value for the color. The color is visible on 3D screens; 2D screens use nebula type.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getRed() {
     	return mRed;
@@ -37,7 +37,7 @@ public class ArtemisNebula extends BaseArtemisObject {
 
     /**
      * The green channel value for the color. The color is visible on 3D screens; 2D screens use nebula type.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getGreen() {
     	return mGreen;
@@ -49,7 +49,7 @@ public class ArtemisNebula extends BaseArtemisObject {
 
     /**
      * The blue channel value for the color. The color is visible on 3D screens; 2D screens use nebula type.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getBlue() {
     	return mBlue;
@@ -79,15 +79,15 @@ public class ArtemisNebula extends BaseArtemisObject {
         if (other instanceof ArtemisNebula) {
             ArtemisNebula n = (ArtemisNebula) other;
 
-            if (n.mRed != -1) {
+            if (!Float.isNaN(n.mRed)) {
             	mRed = n.mRed;
             }
 
-            if (n.mGreen != -1) {
+            if (!Float.isNaN(n.mGreen)) {
             	mGreen = n.mGreen;
             }
 
-            if (n.mBlue != -1) {
+            if (!Float.isNaN(n.mBlue)) {
             	mBlue = n.mBlue;
             }
 
@@ -100,9 +100,9 @@ public class ArtemisNebula extends BaseArtemisObject {
     @Override
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
-    	putProp(props, "Red", mRed, -1);
-    	putProp(props, "Green", mGreen, -1);
-    	putProp(props, "Blue", mBlue, -1);
+    	putProp(props, "Red", mRed);
+    	putProp(props, "Green", mGreen);
+    	putProp(props, "Blue", mBlue);
     	putProp(props, "Nebula type", mNebulaType, -1);
     }
 }

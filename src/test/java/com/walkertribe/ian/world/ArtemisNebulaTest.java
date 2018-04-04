@@ -10,7 +10,7 @@ public class ArtemisNebulaTest {
 	@Test
 	public void testUpdateFrom() {
 		ArtemisNebula obj0 = new ArtemisNebula(47);
-		assertNebula(obj0, 47, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1, -1, -1);
+		assertUnknownNebula(obj0, 47);
 		ArtemisNebula obj1 = new ArtemisNebula(47);
 		obj1.setName("NEBULA");
 		obj1.setX(1f);
@@ -25,6 +25,13 @@ public class ArtemisNebulaTest {
 		obj0.updateFrom(obj1);
 		assertNebula(obj0, 47, "NEBULA", 1f, 2f, 3f, 0.25f, 0.5f, 0.75f);
 		obj0.updateFrom(new ArtemisAnomaly(48));
+	}
+
+	public static void assertUnknownNebula(ArtemisNebula obj, int id) {
+		ArtemisObjectTest.assertUnknownObject(obj, id, ObjectType.NEBULA);
+		Assert.assertTrue(Float.isNaN(obj.getRed()));
+		Assert.assertTrue(Float.isNaN(obj.getGreen()));
+		Assert.assertTrue(Float.isNaN(obj.getBlue()));
 	}
 
 	public static void assertNebula(ArtemisNebula obj, int id, String name, float x, float y, float z, float red,

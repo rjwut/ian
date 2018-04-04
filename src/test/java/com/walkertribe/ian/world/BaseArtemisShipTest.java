@@ -6,6 +6,21 @@ import com.walkertribe.ian.enums.BeamFrequency;
 import com.walkertribe.ian.util.TestUtil;
 
 public class BaseArtemisShipTest {
+	public static void assertUnknownShip(BaseArtemisShip ship) {
+		Assert.assertTrue(Float.isNaN(ship.getVelocity()));
+		Assert.assertTrue(Float.isNaN(ship.getShieldsFrontMax()));
+		Assert.assertTrue(Float.isNaN(ship.getShieldsRearMax()));
+
+		for (BeamFrequency freq : BeamFrequency.values()) {
+			Assert.assertTrue(Float.isNaN(ship.getShieldFreq(freq)));
+		}
+
+		Assert.assertTrue(Float.isNaN(ship.getSteering()));
+		Assert.assertTrue(Float.isNaN(ship.getTopSpeed()));
+		Assert.assertTrue(Float.isNaN(ship.getTurnRate()));
+		Assert.assertTrue(Float.isNaN(ship.getImpulse()));
+	}
+
 	public static void assertShip(BaseArtemisShip ship, float velocity, float shieldsFrontMax, float shieldsRearMax,
 			float[] shieldFreqs, float steering, float topSpeed, float turnRate, float impulse) {
 		Assert.assertEquals(velocity, ship.getVelocity(), TestUtil.EPSILON);

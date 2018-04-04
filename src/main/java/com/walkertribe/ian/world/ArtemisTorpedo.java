@@ -9,9 +9,9 @@ import com.walkertribe.ian.enums.OrdnanceType;
  * A torpedo in flight.
  */
 public class ArtemisTorpedo extends BaseArtemisObject {
-	private float mDx = Float.MIN_VALUE;
-	private float mDy = Float.MIN_VALUE;
-	private float mDz = Float.MIN_VALUE;
+	private float mDx = Float.NaN;
+	private float mDy = Float.NaN;
+	private float mDz = Float.NaN;
 	private OrdnanceType mOrdnanceType;
 
 	public ArtemisTorpedo(int objId) {
@@ -25,7 +25,7 @@ public class ArtemisTorpedo extends BaseArtemisObject {
 
 	/**
 	 * Delta X
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
 	public float getDx() {
 		return mDx;
@@ -37,7 +37,7 @@ public class ArtemisTorpedo extends BaseArtemisObject {
 
 	/**
 	 * Delta Y
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
 	public float getDy() {
 		return mDy;
@@ -49,7 +49,7 @@ public class ArtemisTorpedo extends BaseArtemisObject {
 
 	/**
 	 * Delta Z
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
 	public float getDz() {
 		return mDz;
@@ -78,15 +78,15 @@ public class ArtemisTorpedo extends BaseArtemisObject {
         if (other instanceof ArtemisTorpedo) {
             ArtemisTorpedo t = (ArtemisTorpedo) other;
 
-            if (t.mDx != Float.MIN_VALUE) {
+            if (!Float.isNaN(t.mDx)) {
             	mDx = t.mDx;
             }
 
-            if (t.mDy != Float.MIN_VALUE) {
+            if (!Float.isNaN(t.mDy)) {
             	mDy = t.mDy;
             }
 
-            if (t.mDz != Float.MIN_VALUE) {
+            if (!Float.isNaN(t.mDz)) {
             	mDz = t.mDz;
             }
 
@@ -99,9 +99,9 @@ public class ArtemisTorpedo extends BaseArtemisObject {
     @Override
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
-    	putProp(props, "dx", mDx, Float.MIN_VALUE);
-    	putProp(props, "dy", mDy, Float.MIN_VALUE);
-    	putProp(props, "dz", mDz, Float.MIN_VALUE);
+    	putProp(props, "dx", mDx);
+    	putProp(props, "dy", mDy);
+    	putProp(props, "dz", mDz);
     	putProp(props, "Ordnance type", mOrdnanceType);
     }
 }

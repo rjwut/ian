@@ -54,10 +54,7 @@ public class ArtemisNpcTest {
 	@Test
 	public void testUpdateFrom() {
 		ArtemisNpc obj0 = new ArtemisNpc(47);
-		assertNpc(obj0, 47, ObjectType.NPC_SHIP, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1,
-				Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, -1,
-				Float.MIN_VALUE, Float.MIN_VALUE, SHIELD_FREQS_UNSPECIFIED, -1, -1, -1, -1, null, null, -1, -1,
-				BoolState.UNKNOWN, BoolState.UNKNOWN, Byte.MIN_VALUE, SYS_DAMAGE_UNSPECIFIED);
+		assertUnknownNpc(obj0, 47);
 		ArtemisNpc obj1 = new ArtemisNpc(47);
 		obj1.setName("TEST");
 		obj1.setX(1f);
@@ -156,6 +153,12 @@ public class ArtemisNpcTest {
 		assertNpc(npc, 47, ObjectType.NPC_SHIP, "TEST", 1f, 2f, 3f, 2000, 100f, 47f, 0.3f, 0.2f, 0.1f, 0.4f, 100, 100,
 				SHIELD_FREQS, 0.2f, 0.8f, 0.15f, 0.7f, 2, 2, 0x05, 0x01, BoolState.TRUE, BoolState.TRUE, (byte) 2,
 				SYS_DAMAGE);
+	}
+
+	private static void assertUnknownNpc(ArtemisNpc npc, int id) {
+		ArtemisShieldedTest.assertUnknownShielded(npc, id, ObjectType.NPC_SHIP);
+		ArtemisOrientableTest.assertUnknownOrientable(npc);
+		BaseArtemisShipTest.assertUnknownShip(npc);
 	}
 
 	private static void assertNpc(ArtemisNpc npc, int id, ObjectType type, String name, float x, float y, float z,

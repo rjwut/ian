@@ -42,9 +42,9 @@ public class ArtemisNpc extends BaseArtemisShip {
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = Byte.MIN_VALUE;
-    private float mTargetX = Float.MIN_VALUE;
-    private float mTargetY = Float.MIN_VALUE;
-    private float mTargetZ = Float.MIN_VALUE;
+    private float mTargetX = Float.NaN;
+    private float mTargetY = Float.NaN;
+    private float mTargetZ = Float.NaN;
     private BoolState mTagged = BoolState.UNKNOWN;
     private final float[] mSysDamage = new float[Artemis.SYSTEM_COUNT];
 
@@ -52,7 +52,7 @@ public class ArtemisNpc extends BaseArtemisShip {
         super(objId);
 
         for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-        	mSysDamage[i] = -1;
+        	mSysDamage[i] = Float.NaN;
         }
     }
 
@@ -296,7 +296,7 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     /**
      * Target's X-coordinate
-     * Unspecified: Float.MIN_VALUE
+     * Unspecified: Float.NaN
      */
     public float getTargetX() {
     	return mTargetX;
@@ -308,7 +308,7 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     /**
      * Target's Y-coordinate
-     * Unspecified: Float.MIN_VALUE
+     * Unspecified: Float.NaN
      */
     public float getTargetY() {
     	return mTargetY;
@@ -320,7 +320,7 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     /**
      * Target's Z-coordinate
-     * Unspecified: Float.MIN_VALUE
+     * Unspecified: Float.NaN
      */
     public float getTargetZ() {
     	return mTargetZ;
@@ -345,7 +345,7 @@ public class ArtemisNpc extends BaseArtemisShip {
     /**
      * The percentage of damage sustained by a particular system, expressed as
      * a value between 0 and 1.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getSystemDamage(ShipSystem sys) {
     	return mSysDamage[sys.ordinal()];
@@ -394,15 +394,15 @@ public class ArtemisNpc extends BaseArtemisShip {
                 setSpecialStateBits(cast.mSpecialState);
             }
 
-            if (cast.mTargetX != Float.MIN_VALUE) {
+            if (!Float.isNaN(cast.mTargetX)) {
             	mTargetX = cast.mTargetX;
             }
 
-            if (cast.mTargetY != Float.MIN_VALUE) {
+            if (!Float.isNaN(cast.mTargetY)) {
             	mTargetY = cast.mTargetY;
             }
 
-            if (cast.mTargetZ != Float.MIN_VALUE) {
+            if (!Float.isNaN(cast.mTargetZ)) {
             	mTargetZ = cast.mTargetZ;
             }
 
@@ -413,7 +413,7 @@ public class ArtemisNpc extends BaseArtemisShip {
             for (int i = 0; i < mSysDamage.length; i++) {
             	float value = cast.mSysDamage[i];
 
-            	if (value != -1) {
+            	if (!Float.isNaN(value)) {
                     mSysDamage[i] = value;
             	}
             }
@@ -445,14 +445,14 @@ public class ArtemisNpc extends BaseArtemisShip {
     	putProp(props, "Is enemy", mEnemy);
     	putProp(props, "Surrendered", mSurrendered);
     	putProp(props, "Fleet number", mFleetNumber, Byte.MIN_VALUE);
-    	putProp(props, "Target X", mTargetX, Float.MIN_VALUE);
-    	putProp(props, "Target Y", mTargetY, Float.MIN_VALUE);
-    	putProp(props, "Target Z", mTargetZ, Float.MIN_VALUE);
+    	putProp(props, "Target X", mTargetX);
+    	putProp(props, "Target Y", mTargetY);
+    	putProp(props, "Target Z", mTargetZ);
     	putProp(props, "Tagged", mTagged);
     	ShipSystem[] systems = ShipSystem.values();
 
     	for (int i = 0; i < mSysDamage.length; i++) {
-    		putProp(props, "Damage: " + systems[i], mSysDamage[i], -1);
+    		putProp(props, "Damage: " + systems[i], mSysDamage[i]);
     	}
     }
 }

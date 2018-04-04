@@ -11,8 +11,7 @@ public class ArtemisCreatureTest {
 	@Test
 	public void testUpdateFrom() {
 		ArtemisCreature obj0 = new ArtemisCreature(47);
-		assertCreature(obj0, 47, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, null, Float.MIN_VALUE,
-				Float.MIN_VALUE, Float.MIN_VALUE, null, Float.MIN_VALUE, Float.MIN_VALUE);
+		assertUnknownCreature(obj0, 47);
 		ArtemisCreature obj1 = new ArtemisCreature(47);
 		obj1.setX(1.0f);
 		obj1.setY(2.0f);
@@ -30,6 +29,14 @@ public class ArtemisCreatureTest {
 		obj0.updateFrom(obj1);
 		assertCreature(obj0, 47, 1.0f, 2.0f, 3.0f, "WHALE", 4.0f, 5.0f, 6.0f, CreatureType.WHALE, 50, 100);
 		obj0.updateFrom(new ArtemisDrone(47));
+	}
+
+	public static void assertUnknownCreature(ArtemisCreature creature, int id) {
+		ArtemisObjectTest.assertUnknownObject(creature, id, ObjectType.CREATURE);
+		ArtemisOrientableTest.assertUnknownOrientable(creature);
+		Assert.assertNull(creature.getCreatureType());
+		Assert.assertTrue(Float.isNaN(creature.getHealth()));
+		Assert.assertTrue(Float.isNaN(creature.getMaxHealth()));
 	}
 
 	public static void assertCreature(ArtemisCreature creature, int id, float x, float y, float z, String name,

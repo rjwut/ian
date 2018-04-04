@@ -242,24 +242,27 @@ public class PacketWriter {
 	}
 
 	/**
-	 * Convenience method for writeFloat(bit.ordinal(), v, defaultValue).
+	 * Convenience method for writeFloat(bit.ordinal(), v).
 	 */
-	public PacketWriter writeFloat(Enum<?> bit, float v, float defaultValue) {
-		return writeFloat(bit.ordinal(), v, defaultValue);
+	public PacketWriter writeFloat(Enum<?> bit, float v) {
+		return writeFloat(bit.ordinal(), v);
 	}
 
 	/**
-	 * If the given float is different from defaultValue, the float is written
-	 * to the packet, and the corresponding bit in the object's bit field is
-	 * set; otherwise, nothing happens. You must invoke startObject() before
-	 * calling this method.
+	 * If the given float is not a NaN, the float is written to the packet, and
+	 * the corresponding bit in the object's bit field is set; otherwise,
+	 * nothing happens. You must invoke startObject() before calling this
+	 * method.
 	 */
-	public PacketWriter writeFloat(int bitIndex, float v, float defaultValue) {
-		return writeInt(
-				bitIndex,
-				Float.floatToRawIntBits(v),
-				Float.floatToRawIntBits(defaultValue)
-		);
+	public PacketWriter writeFloat(int bitIndex, float v) {
+		assertObjectStarted();
+
+		if (!Float.isNaN(v)) {
+			bitField.set(bitIndex, true);
+			writeInt(Float.floatToRawIntBits(v), baosObj);
+		}
+
+		return this;
 	}
 
 	/**

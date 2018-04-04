@@ -38,9 +38,9 @@ public class AnomalyParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisAnomaly parseImpl(PacketReader reader) {
         ArtemisAnomaly anomaly = new ArtemisAnomaly(reader.getObjectId());
-        anomaly.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        anomaly.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        anomaly.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+        anomaly.setX(reader.readFloat(Bit.X));
+        anomaly.setY(reader.readFloat(Bit.Y));
+        anomaly.setZ(reader.readFloat(Bit.Z));
 
         if (reader.has(Bit.TYPE)) {
         	anomaly.setAnomalyType(AnomalyType.values()[reader.readInt()]);
@@ -66,9 +66,9 @@ public class AnomalyParser extends AbstractObjectParser {
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisAnomaly anomaly = (ArtemisAnomaly) obj;
-		writer.writeFloat(Bit.X, anomaly.getX(), Float.MIN_VALUE);
-		writer.writeFloat(Bit.Y, anomaly.getY(), Float.MIN_VALUE);
-		writer.writeFloat(Bit.Z, anomaly.getZ(), Float.MIN_VALUE);
+		writer.writeFloat(Bit.X, anomaly.getX());
+		writer.writeFloat(Bit.Y, anomaly.getY());
+		writer.writeFloat(Bit.Z, anomaly.getZ());
 
 		AnomalyType anomalyType = anomaly.getAnomalyType();
 

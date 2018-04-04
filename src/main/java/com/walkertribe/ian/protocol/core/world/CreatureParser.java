@@ -48,13 +48,13 @@ public class CreatureParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisCreature parseImpl(PacketReader reader) {
         final ArtemisCreature creature = new ArtemisCreature(reader.getObjectId());
-        creature.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        creature.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        creature.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+        creature.setX(reader.readFloat(Bit.X));
+        creature.setY(reader.readFloat(Bit.Y));
+        creature.setZ(reader.readFloat(Bit.Z));
 		creature.setName(reader.readString(Bit.NAME));
-        creature.setHeading(reader.readFloat(Bit.HEADING, Float.MIN_VALUE));
-        creature.setPitch(reader.readFloat(Bit.PITCH, Float.MIN_VALUE));
-        creature.setRoll(reader.readFloat(Bit.ROLL, Float.MIN_VALUE));
+        creature.setHeading(reader.readFloat(Bit.HEADING));
+        creature.setPitch(reader.readFloat(Bit.PITCH));
+        creature.setRoll(reader.readFloat(Bit.ROLL));
 
         if (reader.has(Bit.CREATURE_TYPE)) {
             creature.setCreatureType(CreatureType.values()[reader.readInt()]);
@@ -67,8 +67,8 @@ public class CreatureParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_2_5, 4);
         reader.readObjectUnknown(Bit.UNK_2_6, 4);
 
-        creature.setHealth(reader.readFloat(Bit.HEALTH, Float.MIN_VALUE));
-        creature.setMaxHealth(reader.readFloat(Bit.MAX_HEALTH, Float.MIN_VALUE));
+        creature.setHealth(reader.readFloat(Bit.HEALTH));
+        creature.setMaxHealth(reader.readFloat(Bit.MAX_HEALTH));
 
         reader.readObjectUnknown(Bit.UNK_3_1, 1);
         reader.readObjectUnknown(Bit.UNK_3_2, 4);
@@ -78,13 +78,13 @@ public class CreatureParser extends AbstractObjectParser {
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisCreature creature = (ArtemisCreature) obj;
-		writer	.writeFloat(Bit.X, creature.getX(), Float.MIN_VALUE)
-				.writeFloat(Bit.Y, creature.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, creature.getZ(), Float.MIN_VALUE)
+		writer	.writeFloat(Bit.X, creature.getX())
+				.writeFloat(Bit.Y, creature.getY())
+				.writeFloat(Bit.Z, creature.getZ())
 				.writeString(Bit.NAME, creature.getName())
-				.writeFloat(Bit.HEADING, creature.getHeading(), Float.MIN_VALUE)
-				.writeFloat(Bit.PITCH, creature.getPitch(), Float.MIN_VALUE)
-				.writeFloat(Bit.ROLL, creature.getRoll(), Float.MIN_VALUE);
+				.writeFloat(Bit.HEADING, creature.getHeading())
+				.writeFloat(Bit.PITCH, creature.getPitch())
+				.writeFloat(Bit.ROLL, creature.getRoll());
 
 		CreatureType creatureType = creature.getCreatureType();
 
@@ -98,8 +98,8 @@ public class CreatureParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_2_4)
 				.writeUnknown(Bit.UNK_2_5)
 				.writeUnknown(Bit.UNK_2_6)
-				.writeFloat(Bit.HEALTH, creature.getHealth(), Float.MIN_VALUE)
-				.writeFloat(Bit.MAX_HEALTH, creature.getMaxHealth(), Float.MIN_VALUE)
+				.writeFloat(Bit.HEALTH, creature.getHealth())
+				.writeFloat(Bit.MAX_HEALTH, creature.getMaxHealth())
 				.writeUnknown(Bit.UNK_3_1)
 				.writeUnknown(Bit.UNK_3_2);
 	}

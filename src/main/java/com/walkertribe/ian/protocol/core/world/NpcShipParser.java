@@ -104,27 +104,27 @@ public class NpcShipParser extends AbstractObjectParser {
 	protected ArtemisNpc parseImpl(PacketReader reader) {
         ArtemisNpc obj = new ArtemisNpc(reader.getObjectId());
         obj.setName(reader.readString(Bit.NAME));
-        obj.setImpulse(reader.readFloat(Bit.IMPULSE, -1));
-        obj.setSteering(reader.readFloat(Bit.RUDDER, -1));
-        obj.setTopSpeed(reader.readFloat(Bit.MAX_IMPULSE, -1));
-        obj.setTurnRate(reader.readFloat(Bit.MAX_TURN_RATE, -1));
+        obj.setImpulse(reader.readFloat(Bit.IMPULSE));
+        obj.setSteering(reader.readFloat(Bit.RUDDER));
+        obj.setTopSpeed(reader.readFloat(Bit.MAX_IMPULSE));
+        obj.setTurnRate(reader.readFloat(Bit.MAX_TURN_RATE));
         obj.setEnemy(reader.readBool(Bit.IS_ENEMY, 4));
         obj.setHullId(reader.readInt(Bit.SHIP_TYPE, -1));
-        obj.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        obj.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        obj.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
-        obj.setPitch(reader.readFloat(Bit.PITCH, Float.MIN_VALUE));
-        obj.setRoll(reader.readFloat(Bit.ROLL, Float.MIN_VALUE));
-        obj.setHeading(reader.readFloat(Bit.HEADING, Float.MIN_VALUE));
-        obj.setVelocity(reader.readFloat(Bit.VELOCITY, -1));
+        obj.setX(reader.readFloat(Bit.X));
+        obj.setY(reader.readFloat(Bit.Y));
+        obj.setZ(reader.readFloat(Bit.Z));
+        obj.setPitch(reader.readFloat(Bit.PITCH));
+        obj.setRoll(reader.readFloat(Bit.ROLL));
+        obj.setHeading(reader.readFloat(Bit.HEADING));
+        obj.setVelocity(reader.readFloat(Bit.VELOCITY));
         obj.setSurrendered(reader.readBool(Bit.SURRENDERED, 1));
 
         reader.readObjectUnknown(Bit.UNK_2_8, 1);
 
-        obj.setShieldsFront(reader.readFloat(Bit.FORE_SHIELD, Float.MIN_VALUE));
-        obj.setShieldsFrontMax(reader.readFloat(Bit.FORE_SHIELD_MAX, -1));
-        obj.setShieldsRear(reader.readFloat(Bit.AFT_SHIELD, Float.MIN_VALUE));
-        obj.setShieldsRearMax(reader.readFloat(Bit.AFT_SHIELD_MAX, -1));
+        obj.setShieldsFront(reader.readFloat(Bit.FORE_SHIELD));
+        obj.setShieldsFrontMax(reader.readFloat(Bit.FORE_SHIELD_MAX));
+        obj.setShieldsRear(reader.readFloat(Bit.AFT_SHIELD));
+        obj.setShieldsRearMax(reader.readFloat(Bit.AFT_SHIELD_MAX));
 
         reader.readObjectUnknown(Bit.UNK_3_5, 2);
 
@@ -150,21 +150,21 @@ public class NpcShipParser extends AbstractObjectParser {
         reader.readObjectUnknown(Bit.UNK_4_6, 1);
         reader.readObjectUnknown(Bit.UNK_4_7, 1);
 
-        obj.setTargetX(reader.readFloat(Bit.TARGET_X, Float.MIN_VALUE));
-        obj.setTargetY(reader.readFloat(Bit.TARGET_Y, Float.MIN_VALUE));
-        obj.setTargetZ(reader.readFloat(Bit.TARGET_Z, Float.MIN_VALUE));
+        obj.setTargetX(reader.readFloat(Bit.TARGET_X));
+        obj.setTargetY(reader.readFloat(Bit.TARGET_Y));
+        obj.setTargetZ(reader.readFloat(Bit.TARGET_Z));
         obj.setTagged(reader.readBool(Bit.TAGGED, 1));
 
         reader.readObjectUnknown(Bit.UNK_5_4, 1);
 
         // system damage
         for (ShipSystem sys : ShipSystem.values()) {
-        	obj.setSystemDamage(sys, reader.readFloat(SYSTEM_DAMAGES[sys.ordinal()], -1));
+        	obj.setSystemDamage(sys, reader.readFloat(SYSTEM_DAMAGES[sys.ordinal()]));
         }
 
         // shield frequencies
         for (BeamFrequency freq : BeamFrequency.values()) {
-        	obj.setShieldFreq(freq, reader.readFloat(SHLD_FREQS[freq.ordinal()], -1));
+        	obj.setShieldFreq(freq, reader.readFloat(SHLD_FREQS[freq.ordinal()]));
         }
 
         return obj;
@@ -174,25 +174,25 @@ public class NpcShipParser extends AbstractObjectParser {
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisNpc npc = (ArtemisNpc) obj;
 		writer	.writeString(Bit.NAME, npc.getName())
-				.writeFloat(Bit.IMPULSE, npc.getImpulse(), -1)
-				.writeFloat(Bit.RUDDER, npc.getSteering(), -1)
-				.writeFloat(Bit.MAX_IMPULSE, npc.getTopSpeed(), -1)
-				.writeFloat(Bit.MAX_TURN_RATE, npc.getTurnRate(), -1)
+				.writeFloat(Bit.IMPULSE, npc.getImpulse())
+				.writeFloat(Bit.RUDDER, npc.getSteering())
+				.writeFloat(Bit.MAX_IMPULSE, npc.getTopSpeed())
+				.writeFloat(Bit.MAX_TURN_RATE, npc.getTurnRate())
 				.writeBool(Bit.IS_ENEMY, npc.isEnemy(), 4)
 				.writeInt(Bit.SHIP_TYPE, npc.getHullId(), -1)
-				.writeFloat(Bit.X, npc.getX(), Float.MIN_VALUE)
-				.writeFloat(Bit.Y, npc.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, npc.getZ(), Float.MIN_VALUE)
-				.writeFloat(Bit.PITCH, npc.getPitch(), Float.MIN_VALUE)
-				.writeFloat(Bit.ROLL, npc.getRoll(), Float.MIN_VALUE)
-				.writeFloat(Bit.HEADING, npc.getHeading(), Float.MIN_VALUE)
-				.writeFloat(Bit.VELOCITY, npc.getVelocity(), -1)
+				.writeFloat(Bit.X, npc.getX())
+				.writeFloat(Bit.Y, npc.getY())
+				.writeFloat(Bit.Z, npc.getZ())
+				.writeFloat(Bit.PITCH, npc.getPitch())
+				.writeFloat(Bit.ROLL, npc.getRoll())
+				.writeFloat(Bit.HEADING, npc.getHeading())
+				.writeFloat(Bit.VELOCITY, npc.getVelocity())
 				.writeBool(Bit.SURRENDERED, npc.isSurrendered(), 1)
 				.writeUnknown(Bit.UNK_2_8)
-				.writeFloat(Bit.FORE_SHIELD, npc.getShieldsFront(), Float.MIN_VALUE)
-				.writeFloat(Bit.FORE_SHIELD_MAX, npc.getShieldsFrontMax(), -1)
-				.writeFloat(Bit.AFT_SHIELD, npc.getShieldsRear(), Float.MIN_VALUE)
-				.writeFloat(Bit.AFT_SHIELD_MAX, npc.getShieldsRearMax(), -1)
+				.writeFloat(Bit.FORE_SHIELD, npc.getShieldsFront())
+				.writeFloat(Bit.FORE_SHIELD_MAX, npc.getShieldsFrontMax())
+				.writeFloat(Bit.AFT_SHIELD, npc.getShieldsRear())
+				.writeFloat(Bit.AFT_SHIELD_MAX, npc.getShieldsRearMax())
 				.writeUnknown(Bit.UNK_3_5)
 				.writeByte(Bit.FLEET_NUMBER, npc.getFleetNumber(), Byte.MIN_VALUE)
 				.writeInt(Bit.SPECIAL_ABILITIES, npc.getSpecialBits(), -1)
@@ -220,18 +220,18 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_4_5)
 				.writeUnknown(Bit.UNK_4_6)
 				.writeUnknown(Bit.UNK_4_7)
-				.writeFloat(Bit.TARGET_X, npc.getTargetX(), Float.MIN_VALUE)
-				.writeFloat(Bit.TARGET_Y, npc.getTargetY(), Float.MIN_VALUE)
-				.writeFloat(Bit.TARGET_Z, npc.getTargetZ(), Float.MIN_VALUE)
+				.writeFloat(Bit.TARGET_X, npc.getTargetX())
+				.writeFloat(Bit.TARGET_Y, npc.getTargetY())
+				.writeFloat(Bit.TARGET_Z, npc.getTargetZ())
 				.writeBool(Bit.TAGGED, npc.isTagged(), 1)
 				.writeUnknown(Bit.UNK_5_4);
 
 		for (ShipSystem sys : ShipSystem.values()) {
-			writer.writeFloat(SYSTEM_DAMAGES[sys.ordinal()], npc.getSystemDamage(sys), -1);
+			writer.writeFloat(SYSTEM_DAMAGES[sys.ordinal()], npc.getSystemDamage(sys));
 		}
 
 		for (BeamFrequency freq : BeamFrequency.values()) {
-			writer.writeFloat(SHLD_FREQS[freq.ordinal()], npc.getShieldFreq(freq), -1);
+			writer.writeFloat(SHLD_FREQS[freq.ordinal()], npc.getShieldFreq(freq));
 		}
 	}
 }

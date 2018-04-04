@@ -37,7 +37,9 @@ import com.walkertribe.ian.model.Model;
  * <dd>BoolState.UNKNOWN</dd>
  * <dt>Other Objects</dt>
  * <dd>null</dd>
- * <dt>Numeric primitives</dt>
+ * <dt>float</dt>
+ * <dd>Float.NaN</dd>
+ * <dt>Other numeric primitives</dt>
  * <dd>-1, or the type's MIN_VALUE if -1 is a permissible value
  * 		for that property</dd>
  * </dl>
@@ -87,21 +89,21 @@ public interface ArtemisObject {
 
     /**
 	 * The object's position along the X-axis.
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public abstract float getX();
     public abstract void setX(float x);
 
     /**
 	 * The object's position along the Y-axis
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public abstract float getY();
     public abstract void setY(float y);
 
     /**
 	 * The object's position along the Z-axis
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public abstract float getZ();
     public abstract void setZ(float z);

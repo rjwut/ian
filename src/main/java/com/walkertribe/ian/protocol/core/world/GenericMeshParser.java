@@ -18,29 +18,30 @@ public class GenericMeshParser extends AbstractObjectParser {
 		UNK_1_4,
 		UNK_1_5,
 		UNK_1_6,
-		UNK_1_7,
-		UNK_1_8,
+		ROLL,
+		PITCH,
 
-		UNK_2_1,
-		UNK_2_2,
+		HEADING,
+		ROLL_DELTA,
+		PITCH_DELTA,
+		HEADING_DELTA,
 		NAME,
 		MESH_PATH,
 		TEXTURE_PATH,
-		UNK_2_6,
-		UNK_2_7,
-		UNK_2_8,
+		PUSH_RADIUS,
 
+		BLOCK_FIRE,
+		SCALE,
 		RED,
 		GREEN,
 		BLUE,
 		FORE_SHIELDS,
 		AFT_SHIELDS,
-		UNK_3_6,
-		UNK_3_7,
 		UNK_3_8,
 
 		UNK_4_1,
-		UNK_4_2
+		UNK_4_2,
+		UNK_4_3
 	}
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -56,70 +57,70 @@ public class GenericMeshParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisMesh parseImpl(PacketReader reader) {
         final ArtemisMesh mesh = new ArtemisMesh(reader.getObjectId());
-        mesh.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        mesh.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        mesh.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+        mesh.setX(reader.readFloat(Bit.X));
+        mesh.setY(reader.readFloat(Bit.Y));
+        mesh.setZ(reader.readFloat(Bit.Z));
 
         reader.readObjectUnknown(Bit.UNK_1_4, 4);
         reader.readObjectUnknown(Bit.UNK_1_5, 4);
-        reader.readObjectUnknown(Bit.UNK_1_6, 8);
-        reader.readObjectUnknown(Bit.UNK_1_7, 4);
-        reader.readObjectUnknown(Bit.UNK_1_8, 4);
-        reader.readObjectUnknown(Bit.UNK_2_1, 4);
-        reader.readObjectUnknown(Bit.UNK_2_2, 8);
-        
+        reader.readObjectUnknown(Bit.UNK_1_6, 4);
+
+        mesh.setRoll(reader.readFloat(Bit.ROLL));
+        mesh.setPitch(reader.readFloat(Bit.PITCH));
+        mesh.setHeading(reader.readFloat(Bit.HEADING));
+        mesh.setRollDelta(reader.readFloat(Bit.ROLL_DELTA));
+        mesh.setPitchDelta(reader.readFloat(Bit.PITCH_DELTA));
+        mesh.setHeadingDelta(reader.readFloat(Bit.HEADING_DELTA));
         mesh.setName(reader.readString(Bit.NAME));
         mesh.setMesh(reader.readString(Bit.MESH_PATH));
-        mesh.setTexture(reader.readString(Bit.MESH_PATH)); // wtf?!
-
-        reader.readObjectUnknown(Bit.UNK_2_6, 4);
-        reader.readObjectUnknown(Bit.UNK_2_7, 2);
-        reader.readObjectUnknown(Bit.UNK_2_8, 1);
-
-        mesh.setRed(reader.readFloat(Bit.RED, Float.MIN_VALUE));
-        mesh.setGreen(reader.readFloat(Bit.GREEN, Float.MIN_VALUE));
-        mesh.setBlue(reader.readFloat(Bit.BLUE, Float.MIN_VALUE));
+        mesh.setTexture(reader.readString(Bit.TEXTURE_PATH));
+        mesh.setPushRadius(reader.readFloat(Bit.PUSH_RADIUS));
+        mesh.setBlockFire(reader.readBool(Bit.BLOCK_FIRE, 1));
+        mesh.setScale(reader.readFloat(Bit.SCALE));
+        mesh.setRed(reader.readFloat(Bit.RED));
+        mesh.setGreen(reader.readFloat(Bit.GREEN));
+        mesh.setBlue(reader.readFloat(Bit.BLUE));
         mesh.setFakeShields(
-        		reader.readFloat(Bit.FORE_SHIELDS, Float.MIN_VALUE),
-        		reader.readFloat(Bit.AFT_SHIELDS, Float.MIN_VALUE)
+        		reader.readFloat(Bit.FORE_SHIELDS),
+        		reader.readFloat(Bit.AFT_SHIELDS)
         );
 
-        reader.readObjectUnknown(Bit.UNK_3_6, 4);
-        reader.readObjectUnknown(Bit.UNK_3_7, 4);
-        reader.readObjectUnknown(Bit.UNK_3_8, 4);
-        reader.readObjectUnknown(Bit.UNK_4_1, 4);
-        reader.readObjectUnknown(Bit.UNK_4_2, 4);
+        reader.readObjectUnknown(Bit.UNK_3_8, 1);
+        reader.readObjectUnknown(Bit.UNK_4_1, 8);
+        reader.readObjectUnknown(Bit.UNK_4_2, 8);
+        reader.readObjectUnknown(Bit.UNK_4_3, 4);
         return mesh;
 	}
 
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisMesh mesh = (ArtemisMesh) obj;
-		writer	.writeFloat(Bit.X, mesh.getX(), Float.MIN_VALUE)
-				.writeFloat(Bit.Y, mesh.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, mesh.getZ(), Float.MIN_VALUE)
+		writer	.writeFloat(Bit.X, mesh.getX())
+				.writeFloat(Bit.Y, mesh.getY())
+				.writeFloat(Bit.Z, mesh.getZ())
 				.writeUnknown(Bit.UNK_1_4)
 				.writeUnknown(Bit.UNK_1_5)
 				.writeUnknown(Bit.UNK_1_6)
-				.writeUnknown(Bit.UNK_1_7)
-				.writeUnknown(Bit.UNK_1_8)
-				.writeUnknown(Bit.UNK_2_1)
-				.writeUnknown(Bit.UNK_2_2)
+				.writeFloat(Bit.ROLL, mesh.getRoll())
+				.writeFloat(Bit.PITCH, mesh.getPitch())
+				.writeFloat(Bit.HEADING, mesh.getHeading())
+				.writeFloat(Bit.ROLL_DELTA, mesh.getRollDelta())
+				.writeFloat(Bit.PITCH_DELTA, mesh.getPitchDelta())
+				.writeFloat(Bit.HEADING_DELTA, mesh.getHeadingDelta())
 				.writeString(Bit.NAME, mesh.getName())
 				.writeString(Bit.MESH_PATH, mesh.getMesh())
-				.writeString(Bit.MESH_PATH, mesh.getTexture())
-				.writeUnknown(Bit.UNK_2_6)
-				.writeUnknown(Bit.UNK_2_7)
-				.writeUnknown(Bit.UNK_2_8)
-				.writeFloat(Bit.RED, mesh.getRed(), Float.MIN_VALUE)
-				.writeFloat(Bit.GREEN, mesh.getGreen(), Float.MIN_VALUE)
-				.writeFloat(Bit.BLUE, mesh.getBlue(), Float.MIN_VALUE)
-				.writeFloat(Bit.FORE_SHIELDS, mesh.getShieldsFront(), Float.MIN_VALUE)
-				.writeFloat(Bit.AFT_SHIELDS, mesh.getShieldsRear(), Float.MIN_VALUE)
-				.writeUnknown(Bit.UNK_3_6)
-				.writeUnknown(Bit.UNK_3_7)
+				.writeString(Bit.TEXTURE_PATH, mesh.getTexture())
+				.writeFloat(Bit.PUSH_RADIUS, mesh.getPushRadius())
+				.writeBool(Bit.BLOCK_FIRE, mesh.getBlockFire(), 1)
+				.writeFloat(Bit.SCALE, mesh.getScale())
+				.writeFloat(Bit.RED, mesh.getRed())
+				.writeFloat(Bit.GREEN, mesh.getGreen())
+				.writeFloat(Bit.BLUE, mesh.getBlue())
+				.writeFloat(Bit.FORE_SHIELDS, mesh.getShieldsFront())
+				.writeFloat(Bit.AFT_SHIELDS, mesh.getShieldsRear())
 				.writeUnknown(Bit.UNK_3_8)
 				.writeUnknown(Bit.UNK_4_1)
-				.writeUnknown(Bit.UNK_4_2);
+				.writeUnknown(Bit.UNK_4_2)
+				.writeUnknown(Bit.UNK_4_3);
 	}
 }

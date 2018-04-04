@@ -15,7 +15,7 @@ public class BaseParser extends AbstractObjectParser {
 		NAME,
 		FORE_SHIELDS,
 		AFT_SHIELDS,
-		INDEX,
+		UNK_1_4,
 		HULL_ID,
 		X,
 		Y,
@@ -43,13 +43,13 @@ public class BaseParser extends AbstractObjectParser {
 	protected ArtemisBase parseImpl(PacketReader reader) {
         ArtemisBase base = new ArtemisBase(reader.getObjectId());
         base.setName(reader.readString(Bit.NAME));
-        base.setShieldsFront(reader.readFloat(Bit.FORE_SHIELDS, Float.MIN_VALUE));
-        base.setShieldsRear(reader.readFloat(Bit.AFT_SHIELDS, Float.MIN_VALUE));
-        base.setIndex(reader.readInt(Bit.INDEX, -1));
+        base.setShieldsFront(reader.readFloat(Bit.FORE_SHIELDS));
+        base.setShieldsRear(reader.readFloat(Bit.AFT_SHIELDS));
+        reader.readObjectUnknown(Bit.UNK_1_4, 4);
         base.setHullId(reader.readInt(Bit.HULL_ID, -1));
-        base.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        base.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        base.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+        base.setX(reader.readFloat(Bit.X));
+        base.setY(reader.readFloat(Bit.Y));
+        base.setZ(reader.readFloat(Bit.Z));
         reader.readObjectUnknown(Bit.UNK_2_1, 4);
         reader.readObjectUnknown(Bit.UNK_2_2, 4);
         reader.readObjectUnknown(Bit.UNK_2_3, 4);
@@ -63,13 +63,13 @@ public class BaseParser extends AbstractObjectParser {
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisBase base = (ArtemisBase) obj;
 		writer	.writeString(Bit.NAME, base.getName())
-				.writeFloat(Bit.FORE_SHIELDS, base.getShieldsFront(), Float.MIN_VALUE)
-				.writeFloat(Bit.AFT_SHIELDS, base.getShieldsRear(), Float.MIN_VALUE)
-				.writeInt(Bit.INDEX, base.getIndex(), -1)
+				.writeFloat(Bit.FORE_SHIELDS, base.getShieldsFront())
+				.writeFloat(Bit.AFT_SHIELDS, base.getShieldsRear())
+				.writeUnknown(Bit.UNK_1_4)
 				.writeInt(Bit.HULL_ID, base.getHullId(), -1)
-				.writeFloat(Bit.X, base.getX(), Float.MIN_VALUE)
-				.writeFloat(Bit.Y, base.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, base.getZ(), Float.MIN_VALUE)
+				.writeFloat(Bit.X, base.getX())
+				.writeFloat(Bit.Y, base.getY())
+				.writeFloat(Bit.Z, base.getZ())
 				.writeUnknown(Bit.UNK_2_1)
 				.writeUnknown(Bit.UNK_2_2)
 				.writeUnknown(Bit.UNK_2_3)

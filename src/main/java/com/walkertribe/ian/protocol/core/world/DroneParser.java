@@ -38,12 +38,12 @@ public class DroneParser extends AbstractObjectParser {
 	protected ArtemisDrone parseImpl(PacketReader reader) {
         final ArtemisDrone drone = new ArtemisDrone(reader.getObjectId());
     	reader.readObjectUnknown(Bit.UNK_1_1, 4);
-    	drone.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
+    	drone.setX(reader.readFloat(Bit.X));
     	reader.readObjectUnknown(Bit.UNK_1_3, 4);
-    	drone.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+    	drone.setZ(reader.readFloat(Bit.Z));
     	reader.readObjectUnknown(Bit.UNK_1_5, 4);
-    	drone.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-    	drone.setHeading(reader.readFloat(Bit.HEADING, Float.MIN_VALUE));
+    	drone.setY(reader.readFloat(Bit.Y));
+    	drone.setHeading(reader.readFloat(Bit.HEADING));
     	reader.readObjectUnknown(Bit.UNK_1_8, 4);
     	reader.readObjectUnknown(Bit.UNK_2_1, 4);
         return drone;
@@ -53,12 +53,12 @@ public class DroneParser extends AbstractObjectParser {
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisDrone drone = (ArtemisDrone) obj;
 		writer	.writeUnknown(Bit.UNK_1_1)
-				.writeFloat(Bit.X, drone.getX(), Float.MIN_VALUE)
+				.writeFloat(Bit.X, drone.getX())
 				.writeUnknown(Bit.UNK_1_3)
-				.writeFloat(Bit.Z, drone.getZ(), Float.MIN_VALUE)
+				.writeFloat(Bit.Z, drone.getZ())
 				.writeUnknown(Bit.UNK_1_5)
-				.writeFloat(Bit.Y, drone.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.HEADING, drone.getHeading(), Float.MIN_VALUE)
+				.writeFloat(Bit.Y, drone.getY())
+				.writeFloat(Bit.HEADING, drone.getHeading())
 				.writeUnknown(Bit.UNK_1_8)
 				.writeUnknown(Bit.UNK_2_1);
 	}

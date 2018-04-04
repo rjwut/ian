@@ -65,7 +65,7 @@ public class AllShipSettingsPacketTest extends AbstractPacketTester<AllShipSetti
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructShipAccentColorTooHigh() {
-		new Ship("Artemis", 0, 1.0f, DriveType.WARP);
+		new Ship("Artemis", 0, 1.000001f, DriveType.WARP);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

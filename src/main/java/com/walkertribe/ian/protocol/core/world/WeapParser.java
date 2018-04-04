@@ -80,6 +80,7 @@ public class WeapParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisPlayer parseImpl(PacketReader reader) {
         int[] torps = new int[TORPEDOS.length];
+        boolean[] hasTubeTime = new boolean[Artemis.MAX_TUBES];
         float[] tubeTimes = new float[Artemis.MAX_TUBES];
         TubeState[] tubeStates = new TubeState[Artemis.MAX_TUBES];
         byte[] tubeContents = new byte[Artemis.MAX_TUBES];
@@ -89,7 +90,12 @@ public class WeapParser extends AbstractObjectParser {
         }
            
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-            tubeTimes[i] = reader.readFloat(TUBE_TIMES[i], -1);
+        	Bit bit = TUBE_TIMES[i];
+
+        	if (reader.has(bit)) {
+                tubeTimes[i] = reader.readFloat(TUBE_TIMES[i]);
+                hasTubeTime[i] = true;
+        	}
         }
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
@@ -111,7 +117,10 @@ public class WeapParser extends AbstractObjectParser {
         }
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-        	player.setTubeCountdown(i, tubeTimes[i]);
+        	if (hasTubeTime[i]) {
+            	player.setTubeCountdown(i, tubeTimes[i]);
+        	}
+
         	player.setTubeState(i, tubeStates[i]);
         	player.setTubeContentsValue(i, tubeContents[i]);
         }
@@ -130,7 +139,10 @@ public class WeapParser extends AbstractObjectParser {
 		}
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-            writer.writeFloat(TUBE_TIMES[i], player.getTubeCountdown(i), -1);
+        	if (player.isTubeHasCountdown(i)) {
+        		int intVal = Float.floatToRawIntBits(player.getTubeCountdown(i));
+        		writer.writeInt(TUBE_TIMES[i], intVal, intVal + 1); // make sure this writes
+        	}
         }
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
