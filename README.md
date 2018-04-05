@@ -4,11 +4,11 @@ Interface for *Artemis* Networking (IAN)
 
 **IAN** is an unofficial Java library for communicating with [*Artemis Spaceship Bridge Simulator*](http://www.artemis.eochu.com/) servers and clients.
 
-IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* version 2.4.0. If you need Java library support for previous versions of *Artemis*, please see the version table below:
+IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* version 2.7.0 - 2.7.1. If you need Java library support for previous versions of *Artemis*, please see the version table below:
 
 *Artemis* | IAN/ArtClientLib
 ---: | ---
-2.4.0 | [IAN 3.2.0](https://github.com/rjwut/ian/releases/tag/v3.2.0)
+2.4.0 | [IAN 3.2.1](https://github.com/rjwut/ian/releases/tag/v3.2.1)
 2.3.0 | [IAN 3.0.0](https://github.com/rjwut/ian/releases/tag/v3.0.0)
 2.1.1 | [ArtClientLib v2.6.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.6.0)
 2.1 | [ArtClientLib v2.4.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.4.0)
@@ -57,6 +57,8 @@ See `FindServersDemo` for example code.
 
 3. **Run the `ServerDiscoveryRequester` instance.** To do this, construct a new `Thread`, passing in the `ServerDiscoveryRequester` instance, then call `start()` on the `Thread`. While the `Thread` is running, `Listener.onDiscovered()` will be invoked for each server it finds. When the wait time expires, it will invoke `Listener.onStop()`.
 
+4. **Reuse the `ServerDiscoveryRequester` as needed.** The `ServerDiscoveryRequester` will only send a single request, when the `Thread` first starts. If you want to continually poll for servers, wait for the `ServerDiscoveryRequester` to stop, then spin up another `Thread` with the same requester object.
+
 ### Connecting to an *Artemis* Server ###
 See `ClientDemo` for example code.
 
@@ -86,18 +88,18 @@ See `ClientDemo` for example code.
 
 2. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and an `Origin` (`CLIENT` in this case). The resulting object will be responsible for managing the connection to the client.
 
-3. **Configure and start the `ArtemisNetworkInterface`, and disconnect when complete.** This is done the same way as for clients. See "Connecting to an *Artemis* Server" above, starting at step 2.
+3. **Use the `ArtemisNetworkInterface` the same way you do with clients.** You can now add listeners, start the interface, send packets to the client, and disconnect just as you do when connected to a server. See "Connecting to an *Artemis* Server" above, starting at step 2.
 
 ### Creating an *Artemis* Proxy Server ###
 *See `ProxyDemo` for example code.*
 
-1. **Set up as an *Artemis* server.** See steps 1 and 2 in the previous section.
+1. **Listen for client connections.** See "Accepting an *Artemis* Client Connection" above.
 
-2. **Connect to the *Artemis* server.** This is done exactly the same way as you would for creating an *Artemis* client, as documented in "Connecting to an *Artemis* Server". You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
+2. **When you receive a connection, connect to the *Artemis* server for which you are proxying.** This is done exactly the same way as you would for creating an *Artemis* client, as documented in "Connecting to an *Artemis* Server". You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
 
-3. **Pass through all packets.** The `proxyTo()` method on `ArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
+3. **Pass through all packets.** The `proxyTo()` method on `ArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite origin types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
 
-4. **Add listeners.** Add your listeners to both the client and server objects. Once the listener has caught the packet and extracted whatever information it wants from it, you can either pass the packet along by passing it to `send()`, suppress it (by doing nothing), or even inject your own packets instead (by constructing them and passing them to `send()`). Remember that `proxyTo()` does **not** pass along packets caught by listeners, so it's up to you to `send()` them if you want them passed along. Also, keep in mind that multiple listeners can catch the same packet; be careful not to send it more than once!
+4. **Add listeners.** Add your listeners to both the client and server interface objects. Once the listener has caught the packet and extracted whatever information it wants from it, you can either send the packet along by passing it to `send()`, suppress it (by doing nothing), or even inject your own packets instead (by constructing them and passing them to `send()`). Remember that `proxyTo()` does **not** pass along packets caught by listeners, so it's up to you to `send()` them if you want them passed along. Also, keep in mind that multiple listeners can catch the same packet; be careful not to send it more than once!
 
 5. **Start both network interfaces.** Invoke `start()` on both of them to start consuming packets from both connections.
 
@@ -110,7 +112,7 @@ See `ClientDemo` for example code.
 
 2. **Run the `ServerDiscoveryResponder` instance.** To do this, construct a new `Thread`, passing in the `ServerDiscoveryResponder` instance, then call `start()` on the `Thread`. While the `Thread` is running, the `ServerDiscoveryResponder` will automatically respond to any discovery requests it receives.
 
-3. **Invoke `stop()` when you are no longer accepting client connections.** When you shut down your server or the simulation starts, you should no longer announce your server's presence to the LAN. Calling `stop()` on the `ServerDiscoveryResponder` will cause it to shut down the `Thread` so that it will stop responding to requests.
+3. **Invoke `stop()` when you are no longer accepting client connections.** You don't want to continue to announce your server's presence to the LAN if you're not accepting client connections anymore. Calling `stop()` on the `ServerDiscoveryResponder` will cause it to shut down the `Thread` so that it will stop responding to requests.
 
 ### Event Listeners ###
 To make your application react to events, you must write one or more event listeners and register them with your `ThreadedArtemisNetworkInterface` object via the `addListener()` method. An event listener can be any `Object` which has one or more methods marked with the `@Listener` annotation. A listener method must be `public`, return `void`, and have exactly one argument. The type of that argument indicates what sort of events will cause the method to be invoked:
@@ -124,6 +126,24 @@ You should use the most specific subtype you can for the argument type, as IAN w
 One important event to listen for when creating a client is the `ConnectionSuccessEvent`. You shouldn't attempt to send any packets to the server before you receive this event. This may also a good time to send a `SetShipPacket` and a `SetConsolePacket`.
 
 It's also likely that you'll want to know when the connection to the remote machine is lost; listening for `DisconnectEvent` will handle that.
+
+### `ArtemisObject` Instances and Handling Updates ###
+The `ArtemisObject` interface is implemented by objects which represent game world objects (ships, bases, creatures, asteroids, torpedoes, black holes, etc.). The server will frequently send `ObjectUpdatePacket`s that contain these objects.
+
+`ArtemisObject`s have properties which are exposed with getters and setters. The properties which are available will vary depending on the object's type. In order to save network bandwidth, the server will usually send only the properties of an object that have changed since the last update rather than the entire state of the object. Therefore, these properties may be unspecified.
+
+Rather than use `null` to mean "unspecified" (and incur the memory overhead of instantiating many primitive wrapper objects), IAN uses a specific value for each property to indicate that it is unspecified. The value that means "unspecified" depends on the data type:
+
+| Data type       | Unspecified value   |
+| --------------- | ------------------- |
+| `BoolState`     | `BoolState.UNKNOWN` |
+| other `Object`s | `null`              |
+| `float`         | `Float.NaN`         |
+| `byte` or `int` | `-1` or `MIN_VALUE` |
+
+For `byte` or `int`, `-1` is used to mean "unspecified" unless `-1` is a valid value. In that case, `MIN_VALUE` is used. Any property which does not follow the above rules will explain in its documentation.
+
+The `ArtemisObject.updateFrom()` method copies the specified properties from one object to another. This allows you to keep an object current as you recieve updates: simply pass the updated object to the original object's `updateFrom()` method and will have the updates applied to it. If you wish to maintain updated status for the entire game world, the `SystemManager` class handles this for you. Simply instantiate one and register it as a listener with your `ArtemisNetworkInterface`. As the simulation runs, you can use the various `get*()` methods to retrieve game state.
 
 ### Locating *Artemis* Resources ###
 Some operations require data which is obtained from *Artemis* resource files. There are three major classes of resource data IAN can make use of:
@@ -149,9 +169,6 @@ IAN provides several interfaces and classes that can help you with reading *Arte
 * `ClasspathResolver`: A `PathResolver` implementation that loads resources from the classpath relative to a specific class. This allows you to bundle the needed resources inside your JAR.
 
 You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load *Artemis* resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise code that uses a `Context`.)
-
-### Tracking World State ###
-The most frequently received packets from the server are ones which provide updates on the status of objects in the game world. These updates typically contain only that information which has changed, not the complete state of the object. The `SystemManager` class aggregates the received updates in order to provide an up-to-the-moment view of the game world. To use it, simply construct a new `SystemManager` and add it as a listener to your `ThreadedArtemisNetworkInterface`; it has several listener methods which collect the relevant packets to build the game world. You can then use the various `get*()` methods to retrieve game state from the `SystemManager`.
 
 ### Reading `vesselData.xml` ###
 The `vesselData.xml` file contains information about the game's factions and vessels. The `ArtemisShielded` interface includes a `getVessel(Context)` method which will return a `Vessel` object. The `ArtemisBase`, `ArtemisNpc`, and `ArtemisPlayer` classes implement this interface. `Vessel` has a `getFaction()` method which will return the `Faction` corresponding to that `Vessel`.
