@@ -182,5 +182,6 @@ Various GitHub users have contributed to IAN by helping to discover and document
 * [@NoseyNick](https://github.com/NoseyNick)
 * [@prophile](https://github.com/prophile)
 * [@russjudge](https://github.com/russjudge)
+* [@StarryWisdom](https://github.com/StarryWisdom)
 * [@theGuyFromHell](https://github.com/theGuyFromHell)
 * [@UserMcUser](https://github.com/UserMcUser)
