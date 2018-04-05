@@ -125,7 +125,7 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 		int c = type.ordinal() - that.type.ordinal(); // prefer higher-class types
 
 		if (c == 0) {
-			c = iface.getIndex() - that.ifaceIndex; // prefer earlier-listed interfaces
+			c = ifaceIndex - that.ifaceIndex; // prefer earlier-listed interfaces
 			// Note: iface.getIndex() would work, but isn't available before Android API level 19
 		}
 
