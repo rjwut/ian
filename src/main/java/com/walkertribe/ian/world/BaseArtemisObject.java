@@ -192,7 +192,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 
     @Override
     public boolean hasPosition() {
-    	return !Float.isNaN(mX) && !Float.isNaN(mY) && !Float.isNaN(mZ);
+    	return !Float.isNaN(mX) && !Float.isNaN(mZ);
     }
 
     @Override
@@ -201,8 +201,11 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     		throw new RuntimeException("Can't compute distance if both objects don't have a position");
     	}
 
+    	float y0 = obj.getY();
+    	y0 = Float.isNaN(y0) ? 0 : y0;
+    	float y1 = Float.isNaN(mY) ? 0 : mY;
     	float dX = obj.getX() - mX;
-    	float dY = obj.getY() - mY;
+    	float dY = y0 - y1;
     	float dZ = obj.getZ() - mZ;
     	return (float) Math.sqrt(dX * dX + dY * dY + dZ * dZ);
     }
@@ -332,7 +335,12 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 		return  mName != null ||
 				!Float.isNaN(mX) ||
 				!Float.isNaN(mY) ||
-				!Float.isNaN(mZ);
+				!Float.isNaN(mZ) ||
+				mRace != null ||
+				mArtemisClass != null ||
+				mIntelLevel1 != null ||
+				mIntelLevel2 != null ||
+				(unknownProps != null && !unknownProps.isEmpty());
 	}
 
     @Override
