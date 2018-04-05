@@ -8,7 +8,10 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 /**
- * Respond to server discovery requests.
+ * Respond to server discovery requests. Instantiate this class and spin it up
+ * on a Thread to start listening for discovery requests. When you want to stop
+ * announcing your server, call stop() on this object and the Thread will
+ * (eventually) terminate.
  * @author rjwut
  */
 public class ServerDiscoveryResponder implements Runnable {
@@ -24,7 +27,7 @@ public class ServerDiscoveryResponder implements Runnable {
 	 * Listen for server discovery requests, guessing the best PrivateNetworkAddress to use.
 	 */
 	public ServerDiscoveryResponder() throws IOException {
-		init(PrivateNetworkAddress.guessBestPrivateNetworkAddress());
+		init(PrivateNetworkAddress.guessBest());
 	}
 
 	/**

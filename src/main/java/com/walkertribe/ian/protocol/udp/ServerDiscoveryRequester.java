@@ -5,13 +5,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 /**
  * Searches for servers on the LAN. When run on a Thread, the requester will
  * broadcast out a request to discover servers, then listen for response for a
  * configurable amount of time. The requester can be reused to send out
- * requests again.
+ * requests again, which you will need to do if you wish to continually poll
+ * for servers.
  * @author rjwut
  */
 public class ServerDiscoveryRequester implements Runnable {
@@ -37,16 +37,32 @@ public class ServerDiscoveryRequester implements Runnable {
 	private Listener listener;
 	private int timeoutMs;
 	private DatagramSocket skt;
-	private InetAddress defaultBroadcastAddr;
+	private InetAddress broadcastAddr;
 	private byte[] buffer = new byte[255];
 
 	/**
-	 * Sets up a new ServerDiscoveryRequester that will notified the given
-	 * Listener for each server that is discovered. The requester will
-	 * listen for responses for the indicated amount of time, then shut
-	 * down.
+	 * Guesses the appropriate network interface from which to broadcast.
 	 */
-	public ServerDiscoveryRequester(Listener listener, int timeoutMs) throws UnknownHostException {
+	public ServerDiscoveryRequester(Listener listener, int timeoutMs) throws IOException {
+		PrivateNetworkAddress addr = PrivateNetworkAddress.guessBest();
+		init(addr != null ? addr.getBroadcastAddress() : InetAddress.getByName("255.255.255.255"), listener, timeoutMs);
+	}
+
+	/**
+	 * Broadcasts using the given InetAddress.
+	 */
+	public ServerDiscoveryRequester(InetAddress broadcastAddress, Listener listener, int timeoutMs) {
+		init(broadcastAddress, listener, timeoutMs);
+	}
+
+	/**
+	 * Common initialization for both constructors.
+	 */
+	private void init(InetAddress broadcastAddress, Listener listener, int timeoutMs) {
+		if (broadcastAddress == null) {
+			throw new IllegalArgumentException("You must provide a broadcast address");
+		}
+
 		if (listener == null) {
 			throw new IllegalArgumentException("You must provide a listener");
 		}
@@ -57,19 +73,28 @@ public class ServerDiscoveryRequester implements Runnable {
 
 		this.listener = listener;
 		this.timeoutMs = timeoutMs;
-		defaultBroadcastAddr = InetAddress.getByName("255.255.255.255");
+		this.broadcastAddr = broadcastAddress;
 	}
 
 	@Override
 	public synchronized void run() {
 		try {
+			// Broadcast
 			skt = new DatagramSocket();
 			skt.setBroadcast(true);
-			skt.send(new DatagramPacket(DATA, 1, defaultBroadcastAddr, ServerDiscoveryResponder.PORT));
+			skt.send(new DatagramPacket(DATA, 1, broadcastAddr, ServerDiscoveryResponder.PORT));
+
+			// Listen for responses
 			long endTime = System.currentTimeMillis() + timeoutMs;
 
 			do {
-				skt.setSoTimeout(Math.max((int) (endTime - System.currentTimeMillis()), 1));
+				int timeLeft = Math.max((int) (endTime - System.currentTimeMillis()), 1);
+
+				if (timeLeft < 1) {
+					break;
+				}
+
+				skt.setSoTimeout(timeLeft);
 				DatagramPacket pkt = new DatagramPacket(buffer, buffer.length);
 
 				try {

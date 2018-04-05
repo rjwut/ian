@@ -1,6 +1,6 @@
 package com.walkertribe.ian.example;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 
 import com.walkertribe.ian.protocol.udp.Server;
 import com.walkertribe.ian.protocol.udp.ServerDiscoveryRequester;
@@ -14,7 +14,7 @@ import com.walkertribe.ian.protocol.udp.ServerDiscoveryRequester;
  * @author rjwut
  */
 public class FindServersDemo implements ServerDiscoveryRequester.Listener {
-	public static void main(String[] args) throws UnknownHostException {
+	public static void main(String[] args) throws IOException {
 		FindServersDemo demo = new FindServersDemo();
 		ServerDiscoveryRequester requester = new ServerDiscoveryRequester(demo, 5000);
 		new Thread(requester).start();

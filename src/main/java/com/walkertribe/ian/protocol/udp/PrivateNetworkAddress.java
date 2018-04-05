@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+/**
+ * A class which contains all the information needed to perform and respond to
+ * UDP server discovery broadcasts.
+ * @author rjwut
+ */
 public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> {
 	/**
 	 * Returns a PrivateNetworkAddress believed to represent the best one to
 	 * represent this machine on the LAN, or null if none can be found.
 	 */
-	public static PrivateNetworkAddress guessBestPrivateNetworkAddress() throws SocketException {
+	public static PrivateNetworkAddress guessBest() throws SocketException {
 		List<PrivateNetworkAddress> all = findAll();
 		return all.isEmpty() ? null : all.get(0);
 	}
