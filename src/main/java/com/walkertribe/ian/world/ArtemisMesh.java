@@ -113,6 +113,11 @@ public class ArtemisMesh extends BaseArtemisOrientable {
     	return mScale;
     }
 
+    @Override
+    public float getScale(Context ctx) {
+    	return Float.isNaN(mScale) ? super.getScale(ctx) : mScale;
+    }
+
     public void setScale(float scale) {
     	mScale = scale;
     }

@@ -86,8 +86,8 @@ public class GenericMeshParser extends AbstractObjectParser {
         );
 
         reader.readObjectUnknown(Bit.UNK_3_8, 1);
-        reader.readObjectUnknown(Bit.UNK_4_1, 8);
-        reader.readObjectUnknown(Bit.UNK_4_2, 8);
+        reader.readObjectUnknownString(Bit.UNK_4_1);
+        reader.readObjectUnknownString(Bit.UNK_4_2);
         reader.readObjectUnknown(Bit.UNK_4_3, 4);
         return mesh;
 	}

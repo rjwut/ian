@@ -496,6 +496,42 @@ public class PacketReader {
 	}
 
 	/**
+	 * If the indicated bit in the current BitField is off, this method returns
+	 * without doing anything. Otherwise, it reads a string from the current
+	 * packet's payload and puts it in the unknown object property map.
+	 */
+	public void readObjectUnknownString(int bitIndex) {
+		readObjectUnknownString(bitIndex, BitField.generateBitName(bitIndex));
+	}
+
+	/**
+	 * If the indicated bit in the current BitField is off, this method returns
+	 * without doing anything. Otherwise, it reads a string from the current
+	 * packet's payload and puts it in the unknown object property map.
+	 */
+	public void readObjectUnknownString(Enum<?> bit) {
+		readObjectUnknownString(bit.ordinal(), bit.name());
+	}
+
+	/**
+	 * Common internal implementation for the public readObjectUnknownString()
+	 * methods.
+	 */
+	private void readObjectUnknownString(int bitIndex, String name) {
+		if (bitField.get(bitIndex)) {
+			int len = readInt();
+			byte[] str = readBytes(len * 2);
+			byte[] bytes = new byte[str.length + 4];
+			bytes[0] = (byte) (0xff & len);
+			bytes[1] = (byte) (0xff & (len >> 8));
+			bytes[2] = (byte) (0xff & (len >> 16));
+			bytes[3] = (byte) (0xff & (len >> 24));
+			System.arraycopy(str, 0, bytes, 4, str.length);
+			unknownObjectProps.put(name, bytes);
+		}
+	}
+
+	/**
 	 * Skips the given number of bytes in the current packet's payload.
 	 */
 	public void skip(int byteCount) {
