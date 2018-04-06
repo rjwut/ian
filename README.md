@@ -2,7 +2,7 @@ Interface for *Artemis* Networking (IAN)
 ========================================
 [![Build Status](https://secure.travis-ci.org/rjwut/ian.svg)](http://travis-ci.org/rjwut/ian)
 
-**IAN** is an unofficial Java library for communicating with [*Artemis Spaceship Bridge Simulator*](http://www.artemis.eochu.com/) servers and clients.
+**IAN** is an unofficial Java library for communicating with [*Artemis Spaceship Bridge Simulator*](https://artemisspaceshipbridge.com/) servers and clients.
 
 IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* version 2.7.0 - 2.7.1. If you need Java library support for previous versions of *Artemis*, please see the version table below:
 
