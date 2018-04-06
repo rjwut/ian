@@ -32,8 +32,11 @@ public class Vessel {
 	int playerShields;
 	float turnRate;
 	float topSpeed;
-	float efficiency;
+	float shipEfficiency;
+	float warpEfficiency;
+	float jumpEfficiency;
 	int fleetAiCommonality;
+	int bayCount;
 	int fighterCount;
 	int bomberCount;
 	float productionCoeff;
@@ -219,8 +222,22 @@ public class Vessel {
 	/**
 	 * Returns this Vessel's efficiency rating.
 	 */
-	public float getEfficiency() {
-		return efficiency;
+	public float getShipEfficiency() {
+		return shipEfficiency;
+	}
+
+	/**
+	 * Returns this Vessel's warp efficiency rating.
+	 */
+	public float getWarpEfficiency() {
+		return warpEfficiency;
+	}
+
+	/**
+	 * Returns this Vessel's jump efficiency rating.
+	 */
+	public float getJumpEfficiency() {
+		return jumpEfficiency;
 	}
 
 	/**
@@ -232,9 +249,18 @@ public class Vessel {
 	}
 
 	/**
+	 * Returns the number of bays this Vessel has. Only Vessels that were declared with the
+	 * &lt;carrierload&gt; element will have bays. Note that a vessel does not have to have
+	 * VesselAttribute.CARRIER to have bays.
+	 */
+	public int getBayCount() {
+		return fighterCount;
+	}
+
+	/**
 	 * Returns the number of fighters this Vessel has. Only Vessels that were declared with the
-	 * &lt;carrierload&gt; (player ships) or &lt;carrier&gt; (enemy ships) elements will have
-	 * fighters. Note that a vessel does not have to have VesselAttribute.CARRIER to have fighters.
+	 * &lt;carrierload&gt; (player ships) elements will have fighters. Note that a vessel does
+	 * not have to have VesselAttribute.CARRIER to have fighters.
 	 */
 	public int getFighterCount() {
 		return fighterCount;
