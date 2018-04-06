@@ -1,9 +1,9 @@
 package com.walkertribe.ian.protocol.udp;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -18,7 +18,7 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 	 * Returns a PrivateNetworkAddress believed to represent the best one to
 	 * represent this machine on the LAN, or null if none can be found.
 	 */
-	public static PrivateNetworkAddress guessBest() throws SocketException {
+	public static PrivateNetworkAddress guessBest() throws IOException {
 		List<PrivateNetworkAddress> all = findAll();
 		return all.isEmpty() ? null : all.get(0);
 	}
@@ -26,7 +26,7 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 	/**
 	 * Returns a prioritized list of PrivateNetworkAddress objects.
 	 */
-	public static List<PrivateNetworkAddress> findAll() throws SocketException {
+	public static List<PrivateNetworkAddress> findAll() throws IOException {
 		List<PrivateNetworkAddress> list = new ArrayList<PrivateNetworkAddress>();
 		Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
 		int ifaceIndex = -1;
@@ -58,14 +58,16 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 
 	private NetworkInterface iface;
 	private InterfaceAddress addr;
+	private String hostName;
 	private PrivateNetworkType type;
 	private int ifaceIndex;
 	private int addrIndex;
 
 	private PrivateNetworkAddress(NetworkInterface iface, InterfaceAddress addr, PrivateNetworkType type,
-			int ifaceIndex, int addrIndex) {
+			int ifaceIndex, int addrIndex) throws IOException {
 		this.iface = iface;
 		this.addr = addr;
+		hostName = InetAddress.getLocalHost().getHostName();
 		this.type = type;
 		this.ifaceIndex = ifaceIndex;
 		this.addrIndex = addrIndex;
@@ -103,7 +105,7 @@ public class PrivateNetworkAddress implements Comparable<PrivateNetworkAddress> 
 	 * Returns the host name.
 	 */
 	public String getHostName() {
-		return addr.getAddress().getHostName();
+		return hostName;
 	}
 
 	/**
