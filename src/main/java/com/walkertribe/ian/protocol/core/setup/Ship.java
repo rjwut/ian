@@ -78,7 +78,7 @@ public class Ship {
 
 	public void setName(CharSequence name) {
 		mName = name;
-		mHasName = BoolState.from(Util.isBlank(name));
+		mHasName = BoolState.from(!Util.isBlank(name));
 	}
 
 	/**
