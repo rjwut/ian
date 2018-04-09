@@ -33,7 +33,7 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte DMX_MESSAGE          = 0x10;
     	public static final byte KEY_CAPTURE          = 0x11;
     	public static final byte PERSPECTIVE          = 0x12;
-    	public static final byte UNKNOWN_13           = 0x13;
+    	public static final byte DETONATION           = 0x13;
     	public static final byte GAME_OVER_REASON     = 0x14;
     	public static final byte GAME_OVER_STATS      = 0x15;
     	public static final byte UNKNOWN_16           = 0x16;
