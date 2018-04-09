@@ -140,8 +140,7 @@ public class WeapParser extends AbstractObjectParser {
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
         	if (player.isTubeHasCountdown(i)) {
-        		int intVal = Float.floatToRawIntBits(player.getTubeCountdown(i));
-        		writer.writeInt(TUBE_TIMES[i], intVal, intVal + 1); // make sure this writes
+        		writer.writeObjectFloat(TUBE_TIMES[i], player.getTubeCountdown(i));
         	}
         }
 

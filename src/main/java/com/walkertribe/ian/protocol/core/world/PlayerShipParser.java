@@ -141,7 +141,11 @@ public class PlayerShipParser extends AbstractObjectParser {
         }
 
         player.setScanObjectId(reader.readInt(Bit.SCAN_OBJECT_ID, -1));
-        player.setScanProgress(reader.readFloat(Bit.SCAN_PROGRESS));
+
+        if (reader.has(Bit.SCAN_PROGRESS)) {
+            player.setScanProgress(reader.readFloat());
+        }
+
         player.setReverse(reader.readBool(Bit.REVERSE_STATE, 1));
         player.setClimbDive(reader.readFloat(Bit.CLIMB_DIVE));
         player.setSide(reader.readByte(Bit.SIDE, (byte) -1));
@@ -228,9 +232,13 @@ public class PlayerShipParser extends AbstractObjectParser {
 			writer.writeByte(Bit.DRIVE_TYPE, (byte) drive.ordinal(), (byte) -1);
 		}
 
-		writer	.writeInt(Bit.SCAN_OBJECT_ID, player.getScanObjectId(), -1)
-				.writeFloat(Bit.SCAN_PROGRESS, player.getScanProgress())
-				.writeBool(Bit.REVERSE_STATE, player.getReverseState(), 1)
+		writer	.writeInt(Bit.SCAN_OBJECT_ID, player.getScanObjectId(), -1);
+		
+		if (player.hasScanProgress()) {
+			writer.writeObjectFloat(Bit.SCAN_PROGRESS, player.getScanProgress());
+		}
+
+		writer	.writeBool(Bit.REVERSE_STATE, player.getReverseState(), 1)
 				.writeFloat(Bit.CLIMB_DIVE, player.getClimbDive())
 				.writeByte(Bit.SIDE, player.getSide(), (byte) -1)
 				.writeUnknown(Bit.UNK_5_7)

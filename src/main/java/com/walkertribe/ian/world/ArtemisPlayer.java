@@ -132,6 +132,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private BoolState mReverse = BoolState.UNKNOWN;
     private float mClimbDive = Float.NaN;
     private int mScienceTarget = -1;
+    private boolean mHasScanProgress = false;
     private float mScanProgress = Float.NaN;
     private int mCaptainTarget = -1;
     private int mScanningId = -1;
@@ -610,8 +611,17 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
-     * The progress of the current scan, as a value between 0 and 1.
-     * Unspecified: Float.NaN
+     * Returns true if this ship has a value for scan progress. This is needed
+     * because sometimes the server transmits NaN.
+     */
+    public boolean hasScanProgress() {
+    	return mHasScanProgress;
+    }
+
+    /**
+     * The progress of the current scan, as a value between 0 and 1. Note that
+     * in some cases, the value can be NaN.
+     * Unspecified: hasScanProgress() == false
      */
     public float getScanProgress() {
         return mScanProgress;
@@ -619,6 +629,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     public void setScanProgress(float scanProgress) {
         mScanProgress = scanProgress;
+        mHasScanProgress = true;
     }
     
     /**
@@ -825,7 +836,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			BoolState.isKnown(mReverse) ||
     			!Float.isNaN(mClimbDive) ||
     			mScienceTarget != -1 ||
-    			!Float.isNaN(mScanProgress) ||
+    			mHasScanProgress ||
     			mCaptainTarget != -1 ||
     			mScanningId != -1 ||
     			mCapitalShipId != -1 ||
@@ -1011,8 +1022,9 @@ public class ArtemisPlayer extends BaseArtemisShip {
             mScienceTarget = plr.mScienceTarget;
         }
 
-        if (!Float.isNaN(plr.mScanProgress)) {
+        if (plr.mHasScanProgress) {
             mScanProgress = plr.mScanProgress;
+            mHasScanProgress = true;
         }
 
         if (plr.mCaptainTarget != -1) {
@@ -1129,7 +1141,11 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	putProp(props, "Climb/dive", mClimbDive);
     	putProp(props, "Reverse", mReverse);
     	putProp(props, "Scan target", mScienceTarget, -1);
-    	putProp(props, "Scan progress", mScanProgress);
+
+    	if (mHasScanProgress) {
+    		putProp(props, "Scan progress", mScanProgress);
+    	}
+
     	putProp(props, "Scan object ID", mScanningId, -1);
     	putProp(props, "Weapons target", mWeaponsTarget, -1);
     	putProp(props, "Captain target", mCaptainTarget, -1);
