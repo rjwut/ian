@@ -36,17 +36,17 @@ public class ClientDemo extends PlayerShipUpdateListener {
      * <p>Run with no arguments for usage syntax.</p>
      */
     public static void main(String[] args) {
-        if (args.length < 2 || args.length > 3) {
+        if (args.length < 1 || args.length > 2) {
             System.out.println(
-                    "Usage: ClientDemo {ipOrHostname}[:{port}] {artemisInstallPath} [shipIndex]"
+                    "Usage: ClientDemo {ipOrHostname}[:{port}] [shipIndex]"
             );
             return;
         }
 
-        int shipIndex = args.length == 3 ? Integer.parseInt(args[2]) : 0;
+        int shipIndex = args.length == 2 ? Integer.parseInt(args[1]) : 0;
 
         try {
-            new ClientDemo(args[0], args[1], shipIndex);
+            new ClientDemo(args[0], shipIndex);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
     /**
      * Starts the client and connects to the server.
      */
-    public ClientDemo(String host, String artemisInstallPath, int shipIndex) throws IOException {
+    public ClientDemo(String host, int shipIndex) throws IOException {
         super(shipIndex);
         System.out.println("Connecting to " + host + "...");
         int port = Artemis.DEFAULT_PORT;
