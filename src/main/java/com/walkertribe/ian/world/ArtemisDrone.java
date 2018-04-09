@@ -10,6 +10,7 @@ import com.walkertribe.ian.enums.ObjectType;
  */
 public class ArtemisDrone extends BaseArtemisOrientable {
 	private float mSteering = Float.NaN;
+	private int mSide = -1;
 
 	public ArtemisDrone(int objId) {
 		super(objId);
@@ -33,6 +34,18 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 		this.mSteering = steering;
 	}
 
+	/**
+	 * The side this drone belongs to.
+	 * Unspecified: -1
+	 */
+	public int getSide() {
+		return mSide;
+	}
+
+	public void setSide(int side) {
+		mSide = side;
+	}
+
 	@Override
 	public void updateFrom(ArtemisObject other) {
 		super.updateFrom(other);
@@ -43,6 +56,10 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 			if (!Float.isNaN(drone.mSteering)) {
 				mSteering = drone.mSteering;
 			}
+
+			if (drone.mSide != -1) {
+				mSide = drone.mSide;
+			}
 		}
 	}
 
@@ -50,5 +67,6 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
     	putProp(props, "Rudder", mSteering);
+    	putProp(props, "Side", mSide);
     }
 }

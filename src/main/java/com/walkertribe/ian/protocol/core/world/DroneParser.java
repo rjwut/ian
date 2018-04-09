@@ -19,7 +19,7 @@ public class DroneParser extends AbstractObjectParser {
     	UNK_1_5,
     	Y,
     	HEADING,
-    	UNK_1_8,
+    	SIDE,
 
     	UNK_2_1
     }
@@ -44,7 +44,7 @@ public class DroneParser extends AbstractObjectParser {
     	reader.readObjectUnknown(Bit.UNK_1_5, 4);
     	drone.setY(reader.readFloat(Bit.Y));
     	drone.setHeading(reader.readFloat(Bit.HEADING));
-    	reader.readObjectUnknown(Bit.UNK_1_8, 4);
+    	drone.setSide(reader.readInt(Bit.SIDE, -1));
     	reader.readObjectUnknown(Bit.UNK_2_1, 4);
         return drone;
 	}
@@ -59,7 +59,7 @@ public class DroneParser extends AbstractObjectParser {
 				.writeUnknown(Bit.UNK_1_5)
 				.writeFloat(Bit.Y, drone.getY())
 				.writeFloat(Bit.HEADING, drone.getHeading())
-				.writeUnknown(Bit.UNK_1_8)
+				.writeInt(Bit.SIDE, drone.getSide(), -1)
 				.writeUnknown(Bit.UNK_2_1);
 	}
 }
