@@ -59,14 +59,13 @@ public class ProxyDemo implements Runnable {
     public static void main(String[] args) {
         if (args.length < 2 || args.length > 3) {
             System.out.println("Usage:");
-            System.out.println("\tProxyDemo {artemisInstallPath} {serverIpOrHostname}[:{port}] [listenerPort]");
+            System.out.println("\tProxyDemo {serverIpOrHostname}[:{port}] [listenerPort]");
             return;
         }
 
-    String artemisInstallPath = args[0];
-        String serverAddr = args[1];
-        int port = args.length > 1 ? Integer.parseInt(args[2]) : 2010;
-        new Thread(new ProxyDemo(artemisInstallPath, port, serverAddr)).start();
+        String serverAddr = args[0];
+        int port = args.length > 1 ? Integer.parseInt(args[1]) : 2010;
+        new Thread(new ProxyDemo(port, serverAddr)).start();
     }
 
     private int port;
@@ -79,7 +78,7 @@ public class ProxyDemo implements Runnable {
      * After construction, you can start the proxy by spinning it up on a
      * thread.
      */
-    public ProxyDemo(String artemisInstallPath, int port, String serverAddr) {
+    public ProxyDemo(int port, String serverAddr) {
         this.port = port;
         int colonPos = serverAddr.indexOf(':');
 
