@@ -15,7 +15,7 @@ public enum CreatureType {
 	PIRANHA("dat/monster-pira.dxs,dat/monster-pira-jaw.dxs"),
 	CHARYBDIS("dat/monster-cone.dxs"),
 	NSECT("dat/monster-bug.dxs"),
-	JELLY("dat/monster-jelly.dxs"), // TODO confirm jelly DXS
+	JELLY("dat/jelly-body.dxs,dat/jelly-crown.dxs"),
 	WRECK("dat/derelict.dxs");
 
 	private String modelPaths;
