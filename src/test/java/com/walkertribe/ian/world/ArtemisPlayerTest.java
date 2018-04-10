@@ -179,7 +179,7 @@ public class ArtemisPlayerTest {
 		player.setTargetingMode(TargetingMode.AUTO);
 		player.setAlertStatus(AlertStatus.NORMAL);
 		player.setShields(BoolState.FALSE);
-		player.setShipIndex(0);
+		player.setShipIndex((byte) 0);
 		player.setEnergy(1000f);
 		player.setDockingBase(0);
 		player.setMainScreen(MainScreenView.FORE);
@@ -201,7 +201,7 @@ public class ArtemisPlayerTest {
 		Assert.assertNull(player.getTargetingMode());
 		Assert.assertNull(player.getAlertStatus());
 		Assert.assertTrue(!BoolState.isKnown(player.getShieldsState()));
-		Assert.assertEquals(-1, player.getShipIndex());
+		Assert.assertEquals(Byte.MIN_VALUE, player.getShipIndex());
 		Assert.assertTrue(Float.isNaN(player.getEnergy()));
 		Assert.assertEquals(-1, player.getDockingBase());
 		Assert.assertNull(player.getMainScreen());

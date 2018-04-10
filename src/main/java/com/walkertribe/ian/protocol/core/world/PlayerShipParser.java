@@ -29,7 +29,7 @@ public class PlayerShipParser extends AbstractObjectParser {
     	ENERGY,
 
     	SHIELD_STATE,
-    	SHIP_INDEX,
+    	UNK_2_2,
     	SHIP_TYPE,
     	X,
     	Y,
@@ -62,7 +62,7 @@ public class PlayerShipParser extends AbstractObjectParser {
     	CLIMB_DIVE,
     	SIDE,
     	UNK_5_7,
-    	UNK_5_8,
+    	SHIP_INDEX,
 
     	CAPITAL_SHIP_ID,
     	ACCENT_COLOR,
@@ -101,7 +101,7 @@ public class PlayerShipParser extends AbstractObjectParser {
         	player.setShields(reader.readBool(Bit.SHIELD_STATE, 2));
         }
 
-        player.setShipIndex(reader.readInt(Bit.SHIP_INDEX, -1));
+        reader.readObjectUnknown(Bit.UNK_2_2, 4);
         player.setHullId(reader.readInt(Bit.SHIP_TYPE, -1));
         player.setX(reader.readFloat(Bit.X));
         player.setY(reader.readFloat(Bit.Y));
@@ -151,7 +151,9 @@ public class PlayerShipParser extends AbstractObjectParser {
         player.setSide(reader.readByte(Bit.SIDE, (byte) -1));
 
         reader.readObjectUnknown(Bit.UNK_5_7, 4);
-        reader.readObjectUnknown(Bit.UNK_5_8, 1);
+
+        player.setShipIndex(reader.readByte(Bit.SHIP_INDEX, Byte.MIN_VALUE));
+
         player.setCapitalShipId(reader.readInt(Bit.CAPITAL_SHIP_ID, -1));
         player.setAccentColor(reader.readFloat(Bit.ACCENT_COLOR));
         player.setEmergencyJumpCooldown(reader.readFloat(Bit.EMERGENCY_JUMP_COOLDOWN));
@@ -185,7 +187,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 		writer	.writeByte(Bit.WARP, player.getWarp(), (byte) -1)
 				.writeFloat(Bit.ENERGY, player.getEnergy())
 				.writeBool(Bit.SHIELD_STATE, player.getShieldsState(), 2)
-				.writeInt(Bit.SHIP_INDEX, player.getShipIndex(), -1)
+				.writeUnknown(Bit.UNK_2_2)
 				.writeInt(Bit.SHIP_TYPE, player.getHullId(), -1)
 				.writeFloat(Bit.X, player.getX())
 				.writeFloat(Bit.Y, player.getY())
@@ -242,7 +244,7 @@ public class PlayerShipParser extends AbstractObjectParser {
 				.writeFloat(Bit.CLIMB_DIVE, player.getClimbDive())
 				.writeByte(Bit.SIDE, player.getSide(), (byte) -1)
 				.writeUnknown(Bit.UNK_5_7)
-				.writeUnknown(Bit.UNK_5_8)
+				.writeByte(Bit.SHIP_INDEX, player.getShipIndex(), Byte.MIN_VALUE)
 				.writeInt(Bit.CAPITAL_SHIP_ID, player.getCapitalShipId(), -1)
 				.writeFloat(Bit.ACCENT_COLOR, player.getAccentColor())
 				.writeFloat(Bit.EMERGENCY_JUMP_COOLDOWN, player.getEmergencyJumpCooldown());

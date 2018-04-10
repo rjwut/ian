@@ -116,7 +116,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     private TargetingMode mTargetingMode;
 	private AlertStatus mAlertStatus;
     private BoolState mShields = BoolState.UNKNOWN;
-    private int mShipIndex = -1;
+    private byte mShipIndex = Byte.MIN_VALUE;
 	private final SystemStatus[] mSystems = new SystemStatus[Artemis.SYSTEM_COUNT];
     private final int[] mTorpedos = new int[OrdnanceType.COUNT];
     private final Tube[] mTubes = new Tube[Artemis.MAX_TUBES];
@@ -207,15 +207,15 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     /**
      * Get this ship's player ship index. Note that this value is zero-based, so
-     * the vessel that is named Artemis will have a ship index of 0.
-     * Unspecified: -1
-     * @return int in [0,Artemis.SHIP_COUNT), or -1 if undefined
+     * the vessel that is named Artemis will have a ship index of 0. If the ship
+     * is a single-seat craft, this value will be -1.
+     * Unspecified: Byte.MIN_VALUE
      */
-    public int getShipIndex() {
+    public byte getShipIndex() {
         return mShipIndex;
     }
 
-    public void setShipIndex(int shipIndex) {
+    public void setShipIndex(byte shipIndex) {
     	mShipIndex = shipIndex;
     }
 
@@ -823,7 +823,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     			mTargetingMode != null ||
     			mAlertStatus != null ||
     			BoolState.isKnown(mShields) ||
-    			mShipIndex != -1 ||
+    			mShipIndex != Byte.MIN_VALUE ||
     			!Float.isNaN(mEnergy) ||
     			mNebulaType != -1 ||
     			mDockingBase != -1 ||
@@ -956,10 +956,10 @@ public class ArtemisPlayer extends BaseArtemisShip {
      * upgrades data.
      */
     public void updatePlayerFrom(ArtemisPlayer plr) {
-        if (mShipIndex == -1) {
+        if (plr.mShipIndex != Byte.MIN_VALUE) {
             mShipIndex = plr.mShipIndex;
         }
-        
+
         if (plr.mTargetingMode != null) {
         	mTargetingMode = plr.mTargetingMode;
         }
@@ -1095,7 +1095,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
     	putProp(props, "Targeting mode", mTargetingMode);
     	putProp(props, "Alert status", mAlertStatus);
     	putProp(props, "Shield state", mShields);
-    	putProp(props, "Ship index", mShipIndex, -1);
+    	putProp(props, "Ship index", mShipIndex, Byte.MIN_VALUE);
 
     	for (ShipSystem system : ShipSystem.values()) {
     		int i = system.ordinal();

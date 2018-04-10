@@ -43,7 +43,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
             return;
         }
 
-        int shipIndex = args.length == 2 ? Integer.parseInt(args[1]) : 0;
+        byte shipIndex = args.length == 2 ? Byte.parseByte(args[1]) : 0;
 
         try {
             new ClientDemo(args[0], shipIndex);
@@ -59,7 +59,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
     /**
      * Starts the client and connects to the server.
      */
-    public ClientDemo(String host, int shipIndex) throws IOException {
+    public ClientDemo(String host, byte shipIndex) throws IOException {
         super(shipIndex);
         System.out.println("Connecting to " + host + "...");
         int port = Artemis.DEFAULT_PORT;
