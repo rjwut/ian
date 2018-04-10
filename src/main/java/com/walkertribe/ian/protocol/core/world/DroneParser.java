@@ -14,10 +14,10 @@ public class DroneParser extends AbstractObjectParser {
     private enum Bit {
     	UNK_1_1,
     	X,
-    	UNK_1_3,
+    	Y,
     	Z,
     	UNK_1_5,
-    	Y,
+    	UNK_1_6,
     	HEADING,
     	SIDE,
 
@@ -39,10 +39,10 @@ public class DroneParser extends AbstractObjectParser {
         final ArtemisDrone drone = new ArtemisDrone(reader.getObjectId());
     	reader.readObjectUnknown(Bit.UNK_1_1, 4);
     	drone.setX(reader.readFloat(Bit.X));
-    	reader.readObjectUnknown(Bit.UNK_1_3, 4);
+    	drone.setY(reader.readFloat(Bit.Y));
     	drone.setZ(reader.readFloat(Bit.Z));
     	reader.readObjectUnknown(Bit.UNK_1_5, 4);
-    	drone.setY(reader.readFloat(Bit.Y));
+    	reader.readObjectUnknown(Bit.UNK_1_6, 4);
     	drone.setHeading(reader.readFloat(Bit.HEADING));
     	drone.setSide(reader.readInt(Bit.SIDE, -1));
     	reader.readObjectUnknown(Bit.UNK_2_1, 4);
@@ -54,10 +54,10 @@ public class DroneParser extends AbstractObjectParser {
 		ArtemisDrone drone = (ArtemisDrone) obj;
 		writer	.writeUnknown(Bit.UNK_1_1)
 				.writeFloat(Bit.X, drone.getX())
-				.writeUnknown(Bit.UNK_1_3)
+				.writeFloat(Bit.Y, drone.getY())
 				.writeFloat(Bit.Z, drone.getZ())
 				.writeUnknown(Bit.UNK_1_5)
-				.writeFloat(Bit.Y, drone.getY())
+				.writeUnknown(Bit.UNK_1_6)
 				.writeFloat(Bit.HEADING, drone.getHeading())
 				.writeInt(Bit.SIDE, drone.getSide(), -1)
 				.writeUnknown(Bit.UNK_2_1);
