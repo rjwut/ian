@@ -57,7 +57,7 @@ public class ProxyDemo implements Runnable {
      * <p>Run with no arguments for usage syntax.</p>
      */
     public static void main(String[] args) {
-        if (args.length < 2 || args.length > 3) {
+        if (args.length < 1 || args.length > 2) {
             System.out.println("Usage:");
             System.out.println("\tProxyDemo {serverIpOrHostname}[:{port}] [listenerPort]");
             return;
