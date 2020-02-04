@@ -126,4 +126,22 @@ public class NullTerminatedString implements CharSequence {
 		newString.garbage = garbage;
 		return newString;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) {
+	      return true;
+	    }
+
+	    if (!(obj instanceof NullTerminatedString)) {
+	      return false;
+	    }
+
+	    return str.equals(((NullTerminatedString) obj).str);
+	}
+
+    @Override
+	public int hashCode() {
+	    return str.hashCode();
+	}
 }
