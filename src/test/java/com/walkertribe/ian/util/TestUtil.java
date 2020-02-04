@@ -66,11 +66,7 @@ public class TestUtil {
 			Method method = clazz.getMethod("valueOf", String.class);
 			method.setAccessible(true); // valueOf() is always public, but maybe the enum isn't
 			method.invoke(null, clazz.getEnumConstants()[0].name());
-		} catch (ReflectiveOperationException ex) {
-			throw new RuntimeException(ex);
-		} catch (SecurityException ex) {
-			throw new RuntimeException(ex);
-		} catch (IllegalArgumentException ex) {
+		} catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
@@ -87,9 +83,7 @@ public class TestUtil {
 			Constructor<T> constructor = clazz.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			constructor.newInstance();
-		} catch (ReflectiveOperationException ex) {
-			throw new RuntimeException(ex);
-		} catch (SecurityException ex) {
+		} catch (ReflectiveOperationException | SecurityException ex) {
 			throw new RuntimeException(ex);
 		}
 	}

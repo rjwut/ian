@@ -89,6 +89,19 @@ public class EnumsTest {
 	}
 
 	@Test
+	public void testAnomalyType() {
+	    for (AnomalyType type : AnomalyType.values()) {
+	        Upgrade upgrade = type.getUpgrade();
+
+	        if (type == AnomalyType.BEACON || type == AnomalyType.SPACE_JUNK) {
+	            Assert.assertNull(upgrade);
+	        } else {
+	            Assert.assertNotNull(upgrade);
+	        }
+	    }
+	}
+
+	@Test
 	public void testBaseMessage() {
 		for (BaseMessage value : BaseMessage.values()) {
 			Assert.assertEquals(CommsRecipientType.BASE, value.getRecipientType());
@@ -101,6 +114,19 @@ public class EnumsTest {
 
 		Assert.assertNull(BaseMessage.STAND_BY_FOR_DOCKING_OR_CEASE_OPERATION.getOrdnanceType());
 		Assert.assertNull(BaseMessage.PLEASE_REPORT_STATUS.getOrdnanceType());
+	}
+
+	@Test
+	public void testCommFilter() {
+	    Set<CommFilter> filters = CommFilter.fromInt(7);
+        Assert.assertTrue(filters.contains(CommFilter.ALERT));
+        Assert.assertTrue(filters.contains(CommFilter.SIDE));
+        Assert.assertTrue(filters.contains(CommFilter.STATUS));
+        Assert.assertFalse(filters.contains(CommFilter.PLAYER));
+        Assert.assertFalse(filters.contains(CommFilter.BASE));
+        Assert.assertFalse(filters.contains(CommFilter.ENEMY));
+        Assert.assertFalse(filters.contains(CommFilter.FRIEND));
+        Assert.assertEquals(7, CommFilter.toInt(filters));
 	}
 
 	@Test
@@ -145,6 +171,31 @@ public class EnumsTest {
 				CommsRecipientType.OTHER,
 				CommsRecipientType.fromObject(npc, ctx)
 		);
+	}
+
+	@Test
+	public void testIntelType() {
+	    ArtemisNpc npc = new ArtemisNpc(1);
+	    IntelType.RACE.set(npc, "Arvonian");
+	    Assert.assertEquals("Arvonian", npc.getRace());
+	    Assert.assertEquals("Arvonian", IntelType.RACE.get(npc));
+	    IntelType.CLASS.set(npc, "Carrier");
+        Assert.assertEquals("Carrier", npc.getArtemisClass());
+        Assert.assertEquals("Carrier", IntelType.CLASS.get(npc));
+        IntelType.LEVEL_1_SCAN.set(npc, "Level 1 scan");
+        Assert.assertEquals("Level 1 scan", npc.getIntelLevel1());
+        Assert.assertEquals("Level 1 scan", IntelType.LEVEL_1_SCAN.get(npc));
+        IntelType.LEVEL_2_SCAN.set(npc, "Level 2 scan");
+        Assert.assertEquals("Level 2 scan", npc.getIntelLevel2());
+        Assert.assertEquals("Level 2 scan", IntelType.LEVEL_2_SCAN.get(npc));
+	}
+
+	@Test
+	public void testOrdnanceType() {
+	    OrdnanceType type = OrdnanceType.fromCode("bea");
+        Assert.assertEquals(OrdnanceType.BEACON, type);
+        Assert.assertEquals("bea", type.getCode());
+        Assert.assertNull(OrdnanceType.fromCode("zzz"));
 	}
 
 	@Test
@@ -282,6 +333,16 @@ public class EnumsTest {
 			Assert.assertEquals(on, ability.on(0x555));
 		}
 	}
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpgradeInvalidIndex1() {
+        Upgrade.fromIndex(-1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpgradeInvalidIndex2() {
+        Upgrade.fromIndex(Upgrade.values().length - Upgrade.INFUSION_P_COILS.ordinal());
+    }
 
 	@Test
 	public void testUpgradeActivations() {
