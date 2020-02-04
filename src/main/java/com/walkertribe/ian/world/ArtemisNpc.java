@@ -37,7 +37,6 @@ public class ArtemisNpc extends BaseArtemisShip {
 	public static final int MAX_SCAN_LEVEL = 2;
 
     private Integer[] mScanLevels = new Integer[MAX_SCAN_LEVEL];
-    private Integer mVisibility;
     private int mSpecial = -1, mSpecialState = -1;
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
@@ -259,39 +258,6 @@ public class ArtemisNpc extends BaseArtemisShip {
      */
     public void setScanLevelBits(int level, int bits) {
     	mScanLevels[level - 1] = bits;
-    }
-
-    /**
-     * Returns whether this ship is visible to the given side on map screens.
-     * Unspecified: UNKNOWN
-     */
-    public BoolState getVisibility(int side) {
-    	return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
-    }
-
-    /**
-     * Sets the visibility of this ship for the indicated side.
-     */
-    public void setVisibility(int side, boolean visible) {
-    	if (mVisibility == null) {
-    		mVisibility = 0;
-    	}
-
-    	mVisibility |= 1 << side;
-    }
-
-    /**
-     * Returns the raw bits for visibility.
-     */
-    public Integer getVisibilityBits() {
-    	return mVisibility;
-    }
-
-    /**
-     * Sets the raw bits for visibility.
-     */
-    public void setVisibilityBits(int bits) {
-    	mVisibility = bits;
     }
 
     /**

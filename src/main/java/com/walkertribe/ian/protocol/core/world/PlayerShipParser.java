@@ -61,7 +61,7 @@ public class PlayerShipParser extends AbstractObjectParser {
     	REVERSE_STATE,
     	CLIMB_DIVE,
     	SIDE,
-    	UNK_5_7,
+    	VISIBILITY,
     	SHIP_INDEX,
 
     	CAPITAL_SHIP_ID,
@@ -150,7 +150,9 @@ public class PlayerShipParser extends AbstractObjectParser {
         player.setClimbDive(reader.readFloat(Bit.CLIMB_DIVE));
         player.setSide(reader.readByte(Bit.SIDE, (byte) -1));
 
-        reader.readObjectUnknown(Bit.UNK_5_7, 4);
+        if (reader.has(Bit.VISIBILITY)) {
+            player.setVisibilityBits(reader.readInt(Bit.VISIBILITY, 0));
+        }
 
         player.setShipIndex(reader.readByte(Bit.SHIP_INDEX, Byte.MIN_VALUE));
 
@@ -242,9 +244,15 @@ public class PlayerShipParser extends AbstractObjectParser {
 
 		writer	.writeBool(Bit.REVERSE_STATE, player.getReverseState(), 1)
 				.writeFloat(Bit.CLIMB_DIVE, player.getClimbDive())
-				.writeByte(Bit.SIDE, player.getSide(), (byte) -1)
-				.writeUnknown(Bit.UNK_5_7)
-				.writeByte(Bit.SHIP_INDEX, player.getShipIndex(), Byte.MIN_VALUE)
+				.writeByte(Bit.SIDE, player.getSide(), (byte) -1);
+
+		Integer visibility = player.getVisibilityBits();
+
+		if (visibility != null) {
+			writer.writeInt(Bit.VISIBILITY, visibility, 1);
+		}
+
+		writer	.writeByte(Bit.SHIP_INDEX, player.getShipIndex(), Byte.MIN_VALUE)
 				.writeInt(Bit.CAPITAL_SHIP_ID, player.getCapitalShipId(), -1)
 				.writeFloat(Bit.ACCENT_COLOR, player.getAccentColor())
 				.writeFloat(Bit.EMERGENCY_JUMP_COOLDOWN, player.getEmergencyJumpCooldown());

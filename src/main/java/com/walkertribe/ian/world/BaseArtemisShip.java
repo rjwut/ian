@@ -3,6 +3,7 @@ package com.walkertribe.ian.world;
 import java.util.SortedMap;
 
 import com.walkertribe.ian.enums.BeamFrequency;
+import com.walkertribe.ian.util.BoolState;
 
 /**
  * Base implementation for ships (player or NPC).
@@ -17,6 +18,7 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     private float mTurnRate = Float.NaN;
     private float mImpulse = Float.NaN;
     private byte mSide = -1;
+    private Integer mVisibility;
 
     public BaseArtemisShip(int objId) {
         super(objId);
@@ -134,6 +136,39 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 
     public void setSide(byte side) {
     	mSide = side;
+    }
+
+    /**
+     * Returns whether this ship is visible to the given side on map screens.
+     * Unspecified: UNKNOWN
+     */
+    public BoolState getVisibility(int side) {
+    	return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
+    }
+
+    /**
+     * Sets the visibility of this ship for the indicated side.
+     */
+    public void setVisibility(int side, boolean visible) {
+    	if (mVisibility == null) {
+    		mVisibility = 0;
+    	}
+
+    	mVisibility |= 1 << side;
+    }
+
+    /**
+     * Returns the raw bits for visibility.
+     */
+    public Integer getVisibilityBits() {
+    	return mVisibility;
+    }
+
+    /**
+     * Sets the raw bits for visibility.
+     */
+    public void setVisibilityBits(int bits) {
+    	mVisibility = bits;
     }
 
     @Override
