@@ -42,7 +42,6 @@ public class PacketReader {
 	private Origin requiredOrigin;
 	private InputStream in;
 	private byte[] intBuffer = new byte[4];
-	private boolean parse = true;
 	private Protocol protocol;
 	private ListenerRegistry listenerRegistry;
 	private Version version;
@@ -64,16 +63,6 @@ public class PacketReader {
 		this.in = in;
 		this.protocol = protocol;
 		this.listenerRegistry = listenerRegistry;
-	}
-
-	/**
-	 * If set to false, all packets will be returned as UnknownPackets. This is
-	 * useful for testing purposes to easily capture packet payloads in their
-	 * raw form without bothering to parse any of them. By default, this
-	 * property is true, meaning that all known packets will be parsed.
-	 */
-	public void setParsePackets(boolean parse) {
-		this.parse = parse;
 	}
 
 	/**
@@ -173,14 +162,10 @@ public class PacketReader {
 
 		// Find the PacketFactory that knows how to handle this packet type
 		byte subtype = remaining > 0 ? payloadBytes[0] : 0x00;
-		PacketFactory<?> factory = null;
 		ParseResult result = new ParseResult();
+		PacketFactory<?> factory = protocol.getFactory(packetType, subtype);
 		Class<? extends ArtemisPacket> factoryClass;
 		ArtemisPacket packet = null;
-
-		if (parse) {
-			factory = protocol.getFactory(packetType, subtype);
-		}
 
 		if (factory != null) {
 			// We've found a factory that can handle this packet; get the type
