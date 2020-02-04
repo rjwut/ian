@@ -57,7 +57,8 @@ public interface ArtemisNetworkInterface {
     public void send(ArtemisPacket pkt);
 
     /**
-     * Closes the connection to the remote machine.
+     * Requests that the interface finish what it is doing and close the
+     * connection to the remote machine.
      */
     public void stop();
 
