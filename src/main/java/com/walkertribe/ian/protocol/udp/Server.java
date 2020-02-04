@@ -99,7 +99,7 @@ public class Server {
 			return true;
 		}
 
-		if (!(this instanceof Server)) {
+		if (!(obj instanceof Server)) {
 			return false;
 		}
 
