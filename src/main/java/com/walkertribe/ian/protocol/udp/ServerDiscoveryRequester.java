@@ -88,7 +88,7 @@ public class ServerDiscoveryRequester implements Runnable {
 			long endTime = System.currentTimeMillis() + timeoutMs;
 
 			do {
-				int timeLeft = Math.max((int) (endTime - System.currentTimeMillis()), 1);
+				int timeLeft = (int) (endTime - System.currentTimeMillis());
 
 				if (timeLeft < 1) {
 					break;
