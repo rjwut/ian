@@ -172,7 +172,6 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     public void stop() {
         mReceiveThread.end();
         mSendThread.end();
-        mDispatchThread.end();
     }
 
     /**
@@ -257,9 +256,10 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                     	mException = ex;
                     }
 
-                    break;
+                    ThreadedArtemisNetworkInterface.this.stop();
                 } catch (final Exception ex) {
                 	mDebugger.onPacketWriteException(pkt, ex);
+                    ThreadedArtemisNetworkInterface.this.stop();
                 }
             }
 
@@ -401,22 +401,22 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      */
     private class EventDispatchThread extends Thread {
         private final Queue<Object> mQueue = new ConcurrentLinkedQueue<Object>();
-        private boolean mAccepting = true;
+        private boolean mRunning = false;
 
         /**
          * Enqueues a packet or event to be dispatched.
          */
         private boolean offer(final Object obj) {
-        	if (mAccepting) {
-            	return mQueue.offer(obj);
-        	}
+            if (mRunning) {
+                return mQueue.offer(obj);
+            }
 
-        	return false;
+            return false;
         }
 
         @Override
         public void run() {
-        	while (true) {
+            while (mReceiveThread.mRunning || mSendThread.mRunning) {
                 try {
                     Thread.sleep(5);
                 } catch (final InterruptedException ex) {
@@ -426,12 +426,8 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                 Object obj = mQueue.poll();
 
             	if (obj == null) {
-            		// The queue is empty; now what?
-            		if (mAccepting) {
-                        continue; // wait for more stuff to dispatch
-            		} else {
-            			break;    // we're done
-            		}
+            		// The queue is empty; keep running unless the other two threads are stopped
+        			continue;
                 }
 
                 if (obj instanceof ParseResult) {
@@ -451,13 +447,6 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                     mListeners.fire((ConnectionEvent) obj);
                 }
             }
-        }
-
-        /**
-         * Don't accept more enqueues (but keep dispatching what we've got).
-         */
-        private void end() {
-        	mAccepting = false;
         }
     }
 }
