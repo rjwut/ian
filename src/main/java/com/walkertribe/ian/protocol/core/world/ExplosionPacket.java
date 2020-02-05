@@ -11,19 +11,36 @@ import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.world.ArtemisObject;
 
 /**
+ * <p>
  * Sent by the server to indicate that an object is exploding.
+ * </p>
+ * <p>
+ * There are two simpleEvent subtypes involved here: 0x00 (EXPLOSION) and 0x13 (DETONATION). 0x13
+ * is transmitted when a mine or torpedo detonates (in other words, CAUSES damage by exploding),
+ * whereas 0x00 is transmitted when an object explodes BECAUSE of damage it incurs. This class
+ * covers both simpleEvent subtypes; you can invoke getObjectType() to determine which case is
+ * applicable.
+ * </p>
  * @author rjwut
  */
-@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.EXPLOSION)
+@Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = { SubType.EXPLOSION, SubType.DETONATION })
 public class ExplosionPacket extends SimpleEventPacket {
 	private ObjectType mObjectType;
 	private int mObjectId;
 
+	/**
+	 * Indicates that the given ArtemisObject is exploding.
+	 */
 	public ExplosionPacket(ArtemisObject obj) {
 		this(obj.getType(), obj.getId());
 	}
 
+	/**
+	 * Indicates that the object of the given type and with the indicated ID is exploding.
+	 */
 	public ExplosionPacket(ObjectType objectType, int objectId) {
+		super(getSubType(objectType));
+
 		if (objectType == null) {
 			throw new IllegalArgumentException("You must provide an object type");
 		}
@@ -67,4 +84,15 @@ public class ExplosionPacket extends SimpleEventPacket {
 		b.append(mObjectType).append(" #").append(mObjectId);
 	}
 
+	/**
+	 * Returns whether the appropriate packet subtype is DETONATION (for MINE or TORPEDO object
+	 * types) or EXPLOSION (for other object types).
+	 */
+	private static byte getSubType(ObjectType type) {
+		if (type == ObjectType.MINE || type == ObjectType.TORPEDO) {
+			return SubType.DETONATION;
+		}
+
+		return SubType.EXPLOSION;
+	}
 }

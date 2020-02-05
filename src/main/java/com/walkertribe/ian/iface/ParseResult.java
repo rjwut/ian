@@ -41,7 +41,7 @@ public class ParseResult {
 	}
 
 	/**
-	 * Adds ListenerMethods that ares interested in the packet.
+	 * Adds ListenerMethods that are interested in the packet.
 	 */
 	void setPacketListeners(List<ListenerMethod> listeners) {
 		interestedPacketListeners = listeners;

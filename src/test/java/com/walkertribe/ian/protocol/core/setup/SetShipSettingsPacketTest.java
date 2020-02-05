@@ -73,7 +73,7 @@ public class SetShipSettingsPacketTest extends AbstractPacketTester<SetShipSetti
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructColorTooHigh() {
-		new SetShipSettingsPacket(DriveType.WARP, 0, 1.0f, "Artemis");
+		new SetShipSettingsPacket(DriveType.WARP, 0, 1.000001f, "Artemis");
 	}
 
 	public void testConstructNullName() {

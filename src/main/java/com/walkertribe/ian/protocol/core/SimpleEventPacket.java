@@ -20,7 +20,7 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte SOUND_EFFECT         = 0x03;
     	public static final byte PAUSE                = 0x04;
     	public static final byte PLAYER_SHIP_DAMAGE   = 0x05;
-    	public static final byte GAME_OVER            = 0x06;
+    	public static final byte END_GAME             = 0x06;
     	public static final byte CLOAK_DECLOAK        = 0x07;
     	public static final byte UNKNOWN_08           = 0x08;
     	public static final byte SKYBOX               = 0x09;
@@ -33,7 +33,7 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte DMX_MESSAGE          = 0x10;
     	public static final byte KEY_CAPTURE          = 0x11;
     	public static final byte PERSPECTIVE          = 0x12;
-    	public static final byte UNKNOWN_13           = 0x13;
+    	public static final byte DETONATION           = 0x13;
     	public static final byte GAME_OVER_REASON     = 0x14;
     	public static final byte GAME_OVER_STATS      = 0x15;
     	public static final byte UNKNOWN_16           = 0x16;
@@ -42,6 +42,9 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte UNKNOWN_19           = 0x19;
     	public static final byte DOCKED               = 0x1a;
     	public static final byte SMOKE                = 0x1b;
+    	public static final byte SINGLE_SEAT_TEXT     = 0x1c;
+    	public static final byte TAG                  = 0x1d;
+    	public static final byte GAME_OVER            = 0x1e;
 
     	private SubType() {
     		// prevent instantiation

@@ -8,13 +8,14 @@ import com.walkertribe.ian.model.Model;
  * @author rwalker
  */
 public enum CreatureType {
-	CLASSIC(null),
+	TYPHON(null),
 	WHALE("dat/whale.dxs"),
 	SHARK("dat/monster-sha.dxs"),
 	DRAGON("dat/monster-drag.dxs"),
 	PIRANHA("dat/monster-pira.dxs,dat/monster-pira-jaw.dxs"),
 	CHARYBDIS("dat/monster-cone.dxs"),
 	NSECT("dat/monster-bug.dxs"),
+	JELLY("dat/jelly-body.dxs,dat/jelly-crown.dxs"),
 	WRECK("dat/derelict.dxs");
 
 	private String modelPaths;

@@ -18,7 +18,7 @@ import com.walkertribe.ian.util.Util;
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_OVER_STATS)
 public class GameOverStatsPacket extends SimpleEventPacket implements
 		Iterable<GameOverStatsPacket.Row> {
-    private static final byte DELIMITER = 0x00;
+	private static final int HEADER_VALUE = -12345;
     private static final byte END_MARKER = (byte) 0xce;
 
 	private byte columnIndex;
@@ -33,13 +33,23 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
         columnIndex = reader.readByte();
 
         do {
-        	if (reader.readByte() == END_MARKER) {
+        	byte unknown = reader.readByte();
+
+        	if (unknown == END_MARKER) {
         		break;
         	}
 
         	int value = reader.readInt();
         	CharSequence label = reader.readString();
-        	rows.add(new Row(label, value));
+        	Row row;
+
+        	if (value == HEADER_VALUE) {
+        		row = new Row(unknown, label);
+        	} else {
+        		row = new Row(unknown, label, value);
+        	}
+
+        	rows.add(row);
         } while (true);
 	}
 
@@ -60,10 +70,17 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 	}
 
     /**
+     * Adds a header to this column
+     */
+    public void addHeader(String label) {
+    	rows.add(new Row((byte) 0, label));
+    }
+
+    /**
      * Adds a row of data to this column.
      */
     public void addRow(String label, int value) {
-    	rows.add(new Row(label, value));
+    	rows.add(new Row((byte) 0, label, value));
     }
 
 	@Override
@@ -73,8 +90,8 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 
 		for (Row row : rows) {
 			writer
-				.writeByte(DELIMITER)
-				.writeInt(row.getValue())
+				.writeByte(row.getUnknown())
+				.writeInt(row.isHeader() ? HEADER_VALUE : row.getValue())
 				.writeString(row.getLabel());
 		}
 
@@ -84,10 +101,11 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
 		for (Row row : rows) {
-			b	.append("\n\t")
-				.append(row.getLabel())
-				.append(": ")
-				.append(row.getValue());
+			b.append("\n\t").append(row.getLabel());
+
+			if (!row.isHeader()) {
+				b.append(": ").append(row.getValue());
+			}
 		}
 	}
 
@@ -96,24 +114,60 @@ public class GameOverStatsPacket extends SimpleEventPacket implements
 	 * @author rjwut
 	 */
 	public static class Row {
+		private byte unknown;
 		private CharSequence label;
+		private boolean header = true;
 		private int value;
 
-		private Row(CharSequence label, int value) {
+		/**
+		 * Creates a stat row
+		 */
+		private Row(byte unknown, CharSequence label, int value) {
+			this(unknown, label);
+			this.value = value;
+			this.header = false;
+		}
+
+		/**
+		 * Creates a header
+		 */
+		public Row(byte unknown, CharSequence label) {
 			if (Util.isBlank(label)) {
 				throw new IllegalArgumentException("You must provide a label");
 			}
 
+			this.unknown = unknown;
 			this.label = label;
-			this.value = value;
 		}
 
+		private byte getUnknown() {
+			return unknown;
+		}
+
+		/**
+		 * The label for this header or stat row
+		 */
 		public CharSequence getLabel() {
 			return label;
 		}
 
+		/**
+		 * Returns true if this object represents a header.
+		 */
+		public boolean isHeader() {
+			return header;
+		}
+
+		/**
+		 * The value for this stat row
+		 */
 		public int getValue() {
 			return value;
+		}
+
+		@Override
+		public String toString() {
+			return label + ": " + value;
 		}
 	}
 }

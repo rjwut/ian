@@ -11,8 +11,7 @@ public class ArtemisTorpedoTest {
 	@Test
 	public void testUpdateFrom() {
 		ArtemisTorpedo obj0 = new ArtemisTorpedo(47);
-		assertTorpedo(obj0, 47, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE,
-				Float.MIN_VALUE, null);
+		assertUnpopulatedTorpedo(obj0, 47);
 		ArtemisTorpedo obj1 = new ArtemisTorpedo(47);
 		obj1.setX(1f);
 		obj1.setY(2f);
@@ -27,6 +26,14 @@ public class ArtemisTorpedoTest {
 		assertPopulatedTorpedo(obj0);
 		obj0.updateFrom(new ArtemisCreature(48));
 		assertPopulatedTorpedo(obj0);
+	}
+
+	public static void assertUnpopulatedTorpedo(ArtemisTorpedo torp, int id) {
+		ArtemisObjectTest.assertUnknownObject(torp, id, ObjectType.TORPEDO);
+		Assert.assertTrue(Float.isNaN(torp.getDx()));
+		Assert.assertTrue(Float.isNaN(torp.getDy()));
+		Assert.assertTrue(Float.isNaN(torp.getDz()));
+		Assert.assertNull(torp.getOrdnanceType());
 	}
 
 	public static void assertPopulatedTorpedo(ArtemisTorpedo torp) {

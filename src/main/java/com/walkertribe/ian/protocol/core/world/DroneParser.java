@@ -14,12 +14,12 @@ public class DroneParser extends AbstractObjectParser {
     private enum Bit {
     	UNK_1_1,
     	X,
-    	UNK_1_3,
+    	Y,
     	Z,
     	UNK_1_5,
-    	Y,
+    	UNK_1_6,
     	HEADING,
-    	UNK_1_8,
+    	SIDE,
 
     	UNK_2_1
     }
@@ -38,13 +38,13 @@ public class DroneParser extends AbstractObjectParser {
 	protected ArtemisDrone parseImpl(PacketReader reader) {
         final ArtemisDrone drone = new ArtemisDrone(reader.getObjectId());
     	reader.readObjectUnknown(Bit.UNK_1_1, 4);
-    	drone.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-    	reader.readObjectUnknown(Bit.UNK_1_3, 4);
-    	drone.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
+    	drone.setX(reader.readFloat(Bit.X));
+    	drone.setY(reader.readFloat(Bit.Y));
+    	drone.setZ(reader.readFloat(Bit.Z));
     	reader.readObjectUnknown(Bit.UNK_1_5, 4);
-    	drone.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-    	drone.setHeading(reader.readFloat(Bit.HEADING, Float.MIN_VALUE));
-    	reader.readObjectUnknown(Bit.UNK_1_8, 4);
+    	reader.readObjectUnknown(Bit.UNK_1_6, 4);
+    	drone.setHeading(reader.readFloat(Bit.HEADING));
+    	drone.setSide(reader.readInt(Bit.SIDE, -1));
     	reader.readObjectUnknown(Bit.UNK_2_1, 4);
         return drone;
 	}
@@ -53,13 +53,13 @@ public class DroneParser extends AbstractObjectParser {
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisDrone drone = (ArtemisDrone) obj;
 		writer	.writeUnknown(Bit.UNK_1_1)
-				.writeFloat(Bit.X, drone.getX(), Float.MIN_VALUE)
-				.writeUnknown(Bit.UNK_1_3)
-				.writeFloat(Bit.Z, drone.getZ(), Float.MIN_VALUE)
+				.writeFloat(Bit.X, drone.getX())
+				.writeFloat(Bit.Y, drone.getY())
+				.writeFloat(Bit.Z, drone.getZ())
 				.writeUnknown(Bit.UNK_1_5)
-				.writeFloat(Bit.Y, drone.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.HEADING, drone.getHeading(), Float.MIN_VALUE)
-				.writeUnknown(Bit.UNK_1_8)
+				.writeUnknown(Bit.UNK_1_6)
+				.writeFloat(Bit.HEADING, drone.getHeading())
+				.writeInt(Bit.SIDE, drone.getSide(), -1)
 				.writeUnknown(Bit.UNK_2_1);
 	}
 }

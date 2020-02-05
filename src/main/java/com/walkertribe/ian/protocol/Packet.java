@@ -34,7 +34,7 @@ public @interface Packet {
 
 	/**
 	 * Optional packet subtype values. If you specify more than one subtype,
-	 * this class with parse packets with any of the given subtypes.
+	 * this class will parse packets with any of the given subtypes.
 	 */
 	byte[] subtype() default {};
 }

@@ -37,18 +37,21 @@ public class ArtemisNpc extends BaseArtemisShip {
 	public static final int MAX_SCAN_LEVEL = 2;
 
     private Integer[] mScanLevels = new Integer[MAX_SCAN_LEVEL];
-    private Integer mVisibility;
     private int mSpecial = -1, mSpecialState = -1;
     private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = Byte.MIN_VALUE;
+    private float mTargetX = Float.NaN;
+    private float mTargetY = Float.NaN;
+    private float mTargetZ = Float.NaN;
+    private BoolState mTagged = BoolState.UNKNOWN;
     private final float[] mSysDamage = new float[Artemis.SYSTEM_COUNT];
 
     public ArtemisNpc(int objId) {
         super(objId);
 
         for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-        	mSysDamage[i] = -1;
+        	mSysDamage[i] = Float.NaN;
         }
     }
 
@@ -258,42 +261,57 @@ public class ArtemisNpc extends BaseArtemisShip {
     }
 
     /**
-     * Returns whether this ship is visible to the given side on map screens.
+     * Target's X-coordinate
+     * Unspecified: Float.NaN
+     */
+    public float getTargetX() {
+    	return mTargetX;
+    }
+
+    public void setTargetX(float targetX) {
+    	mTargetX = targetX;
+    }
+
+    /**
+     * Target's Y-coordinate
+     * Unspecified: Float.NaN
+     */
+    public float getTargetY() {
+    	return mTargetY;
+    }
+
+    public void setTargetY(float targetY) {
+    	mTargetY = targetY;
+    }
+
+    /**
+     * Target's Z-coordinate
+     * Unspecified: Float.NaN
+     */
+    public float getTargetZ() {
+    	return mTargetZ;
+    }
+
+    public void setTargetZ(float targetZ) {
+    	mTargetZ = targetZ;
+    }
+
+    /**
+     * Is the NPC tagged?
      * Unspecified: UNKNOWN
      */
-    public BoolState getVisibility(int side) {
-    	return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
+    public BoolState isTagged() {
+    	return mTagged;
     }
 
-    /**
-     * Sets the visibility of this ship for the indicated side.
-     */
-    public void setVisibility(int side, boolean visible) {
-    	if (mVisibility == null) {
-    		mVisibility = 0;
-    	}
-
-    	mVisibility |= 1 << side;
-    }
-
-    /**
-     * Returns the raw bits for visibility.
-     */
-    public Integer getVisibilityBits() {
-    	return mVisibility;
-    }
-
-    /**
-     * Sets the raw bits for visibility.
-     */
-    public void setVisibilityBits(int bits) {
-    	mVisibility = bits;
+    public void setTagged(BoolState tagged) {
+    	mTagged = tagged;
     }
 
     /**
      * The percentage of damage sustained by a particular system, expressed as
      * a value between 0 and 1.
-     * Unspecified: -1
+     * Unspecified: Float.NaN
      */
     public float getSystemDamage(ShipSystem sys) {
     	return mSysDamage[sys.ordinal()];
@@ -342,10 +360,26 @@ public class ArtemisNpc extends BaseArtemisShip {
                 setSpecialStateBits(cast.mSpecialState);
             }
 
+            if (!Float.isNaN(cast.mTargetX)) {
+            	mTargetX = cast.mTargetX;
+            }
+
+            if (!Float.isNaN(cast.mTargetY)) {
+            	mTargetY = cast.mTargetY;
+            }
+
+            if (!Float.isNaN(cast.mTargetZ)) {
+            	mTargetZ = cast.mTargetZ;
+            }
+
+            if (BoolState.isKnown(cast.mTagged)) {
+            	mTagged = cast.mTagged;
+            }
+
             for (int i = 0; i < mSysDamage.length; i++) {
             	float value = cast.mSysDamage[i];
 
-            	if (value != -1) {
+            	if (!Float.isNaN(value)) {
                     mSysDamage[i] = value;
             	}
             }
@@ -377,10 +411,14 @@ public class ArtemisNpc extends BaseArtemisShip {
     	putProp(props, "Is enemy", mEnemy);
     	putProp(props, "Surrendered", mSurrendered);
     	putProp(props, "Fleet number", mFleetNumber, Byte.MIN_VALUE);
+    	putProp(props, "Target X", mTargetX);
+    	putProp(props, "Target Y", mTargetY);
+    	putProp(props, "Target Z", mTargetZ);
+    	putProp(props, "Tagged", mTagged);
     	ShipSystem[] systems = ShipSystem.values();
 
     	for (int i = 0; i < mSysDamage.length; i++) {
-    		putProp(props, "Damage: " + systems[i], mSysDamage[i], -1);
+    		putProp(props, "Damage: " + systems[i], mSysDamage[i]);
     	}
     }
 }

@@ -26,14 +26,14 @@ public interface ArtemisShielded extends ArtemisObject {
 
     /**
 	 * The strength of the forward shields.
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public float getShieldsFront();
     public void setShieldsFront(float value);
 
     /**
 	 * The strength of the aft shields.
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public float getShieldsRear();
     public void setShieldsRear(float value);

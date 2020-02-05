@@ -92,11 +92,11 @@ public class EngParser extends AbstractObjectParser {
 		ArtemisPlayer player = (ArtemisPlayer) obj;
 
 		for (ShipSystem sys : ShipSystem.values()) {
-			writer.writeFloat(HEAT[sys.ordinal()], player.getSystemHeat(sys), -1);
+			writer.writeFloat(HEAT[sys.ordinal()], player.getSystemHeat(sys));
 		}
 
 		for (ShipSystem sys : ShipSystem.values()) {
-			writer.writeFloat(ENERGY[sys.ordinal()], player.getSystemEnergy(sys), -1);
+			writer.writeFloat(ENERGY[sys.ordinal()], player.getSystemEnergy(sys));
 		}
 
 		for (ShipSystem sys : ShipSystem.values()) {

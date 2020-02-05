@@ -13,7 +13,7 @@ import com.walkertribe.ian.iface.Listener;
 import com.walkertribe.ian.protocol.core.eng.EngGridUpdatePacket;
 import com.walkertribe.ian.protocol.core.eng.EngGridUpdatePacket.DamconStatus;
 import com.walkertribe.ian.protocol.core.eng.EngGridUpdatePacket.GridDamage;
-import com.walkertribe.ian.protocol.core.world.DestroyObjectPacket;
+import com.walkertribe.ian.protocol.core.world.DeleteObjectPacket;
 import com.walkertribe.ian.protocol.core.world.IntelPacket;
 import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
 import com.walkertribe.ian.util.GridCoord;
@@ -65,7 +65,7 @@ public class SystemManager {
     }
 
     @Listener
-    public void onPacket(DestroyObjectPacket pkt) {
+    public void onPacket(DeleteObjectPacket pkt) {
         synchronized(this) {
             mObjects.remove(Integer.valueOf(pkt.getTarget()));
         }

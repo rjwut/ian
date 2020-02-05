@@ -2,7 +2,7 @@ package com.walkertribe.ian.util;
 
 import com.walkertribe.ian.iface.DisconnectEvent;
 import com.walkertribe.ian.iface.Listener;
-import com.walkertribe.ian.protocol.core.GameOverPacket;
+import com.walkertribe.ian.protocol.core.EndGamePacket;
 import com.walkertribe.ian.world.Artemis;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
@@ -27,14 +27,15 @@ public abstract class PlayerShipUpdateListener {
 	 */
 	public abstract void onShipUpdate(ArtemisPlayer player);
 
-	private int index;
+	private byte index;
 	private int id = -1;
 
 	/**
-	 * Creates a PlayerShipUpdateListener that listens for updates to the ship with the given
-	 * index. (For example, by default, Artemis is 0.)
+	 * Creates a PlayerShipUpdateListener that listens for updates to the ship
+	 * with the given index. (For example, by default, Artemis is 0.) Does not
+	 * work for single-seat craft, since they all have a ship index of -1.
 	 */
-	public PlayerShipUpdateListener(int index) {
+	public PlayerShipUpdateListener(byte index) {
 		if (index < 0 || index >= Artemis.SHIP_COUNT) {
 			throw new IllegalArgumentException("Invalid ship index: " + index);
 		}
@@ -50,7 +51,7 @@ public abstract class PlayerShipUpdateListener {
 	public final void onPlayerObjectUpdated(ArtemisPlayer player) {
 		if (id == -1) {
 			// We don't know the ship's ID yet
-			int curIndex = player.getShipIndex();
+			byte curIndex = player.getShipIndex();
 
 			if (curIndex == -1 || curIndex != index) {
 				return; // this isn't the one we want
@@ -70,7 +71,7 @@ public abstract class PlayerShipUpdateListener {
 	}
 
 	@Listener
-	public void onGameOver(GameOverPacket pkt) {
+	public void onGameOver(EndGamePacket pkt) {
         id = -1; // ship will probably have a different ID next game
 	}
 
@@ -79,7 +80,7 @@ public abstract class PlayerShipUpdateListener {
         id = -1; // ship will probably have a different ID next game
 	}
 
-	public int getIndex() {
+	public byte getIndex() {
 		return index;
 	}
 }

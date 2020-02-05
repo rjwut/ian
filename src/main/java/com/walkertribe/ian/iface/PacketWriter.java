@@ -242,24 +242,48 @@ public class PacketWriter {
 	}
 
 	/**
-	 * Convenience method for writeFloat(bit.ordinal(), v, defaultValue).
+	 * Convenience method for writeFloat(bit.ordinal(), v).
 	 */
-	public PacketWriter writeFloat(Enum<?> bit, float v, float defaultValue) {
-		return writeFloat(bit.ordinal(), v, defaultValue);
+	public PacketWriter writeFloat(Enum<?> bit, float v) {
+		return writeFloat(bit.ordinal(), v);
 	}
 
 	/**
-	 * If the given float is different from defaultValue, the float is written
-	 * to the packet, and the corresponding bit in the object's bit field is
-	 * set; otherwise, nothing happens. You must invoke startObject() before
-	 * calling this method.
+	 * If the given float is not a NaN, the float is written to the packet, and
+	 * the corresponding bit in the object's bit field is set; otherwise,
+	 * nothing happens. You must invoke startObject() before calling this
+	 * method.
 	 */
-	public PacketWriter writeFloat(int bitIndex, float v, float defaultValue) {
-		return writeInt(
-				bitIndex,
-				Float.floatToRawIntBits(v),
-				Float.floatToRawIntBits(defaultValue)
-		);
+	public PacketWriter writeFloat(int bitIndex, float v) {
+		assertObjectStarted();
+
+		if (!Float.isNaN(v)) {
+			bitField.set(bitIndex, true);
+			writeInt(Float.floatToRawIntBits(v), baosObj);
+		}
+
+		return this;
+	}
+
+	/**
+	 * Unconditionally write a float to the packet for the current object. This
+	 * is needed in cases where the server can possibly send NaN for a property
+	 * value.
+	 */
+	public PacketWriter writeObjectFloat(Enum<?> bit, float v) {
+		return writeObjectFloat(bit.ordinal(), v);
+	}
+
+	/**
+	 * Unconditionally write a float to the packet for the current object. This
+	 * is needed in cases where the server can possibly send NaN for a property
+	 * value.
+	 */
+	public PacketWriter writeObjectFloat(int bitIndex, float v) {
+		assertObjectStarted();
+		bitField.set(bitIndex, true);
+		writeInt(Float.floatToRawIntBits(v), baosObj);
+		return this;
 	}
 
 	/**
@@ -436,11 +460,11 @@ public class PacketWriter {
 		baos = null;
 		writeInt(ArtemisPacket.HEADER, out); // header
 		writeInt(payload.length + 24, out);  // packet length
-		writeInt(mOrigin.toInt(), out);    // connection type
+		writeInt(mOrigin.toInt(), out);      // connection type
 		writeInt(0, out);                    // padding
 		writeInt(payload.length + 4, out);   // remaining bytes
 		writeInt(mPacketType, out);          // packet type
-		out.write(payload); // payload
+		out.write(payload);                  // payload
 		out.flush();
 		debugger.onSendPacketBytes(mOrigin, mPacketType, payload);
 	}

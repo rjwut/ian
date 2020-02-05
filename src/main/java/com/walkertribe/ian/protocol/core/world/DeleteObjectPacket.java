@@ -14,20 +14,20 @@ import com.walkertribe.ian.world.ArtemisObject;
  * doesn't necessarily mean that an explosion effect should be shown.
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.OBJECT_DELETE)
-public class DestroyObjectPacket extends BaseArtemisPacket {
+public class DeleteObjectPacket extends BaseArtemisPacket {
     private final ObjectType mTargetType;
     private final int mTarget;
 
-    public DestroyObjectPacket(ArtemisObject obj) {
+    public DeleteObjectPacket(ArtemisObject obj) {
     	this(obj.getType(), obj.getId());
     }
 
-    public DestroyObjectPacket(ObjectType targetType, int id) {
+    public DeleteObjectPacket(ObjectType targetType, int id) {
         mTargetType = targetType;
         mTarget = id;
     }
 
-    public DestroyObjectPacket(PacketReader reader) {
+    public DeleteObjectPacket(PacketReader reader) {
     	this(ObjectType.fromId(reader.readByte()), reader.readInt());
     }
 

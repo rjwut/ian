@@ -12,8 +12,8 @@ import com.walkertribe.ian.model.Model;
  */
 public class ArtemisCreature extends BaseArtemisOrientable {
 	private CreatureType mCreatureType;
-	private float mHealth = Float.MIN_VALUE;
-	private float mMaxHealth = Float.MIN_VALUE;
+	private float mHealth = Float.NaN;
+	private float mMaxHealth = Float.NaN;
 
     public ArtemisCreature(int objId) {
         super(objId);
@@ -42,11 +42,11 @@ public class ArtemisCreature extends BaseArtemisOrientable {
                 setCreatureType(creatureType);
             }
 
-            if (cast.mHealth != Float.MIN_VALUE) {
+            if (!Float.isNaN(cast.mHealth)) {
             	mHealth = cast.mHealth;
             }
 
-            if (cast.mMaxHealth != Float.MIN_VALUE) {
+            if (!Float.isNaN(cast.mMaxHealth)) {
             	mMaxHealth = cast.mMaxHealth;
             }
         }
@@ -65,6 +65,7 @@ public class ArtemisCreature extends BaseArtemisOrientable {
 
     /**
      * The health level of this creature.
+     * Unspecified: Float.NaN
      */
 	public float getHealth() {
 		return mHealth;
@@ -76,6 +77,7 @@ public class ArtemisCreature extends BaseArtemisOrientable {
 
     /**
      * The maximum health level of this creature.
+     * Unspecified: Float.NaN
      */
 	public float getMaxHealth() {
 		return mMaxHealth;

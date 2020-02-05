@@ -6,7 +6,7 @@ import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 
 /**
- * Sent by the server when the game ends.
+ * Sent by the server when the simulation ends (victory, player's ship is destroyed, etc.).
  * @author rjwut
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.GAME_OVER)

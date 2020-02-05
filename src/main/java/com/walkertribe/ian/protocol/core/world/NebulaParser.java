@@ -17,7 +17,8 @@ public class NebulaParser extends AbstractObjectParser {
     	Z,
     	RED,
     	GREEN,
-    	BLUE;
+    	BLUE,
+    	TYPE;
     }
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -33,23 +34,25 @@ public class NebulaParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisNebula parseImpl(PacketReader reader) {
         final ArtemisNebula obj = new ArtemisNebula(reader.getObjectId());
-        obj.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        obj.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        obj.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
-        obj.setRed(reader.readFloat(Bit.RED, -1));
-        obj.setGreen(reader.readFloat(Bit.GREEN, -1));
-        obj.setBlue(reader.readFloat(Bit.BLUE, -1));
+        obj.setX(reader.readFloat(Bit.X));
+        obj.setY(reader.readFloat(Bit.Y));
+        obj.setZ(reader.readFloat(Bit.Z));
+        obj.setRed(reader.readFloat(Bit.RED));
+        obj.setGreen(reader.readFloat(Bit.GREEN));
+        obj.setBlue(reader.readFloat(Bit.BLUE));
+        obj.setNebulaType(reader.readByte(Bit.TYPE, (byte) -1));
         return obj;
 	}
 
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisNebula nObj = (ArtemisNebula) obj;
-    	writer	.writeFloat(Bit.X, nObj.getX(), Float.MIN_VALUE)
-				.writeFloat(Bit.Y, nObj.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, nObj.getZ(), Float.MIN_VALUE)
-				.writeFloat(Bit.RED, nObj.getRed(), -1)
-				.writeFloat(Bit.GREEN, nObj.getGreen(), -1)
-				.writeFloat(Bit.BLUE, nObj.getBlue(), -1);
+    	writer	.writeFloat(Bit.X, nObj.getX())
+				.writeFloat(Bit.Y, nObj.getY())
+				.writeFloat(Bit.Z, nObj.getZ())
+				.writeFloat(Bit.RED, nObj.getRed())
+				.writeFloat(Bit.GREEN, nObj.getGreen())
+				.writeFloat(Bit.BLUE, nObj.getBlue())
+				.writeByte(Bit.TYPE, nObj.getNebulaType(), (byte) -1);
 	}
 }

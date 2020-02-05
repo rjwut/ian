@@ -36,12 +36,12 @@ public class TorpedoParser extends AbstractObjectParser {
 	@Override
 	protected ArtemisTorpedo parseImpl(PacketReader reader) {
         final ArtemisTorpedo obj = new ArtemisTorpedo(reader.getObjectId());
-        obj.setX(reader.readFloat(Bit.X, Float.MIN_VALUE));
-        obj.setY(reader.readFloat(Bit.Y, Float.MIN_VALUE));
-        obj.setZ(reader.readFloat(Bit.Z, Float.MIN_VALUE));
-        obj.setDx(reader.readFloat(Bit.DELTA_X, Float.MIN_VALUE));
-        obj.setDy(reader.readFloat(Bit.DELTA_Y, Float.MIN_VALUE));
-        obj.setDz(reader.readFloat(Bit.DELTA_Z, Float.MIN_VALUE));
+        obj.setX(reader.readFloat(Bit.X));
+        obj.setY(reader.readFloat(Bit.Y));
+        obj.setZ(reader.readFloat(Bit.Z));
+        obj.setDx(reader.readFloat(Bit.DELTA_X));
+        obj.setDy(reader.readFloat(Bit.DELTA_Y));
+        obj.setDz(reader.readFloat(Bit.DELTA_Z));
         reader.readObjectUnknown(Bit.UNK_1_7, 4);
 
         if (reader.has(Bit.ORDNANCE_TYPE)) {
@@ -54,12 +54,12 @@ public class TorpedoParser extends AbstractObjectParser {
 	@Override
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisTorpedo t = (ArtemisTorpedo) obj;
-    	writer	.writeFloat(Bit.X, t.getX(), Float.MIN_VALUE)
-				.writeFloat(Bit.Y, t.getY(), Float.MIN_VALUE)
-				.writeFloat(Bit.Z, t.getZ(), Float.MIN_VALUE)
-				.writeFloat(Bit.DELTA_X, t.getDx(), Float.MIN_VALUE)
-				.writeFloat(Bit.DELTA_Y, t.getDy(), Float.MIN_VALUE)
-				.writeFloat(Bit.DELTA_Z, t.getDz(), Float.MIN_VALUE)
+    	writer	.writeFloat(Bit.X, t.getX())
+				.writeFloat(Bit.Y, t.getY())
+				.writeFloat(Bit.Z, t.getZ())
+				.writeFloat(Bit.DELTA_X, t.getDx())
+				.writeFloat(Bit.DELTA_Y, t.getDy())
+				.writeFloat(Bit.DELTA_Z, t.getDz())
 				.writeUnknown(Bit.UNK_1_7);
 
     	OrdnanceType ordType = t.getOrdnanceType();

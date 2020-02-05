@@ -8,13 +8,14 @@ efbeadde // header
 
 
 efbeadde // header
-50000000 // packet length = 80
+54000000 // packet length = 84
 01000000 // origin = server
 00000000 // padding
-3c000000 // remaining length = 60
+40000000 // remaining length = 64
 3bf2d19a // FighterBayStatusPacket
 
 01000000 // fighter ID = 1
+00000000 // bay = 0
 0a000000 46 00 69 00 67 00 68 00 74 00 65 00 72 00 20 00 31 00 00 00
          // name = "Fighter 1"
 08000000 43 00 6c 00 61 00 73 00 73 00 20 00 31 00 00 00
@@ -25,13 +26,14 @@ efbeadde // header
 
 
 efbeadde // header
-84000000 // packet length = 132
+8c000000 // packet length = 140
 01000000 // origin = server
 00000000 // padding
-70000000 // remaining length = 112
+78000000 // remaining length = 120
 3bf2d19a // FighterBayStatusPacket
 
 01000000 // fighter ID = 1
+00000000 // bay = 0
 0a000000 46 00 69 00 67 00 68 00 74 00 65 00 72 00 20 00 31 00 00 00
          // name = "Fighter 1"
 08000000 43 00 6c 00 61 00 73 00 73 00 20 00 31 00 00 00
@@ -39,6 +41,7 @@ efbeadde // header
 01010000 // refit time = 257
 
 02000000 // fighter ID = 2
+01000000 // bay = 1
 0a000000 46 00 69 00 67 00 68 00 74 00 65 00 72 00 20 00 32 00 00 00
          // name = "Fighter 2"
 08000000 43 00 6c 00 61 00 73 00 73 00 20 00 32 00 00 00

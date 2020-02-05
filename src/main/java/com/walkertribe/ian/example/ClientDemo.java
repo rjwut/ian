@@ -9,7 +9,7 @@ import com.walkertribe.ian.iface.ConnectionSuccessEvent;
 import com.walkertribe.ian.iface.DisconnectEvent;
 import com.walkertribe.ian.iface.Listener;
 import com.walkertribe.ian.iface.ThreadedArtemisNetworkInterface;
-import com.walkertribe.ian.protocol.core.GameOverPacket;
+import com.walkertribe.ian.protocol.core.EndGamePacket;
 import com.walkertribe.ian.protocol.core.comm.ToggleRedAlertPacket;
 import com.walkertribe.ian.protocol.core.setup.ReadyPacket;
 import com.walkertribe.ian.protocol.core.setup.SetConsolePacket;
@@ -36,17 +36,17 @@ public class ClientDemo extends PlayerShipUpdateListener {
      * <p>Run with no arguments for usage syntax.</p>
      */
     public static void main(String[] args) {
-        if (args.length < 2 || args.length > 3) {
+        if (args.length < 1 || args.length > 2) {
             System.out.println(
-                    "Usage: ClientDemo {ipOrHostname}[:{port}] {artemisInstallPath} [shipIndex]"
+                    "Usage: ClientDemo {ipOrHostname}[:{port}] [shipIndex]"
             );
             return;
         }
 
-        int shipIndex = args.length == 3 ? Integer.parseInt(args[2]) : 0;
+        byte shipIndex = args.length == 2 ? Byte.parseByte(args[1]) : 0;
 
         try {
-            new ClientDemo(args[0], args[1], shipIndex);
+            new ClientDemo(args[0], shipIndex);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
     /**
      * Starts the client and connects to the server.
      */
-    public ClientDemo(String host, String artemisInstallPath, int shipIndex) throws IOException {
+    public ClientDemo(String host, byte shipIndex) throws IOException {
         super(shipIndex);
         System.out.println("Connecting to " + host + "...");
         int port = Artemis.DEFAULT_PORT;
@@ -141,7 +141,7 @@ public class ClientDemo extends PlayerShipUpdateListener {
      * superclass.
      */
     @Override
-    public void onGameOver(GameOverPacket pkt) {
+    public void onGameOver(EndGamePacket pkt) {
         redAlert = false;
         shieldsUp = false;
     }

@@ -12,8 +12,8 @@ import com.walkertribe.ian.vesseldata.Vessel;
 public abstract class BaseArtemisShielded extends BaseArtemisOrientable
 		implements ArtemisShielded {
     private int mHullId = -1;
-    private float mShieldsFront = Float.MIN_VALUE;
-    private float mShieldsRear = Float.MIN_VALUE;
+    private float mShieldsFront = Float.NaN;
+    private float mShieldsRear = Float.NaN;
 
     public BaseArtemisShielded(int objId) {
         super(objId);
@@ -83,13 +83,13 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
 
             float shields = ship.getShieldsFront();
 
-            if (shields != Float.MIN_VALUE) {
+            if (!Float.isNaN(shields)) {
                 mShieldsFront = shields;
             }
 
             shields = ship.getShieldsRear();
 
-            if (shields != Float.MIN_VALUE) {
+            if (!Float.isNaN(shields)) {
                 mShieldsRear = shields;
             }
         }
@@ -99,14 +99,14 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
     	putProp(props, "Hull ID", mHullId, -1);
-    	putProp(props, "Shields: fore", mShieldsFront, Float.MIN_VALUE);
-    	putProp(props, "Shields: aft", mShieldsRear, Float.MIN_VALUE);
+    	putProp(props, "Shields: fore", mShieldsFront);
+    	putProp(props, "Shields: aft", mShieldsRear);
     }
 
     /**
      * Returns true if this object contains any data.
      */
     protected boolean hasData() {
-    	return super.hasData() || mHullId != -1 || mShieldsFront != Float.MIN_VALUE || mShieldsRear != Float.MIN_VALUE;
+    	return super.hasData() || mHullId != -1 || !Float.isNaN(mShieldsFront) || !Float.isNaN(mShieldsRear);
     }
 }

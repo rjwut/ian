@@ -78,7 +78,7 @@ public class Ship {
 
 	public void setName(CharSequence name) {
 		mName = name;
-		mHasName = BoolState.from(Util.isBlank(name));
+		mHasName = BoolState.from(!Util.isBlank(name));
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class Ship {
 	}
 
 	public void setAccentColor(float accentColor) {
-		if (accentColor < 0.0f || accentColor >= 1.0f) {
-			throw new IllegalArgumentException("Accent color must be in range [0.0,1.0)");
+		if (accentColor < 0.0f || accentColor > 1.0f) {
+			throw new IllegalArgumentException("Accent color must be in range [0.0,1.0]");
 		}
 
 		mAccentColor = accentColor;

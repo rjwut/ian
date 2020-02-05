@@ -40,17 +40,6 @@ public enum Upgrade {
 
 	private static final Upgrade[] ALL = values();
 
-	private static final Upgrade[] ANOMALY_UPGRADES = {
-		HIDENS_POWER_CELL,
-		VIGORANIUM_NODULE,
-		CETROCITE_HEATSINKS,
-		LATERAL_ARRAY,
-		TAURON_FOCUSERS,
-		INFUSION_P_COILS,
-		CARPACTION_COILS,
-		SECRET_CODE_CASE
-	};
-
 	private static final Upgrade[] ACTIVATION_UPGRADES = Arrays.copyOfRange(
 			ALL,
 			INFUSION_P_COILS.ordinal(),
@@ -60,32 +49,16 @@ public enum Upgrade {
 	public static final int ACTIVATION_UPGRADE_COUNT = ACTIVATION_UPGRADES.length;
 
 	static {
-		for (int i = 0; i < ANOMALY_UPGRADES.length; i++) {
-			ANOMALY_UPGRADES[i].anomalyIndex = i;
-		}
-
 		for (int i = 0; i < ACTIVATION_UPGRADES.length; i++) {
 			ACTIVATION_UPGRADES[i].activationIndex = i;
 		}
 	}
 
 	/**
-	 * Returns the Upgrade identified by the given index used in ArtemisAnomaly
-	 * objects.
-	 */
-	public static Upgrade fromAnomalyIndex(int index) {
-		if (index < 0 || index >= ANOMALY_UPGRADES.length) {
-			throw new IllegalArgumentException("Invalid anomaly index: " + index);
-		}
-
-		return ANOMALY_UPGRADES[index];
-	}
-
-	/**
-	 * Returns the Upgrade indentified by the given index used in ArtemisPlayer
+	 * Returns the Upgrade identified by the given index used in ArtemisPlayer
 	 * objects and ActivateUpgradePackets.
 	 */
-	public static Upgrade fromActivationIndex(int index) {
+	public static Upgrade fromIndex(int index) {
 		if (index < 0 || index >= ACTIVATION_UPGRADES.length) {
 			throw new IllegalArgumentException("Invalid activation index: " + index);
 		}
@@ -101,7 +74,6 @@ public enum Upgrade {
 		return Arrays.copyOf(ACTIVATION_UPGRADES, ACTIVATION_UPGRADES.length);
 	}
 
-	private Integer anomalyIndex;
 	private Integer activationIndex;
 	private Console activatedBy;
 
@@ -111,15 +83,6 @@ public enum Upgrade {
 
 	private Upgrade(Console activatedBy) {
 		this.activatedBy = activatedBy;
-	}
-
-	/**
-	 * If this Upgrade is available through an anomaly pickup, returns the
-	 * index used by ArtemisAnomaly to refer to this Upgrade. Upgrades which
-	 * aren't available through anomaly pickup return null.
-	 */
-	public Integer getAnomalyIndex() {
-		return anomalyIndex;
 	}
 
 	/**

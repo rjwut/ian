@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
-public class GameOverPacketTest extends AbstractPacketTester<GameOverPacket> {
+public class GameOverPacketTest extends AbstractPacketTester<EndGamePacket> {
 	@Test
 	public void test() {
 		execute("core/GameOverPacket.txt", Origin.SERVER, 1);
@@ -16,11 +16,11 @@ public class GameOverPacketTest extends AbstractPacketTester<GameOverPacket> {
 
 	@Test
 	public void testConstruct() {
-		new GameOverPacket();
+		new EndGamePacket();
 	}
 
 	@Override
-	protected void testPackets(List<GameOverPacket> packets) {
+	protected void testPackets(List<EndGamePacket> packets) {
 		Assert.assertNotNull(packets.get(0));
 	}
 }

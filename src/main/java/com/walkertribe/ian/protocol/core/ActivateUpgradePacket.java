@@ -32,7 +32,7 @@ public class ActivateUpgradePacket extends ValueIntPacket {
 	 * The Upgrade to activate
 	 */
 	public Upgrade getUpgrade() {
-		return Upgrade.fromActivationIndex(mArg);
+		return Upgrade.fromIndex(mArg);
 	}
 
 	@Override

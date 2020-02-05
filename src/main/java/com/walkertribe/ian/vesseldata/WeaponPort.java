@@ -12,6 +12,7 @@ package com.walkertribe.ian.vesseldata;
  */
 public class WeaponPort extends VesselPoint {
 	float damage;
+	float playerDamage;
 	float cycleTime;
 	int range;
 
@@ -20,6 +21,14 @@ public class WeaponPort extends VesselPoint {
 	 */
 	public float getDamage() {
 		return damage;
+	}
+
+	/**
+	 * The amount of "player" damage that this weapon port can inflict. (This
+	 * appears to only apply to single-seat craft.)
+	 */
+	public float getPlayerDamage() {
+		return playerDamage;
 	}
 
 	/**

@@ -9,7 +9,8 @@ import com.walkertribe.ian.enums.ObjectType;
  * @author rjwut
  */
 public class ArtemisDrone extends BaseArtemisOrientable {
-	private float mSteering = -1;
+	private float mSteering = Float.NaN;
+	private int mSide = -1;
 
 	public ArtemisDrone(int objId) {
 		super(objId);
@@ -23,6 +24,7 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 	/**
 	 * Current rudder position for the drone, as a value between 0 (hard port)
 	 * and 1 (hard starboard).
+	 * Unspecified: Float.NaN
 	 */
 	public float getSteering() {
 		return mSteering;
@@ -32,6 +34,18 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 		this.mSteering = steering;
 	}
 
+	/**
+	 * The side this drone belongs to.
+	 * Unspecified: -1
+	 */
+	public int getSide() {
+		return mSide;
+	}
+
+	public void setSide(int side) {
+		mSide = side;
+	}
+
 	@Override
 	public void updateFrom(ArtemisObject other) {
 		super.updateFrom(other);
@@ -39,8 +53,12 @@ public class ArtemisDrone extends BaseArtemisOrientable {
 		if (other instanceof ArtemisDrone) {
 			ArtemisDrone drone = (ArtemisDrone) other;
 
-			if (drone.mSteering != -1) {
+			if (!Float.isNaN(drone.mSteering)) {
 				mSteering = drone.mSteering;
+			}
+
+			if (drone.mSide != -1) {
+				mSide = drone.mSide;
 			}
 		}
 	}
@@ -48,6 +66,7 @@ public class ArtemisDrone extends BaseArtemisOrientable {
     @Override
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
-    	putProp(props, "Rudder", mSteering, -1);
+    	putProp(props, "Rudder", mSteering);
+    	putProp(props, "Side", mSide);
     }
 }

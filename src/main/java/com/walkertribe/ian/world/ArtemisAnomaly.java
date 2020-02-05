@@ -2,18 +2,22 @@ package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
 
+import com.walkertribe.ian.enums.AnomalyType;
+import com.walkertribe.ian.enums.BeaconMode;
+import com.walkertribe.ian.enums.CreatureType;
 import com.walkertribe.ian.enums.ObjectType;
-import com.walkertribe.ian.enums.Upgrade;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.TextUtil;
 
 /**
- * An anomaly (objects which can be picked up for upgrades)
+ * An anomaly (upgrade pickup, deployed beacon, or space junk)
  * @author rjwut
  */
 public class ArtemisAnomaly extends BaseArtemisObject {
 	private Integer mScan;
-	private Upgrade mUpgrade;
+	private AnomalyType mAnomalyType;
+	private CreatureType mBeaconType;
+	private BeaconMode mBeaconMode;
 
 	public ArtemisAnomaly(int objId) {
 		super(objId);
@@ -62,26 +66,66 @@ public class ArtemisAnomaly extends BaseArtemisObject {
 	}
 
 	/**
-	 * Returns the Upgrade you receive for picking up this anomaly.
+	 * Returns the type of anomaly this is.
 	 */
-	public Upgrade getUpgrade() {
-		return mUpgrade;
+	public AnomalyType getAnomalyType() {
+		return mAnomalyType;
 	}
 
-	public void setUpgrade(Upgrade upgrade) {
-		mUpgrade = upgrade;
+	public void setAnomalyType(AnomalyType anomalyType) {
+		mAnomalyType = anomalyType;
 	}
 
-    @Override
+	/**
+	 * The type of creature this beacon affects. The value of this property
+	 * should be ignored if the anomaly type is not BEACON.
+	 */
+	public CreatureType getBeaconType() {
+		return mBeaconType;
+	}
+
+	public void setBeaconType(CreatureType beaconType) {
+		if (beaconType == CreatureType.WRECK) {
+			throw new IllegalArgumentException("Can't have beacons for wrecks");
+		}
+
+		mBeaconType = beaconType;
+	}
+
+	/**
+	 * Whether the creature is attracted or repelled by this bacon. The value
+	 * of this property should be ignored if the anomaly type is not BEACON.
+	 */
+	public BeaconMode getBeaconMode() {
+		return mBeaconMode;
+	}
+
+	public void setBeaconMode(BeaconMode beaconMode) {
+		mBeaconMode = beaconMode;
+	}
+
+	@Override
     public void updateFrom(ArtemisObject obj) {
         super.updateFrom(obj);
         
         if (obj instanceof ArtemisAnomaly) {
         	ArtemisAnomaly anomaly = (ArtemisAnomaly) obj;
 
-            if (anomaly.mUpgrade != null) {
-            	mUpgrade = anomaly.mUpgrade;
+        	if (anomaly.mAnomalyType != null) {
+            	mAnomalyType = anomaly.mAnomalyType;
             }
+
+        	if (anomaly.mScan != null) {
+        		mScan = anomaly.mScan;
+        	}
+
+        	if (anomaly.mBeaconType != null) {
+        		mBeaconType = anomaly.mBeaconType;
+        	}
+
+        	if (anomaly.mBeaconMode != null) {
+        		mBeaconMode = anomaly.mBeaconMode;
+        	}
         }
     }
 
@@ -93,6 +137,8 @@ public class ArtemisAnomaly extends BaseArtemisObject {
         	putProp(props, "Scan bits", TextUtil.intToHex(mScan));
     	}
 
-    	putProp(props, "Upgrade", mUpgrade);
+    	putProp(props, "Anomaly type", mAnomalyType);
+    	putProp(props, "Beacon type", mBeaconType);
+    	putProp(props, "Beacon mode", mBeaconMode);
     }
 }

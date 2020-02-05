@@ -11,7 +11,8 @@ import com.walkertribe.ian.util.Version;
  * receive packets.
  */
 public interface ArtemisNetworkInterface {
-	public static final Version MIN_VERSION = new Version("2.4");
+	public static final Version MIN_VERSION = new Version("2.7");
+	public static final Version MAX_VERSION_EXCLUSIVE = new Version("2.8");
 
 	/**
      * Returns the Origin of the packets this interface can receive. An
@@ -56,7 +57,8 @@ public interface ArtemisNetworkInterface {
     public void send(ArtemisPacket pkt);
 
     /**
-     * Closes the connection to the remote machine.
+     * Requests that the interface finish what it is doing and close the
+     * connection to the remote machine.
      */
     public void stop();
 

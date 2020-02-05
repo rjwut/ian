@@ -39,7 +39,7 @@ public abstract class ValueIntPacket extends BaseArtemisPacket {
     	public static final byte GM_SELECT               = 0x12;
     	public static final byte SCIENCE_SCAN            = 0x13;
     	public static final byte KEYSTROKE               = 0x14;
-    	public static final byte GM_BUTTON_CLICK         = 0x15;
+    	public static final byte BUTTON_CLICK            = 0x15;
     	public static final byte UNKNOWN_16              = 0x16;
     	public static final byte SHIP_SETUP              = 0x17;
     	public static final byte ENG_RESET_COOLANT       = 0x18;
@@ -51,6 +51,8 @@ public abstract class ValueIntPacket extends BaseArtemisPacket {
     	public static final byte SINGLE_SEAT_LAUNCH      = 0x1e;
     	public static final byte SINGLE_SEAT_SHOOT       = 0x1f;
     	public static final byte EMERGENCY_JUMP          = 0x20;
+    	public static final byte SINGLE_SEAT_SETTINGS    = 0x21;
+    	public static final byte BEACON_CONFIG           = 0x22;
 
     	private SubType() {
     		// prevent instantiation

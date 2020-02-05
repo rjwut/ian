@@ -5,8 +5,9 @@ import java.util.Set;
 import com.walkertribe.ian.util.Util;
 
 /**
- * Constants representing the known broadType values in vesselData.xml. Mods may introduce other broadType values;
- * Artemis doesn't care, but scripts can use them to spawn vessels, for example.
+ * Constants representing the known broadType values in vesselData.xml. Mods
+ * may introduce other broadType values; Artemis doesn't care, but scripts can
+ * use them to spawn vessels, for example.
  * @author rjwut
  */
 public final class VesselAttribute {
@@ -34,7 +35,7 @@ public final class VesselAttribute {
 	/**
 	 * Converts a space-delimited list (as given in broadType) into a Set of Strings.
 	 */
-	public static Set<String> build(String broadType) {
+	public static Set<String> build(CharSequence broadType) {
 		return Util.splitSpaceDelimited(broadType);
 	}
 

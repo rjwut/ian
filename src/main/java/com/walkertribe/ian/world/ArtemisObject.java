@@ -37,7 +37,9 @@ import com.walkertribe.ian.model.Model;
  * <dd>BoolState.UNKNOWN</dd>
  * <dt>Other Objects</dt>
  * <dd>null</dd>
- * <dt>Numeric primitives</dt>
+ * <dt>float</dt>
+ * <dd>Float.NaN</dd>
+ * <dt>Other numeric primitives</dt>
  * <dd>-1, or the type's MIN_VALUE if -1 is a permissible value
  * 		for that property</dd>
  * </dl>
@@ -87,21 +89,21 @@ public interface ArtemisObject {
 
     /**
 	 * The object's position along the X-axis.
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public abstract float getX();
     public abstract void setX(float x);
 
     /**
 	 * The object's position along the Y-axis
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public abstract float getY();
     public abstract void setY(float y);
 
     /**
 	 * The object's position along the Z-axis
-	 * Unspecified: Float.MIN_VALUE
+	 * Unspecified: Float.NaN
 	 */
     public abstract float getZ();
     public abstract void setZ(float z);
@@ -136,14 +138,18 @@ public interface ArtemisObject {
     public void setIntelLevel2(CharSequence intelLevel2);
 
     /**
-     * Returns true if this object's X, Y, and Z properties are all specified.
+     * Returns true if this object's coordinates are specified. Note that
+     * objects which start out at y=0 and have never deviated from it will have
+     * an undefined y property. This, this method will return true even if only
+     * x and z are defined.
      */
     public abstract boolean hasPosition();
 
     /**
-     * Returns the distance between this object and the given object. If either
-     * object doesn't have all three components of its coordinates, this method
-     * will throw a RuntimeException.
+     * Returns the distance between this object and the given object. This
+     * method will throw a RuntimeException if either object's hasPosition()
+     * would return false. If the y coordinate for an object is undefined, 0 is
+     * assumed.
      */
     public abstract float distance(ArtemisObject obj);
 

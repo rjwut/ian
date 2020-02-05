@@ -29,11 +29,11 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 
 	/**
 	 * Puts the given float property into the indicated map, unless its value
-	 * is equal to unspecifiedValue.
+	 * is NaN.
 	 */
 	public static void putProp(SortedMap<String, Object> props, String label,
-			float value, float unspecifiedValue) {
-		if (value == unspecifiedValue) {
+			float value) {
+		if (Float.isNaN(value)) {
 			return;
 		}
 
@@ -68,9 +68,9 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 
 	protected final int mId;
     public CharSequence mName;
-    private float mX = Float.MIN_VALUE;
-    private float mY = Float.MIN_VALUE;
-    private float mZ = Float.MIN_VALUE;
+    private float mX = Float.NaN;
+    private float mY = Float.NaN;
+    private float mZ = Float.NaN;
     private CharSequence mRace;
     private CharSequence mArtemisClass;
     private CharSequence mIntelLevel1;
@@ -192,7 +192,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 
     @Override
     public boolean hasPosition() {
-    	return mX != Float.MIN_VALUE && mY != Float.MIN_VALUE && mZ != Float.MIN_VALUE;
+    	return !Float.isNaN(mX) && !Float.isNaN(mZ);
     }
 
     @Override
@@ -201,8 +201,11 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     		throw new RuntimeException("Can't compute distance if both objects don't have a position");
     	}
 
+    	float y0 = obj.getY();
+    	y0 = Float.isNaN(y0) ? 0 : y0;
+    	float y1 = Float.isNaN(mY) ? 0 : mY;
     	float dX = obj.getX() - mX;
-    	float dY = obj.getY() - mY;
+    	float dY = y0 - y1;
     	float dZ = obj.getZ() - mZ;
     	return (float) Math.sqrt(dX * dX + dY * dY + dZ * dZ);
     }
@@ -219,15 +222,15 @@ public abstract class BaseArtemisObject implements ArtemisObject {
         float y = obj.getY();
         float z = obj.getZ();
 
-        if (x != Float.MIN_VALUE) {
+        if (!Float.isNaN(x)) {
         	mX = x;
         }
 
-        if (y != Float.MIN_VALUE) {
+        if (!Float.isNaN(y)) {
         	mY = y;
         }
 
-        if (z != Float.MIN_VALUE) {
+        if (!Float.isNaN(z)) {
         	mZ = z;
         }
 
@@ -312,9 +315,9 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     	props.put("ID", Integer.valueOf(mId));
     	putProp(props, "Name", mName);
     	putProp(props, "Object type", getType());
-    	putProp(props, "X", mX, Float.MIN_VALUE);
-    	putProp(props, "Y", mY, Float.MIN_VALUE);
-    	putProp(props, "Z", mZ, Float.MIN_VALUE);
+    	putProp(props, "X", mX);
+    	putProp(props, "Y", mY);
+    	putProp(props, "Z", mZ);
     	putProp(props, "Race", mRace);
     	putProp(props, "Class", mArtemisClass);
     	putProp(props, "Level 1 intel", mIntelLevel1);
@@ -330,9 +333,14 @@ public abstract class BaseArtemisObject implements ArtemisObject {
 	 */
 	protected boolean hasData() {
 		return  mName != null ||
-				mX != Float.MIN_VALUE ||
-				mY != Float.MIN_VALUE ||
-				mZ != Float.MIN_VALUE;
+				!Float.isNaN(mX) ||
+				!Float.isNaN(mY) ||
+				!Float.isNaN(mZ) ||
+				mRace != null ||
+				mArtemisClass != null ||
+				mIntelLevel1 != null ||
+				mIntelLevel2 != null ||
+				(unknownProps != null && !unknownProps.isEmpty());
 	}
 
     @Override

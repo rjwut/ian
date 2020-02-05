@@ -18,7 +18,7 @@ public class ArtemisGenericObjectTest {
 	@Test
 	public void testUpdateFrom() {
 		ArtemisGenericObject obj0 = new ArtemisGenericObject(47);
-		ArtemisObjectTest.assertObject(obj0, 47, null, null, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+		ArtemisObjectTest.assertUnknownObject(obj0, 47, null);
 		ArtemisGenericObject obj1 = new ArtemisGenericObject(47);
 		obj1.setType(ObjectType.ASTEROID);
 		obj1.setName("A");

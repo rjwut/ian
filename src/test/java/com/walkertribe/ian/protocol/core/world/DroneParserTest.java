@@ -15,8 +15,7 @@ public class DroneParserTest extends AbstractObjectUpdatePacketTester<ArtemisDro
 
 	@Override
 	protected void testObjects(List<ArtemisDrone> objects) {
-		ArtemisDroneTest.assertDrone(objects.get(0), 2, null, 1.0f, 2.0f, 3.0f, 4.0f, Float.MIN_VALUE, Float.MIN_VALUE,
-				-1.0f);
+		ArtemisDroneTest.assertDrone(objects.get(0), 2, null, 1.0f, 2.0f, 3.0f, 4.0f);
 	}
 
 }

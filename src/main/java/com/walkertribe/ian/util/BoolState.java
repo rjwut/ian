@@ -109,13 +109,7 @@ public class BoolState {
     	}
 
     	byte[] bytesToReturn = new byte[byteCount];
-
-    	if (bytes != null) {
-        	System.arraycopy(bytes, 0, bytesToReturn, 0, Math.min(bytes.length, byteCount));
-    	} else {
-    		bytes[0] = (byte) (boolValue ? 1 : 0);
-    	}
-
+    	System.arraycopy(bytes, 0, bytesToReturn, 0, Math.min(bytes.length, byteCount));
     	return bytesToReturn;
     }
 }

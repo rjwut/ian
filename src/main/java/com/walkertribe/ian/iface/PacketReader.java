@@ -42,7 +42,6 @@ public class PacketReader {
 	private Origin requiredOrigin;
 	private InputStream in;
 	private byte[] intBuffer = new byte[4];
-	private boolean parse = true;
 	private Protocol protocol;
 	private ListenerRegistry listenerRegistry;
 	private Version version;
@@ -64,16 +63,6 @@ public class PacketReader {
 		this.in = in;
 		this.protocol = protocol;
 		this.listenerRegistry = listenerRegistry;
-	}
-
-	/**
-	 * If set to false, all packets will be returned as UnknownPackets. This is
-	 * useful for testing purposes to easily capture packet payloads in their
-	 * raw form without bothering to parse any of them. By default, this
-	 * property is true, meaning that all known packets will be parsed.
-	 */
-	public void setParsePackets(boolean parse) {
-		this.parse = parse;
 	}
 
 	/**
@@ -173,14 +162,10 @@ public class PacketReader {
 
 		// Find the PacketFactory that knows how to handle this packet type
 		byte subtype = remaining > 0 ? payloadBytes[0] : 0x00;
-		PacketFactory<?> factory = null;
 		ParseResult result = new ParseResult();
+		PacketFactory<?> factory = protocol.getFactory(packetType, subtype);
 		Class<? extends ArtemisPacket> factoryClass;
 		ArtemisPacket packet = null;
-
-		if (parse) {
-			factory = protocol.getFactory(packetType, subtype);
-		}
 
 		if (factory != null) {
 			// We've found a factory that can handle this packet; get the type
@@ -389,19 +374,19 @@ public class PacketReader {
 	}
 
 	/**
-	 * Convenience method for readFloat(bit.ordinal(), defaultValue).
+	 * Convenience method for readFloat(bit.ordinal()).
 	 */
-	public float readFloat(Enum<?> bit, float defaultValue) {
-		return readFloat(bit.ordinal(), defaultValue);
+	public float readFloat(Enum<?> bit) {
+		return readFloat(bit.ordinal());
 	}
 
 	/**
 	 * Reads a float from the current packet's payload if the indicated bit in
-	 * the current BitField is on. Otherwise, the pointer is not moved, and the
-	 * given default value is returned.
+	 * the current BitField is on. Otherwise, the pointer is not moved, and
+	 * Float.NaN is returned instead.
 	 */
-	public float readFloat(int bitIndex, float defaultValue) {
-		return bitField.get(bitIndex) ? readFloat() : defaultValue;
+	public float readFloat(int bitIndex) {
+		return bitField.get(bitIndex) ? readFloat() : Float.NaN;
 	}
 
 	/**
@@ -492,6 +477,42 @@ public class PacketReader {
 	public void readObjectUnknown(int bitIndex, int byteCount) {
 		if (bitField.get(bitIndex)) {
 			readObjectUnknown(BitField.generateBitName(bitIndex), byteCount);
+		}
+	}
+
+	/**
+	 * If the indicated bit in the current BitField is off, this method returns
+	 * without doing anything. Otherwise, it reads a string from the current
+	 * packet's payload and puts it in the unknown object property map.
+	 */
+	public void readObjectUnknownString(int bitIndex) {
+		readObjectUnknownString(bitIndex, BitField.generateBitName(bitIndex));
+	}
+
+	/**
+	 * If the indicated bit in the current BitField is off, this method returns
+	 * without doing anything. Otherwise, it reads a string from the current
+	 * packet's payload and puts it in the unknown object property map.
+	 */
+	public void readObjectUnknownString(Enum<?> bit) {
+		readObjectUnknownString(bit.ordinal(), bit.name());
+	}
+
+	/**
+	 * Common internal implementation for the public readObjectUnknownString()
+	 * methods.
+	 */
+	private void readObjectUnknownString(int bitIndex, String name) {
+		if (bitField.get(bitIndex)) {
+			int len = readInt();
+			byte[] str = readBytes(len * 2);
+			byte[] bytes = new byte[str.length + 4];
+			bytes[0] = (byte) (0xff & len);
+			bytes[1] = (byte) (0xff & (len >> 8));
+			bytes[2] = (byte) (0xff & (len >> 16));
+			bytes[3] = (byte) (0xff & (len >> 24));
+			System.arraycopy(str, 0, bytes, 4, str.length);
+			unknownObjectProps.put(name, bytes);
 		}
 	}
 
