@@ -321,16 +321,18 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
 	 * Manages receiving packets from the InputStream.
 	 */
     private class ReceiverThread extends Thread {
-        private boolean mRunning = true;
+        private boolean mRunning = false;
+        private InputStream input;
         private PacketReader mReader;
         
         private ReceiverThread(final Socket skt) throws IOException {
-            InputStream input = new BufferedInputStream(skt.getInputStream());
-            mReader = new PacketReader(getRecvType(), input, mProtocol, mListeners);
+            input = new BufferedInputStream(skt.getInputStream());
         }
 
         @Override
         public void run() {
+            mRunning = true;
+            mReader = new PacketReader(getRecvType(), input, mProtocol, mListeners);
             SenderThread sender = ThreadedArtemisNetworkInterface.this.mSendThread;
             
             while (mRunning) {
