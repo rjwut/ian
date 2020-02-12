@@ -2,31 +2,71 @@ package com.walkertribe.ian.vesseldata;
 
 import static org.junit.Assert.*;
 
-import com.walkertribe.ian.Context;
+import com.walkertribe.ian.TestContext;
 import com.walkertribe.ian.enums.FactionAttribute;
-import com.walkertribe.ian.util.TestUtil;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class VesselDataTest {
-	private static VesselData vesselData;
+    private static final String[] FACTIONS = {
+            "TSN:PLAYER",
+            "Terran:FRIENDLY",
+            "Kralien:ENEMY STANDARD",
+            "Arvonian:ENEMY SUPPORT WHALELOVER",
+            "Torgoth:ENEMY SUPPORT WHALEHATER",
+            "Skaraan:ENEMY LONER HASSPECIALS",
+            "BioMech:ENEMY LONER BIOMECH",
+            "Ximni:PLAYER JUMPMASTER"
+    };
+    private static final String[] PLAYER_VESSELS = {
+            "0:0:Light Cruiser:PLAYER:80:80",
+            "1:0:Scout:PLAYER:60:60",
+            "2:0:Battleship:PLAYER:250:150",
+            "3:0:Missile Cruiser:PLAYER:110:80",
+            "4:0:Dreadnought:PLAYER CARRIER:200:200",
+            "5:0:Carrier:PLAYER CARRIER:100:100",
+            "6:0:Mine Layer:PLAYER:150:150",
+            "7:0:Juggernaut:PLAYER CARRIER:300:300",
+            "8:7:Light Cruiser:PLAYER:80:80",
+            "9:7:Scout:PLAYER:60:60",
+            "10:7:Missile Cruiser:PLAYER:110:80",
+            "11:7:Battleship:PLAYER:250:150",
+            "12:7:Carrier:PLAYER CARRIER:80:80",
+            "13:7:Dreadnought:PLAYER CARRIER:200:200",
+            "100:0:Fighter XA:PLAYER FIGHTER:15:15",
+            "120:7:Zim Fighter:PLAYER FIGHTER:15:15"
+    };
+
+    private static VesselData vesselData;
 
 	@BeforeClass
 	public static void beforeClass() {
-		Context ctx = TestUtil.getContext();
+	    TestContext ctx = new TestContext();
+	    MutableVesselData mvd = new MutableVesselData(ctx);
+	    ctx.setVesselData(mvd);
+	    int i = 0;
 
-		if (ctx != null) {
-			vesselData = ctx.getVesselData();
-			vesselData.preloadInternals();
-			vesselData.preloadModels();
-		}
-	}
+	    for (String factionInfo : FACTIONS) {
+	        String[] parts = factionInfo.split(":");
+	        mvd.putFaction(new MutableFaction(i++, parts[0], parts[1]));
+	    }
 
-	@Before
-	public void before() {
-		TestUtil.assumeContext();
+	    for (String vesselInfo : PLAYER_VESSELS) {
+	        String[] parts = vesselInfo.split(":");
+	        MutableVessel vessel = new MutableVessel(
+                    ctx,
+                    Integer.parseInt(parts[0]),
+                    Integer.parseInt(parts[1]),
+                    parts[2],
+                    parts[3]
+	        );
+            vessel.setForeShields(Integer.parseInt(parts[4]));
+            vessel.setAftShields(Integer.parseInt(parts[5]));
+            mvd.putVessel(vessel);
+	    }
+
+	    vesselData = mvd;
 	}
 
 	@Test

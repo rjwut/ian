@@ -36,7 +36,7 @@ public final class VesselAttribute {
 	 * Converts a space-delimited list (as given in broadType) into a Set of Strings.
 	 */
 	public static Set<String> build(CharSequence broadType) {
-		return Util.splitSpaceDelimited(broadType);
+		return Util.splitSpaceDelimited(broadType.toString().toLowerCase());
 	}
 
 	private VesselAttribute() {

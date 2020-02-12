@@ -98,10 +98,10 @@ public class Vessel {
 	}
 
 	/**
-	 * Returns an array of this Vessel's VesselAttributes.
+	 * Returns an array of this Vessel's attributes.
 	 */
-	public VesselAttribute[] getAttributes() {
-		return attributes.toArray(new VesselAttribute[attributes.size()]);
+	public String[] getAttributes() {
+		return attributes.toArray(new String[attributes.size()]);
 	}
 
 	/**

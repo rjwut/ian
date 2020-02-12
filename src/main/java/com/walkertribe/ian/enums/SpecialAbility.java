@@ -13,12 +13,15 @@ public enum SpecialAbility {
 	CLOAK,        // invisible on all views
 	HET,          // high energy turn
 	WARP,         // warp drive
-	TELEPORT,     // jump drive
+	TELEPORT,     // jump drive (forward only)
 	TRACTOR,      // tractor beam
 	DRONES,       // Torgoth drone launcher
 	ANTI_MINE,    // can shoot mines
 	ANTI_TORP,    // can shoot torpedoes
-	SHIELD_DRAIN; // can drain your shields
+	SHIELD_DRAIN, // can drain your shields
+	SHIELD_VAMP,  // can steal energy from your shields
+	TELE_BACK,    // jump drive (backward only)
+	SHIELD_RESET; // can scramble its shield frequencies
 
 	/**
 	 * Returns a set containing the SpecialAbility values that correspond to the
