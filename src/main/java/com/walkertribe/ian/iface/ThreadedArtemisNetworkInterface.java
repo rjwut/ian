@@ -403,13 +403,12 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
      */
     private class EventDispatchThread extends Thread {
         private final Queue<Object> mQueue = new ConcurrentLinkedQueue<Object>();
-        private boolean mRunning = false;
 
         /**
          * Enqueues a packet or event to be dispatched.
          */
         private boolean offer(final Object obj) {
-            if (mRunning) {
+            if (mReceiveThread.mRunning || mSendThread.mRunning) {
                 return mQueue.offer(obj);
             }
 
