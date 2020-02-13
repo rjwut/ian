@@ -212,6 +212,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
         private final Socket mSkt;
         private final Queue<ArtemisPacket> mQueue = new ConcurrentLinkedQueue<ArtemisPacket>();
         private boolean mRunning = true;
+        private boolean mDone = false;
         
         private final PacketWriter mWriter;
         
@@ -266,7 +267,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             mConnected = false;
             mLastHeartbeatTimestamp = null;
             ThreadedArtemisNetworkInterface.this.stop();
-            
+
             // Close the socket here; this will allow us to send any closing
             // packets needed before shutting down the pipes.
             try {
@@ -276,6 +277,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             }
 
             mDispatchThread.offer(new DisconnectEvent(mDisconnectCause, mException));
+            mDone = true;
         }
 
         /**
@@ -322,6 +324,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
 	 */
     private class ReceiverThread extends Thread {
         private boolean mRunning = false;
+        private boolean mDone = false;
         private InputStream input;
         private PacketReader mReader;
         
@@ -365,6 +368,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
             }
             
             ThreadedArtemisNetworkInterface.this.stop();
+            mDone = true;
         }
 
         /**
@@ -408,7 +412,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
          * Enqueues a packet or event to be dispatched.
          */
         private boolean offer(final Object obj) {
-            if (mReceiveThread.mRunning || mSendThread.mRunning) {
+            if (!mReceiveThread.mDone || !mSendThread.mDone) {
                 return mQueue.offer(obj);
             }
 
@@ -417,7 +421,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
 
         @Override
         public void run() {
-            while (mReceiveThread.mRunning || mSendThread.mRunning) {
+            while (!mQueue.isEmpty() || !mReceiveThread.mDone || !mSendThread.mDone) {
                 try {
                     Thread.sleep(5);
                 } catch (final InterruptedException ex) {
@@ -427,7 +431,7 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
                 Object obj = mQueue.poll();
 
             	if (obj == null) {
-            		// The queue is empty; keep running unless the other two threads are stopped
+            		// The queue is empty; go to next loop to check if the threads are stopped
         			continue;
                 }
 
