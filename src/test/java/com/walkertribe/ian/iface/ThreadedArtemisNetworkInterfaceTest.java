@@ -12,6 +12,7 @@ import com.walkertribe.ian.protocol.core.setup.SetShipPacket;
 import com.walkertribe.ian.protocol.core.setup.VersionPacket;
 import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
 import com.walkertribe.ian.util.Version;
+import com.walkertribe.ian.world.Artemis;
 
 /**
  * Test that confirms that a server and client interface can connect to one another and exchange
@@ -30,15 +31,13 @@ public class ThreadedArtemisNetworkInterfaceTest {
     private class ServerStartup implements Runnable {
         private Socket clientSocket;
         private IOException exception;
-        private int port;
 
         @Override
         public void run() {
             ServerSocket serverSocket = null;
 
             try {
-                serverSocket = new ServerSocket(0); // pick an ephemeral port
-                port = serverSocket.getLocalPort();
+                serverSocket = new ServerSocket(Artemis.DEFAULT_PORT);
                 serverSocket.setSoTimeout(CONNECT_TIMEOUT);
                 clientSocket = serverSocket.accept();
             } catch (IOException ex) {
@@ -112,7 +111,7 @@ public class ThreadedArtemisNetworkInterfaceTest {
         thread.start();
 
         // Create a client and connect to the server
-        ArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface("localhost", serverStartup.port);
+        ArtemisNetworkInterface client = new ThreadedArtemisNetworkInterface("0.0.0.0", Artemis.DEFAULT_PORT);
         ClientListener clientListener = new ClientListener(client);
         client.addListener(clientListener);
         client.start();
