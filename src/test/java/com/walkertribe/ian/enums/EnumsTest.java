@@ -13,11 +13,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.walkertribe.ian.Context;
-import com.walkertribe.ian.model.Model;
+import com.walkertribe.ian.TestContext;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.TestUtil;
 import com.walkertribe.ian.util.Util;
 import com.walkertribe.ian.vesseldata.Faction;
+import com.walkertribe.ian.vesseldata.MutableFaction;
+import com.walkertribe.ian.vesseldata.MutableVessel;
+import com.walkertribe.ian.vesseldata.MutableVesselData;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.vesseldata.VesselAttribute;
 import com.walkertribe.ian.world.ArtemisBase;
@@ -156,9 +159,22 @@ public class EnumsTest {
 		);
 	}
 
+	private Context buildContext() {
+	    TestContext ctx = new TestContext();
+        MutableVesselData vesselData = new MutableVesselData(ctx);
+        ctx.setVesselData(vesselData);
+        vesselData.putFaction(new MutableFaction(0, "TSN", "PLAYER"));
+        vesselData.putFaction(new MutableFaction(1, "Terran", "FRIENDLY"));
+        vesselData.putFaction(new MutableFaction(2, "Kralien", "ENEMY STANDARD"));
+        vesselData.putVessel(new MutableVessel(ctx, 0, 0, "Light Cruiser", "PLAYER"));
+        vesselData.putVessel(new MutableVessel(ctx, 1, 1, "Transport", "SMALL TRANSPORT"));
+        vesselData.putVessel(new MutableVessel(ctx, 2, 2, "Cruiser", "SMALL"));
+        return ctx;
+	}
+
 	@Test
 	public void testCommsRecipientTypeRequiringContext() {
-		Context ctx = TestUtil.assumeContext();
+	    Context ctx = buildContext();
 		ArtemisNpc npc = new ArtemisNpc(0);
 		npc.setVessel(findNpcVessel(ctx, false));
 		Assert.assertEquals(
@@ -210,16 +226,6 @@ public class EnumsTest {
 	@Test
 	public void testConsoleToString() {
 		Assert.assertEquals("Captain's map", Console.CAPTAINS_MAP.toString());
-	}
-
-	@Test
-	public void testCreatureTypeGetModel() {
-		Context ctx = TestUtil.assumeContext();
-
-		for (CreatureType type : CreatureType.values()) {
-			Model model = type.getModel(ctx);
-			Assert.assertEquals(type != CreatureType.TYPHON, model != null);
-		}
 	}
 
 	@Test
@@ -278,16 +284,6 @@ public class EnumsTest {
 		Assert.assertNull(ObjectType.fromId(0));
 	}
 
-	@Test
-	public void testObjectTypeRequiringContext() {
-		Context ctx = TestUtil.assumeContext();
-
-		for (ObjectType type : ObjectType.values()) {
-			Model model = type.getModel(ctx);
-			Assert.assertEquals(OBJECT_TYPES_WITH_ONE_MODEL.contains(type), model != null);
-		}
-	}
-
 	@Test(expected = IllegalArgumentException.class)
 	public void testObjectTypeInvalidId() {
 		ObjectType.fromId(9);
@@ -325,12 +321,12 @@ public class EnumsTest {
 	public void testSpecialAbility() {
 		Set<SpecialAbility> set = SpecialAbility.fromValue(0);
 		Assert.assertTrue(set.isEmpty());
-		set = SpecialAbility.fromValue(0x555);
+		set = SpecialAbility.fromValue(0x1555);
 
 		for (SpecialAbility ability : SpecialAbility.values()) {
 			boolean on = ability.ordinal() % 2 == 0;
 			Assert.assertEquals(on, set.contains(ability));
-			Assert.assertEquals(on, ability.on(0x555));
+			Assert.assertEquals(on, ability.on(0x1555));
 		}
 	}
 

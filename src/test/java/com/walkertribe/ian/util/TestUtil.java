@@ -5,11 +5,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.junit.Assert;
-import org.junit.Assume;
-
-import com.walkertribe.ian.Context;
-import com.walkertribe.ian.DefaultContext;
-import com.walkertribe.ian.FilePathResolver;
 
 /**
  * Utility methods for testing. Code testing the source Util class is found in
@@ -20,39 +15,6 @@ public class TestUtil {
 	// Are we running in debug mode?
 	public static final boolean DEBUG = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("jdwp") >= 0;
 	public static final float EPSILON = 0.00000001f; // for float equality checks
-
-	private static final String PROPERTY_INSTALL_PATH = "artemisInstallPath";
-
-	private static Context ctx;
-
-	/**
-	 * Returns a Context object if an Artemis install path is specified in the
-	 * VM arguments, or null if it has not.
-	 */
-	public static Context getContext() {
-		if (ctx == null) {
-			String installPath = System.getProperty(PROPERTY_INSTALL_PATH);
-
-			if (installPath != null) {
-				ctx = new DefaultContext(new FilePathResolver(installPath));
-			}
-		}
-
-		return ctx;
-	}
-
-	/**
-	 * Assumes that we have a context (Artemis install path specified in VM
-	 * arguments) and returns it if we do. If not, the test is ignored.
-	 */
-	public static Context assumeContext() {
-		Context ctx = getContext();
-		Assume.assumeTrue(
-				"No -D" + PROPERTY_INSTALL_PATH + " specified in VM arguments",
-				ctx != null
-		);
-		return ctx;
-	}
 
 	/**
 	 * EclEmma will highlight the package line of an enum as uncovered if
@@ -95,7 +57,7 @@ public class TestUtil {
 	 * obj but isn't == to it. The rest are objects which are neither == nor
 	 * equals() to obj.
 	 */
-	public static <T> void testEqualsAndHashCode(T obj, T equal, T... notEqual) {
+	public static <T> void testEqualsAndHashCode(T obj, T equal, @SuppressWarnings("unchecked") T... notEqual) {
 		if (obj == null) {
 			throw new IllegalArgumentException("Must specify obj");
 		}
