@@ -21,11 +21,9 @@ public class BaseArtemisShipTest {
 		Assert.assertTrue(Float.isNaN(ship.getImpulse()));
 	}
 
-	public static void assertShip(BaseArtemisShip ship, float velocity, float shieldsFrontMax, float shieldsRearMax,
-			float[] shieldFreqs, float steering, float topSpeed, float turnRate, float impulse) {
+	public static void assertShip(BaseArtemisShip ship, float velocity, float[] shieldFreqs,
+	        float steering, float topSpeed, float turnRate, float impulse) {
 		Assert.assertEquals(velocity, ship.getVelocity(), TestUtil.EPSILON);
-		Assert.assertEquals(shieldsFrontMax, ship.getShieldsFrontMax(), TestUtil.EPSILON);
-		Assert.assertEquals(shieldsRearMax, ship.getShieldsRearMax(), TestUtil.EPSILON);
 
 		for (BeamFrequency freq : BeamFrequency.values()) {
 			Assert.assertEquals(shieldFreqs[freq.ordinal()], ship.getShieldFreq(freq), TestUtil.EPSILON);

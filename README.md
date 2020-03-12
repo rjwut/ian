@@ -4,10 +4,11 @@ Interface for *Artemis* Networking (IAN)
 
 **IAN** is an unofficial Java library for communicating with [*Artemis Spaceship Bridge Simulator*](https://artemisspaceshipbridge.com/) servers and clients.
 
-IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* versions 2.7.0-x. If you need Java library support for previous versions of *Artemis*, please see the version table below:
+IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* versions 2.7.5. If you need Java library support for previous versions of *Artemis*, please see the version table below:
 
 *Artemis* | IAN/ArtClientLib
 ---: | ---
+2.7.0-4 | [IAN 3.4.0](https://github.com/rjwut/ian/releases/tag/v3.4.0)
 2.4.0 | [IAN 3.2.1](https://github.com/rjwut/ian/releases/tag/v3.2.1)
 2.3.0 | [IAN 3.0.0](https://github.com/rjwut/ian/releases/tag/v3.0.0)
 2.1.1 | [ArtClientLib v2.6.0](https://github.com/rjwut/ArtClientLib/releases/tag/v2.6.0)
@@ -29,7 +30,7 @@ This library was originally developed by Daniel Leong and released on GitHub wit
 
 **Use at your own risk.** This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; not even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-**Don't pirate *Artemis*.** IAN is intended to allow you to enhance your *Artemis* experience with custom behavior. However, using a custom *Artemis* software does not release you from the obligation to license the original *Artemis* software. If you are playing *Artemis* without a license, either with stock or custom software, you are engaging in software piracy and inhibiting the future development of *Artemis*. If you don't have a license, please support Thom by purchasing one now.
+**Don't pirate *Artemis*.** IAN is intended to allow you to enhance your *Artemis* experience with custom behavior. However, using custom *Artemis* software does not release you from the obligation to license the original *Artemis* software. If you are playing *Artemis* without a license, either with stock or custom software, you are engaging in software piracy and inhibiting the future development of *Artemis*. If you don't have a license, please support Thom by purchasing one now.
 
 **I'd love to see what you do with it!** If you make something cool from this, I'd love to know. Crediting this library would be appreciated, as would sharing any improvements you make, to potentially include upstream contributions in the form of pull requests.
 
@@ -117,15 +118,17 @@ See `ClientDemo` for example code.
 ### Event Listeners ###
 To make your application react to events, you must write one or more event listeners and register them with your `ThreadedArtemisNetworkInterface` object via the `addListener()` method. An event listener can be any `Object` which has one or more methods marked with the `@Listener` annotation. A listener method must be `public`, return `void`, and have exactly one argument. The type of that argument indicates what sort of events will cause the method to be invoked:
 
-* `ConnectionEvent`: IAN connects to or disconnects from a remote machine.
+* `ConnectionEvent`: Events related to IAN's connection with the remote machine or its heartbeat.
 * `ArtemisPacket`: IAN receives a packet from the remote machine.
 * `ArtemisObject`: IAN receives an `ArtemisObject` inside an `ObjectUpdatePacket`.
 
 You should use the most specific subtype you can for the argument type, as IAN will only invoke your listener method when the type of the argument matches. For example, if you write a listener method with an argument of type `CommsIncomingPacket`, it will be invoked only when that packet type is received (when the COMMs station receives an incoming text message). IAN will only bother to parse a packet if a listener is interested in it, so writing your listener methods to specific subtypes can be significantly more efficient. If you write a listener that has `ArtemisPacket` as its argument, IAN will parse all packets it receives because as far as it knows, you're interested in all of them.
 
-One important event to listen for when creating a client is the `ConnectionSuccessEvent`. You shouldn't attempt to send any packets to the server before you receive this event. This may also a good time to send a `SetShipPacket` and a `SetConsolePacket`.
+One important event to listen for when creating a client is the `ConnectionSuccessEvent`. You shouldn't attempt to send any packets to the server before you receive this event. This may also be a good time to send a `SetShipPacket` and a `SetConsolePacket`.
 
 It's also likely that you'll want to know when the connection to the remote machine is lost; listening for `DisconnectEvent` will handle that.
+
+Artemis servers and clients send occasional heartbeat packets as a way of letting remote machines know they're still alive. The `ThreadedArtemisNetworkInterface` will raise a `HeartbeatLostEvent` when a heartbeat packet has not been received recently. If afterwards a heartbeat packet is received, a `HeartbeatRegainedEvent` will be raised.
 
 ### `ArtemisObject` Instances and Handling Updates ###
 The `ArtemisObject` interface is implemented by objects which represent game world objects (ships, bases, creatures, asteroids, torpedoes, black holes, etc.). The server will frequently send `ObjectUpdatePacket`s that contain these objects.

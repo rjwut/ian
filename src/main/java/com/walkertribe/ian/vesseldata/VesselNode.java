@@ -6,6 +6,7 @@ import java.io.InputStream;
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.util.ByteArrayReader;
 import com.walkertribe.ian.util.GridCoord;
+import com.walkertribe.ian.util.GridNode;
 
 /**
  * <p>
@@ -30,12 +31,11 @@ import com.walkertribe.ian.util.GridCoord;
  * </ul>
  * @author rjwut
  */
-public class VesselNode {
+public class VesselNode extends GridNode {
 	static final int BLOCK_SIZE = 32;
 	static final int EMPTY_NODE_VALUE = -2;
 	static final int HALLWAY_NODE_VALUE = -1;
 
-	private GridCoord coords;
 	private float x;
 	private float y;
 	private float z;
@@ -48,7 +48,7 @@ public class VesselNode {
 	 * inaccessible.
 	 */
 	VesselNode (GridCoord coords) {
-		this.coords = coords;
+		super(coords);
 	}
 
 	/**
@@ -57,9 +57,9 @@ public class VesselNode {
 	 * VesselNode.BLOCK_SIZE.
 	 */
 	VesselNode (InputStream in, GridCoord coords, byte[] buffer) throws InterruptedException, IOException {
+	    super(coords);
 		ByteArrayReader.readBytes(in, BLOCK_SIZE, buffer);
 		ByteArrayReader reader = new ByteArrayReader(buffer);
-		this.coords = coords;
 		x = reader.readFloat();
 		y = reader.readFloat();
 		z = reader.readFloat();
@@ -72,17 +72,10 @@ public class VesselNode {
 	}
 
 	/**
-	 * Returns the GridCoord for this node's location in the system grid.
-	 */
-	public GridCoord getGridCoord() {
-		return coords;
-	}
-
-	/**
 	 * Returns the X-coordinate of this node relative to the origin of the
 	 * ship's model coordinates.
 	 */
-	public float getX() {
+	public float getShipX() {
 		return x;
 	}
 
@@ -90,7 +83,7 @@ public class VesselNode {
 	 * Sets the X-coordinate of this node relative to the origin of the ship's
 	 * model coordinates.
 	 */
-	public void setX(float x) {
+	public void setShipX(float x) {
 		this.x = x;
 	}
 
@@ -98,7 +91,7 @@ public class VesselNode {
 	 * Returns the Y-coordinate of this node relative to the origin of the
 	 * ship's model coordinates.
 	 */
-	public float getY() {
+	public float getShipY() {
 		return y;
 	}
 
@@ -106,7 +99,7 @@ public class VesselNode {
 	 * Sets the Y-coordinate of this node relative to the origin of the ship's
 	 * model coordinates.
 	 */
-	public void setY(float y) {
+	public void setShipY(float y) {
 		this.y = y;
 	}
 
@@ -114,7 +107,7 @@ public class VesselNode {
 	 * Returns the Z-coordinate of this node relative to the origin of the
 	 * ship's model coordinates.
 	 */
-	public float getZ() {
+	public float getShipZ() {
 		return z;
 	}
 
@@ -122,7 +115,7 @@ public class VesselNode {
 	 * Sets the Z-coordinate of this node relative to the origin of the ship's
 	 * model coordinates.
 	 */
-	public void setZ(float z) {
+	public void setShipZ(float z) {
 		this.z = z;
 	}
 
@@ -176,16 +169,16 @@ public class VesselNode {
 		}
 
 		VesselNode that = (VesselNode) obj;
-		return coords.equals(that.coords);
+		return coord.equals(that.coord);
 	}
 
 	@Override
 	public int hashCode() {
-		return coords.hashCode();
+		return coord.index();
 	}
 
 	@Override
 	public String toString() {
-		return coords.toString() + '=' + (accessible ? (system != null ? system : "hallway") : "empty");
+		return coord.toString() + '=' + (accessible ? (system != null ? system : "hallway") : "empty");
 	}
 }

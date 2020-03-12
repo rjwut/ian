@@ -10,8 +10,6 @@ import com.walkertribe.ian.util.BoolState;
  */
 public abstract class BaseArtemisShip extends BaseArtemisShielded {
     private float mVelocity = Float.NaN;
-    private float mShieldsFrontMax = Float.NaN;
-    private float mShieldsRearMax = Float.NaN;
     private final float[] mShieldFreqs = new float[5];
     private float mSteering = Float.NaN;
     private float mTopSpeed = Float.NaN;
@@ -75,30 +73,6 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     
     public void setTurnRate(float turnRate) {
         mTurnRate = turnRate;
-    }
-
-    /**
-     * The maximum strength of the forward shield.
-     * Unspecified: Float.NaN
-     */
-    public float getShieldsFrontMax() {
-        return mShieldsFrontMax;
-    }
-
-    public void setShieldsFrontMax(float shieldsFrontMax) {
-        this.mShieldsFrontMax = shieldsFrontMax;
-    }
-    
-    /**
-     * The maximum strength of the aft shield.
-     * Unspecified: Float.NaN
-     */
-    public float getShieldsRearMax() {
-        return mShieldsRearMax;
-    }
-
-    public void setShieldsRearMax(float shieldsRearMax) {
-        this.mShieldsRearMax = shieldsRearMax;
     }
 
     /**
@@ -193,14 +167,6 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
             if (!Float.isNaN(ship.mTurnRate)) {
                 mTurnRate = ship.mTurnRate;
             }
-            
-            if (!Float.isNaN(ship.mShieldsFrontMax)) {
-                mShieldsFrontMax = ship.mShieldsFrontMax;
-            }
-
-            if (!Float.isNaN(ship.mShieldsRearMax)) {
-                mShieldsRearMax = ship.mShieldsRearMax;
-            }
 
             if (!Float.isNaN(ship.mImpulse)) {
             	mImpulse = ship.mImpulse;
@@ -224,8 +190,6 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
     	putProp(props, "Velocity", mVelocity);
-    	putProp(props, "Shields: fore max", mShieldsFrontMax);
-    	putProp(props, "Shields: aft max", mShieldsRearMax);
     	BeamFrequency[] freqs = BeamFrequency.values();
 
     	for (int i = 0; i < mShieldFreqs.length; i++) {
@@ -249,8 +213,6 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 
     	if (
     			!Float.isNaN(mVelocity) ||
-    			!Float.isNaN(mShieldsFrontMax) ||
-    			!Float.isNaN(mShieldsRearMax) ||
     			!Float.isNaN(mSteering) ||
     			!Float.isNaN(mTopSpeed) ||
     			!Float.isNaN(mTurnRate) ||

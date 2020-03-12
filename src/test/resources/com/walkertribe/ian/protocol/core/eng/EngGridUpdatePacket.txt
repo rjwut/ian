@@ -7,16 +7,16 @@ efbeadde // header
 01       // requested = true
 000000   // 0,0,0
 00000000 // 0.0 damage
-01ff01   // 1,-1,1
+010101   // 1,1,1
 3333333f // 0.7 damage
 ff       // end of grid marker
 0a       // team = 0
 04000000 // goal X = 4
 03000000 // current X = 3
-07000000 // goal Y = 7
-04000000 // current Y = 4
-ffffffff // goal Z = -1
-00000000 // current Z = 0
+01000000 // goal Y = 1
+01000000 // current Y = 1
+07000000 // goal Z = 7
+07000000 // current Z = 7
 9a99993e // progress = 0.3
 03000000 // team member count = 3
 fe       // end of DAMCON status marker
@@ -30,16 +30,16 @@ efbeadde // header
 00       // requested = false
 000000   // 0,0,0
 00000000 // 0.0 damage
-01ff01   // 1,-1,1
+010101   // 1,1,1
 3333333f // 0.7 damage
 ff       // end of grid marker
 0a       // team = 0
 04000000 // goal X = 4
 03000000 // current X = 3
-07000000 // goal Y = 7
-04000000 // current Y = 4
-ffffffff // goal Z = -1
-00000000 // current Z = 0
+01000000 // goal Y = 1
+01000000 // current Y = 1
+07000000 // goal Z = 7
+07000000 // current Z = 7
 9a99993e // progress = 0.3
 03000000 // team member count = 3
 fe       // end of DAMCON status marker

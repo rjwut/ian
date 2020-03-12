@@ -25,7 +25,7 @@ public class EngSendDamconPacket extends BaseArtemisPacket {
      * @param z Destination Z-coordinate in the system grid
      */
     public EngSendDamconPacket(int teamNumber, int x, int y, int z) {
-    	this(teamNumber, GridCoord.getInstance(x, y, z));
+    	this(teamNumber, GridCoord.get(x, y, z));
     }
 
     /**
@@ -46,7 +46,7 @@ public class EngSendDamconPacket extends BaseArtemisPacket {
     public EngSendDamconPacket(PacketReader reader) {
         reader.skip(4); // subtype
         mTeamNumber = reader.readInt();
-        mCoord = GridCoord.getInstance(reader.readInt(), reader.readInt(), reader.readInt());
+        mCoord = GridCoord.get(reader.readInt(), reader.readInt(), reader.readInt());
     }
 
     /**
@@ -67,9 +67,9 @@ public class EngSendDamconPacket extends BaseArtemisPacket {
 	protected void writePayload(PacketWriter writer) {
 		writer	.writeInt(0x04) // subtype
 				.writeInt(mTeamNumber)
-				.writeInt(mCoord.getX())
-				.writeInt(mCoord.getY())
-				.writeInt(mCoord.getZ());
+				.writeInt(mCoord.x())
+				.writeInt(mCoord.y())
+				.writeInt(mCoord.z());
 	}
 
 	@Override

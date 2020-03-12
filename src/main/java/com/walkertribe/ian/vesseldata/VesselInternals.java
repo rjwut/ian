@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.util.GridCoord;
@@ -18,13 +16,9 @@ import com.walkertribe.ian.util.GridCoord;
  * @author rjwut
  */
 public class VesselInternals {
-	public static final int GRID_SIZE_X = 5;
-	public static final int GRID_SIZE_Y = 5;
-	public static final int GRID_SIZE_Z = 10;
-
 	private static final byte[] RESERVED = new byte[16];
 
-	private Map<GridCoord, VesselNode> map = new LinkedHashMap<GridCoord, VesselNode>();
+	private VesselNode[] nodes = new VesselNode[GridCoord.LENGTH];
 	private byte[] buffer = new byte[VesselNode.BLOCK_SIZE];
 
 	/**
@@ -33,11 +27,11 @@ public class VesselInternals {
 	 * coordinate space.
 	 */
 	public VesselInternals() {
-		for (int x = 0; x < GRID_SIZE_X; x++) {
-			for (int y = 0; y < GRID_SIZE_Y; y++) {
-				for (int z = 0; z < GRID_SIZE_Z; z++) {
-					GridCoord coords = GridCoord.getInstance(x, y, z);
-					map.put(coords, new VesselNode(coords));
+		for (int x = 0; x < GridCoord.MAX_X; x++) {
+			for (int y = 0; y < GridCoord.MAX_Y; y++) {
+				for (int z = 0; z < GridCoord.MAX_Z; z++) {
+					GridCoord coords = GridCoord.get(x, y, z);
+					nodes[coords.index()] = new VesselNode(coords);
 				}
 			}
 		}
@@ -52,12 +46,11 @@ public class VesselInternals {
 		}
 
 		try {
-			for (int x = 0; x < GRID_SIZE_X; x++) {
-				for (int y = 0; y < GRID_SIZE_Y; y++) {
-					for (int z = 0; z < GRID_SIZE_Z; z++) {
-						GridCoord coords = GridCoord.getInstance(x, y, z); 
-						VesselNode node = new VesselNode(in, coords, buffer);
-						map.put(coords, node);
+			for (int x = 0; x < GridCoord.MAX_X; x++) {
+				for (int y = 0; y < GridCoord.MAX_Y; y++) {
+					for (int z = 0; z < GridCoord.MAX_Z; z++) {
+						GridCoord coords = GridCoord.get(x, y, z);
+						nodes[coords.index()] = new VesselNode(in, coords, buffer);
 					}
 				}
 			}
@@ -72,22 +65,29 @@ public class VesselInternals {
 	 * Returns the VesselNode located at the given internal grid coordinates.
 	 * This method will never return null; if the given coordinates are outside
 	 * the system grid, you'll get back a VesselNode where isAccessible()
-	 * returns false. If the given coordinates are out of range (5 x 5 x 10),
-	 * get() will throw an IllegalArgumentException.
+	 * returns false.
 	 */
-	public VesselNode get(int x, int y, int z) {
-		if (x < 0 || x >= GRID_SIZE_X || y < 0 || y >= GRID_SIZE_Y || z < 0 || z >= GRID_SIZE_Z) {
-			throw new IllegalArgumentException("Coordinates out of range");
-		}
-
-		return map.get(GridCoord.getInstance(x, y, z));
+	public VesselNode get(GridCoord coord) {
+		return nodes[coord.index()];
 	}
 
 	/**
 	 * Iterates all VesselNodes (including those outside the ship).
 	 */
 	public Iterator<VesselNode> nodeIterator() {
-		return map.values().iterator();
+	    return new Iterator<VesselNode>() {
+	        private int index = 0;
+
+	        @Override
+            public boolean hasNext() {
+	            return index < GridCoord.LENGTH;
+            }
+
+            @Override
+            public VesselNode next() {
+                return nodes[index++];
+            }
+	    };
 	}
 
 	/**
@@ -95,13 +95,14 @@ public class VesselInternals {
 	 * OutputStream.
 	 */
 	public void write(OutputStream out) throws IOException {
-		for (int x = 0; x < GRID_SIZE_X; x++) {
-			for (int y = 0; y < GRID_SIZE_Y; y++) {
-				for (int z = 0; z < GRID_SIZE_Z; z++) {
-					VesselNode node = map.get(GridCoord.getInstance(x, y, z));
-					writeFloat(out, node.getX());
-					writeFloat(out, node.getY());
-					writeFloat(out, node.getZ());
+		for (int x = 0; x < GridCoord.MAX_X; x++) {
+			for (int y = 0; y < GridCoord.MAX_X; y++) {
+				for (int z = 0; z < GridCoord.MAX_X; z++) {
+					VesselNode node = nodes[GridCoord.computeIndex(x, y, z)];
+					GridCoord coord = node.getCoord();
+					writeFloat(out, coord.x());
+					writeFloat(out, coord.y());
+					writeFloat(out, coord.z());
 					int type;
 
 					if (!node.isAccessible()) {

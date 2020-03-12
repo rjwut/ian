@@ -15,6 +15,6 @@ public class BaseParserTest extends AbstractObjectUpdatePacketTester<ArtemisBase
 
 	@Override
 	protected void testObjects(List<ArtemisBase> objects) {
-		ArtemisBaseTest.assertBase(objects.get(0), 2, "DS1", 47.0f, 0.0f, 1000, 1.0f, 2.0f, 3.0f);
+		ArtemisBaseTest.assertBase(objects.get(0), 2, "DS1", 47.0f, 80.0f, 1000, 1.0f, 2.0f, 3.0f);
 	}
 }

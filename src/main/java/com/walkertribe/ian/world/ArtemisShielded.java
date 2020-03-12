@@ -37,4 +37,18 @@ public interface ArtemisShielded extends ArtemisObject {
 	 */
     public float getShieldsRear();
     public void setShieldsRear(float value);
+
+    /**
+     * The maximum strength of the forward shields.
+     * Unspecified: Float.NaN
+     */
+    public float getShieldsFrontMax();
+    public void setShieldsFrontMax(float value);
+
+    /**
+     * The maximum strength of the aft shields.
+     * Unspecified: Float.NaN
+     */
+    public float getShieldsRearMax();
+    public void setShieldsRearMax(float value);
 }

@@ -17,7 +17,7 @@ public class EngSendDamconPacketTest extends AbstractPacketTester<EngSendDamconP
 
 	@Test
 	public void testConstruct() {
-		new EngSendDamconPacket(0, GridCoord.getInstance(0, 0, 0));
+		new EngSendDamconPacket(0, GridCoord.get(0, 0, 0));
 		new EngSendDamconPacket(0, 0, 0, 0);
 	}
 
@@ -31,14 +31,14 @@ public class EngSendDamconPacketTest extends AbstractPacketTester<EngSendDamconP
 		EngSendDamconPacket pkt = packets.get(0);
 		Assert.assertEquals(0, pkt.getTeamNumber());
 		GridCoord coord = pkt.getDestination();
-		Assert.assertEquals(0, coord.getX());
-		Assert.assertEquals(0, coord.getY());
-		Assert.assertEquals(0, coord.getZ());
+		Assert.assertEquals(0, coord.x());
+		Assert.assertEquals(0, coord.y());
+		Assert.assertEquals(0, coord.z());
 		pkt = packets.get(1);
 		Assert.assertEquals(1, pkt.getTeamNumber());
 		coord = pkt.getDestination();
-		Assert.assertEquals(2, coord.getX());
-		Assert.assertEquals(3, coord.getY());
-		Assert.assertEquals(4, coord.getZ());
+		Assert.assertEquals(2, coord.x());
+		Assert.assertEquals(3, coord.y());
+		Assert.assertEquals(4, coord.z());
 	}
 }

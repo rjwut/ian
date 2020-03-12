@@ -13,8 +13,8 @@ import com.walkertribe.ian.world.ArtemisObject;
 public class BaseParser extends AbstractObjectParser {
 	private enum Bit {
 		NAME,
-		FORE_SHIELDS,
-		AFT_SHIELDS,
+		SHIELDS,
+		MAX_SHIELDS,
 		UNK_1_4,
 		HULL_ID,
 		X,
@@ -43,8 +43,8 @@ public class BaseParser extends AbstractObjectParser {
 	protected ArtemisBase parseImpl(PacketReader reader) {
         ArtemisBase base = new ArtemisBase(reader.getObjectId());
         base.setName(reader.readString(Bit.NAME));
-        base.setShieldsFront(reader.readFloat(Bit.FORE_SHIELDS));
-        base.setShieldsRear(reader.readFloat(Bit.AFT_SHIELDS));
+        base.setShieldsFront(reader.readFloat(Bit.SHIELDS));
+        base.setShieldsFrontMax(reader.readFloat(Bit.MAX_SHIELDS));
         reader.readObjectUnknown(Bit.UNK_1_4, 4);
         base.setHullId(reader.readInt(Bit.HULL_ID, -1));
         base.setX(reader.readFloat(Bit.X));
@@ -63,8 +63,8 @@ public class BaseParser extends AbstractObjectParser {
 	public void write(ArtemisObject obj, PacketWriter writer) {
 		ArtemisBase base = (ArtemisBase) obj;
 		writer	.writeString(Bit.NAME, base.getName())
-				.writeFloat(Bit.FORE_SHIELDS, base.getShieldsFront())
-				.writeFloat(Bit.AFT_SHIELDS, base.getShieldsRear())
+				.writeFloat(Bit.SHIELDS, base.getShieldsFront())
+				.writeFloat(Bit.MAX_SHIELDS, base.getShieldsFrontMax())
 				.writeUnknown(Bit.UNK_1_4)
 				.writeInt(Bit.HULL_ID, base.getHullId(), -1)
 				.writeFloat(Bit.X, base.getX())

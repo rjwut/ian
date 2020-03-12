@@ -14,6 +14,8 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
     private int mHullId = -1;
     private float mShieldsFront = Float.NaN;
     private float mShieldsRear = Float.NaN;
+    private float mShieldsFrontMax = Float.NaN;
+    private float mShieldsRearMax = Float.NaN;
 
     public BaseArtemisShielded(int objId) {
         super(objId);
@@ -59,6 +61,7 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
     public void setShieldsFront(float shieldsFront) {
         mShieldsFront = shieldsFront;
     }
+
     @Override
     public float getShieldsRear() {
         return mShieldsRear;
@@ -67,6 +70,26 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
     @Override
     public void setShieldsRear(float shieldsRear) {
         mShieldsRear = shieldsRear;
+    }
+
+    @Override
+    public float getShieldsFrontMax() {
+        return mShieldsFrontMax;
+    }
+
+    @Override
+    public void setShieldsFrontMax(float shieldsFrontMax) {
+        mShieldsFrontMax = shieldsFrontMax;
+    }
+
+    @Override
+    public float getShieldsRearMax() {
+        return mShieldsRearMax;
+    }
+
+    @Override
+    public void setShieldsRearMax(float shieldsRearMax) {
+        mShieldsRearMax = shieldsRearMax;
     }
 
     @Override
@@ -92,6 +115,18 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
             if (!Float.isNaN(shields)) {
                 mShieldsRear = shields;
             }
+
+            shields = ship.getShieldsFrontMax();
+
+            if (!Float.isNaN(shields)) {
+                mShieldsFrontMax = shields;
+            }
+
+            shields = ship.getShieldsRearMax();
+
+            if (!Float.isNaN(shields)) {
+                mShieldsRearMax = shields;
+            }
         }
     }
 
@@ -99,14 +134,18 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
     	putProp(props, "Hull ID", mHullId, -1);
-    	putProp(props, "Shields: fore", mShieldsFront);
-    	putProp(props, "Shields: aft", mShieldsRear);
+        putProp(props, "Shields: fore", mShieldsFront);
+        putProp(props, "Shields: aft", mShieldsRear);
+        putProp(props, "Max shields: fore", mShieldsFrontMax);
+        putProp(props, "Max shields: aft", mShieldsRearMax);
     }
 
     /**
      * Returns true if this object contains any data.
      */
     protected boolean hasData() {
-    	return super.hasData() || mHullId != -1 || !Float.isNaN(mShieldsFront) || !Float.isNaN(mShieldsRear);
+    	return super.hasData() || mHullId != -1 || !Float.isNaN(mShieldsFront) ||
+    	        !Float.isNaN(mShieldsRear) || !Float.isNaN(mShieldsFrontMax) ||
+    	        !Float.isNaN(mShieldsRearMax);
     }
 }

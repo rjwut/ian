@@ -11,7 +11,7 @@ import com.walkertribe.ian.util.Version;
  * receive packets.
  */
 public interface ArtemisNetworkInterface {
-	public static final Version MIN_VERSION = new Version("2.7");
+	public static final Version MIN_VERSION = new Version("2.7.5");
 	public static final Version MAX_VERSION_EXCLUSIVE = new Version("2.8");
 
 	/**
@@ -39,6 +39,13 @@ public interface ArtemisNetworkInterface {
      * methods annotated with {@link Listener}.
      */
     public void addListener(Object listener);
+
+    /**
+     * Sets whether heartbeat packets should be sent to the remote machine automatically. Defaults
+     * to true. Set this to false if you pass this object to another interface's proxyTo() method
+     * and don't capture heartbeat packets in any of your listeners.
+     */
+    public void setAutoSendHeartbeat(boolean autoSendHeartbeat);
 
     /**
      * Opens the send/receive streams to the remote machine.
@@ -79,4 +86,11 @@ public interface ArtemisNetworkInterface {
      * types.
      */
     public void proxyTo(ArtemisNetworkInterface iface);
+
+    /**
+     * Dispatches the given Object to listeners. The Object in question should
+     * be a ConnectionEvent, ArtemisPacket, or ArtemisObject (or any of their
+     * subtypes).
+     */
+    public void dispatch(Object obj);
 }

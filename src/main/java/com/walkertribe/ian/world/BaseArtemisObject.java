@@ -198,7 +198,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     @Override
     public float distance(ArtemisObject obj) {
     	if (!hasPosition() || !obj.hasPosition()) {
-    		throw new RuntimeException("Can't compute distance if both objects don't have a position");
+    		throw new IllegalStateException("Can't compute distance if both objects don't have a position");
     	}
 
     	float y0 = obj.getY();
@@ -208,6 +208,17 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     	float dY = y0 - y1;
     	float dZ = obj.getZ() - mZ;
     	return (float) Math.sqrt(dX * dX + dY * dY + dZ * dZ);
+    }
+
+    @Override
+    public float distanceIgnoreY(ArtemisObject obj) {
+        if (!hasPosition() || !obj.hasPosition()) {
+            throw new IllegalStateException("Can't compute distance if both objects don't have a position");
+        }
+
+        float dX = obj.getX() - mX;
+        float dZ = obj.getZ() - mZ;
+        return (float) Math.sqrt(dX * dX + dZ * dZ);
     }
 
     @Override

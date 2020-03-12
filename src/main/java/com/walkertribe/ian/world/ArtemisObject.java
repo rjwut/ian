@@ -148,10 +148,16 @@ public interface ArtemisObject {
     /**
      * Returns the distance between this object and the given object. This
      * method will throw a RuntimeException if either object's hasPosition()
-     * would return false. If the y coordinate for an object is undefined, 0 is
+     * would return false. If the Y coordinate for an object is undefined, 0 is
      * assumed.
      */
     public abstract float distance(ArtemisObject obj);
+
+    /**
+     * Same as distance(ArtemisObject), but ignores the Y-axis, giving the
+     * distance between the objects from the top-down perspective.
+     */
+    public abstract float distanceIgnoreY(ArtemisObject obj);
 
     /**
      * Returns the Model object for this ArtemisObject, using the given

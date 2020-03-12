@@ -65,10 +65,24 @@ public class VesselData {
 	}
 
 	/**
+	 * Returns a List containing all the Factions.
+	 */
+	public List<Faction> getFactions() {
+	    return new ArrayList<>(factions);
+	}
+
+	/**
 	 * Iterates all the Vessels in this object.
 	 */
 	public Iterator<Vessel> vesselIterator() {
 		return vessels.values().iterator();
+	}
+
+	/**
+	 * Returns a list of all the Vessels.
+	 */
+	public List<Vessel> getVessels() {
+	    return new ArrayList<>(vessels.values());
 	}
 
 	/**

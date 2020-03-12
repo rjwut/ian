@@ -53,6 +53,8 @@ public abstract class ValueIntPacket extends BaseArtemisPacket {
     	public static final byte EMERGENCY_JUMP          = 0x20;
     	public static final byte SINGLE_SEAT_SETTINGS    = 0x21;
     	public static final byte BEACON_CONFIG           = 0x22;
+    	public static final byte UNKNOWN_23              = 0x23;
+    	public static final byte CLIENT_HEARTBEAT        = 0x24;
 
     	private SubType() {
     		// prevent instantiation
