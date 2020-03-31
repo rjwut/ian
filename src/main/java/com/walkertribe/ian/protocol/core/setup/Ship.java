@@ -45,6 +45,17 @@ public class Ship {
 	}
 
 	/**
+	 * Clones the given Ship;
+	 */
+	public Ship(Ship ship) {
+	    mHasName = ship.mHasName;
+	    mName = ship.mName;
+	    mShipType = ship.mShipType;
+	    mAccentColor = ship.mAccentColor;
+	    mDrive = ship.mDrive;
+	}
+
+	/**
 	 * Constructor for reading a Ship from a packet (which includes the hasName property).
 	 */
 	private Ship(BoolState hasName, CharSequence name, int shipType, float accentColor, DriveType drive) {

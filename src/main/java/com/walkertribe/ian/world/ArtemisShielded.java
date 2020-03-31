@@ -51,4 +51,11 @@ public interface ArtemisShielded extends ArtemisObject {
      */
     public float getShieldsRearMax();
     public void setShieldsRearMax(float value);
+
+    /**
+     * The side the ship is on. Ships on the same side are friendly to one another.
+     * Unspecified: -1
+     */
+    public byte getSide();
+    public void setSide(byte side);
 }

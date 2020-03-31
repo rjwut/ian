@@ -295,7 +295,7 @@ public class Vessel {
 	 * Vessel's torpedo tubes.
 	 */
 	public VesselPoint[] getTorepedoTubes() {
-		return torpedoTubes.toArray(new BeamPort[torpedoTubes.size()]);
+		return torpedoTubes.toArray(new VesselPoint[torpedoTubes.size()]);
 	}
 
 	/**

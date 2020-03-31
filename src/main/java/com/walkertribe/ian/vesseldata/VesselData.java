@@ -44,14 +44,20 @@ public class VesselData {
 	}
 
 	/**
-	 * Returns the Faction represented by the given ID.
+	 * Returns the Faction represented by the given faction ID. Note that if the server and client
+	 * vesselData.xml files are not identical, one may specify a faction ID that the other doesn't
+	 * have, which would result in this method returning null. Your code should handle this scenario
+	 * gracefully.
 	 */
 	public Faction getFaction(int id) {
 		return factions.get(id);
 	}
 
 	/**
-	 * Returns the Vessel represented by the given ID.
+	 * Returns the Vessel represented by the given hull ID, or null if no Vessel has this ID. Note
+	 * that if the server and client vesselData.xml files are not identical, one may specify a hull
+	 * ID that the other doesn't have, which would result in this method returning null. Your code
+	 * should handle this scenario gracefully.
 	 */
 	public Vessel getVessel(int id) {
 		return vessels.get(Integer.valueOf(id));

@@ -292,6 +292,20 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
     @Override
+    public final byte[] getUnknownProp(int byteNumber, int bitNumber) {
+        return unknownProps != null ? unknownProps.get("UNK_" + byteNumber + "_" + bitNumber) : null;
+    }
+
+    @Override
+    public final void setUnknownProp(int byteNumber, int bitNumber, byte[] bytes) {
+        if (unknownProps == null) {
+            unknownProps = new TreeMap<>();
+        }
+
+        unknownProps.put("UNK_" + byteNumber + "_" + bitNumber, bytes);
+    }
+
+    @Override
     public final SortedMap<String, Object> getProps() {
     	SortedMap<String, Object> props = new TreeMap<String, Object>();
     	appendObjectProps(props);

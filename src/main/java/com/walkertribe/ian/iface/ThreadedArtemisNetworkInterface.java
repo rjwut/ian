@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -174,6 +175,13 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
     }
 
     @Override
+    public void send(Collection<? extends ArtemisPacket> packets) {
+        for (ArtemisPacket pkt : packets) {
+            send(pkt);
+        }
+    }
+
+    @Override
     public void dispatch(Object obj) {
         mDispatchThread.dispatch(obj);
     }
@@ -277,6 +285,10 @@ public class ThreadedArtemisNetworkInterface implements ArtemisNetworkInterface 
          * Sends the given ArtemisPacket to the remote machine.
          */
         private void send(ArtemisPacket pkt) {
+            if (!mRunning) {
+                return;
+            }
+
             mDebugger.onSendPacket(pkt);
 
             try {

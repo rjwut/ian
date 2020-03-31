@@ -3,11 +3,13 @@ package com.walkertribe.ian.enums;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.model.Model;
 import com.walkertribe.ian.world.ArtemisAnomaly;
+import com.walkertribe.ian.world.ArtemisAsteroid;
 import com.walkertribe.ian.world.ArtemisBase;
+import com.walkertribe.ian.world.ArtemisBlackHole;
 import com.walkertribe.ian.world.ArtemisCreature;
 import com.walkertribe.ian.world.ArtemisDrone;
-import com.walkertribe.ian.world.ArtemisGenericObject;
 import com.walkertribe.ian.world.ArtemisMesh;
+import com.walkertribe.ian.world.ArtemisMine;
 import com.walkertribe.ian.world.ArtemisNebula;
 import com.walkertribe.ian.world.ArtemisNpc;
 import com.walkertribe.ian.world.ArtemisObject;
@@ -25,13 +27,13 @@ public enum ObjectType {
 	UPGRADES(0x04, false, ArtemisPlayer.class, null),
 	NPC_SHIP(0x05, true, ArtemisNpc.class, null),
 	BASE(0x06, true, ArtemisBase.class, null),
-	MINE(0x07, false, ArtemisGenericObject.class, "mine"),
+	MINE(0x07, false, ArtemisMine.class, "mine"),
 	ANOMALY(0x08, true, ArtemisAnomaly.class, "wreck1"),
 	// 0x09 is unused
 	NEBULA(0x0a, false, ArtemisNebula.class, null),
 	TORPEDO(0x0b, false, ArtemisTorpedo.class, null),
-	BLACK_HOLE(0x0c, false, ArtemisGenericObject.class, null),
-	ASTEROID(0x0d, false, ArtemisGenericObject.class, "asteroid"),
+	BLACK_HOLE(0x0c, false, ArtemisBlackHole.class, null),
+	ASTEROID(0x0d, false, ArtemisAsteroid.class, "asteroid"),
 	GENERIC_MESH(0x0e, true, ArtemisMesh.class, null),
 	CREATURE(0x0f, true, ArtemisCreature.class, null),
 	DRONE(0x10, false, ArtemisDrone.class, "drone1");

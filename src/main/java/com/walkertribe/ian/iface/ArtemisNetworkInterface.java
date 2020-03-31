@@ -1,5 +1,7 @@
 package com.walkertribe.ian.iface;
 
+import java.util.Collection;
+
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.Protocol;
@@ -62,6 +64,11 @@ public interface ArtemisNetworkInterface {
      * Enqueues a packet to be transmitted to the remote machine.
      */
     public void send(ArtemisPacket pkt);
+
+    /**
+     * Enqueues a Collection of packets to be transmitted to the remote machine.
+     */
+    public void send(Collection<? extends ArtemisPacket> pkt);
 
     /**
      * Requests that the interface finish what it is doing and close the

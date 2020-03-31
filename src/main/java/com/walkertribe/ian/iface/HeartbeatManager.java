@@ -69,6 +69,7 @@ class HeartbeatManager {
 
         if (now - mLastHeartbeatSentTime >= HEARTBEAT_SEND_INTERVAL_MS) {
             iface.send(iface.getSendType().createHeartbeat());
+            mLastHeartbeatSentTime = now;
         }
     }
 

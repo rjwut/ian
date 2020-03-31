@@ -21,12 +21,12 @@ public class BaseParser extends AbstractObjectParser {
 		Y,
 		Z,
 
-		UNK_2_1,
-		UNK_2_2,
-		UNK_2_3,
+		PITCH,
+		ROLL,
+		HEADING,
 		UNK_2_4,
 		UNK_2_5,
-		UNK_2_6
+		SIDE
 	}
 	private static final int BIT_COUNT = Bit.values().length;
 
@@ -50,12 +50,12 @@ public class BaseParser extends AbstractObjectParser {
         base.setX(reader.readFloat(Bit.X));
         base.setY(reader.readFloat(Bit.Y));
         base.setZ(reader.readFloat(Bit.Z));
-        reader.readObjectUnknown(Bit.UNK_2_1, 4);
-        reader.readObjectUnknown(Bit.UNK_2_2, 4);
-        reader.readObjectUnknown(Bit.UNK_2_3, 4);
+        base.setPitch(reader.readFloat(Bit.PITCH));
+        base.setRoll(reader.readFloat(Bit.ROLL));
+        base.setHeading(reader.readFloat(Bit.HEADING));
         reader.readObjectUnknown(Bit.UNK_2_4, 4);
         reader.readObjectUnknown(Bit.UNK_2_5, 1);
-        reader.readObjectUnknown(Bit.UNK_2_6, 1);
+        base.setSide(reader.readByte());
         return base;
 	}
 
@@ -70,11 +70,11 @@ public class BaseParser extends AbstractObjectParser {
 				.writeFloat(Bit.X, base.getX())
 				.writeFloat(Bit.Y, base.getY())
 				.writeFloat(Bit.Z, base.getZ())
-				.writeUnknown(Bit.UNK_2_1)
-				.writeUnknown(Bit.UNK_2_2)
-				.writeUnknown(Bit.UNK_2_3)
+				.writeFloat(Bit.PITCH, base.getPitch())
+				.writeFloat(Bit.ROLL, base.getRoll())
+				.writeFloat(Bit.HEADING, base.getHeading())
 				.writeUnknown(Bit.UNK_2_4)
 				.writeUnknown(Bit.UNK_2_5)
-				.writeUnknown(Bit.UNK_2_6);
+				.writeByte(Bit.SIDE, base.getSide(), (byte) -1);
 	}
 }

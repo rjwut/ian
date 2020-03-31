@@ -16,6 +16,7 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
     private float mShieldsRear = Float.NaN;
     private float mShieldsFrontMax = Float.NaN;
     private float mShieldsRearMax = Float.NaN;
+    private byte mSide = -1;
 
     public BaseArtemisShielded(int objId) {
         super(objId);
@@ -92,6 +93,17 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
         mShieldsRearMax = shieldsRearMax;
     }
 
+    /**
+     * The side this ship is on. There is no side 0. Biomechs are side 30.
+     */
+    public byte getSide() {
+        return mSide;
+    }
+
+    public void setSide(byte side) {
+        mSide = side;
+    }
+
     @Override
     public void updateFrom(ArtemisObject obj) {
         super.updateFrom(obj);
@@ -127,6 +139,12 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
             if (!Float.isNaN(shields)) {
                 mShieldsRearMax = shields;
             }
+
+            byte side = ship.getSide();
+
+            if (side != -1) {
+                mSide = side;
+            }
         }
     }
 
@@ -138,6 +156,7 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
         putProp(props, "Shields: aft", mShieldsRear);
         putProp(props, "Max shields: fore", mShieldsFrontMax);
         putProp(props, "Max shields: aft", mShieldsRearMax);
+        putProp(props, "Side", mSide, -1);
     }
 
     /**
@@ -146,6 +165,6 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
     protected boolean hasData() {
     	return super.hasData() || mHullId != -1 || !Float.isNaN(mShieldsFront) ||
     	        !Float.isNaN(mShieldsRear) || !Float.isNaN(mShieldsFrontMax) ||
-    	        !Float.isNaN(mShieldsRearMax);
+    	        !Float.isNaN(mShieldsRearMax) || mSide != -1;
     }
 }

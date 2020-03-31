@@ -1,10 +1,10 @@
 package com.walkertribe.ian.world;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.iface.Listener;
@@ -18,8 +18,8 @@ import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
  * @author rjwut
  */
 public class World implements Iterable<ArtemisObject> {
-    private Map<Integer, ArtemisObject> objects = new HashMap<>();
-    private Map<Byte, ArtemisPlayer> players = new HashMap<>();
+    private Map<Integer, ArtemisObject> objects = new ConcurrentHashMap<>();
+    private Map<Byte, ArtemisPlayer> players = new ConcurrentHashMap<>();
 
     /**
      * Invoked when we get object updates.

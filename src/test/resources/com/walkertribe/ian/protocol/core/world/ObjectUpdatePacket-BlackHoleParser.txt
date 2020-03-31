@@ -1,0 +1,13 @@
+efbeadde // header
+2e000000 // packet length = 46
+01000000 // origin = server
+00000000 // padding
+1a000000 // remaining length = 26
+f93d8080 // ObjectUpdatePacket
+0c       // object type = black hole
+02000000 // object ID = 2
+07       // bit field
+0000803f // x = 1.0
+00000040 // y = 2.0
+00004040 // z = 3.0
+00000000 // end of array

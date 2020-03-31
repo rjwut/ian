@@ -1,11 +1,22 @@
 package com.walkertribe.ian.enums;
 
 /**
- * Availability status for the various bridge consoles.
+ * Availability status for the various bridge Consoles.
  * @author rjwut
  */
 public enum ConsoleStatus {
-	AVAILABLE,   // you can claim this console
-	YOURS,       // you have already claimed this console
-	UNAVAILABLE; // you cannot claim this console
+    /**
+     * You can claim this Console
+     */
+	AVAILABLE,
+
+	/**
+	 * You have already claimed this Console
+	 */
+	YOURS,
+
+	/**
+	 * You cannot claim this Console
+	 */
+	UNAVAILABLE;
 }

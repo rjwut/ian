@@ -49,9 +49,17 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     public ArtemisNpc(int objId) {
         super(objId);
+        init();
+    }
 
+    public ArtemisNpc(int objId, Vessel vessel) {
+        super(objId, vessel);
+        init();
+    }
+
+    private void init() {
         for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-        	mSysDamage[i] = Float.NaN;
+            mSysDamage[i] = Float.NaN;
         }
     }
 

@@ -129,10 +129,10 @@ public class BitField {
 	}
 
 	/**
-	 * Generates a name for an unknown bit in the form UNKNOWN_{byte}_{bit},
+	 * Generates a name for an unknown bit in the form UNK_{byte}_{bit},
 	 * where the byte and bit values are one-based.
 	 */
 	public static String generateBitName(int bitIndex) {
-		return "UNKNOWN_" + ((bitIndex / 8) + 1) + "_" + ((bitIndex % 8) + 1);
+		return "UNK_" + ((bitIndex / 8) + 1) + "_" + ((bitIndex % 8) + 1);
 	}
 }

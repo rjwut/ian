@@ -140,8 +140,8 @@ public interface ArtemisObject {
     /**
      * Returns true if this object's coordinates are specified. Note that
      * objects which start out at y=0 and have never deviated from it will have
-     * an undefined y property. This, this method will return true even if only
-     * x and z are defined.
+     * an undefined y property. If y is undefined, 0 will be assumed and
+     * hasPosition() will still return true if x and z are defined.
      */
     public abstract boolean hasPosition();
 
@@ -177,6 +177,13 @@ public interface ArtemisObject {
      */
     public SortedMap<String, byte[]> getUnknownProps();
     public void setUnknownProps(SortedMap<String, byte[]> unknownProps);
+
+    /**
+     * Returns the byte array for the named unknown property, identified by its byte and bit
+     * numbers in the property bit field. Both of these numbers are 1-based.
+     */
+    public byte[] getUnknownProp(int byteNumber, int bitNumber);
+    public void setUnknownProp(int byteNumber, int bitNumber, byte[] bytes);
 
     /**
      * Updates this object's properties to match any updates provided by the

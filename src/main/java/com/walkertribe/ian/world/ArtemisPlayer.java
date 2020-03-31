@@ -18,6 +18,7 @@ import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.enums.TargetingMode;
 import com.walkertribe.ian.enums.TubeState;
 import com.walkertribe.ian.enums.Upgrade;
+import com.walkertribe.ian.protocol.core.setup.Ship;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.vesseldata.VesselAttribute;
@@ -145,20 +146,34 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     public ArtemisPlayer(int objId) {
         super(objId);
+        init();
+    }
 
+    /**
+     * Handy shortcut for creating a new ArtemisPlayer from a Ship created during game setup.
+     */
+    public ArtemisPlayer(int objId, Ship ship, Context ctx) {
+        super(objId, ship.getVessel(ctx));
+        init();
+        setName(ship.getName());
+        setAccentColor(ship.getAccentColor());
+        setDriveType(ship.getDrive());
+    }
+
+    private void init() {
         // pre-fill
         Arrays.fill(mTorpedos, -1);
 
         for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-        	mSystems[i] = new SystemStatus();
+            mSystems[i] = new SystemStatus();
         }
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-        	mTubes[i] = new Tube();
+            mTubes[i] = new Tube();
         }
 
         for (Upgrade upgrade : Upgrade.activation()) {
-        	mUpgrades.put(upgrade, new UpgradeStatus());
+            mUpgrades.put(upgrade, new UpgradeStatus());
         }
     }
 
