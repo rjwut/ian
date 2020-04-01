@@ -93,9 +93,6 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
         mShieldsRearMax = shieldsRearMax;
     }
 
-    /**
-     * The side this ship is on. There is no side 0. Biomechs are side 30.
-     */
     public byte getSide() {
         return mSide;
     }
