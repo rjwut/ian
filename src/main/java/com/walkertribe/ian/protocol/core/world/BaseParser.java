@@ -55,7 +55,7 @@ public class BaseParser extends AbstractObjectParser {
         base.setHeading(reader.readFloat(Bit.HEADING));
         reader.readObjectUnknown(Bit.UNK_2_4, 4);
         reader.readObjectUnknown(Bit.UNK_2_5, 1);
-        base.setSide(reader.readByte());
+        base.setSide(reader.readByte(Bit.SIDE, (byte) -1));
         return base;
 	}
 
