@@ -21,7 +21,7 @@ import com.walkertribe.ian.world.Artemis;
  */
 public class ThreadedArtemisNetworkInterfaceTest {
     private static final int CONNECT_TIMEOUT = 1000;
-    private static final int DISCONNECT_TIMEOUT = 1000;
+    private static final int DISCONNECT_TIMEOUT = 5000;
 
     /**
      * Sets up a ServerSocket to listen for a client connection. The client Socket is then stored in
@@ -137,7 +137,7 @@ public class ThreadedArtemisNetworkInterfaceTest {
         try {
             // Send WelcomePacket and VersionPacket
             server.send(new WelcomePacket());
-            server.send(new VersionPacket(new Version("2.7.4")));
+            server.send(new VersionPacket(new Version("2.7.5")));
             endTime = System.currentTimeMillis() + DISCONNECT_TIMEOUT;
 
             // Wait for connection to close
