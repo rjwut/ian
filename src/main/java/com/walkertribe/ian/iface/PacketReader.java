@@ -596,9 +596,9 @@ public class PacketReader {
 			ByteArrayReader.readBytes(in, 4, intBuffer);
 			return ByteArrayReader.readInt(intBuffer, 0);
 		} catch (InterruptedException ex) {
-			throw new ArtemisPacketException(ex);
+			throw new ArtemisPacketException(ex, true);
 		} catch (IOException ex) {
-			throw new ArtemisPacketException(ex);
+			throw new ArtemisPacketException(ex, true);
 		}
 	}
 }

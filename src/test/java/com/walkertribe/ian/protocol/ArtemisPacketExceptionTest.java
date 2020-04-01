@@ -15,7 +15,7 @@ public class ArtemisPacketExceptionTest {
 	// Done separately to make SpotBugs happy.
 	@Test(expected = ArtemisPacketException.class)
 	public void testConstructCause() throws ArtemisPacketException {
-		throw new ArtemisPacketException(new RuntimeException());
+		throw new ArtemisPacketException(new RuntimeException(), true);
 	}
 
 	@Test

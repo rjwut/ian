@@ -28,9 +28,9 @@ public class ArtemisPacketException extends Exception {
     /**
      * @param t The exception that caused ArtemisPacketException to be thrown
      */
-    public ArtemisPacketException(Throwable t) {
+    public ArtemisPacketException(Throwable t, boolean fatal) {
         super(t);
-        fatal = true;
+        this.fatal = fatal;
     }
 
     /**
