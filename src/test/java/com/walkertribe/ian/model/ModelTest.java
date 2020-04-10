@@ -30,7 +30,7 @@ public class ModelTest {
 		params.offsetY(2.0);
 		params.offsetZ(3.0);
 		params.scale(2.0);
-		Map<String, double[]> map = model.transformVertices(params);
+		Map<String, double[]> map = model.transformPoints(params);
 		double[] coords = map.get("1");
 		Assert.assertArrayEquals(new double[] { 3.0, 6.0, -3.0 }, coords, TestUtil.EPSILON);
 		coords = map.get("2");
@@ -43,7 +43,7 @@ public class ModelTest {
 	public void testIdentityTransform() {
 		Model model = buildModel();
 		RenderParams params = new RenderParams();
-		Map<String, double[]> map = model.transformVertices(params);
+		Map<String, double[]> map = model.transformPoints(params);
 		double[] coords = map.get("1");
 		Assert.assertArrayEquals(new double[] { 1.0, 2.0, -3.0 }, coords, TestUtil.EPSILON);
 		coords = map.get("2");
@@ -62,10 +62,10 @@ public class ModelTest {
 	}
 
 	private Model buildModel() {
-		Map<String, Vertex> vertices = new TreeMap<String, Vertex>();
-		vertices.put("1", new Vertex(1.0, 2.0, 3.0));
-		vertices.put("2", new Vertex(2.0, 3.0, 1.0));
-		vertices.put("3", new Vertex(3.0, 1.0, 2.0));
+		Map<String, Point> vertices = new TreeMap<String, Point>();
+		vertices.put("1", new Point(1.0, 2.0, 3.0));
+		vertices.put("2", new Point(2.0, 3.0, 1.0));
+		vertices.put("3", new Point(3.0, 1.0, 2.0));
 		Poly poly = new Poly(new ArrayList<String>(vertices.keySet()));
 		List<Poly> polys = new ArrayList<Poly>();
 		polys.add(poly);

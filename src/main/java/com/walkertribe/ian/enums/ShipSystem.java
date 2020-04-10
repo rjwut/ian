@@ -9,10 +9,10 @@ public enum ShipSystem {
 	TORPEDOES("Torpedoes"),
 	SENSORS("Sensors"),
 	MANEUVERING("Maneuvering"),
-	IMPULSE("Impulse"),
+	IMPULSE("Impulse Drive"),
 	WARP_JUMP_DRIVE("Warp/Jump Drive"),
-	FORE_SHIELDS("Fore shields"),
-	AFT_SHIELDS("Aft shields");
+	FORE_SHIELDS("Forward Shields"),
+	AFT_SHIELDS("Aft Shields");
 
 	private String label;
 

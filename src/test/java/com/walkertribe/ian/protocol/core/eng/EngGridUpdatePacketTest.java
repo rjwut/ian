@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 import com.walkertribe.ian.util.GridCoord;
+import com.walkertribe.ian.util.GridNode;
 import com.walkertribe.ian.util.TestUtil;
 
 public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdatePacket> {
@@ -29,21 +30,21 @@ public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdateP
 		boolean requested = true;
 
 		for (EngGridUpdatePacket pkt : packets) {
-			Assert.assertEquals(requested, pkt.isRequested());
-			List<NodeDamage> damageEntries = pkt.getDamage();
+			Assert.assertEquals(requested, pkt.isFullUpdate());
+			List<GridNode> damageEntries = pkt.getDamage();
 			Assert.assertEquals(2, damageEntries.size());
-			NodeDamage damageEntry = damageEntries.get(0);
-			GridCoord coord = damageEntry.getCoord();
+			GridNode node = damageEntries.get(0);
+			GridCoord coord = node.getCoord();
 			Assert.assertEquals(0, coord.x());
 			Assert.assertEquals(0, coord.y());
 			Assert.assertEquals(0, coord.z());
-			Assert.assertEquals(0.0f, damageEntry.getDamage(), EPSILON);
-			damageEntry = damageEntries.get(1);
-			coord = damageEntry.getCoord();
+			Assert.assertEquals(0.0f, node.getDamage(), EPSILON);
+			node = damageEntries.get(1);
+			coord = node.getCoord();
 			Assert.assertEquals(1, coord.x());
 			Assert.assertEquals(1, coord.y());
 			Assert.assertEquals(1, coord.z());
-			Assert.assertEquals(0.7f, damageEntry.getDamage(), EPSILON);
+			Assert.assertEquals(0.7f, node.getDamage(), EPSILON);
 			List<DamconTeam> statuses = pkt.getDamcons();
 			Assert.assertEquals(1, statuses.size());
 			DamconTeam status = statuses.get(0);
@@ -64,9 +65,9 @@ public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdateP
 
 	@Test
 	public void testGridDamageEqualsAndHashCode() {
-	    NodeDamage dmg0 = new NodeDamage(GridCoord.get(0, 0, 0), 0.5f);
-		NodeDamage dmg1 = new NodeDamage(GridCoord.get(0, 0, 0), 0.5f);
-		NodeDamage dmg2 = new NodeDamage(GridCoord.get(0, 0, 1), 0.5f);
+	    GridNode dmg0 = new GridNode(null, GridCoord.get(0, 0, 0));
+	    GridNode dmg1 = new GridNode(null, GridCoord.get(0, 0, 0));
+	    GridNode dmg2 = new GridNode(null, GridCoord.get(0, 0, 1));
 		TestUtil.testEqualsAndHashCode(dmg0, dmg1, dmg2);
 	}
 }

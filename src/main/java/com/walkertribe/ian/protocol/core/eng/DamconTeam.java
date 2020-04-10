@@ -25,6 +25,17 @@ public class DamconTeam {
     }
 
     /**
+     * Clones the given DAMCON team.
+     */
+    public DamconTeam(DamconTeam original) {
+        id = original.id;
+        location = original.location;
+        goal = original.goal;
+        progress = original.progress;
+        members = original.members;
+    }
+
+    /**
      * The DAMCON team's ID.
      */
     public byte getId() {
@@ -32,14 +43,14 @@ public class DamconTeam {
     }
 
     /**
-     * The DAMCON team's current location in the grid.
+     * The DAMCON team's current location in the nodes.
      */
     public GridCoord getLocation() {
         return location;
     }
 
     /**
-     * The DAMCON team's destination in the grid.
+     * The DAMCON team's destination in the nodes.
      */
     public GridCoord getGoal() {
         return goal;

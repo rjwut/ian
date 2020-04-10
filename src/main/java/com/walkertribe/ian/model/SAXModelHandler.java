@@ -20,10 +20,10 @@ public class SAXModelHandler extends DefaultHandler {
 	}
 
 	private String dxsPath;
-	private Map<String, Vertex> vertices = new HashMap<String, Vertex>();
+	private Map<String, Point> vertices = new HashMap<String, Point>();
 	private List<Poly> polys = new LinkedList<Poly>();
 	private ParseMode mode = ParseMode.NONE;
-	private List<String> vertexList = new ArrayList<String>();
+	private List<String> pointList = new ArrayList<String>();
 
 	public SAXModelHandler(String dxsPath) {
 		this.dxsPath = dxsPath;
@@ -42,9 +42,9 @@ public class SAXModelHandler extends DefaultHandler {
 				double x = Double.parseDouble(attrs.getValue("x"));
 				double y = Double.parseDouble(attrs.getValue("y"));
 				double z = Double.parseDouble(attrs.getValue("z"));
-				vertices.put(dxsPath + ":" + attrs.getValue("id"), new Vertex(x, y, z));
+				vertices.put(dxsPath + ":" + attrs.getValue("id"), new Point(x, y, z));
 			} else if (mode == ParseMode.POLYS) {
-				vertexList.add(dxsPath + ":" + attrs.getValue("vid"));
+				pointList.add(dxsPath + ":" + attrs.getValue("vid"));
 			}
 		}
 	}
@@ -55,19 +55,19 @@ public class SAXModelHandler extends DefaultHandler {
 		if ("vertices".equals(qName) || "polygons".equals(qName)) {
 			mode = ParseMode.NONE;
 		} else if ("poly".equals(qName)) {
-			if (vertexList.size() > 2) {
-				polys.add(new Poly(vertexList));
+			if (pointList.size() > 2) {
+				polys.add(new Poly(pointList));
 			}
 
-			vertexList.clear();
+			pointList.clear();
 		}
     }
 
 	/**
-	 * Returns a Map containing all the Vertex objects discovered in the .dxs
+	 * Returns a Map containing all the Point objects discovered in the .dxs
 	 * file.
 	 */
-	public Map<String, Vertex> getVertices() {
+	public Map<String, Point> getVertices() {
 		return vertices;
 	};
 

@@ -22,8 +22,8 @@ public class GridCoordTest {
 		Assert.assertNotEquals(coord1, null);
 		Assert.assertNotEquals(coord1, "foo");
 		Assert.assertNotEquals(coord1, coord2);
-		Assert.assertTrue(coord1.equals(0, 0, 0));
-		Assert.assertFalse(coord1.equals(0, 0, 1));
+		Assert.assertTrue(coord1.at(0, 0, 0));
+		Assert.assertFalse(coord1.at(0, 0, 1));
 		Assert.assertEquals(coord1.hashCode(), coord1.hashCode());
 	}
 

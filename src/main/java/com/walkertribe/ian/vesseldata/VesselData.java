@@ -111,13 +111,13 @@ public class VesselData {
 	}
 
 	/**
-	 * Preloads all of the VesselInternals objects into memory. If you do not
-	 * call this method, then each VesselInternals object will be loaded into
-	 * memory on demand instead.
+	 * Preloads all of the system Grid objects into memory. If you do not call
+	 * this method, then each Grid object will be loaded into memory on demand
+	 * instead.
 	 */
-	public void preloadInternals() {
+	public void preloadGrids() {
 		for (Vessel vessel : vessels.values()) {
-			vessel.getInternals();
+			vessel.getGrid();
 		}
 	}
 }

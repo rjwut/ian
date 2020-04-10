@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.walkertribe.ian.model.Model;
+import com.walkertribe.ian.util.Grid;
 import com.walkertribe.ian.vesseldata.VesselData;
-import com.walkertribe.ian.vesseldata.VesselInternals;
 
 /**
  * A Context implementation where that can be pre-populated with the specific
@@ -15,7 +15,7 @@ import com.walkertribe.ian.vesseldata.VesselInternals;
 public class TestContext implements Context {
 	private VesselData vesselData;
 	private Map<String, Model> modelMap = new HashMap<String, Model>();
-	private Map<String, VesselInternals> internalsMap = new HashMap<String, VesselInternals>();
+	private Map<String, Grid> gridMap = new HashMap<String, Grid>();
 
 	@Override
 	public VesselData getVesselData() {
@@ -36,11 +36,11 @@ public class TestContext implements Context {
 	}
 
 	@Override
-	public VesselInternals getInternals(String sntPath) {
-		return internalsMap.get(sntPath);
+	public Grid getGrid(String sntPath) {
+		return gridMap.get(sntPath);
 	}
 
-	public void putInternals(String sntPath, VesselInternals internals) {
-		internalsMap.put(sntPath, internals);
+	public void putGrid(String sntPath, Grid grid) {
+		gridMap.put(sntPath, grid);
 	}
 }

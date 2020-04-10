@@ -9,30 +9,30 @@ import java.util.Iterator;
  * @author rjwut
  */
 public class Poly implements Iterable<String> {
-	private String[] vertexIds;
+	private String[] pointIds;
 
 	/**
-	 * Creates a new Poly using the given vertex IDs.
+	 * Creates a new Poly using the given point IDs.
 	 */
-	Poly(Collection<String> vertexIds) {
-		this.vertexIds = new String[vertexIds.size()];
+	Poly(Collection<String> pointIds) {
+		this.pointIds = new String[pointIds.size()];
 		int i = 0;
 
-		for (String vert : vertexIds) {
-			this.vertexIds[i++] = vert;
+		for (String vert : pointIds) {
+			this.pointIds[i++] = vert;
 		}
 	}
 
-	public String getVertexId(int index) {
-	    return vertexIds[index];
+	public String getPointId(int index) {
+	    return pointIds[index];
 	}
 
-	public int vertexCount() {
-	    return vertexIds.length;
+	public int pointCount() {
+	    return pointIds.length;
 	}
 
     @Override
     public Iterator<String> iterator() {
-        return Arrays.stream(vertexIds).iterator();
+        return Arrays.stream(pointIds).iterator();
     }
 }

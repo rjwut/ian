@@ -13,8 +13,16 @@ public class RenderParams {
 	double mOffsetZ;
 
 	/**
-	 * Scaling factor: a value greater than 1 will scale it up, and less
-	 * than 1 will scale it down.
+     * Returns the scaling factor: a value greater than 1 will scale it up,
+     * and less than 1 will scale it down.
+	 */
+	public double scale() {
+	    return mScale;
+	}
+
+	/**
+	 * Sets the scaling factor: a value greater than 1 will scale it up, and
+	 * less than 1 will scale it down.
 	 */
 	public RenderParams scale(double scale) {
 		mScale = scale;

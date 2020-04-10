@@ -10,6 +10,7 @@ import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.util.GridCoord;
+import com.walkertribe.ian.util.GridNode;
 
 /**
  * Updates damage to the various system grids on the ship, as well as DAMCON
@@ -22,8 +23,8 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
     private static final byte END_DAMCON_MARKER = (byte) 0xfe;
     private static final byte TEAM_NUMBER_OFFSET = 0x0a;
 
-    private boolean mRequested;
-    private List<NodeDamage> mDamage = new ArrayList<>();
+    private boolean mFullUpdate;
+    private List<GridNode> mDamage = new ArrayList<>();
     private List<DamconTeam> mDamconUpdates = new ArrayList<>();
 
     /**
@@ -33,15 +34,17 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
      * being sent in response to a {@link EngRequestGridUpdatePacket} packet.
      */
     public EngGridUpdatePacket(boolean requested) {
-        mRequested = requested;
+        mFullUpdate = requested;
     }
 
     public EngGridUpdatePacket(PacketReader reader) {
-        mRequested = reader.readByte() == 1;
+        mFullUpdate = reader.readByte() == 1;
 
         while (reader.peekByte() != END_GRID_MARKER) {
             GridCoord coord = GridCoord.get(reader.readByte(), reader.readByte(), reader.readByte());
-            mDamage.add(new NodeDamage(coord, reader.readFloat()));
+            GridNode node = new GridNode(null, coord);
+            node.setDamage(reader.readFloat());
+            mDamage.add(node);
         }
 
         reader.skip(1); // read the 0xff byte
@@ -63,17 +66,20 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
     }
 
     /**
-     * Returns true if this update was requested by the client.
+     * Returns true if this update contains all nodes nodes and DAMCON teams, or false if it just
+     * has updates.
      */
-    public boolean isRequested() {
-    	return mRequested;
+    public boolean isFullUpdate() {
+    	return mFullUpdate;
     }
 
     /**
      * Adds a damage update to this packet.
      */
     public void addDamageUpdate(int x, int y, int z, float damage) {
-    	mDamage.add(new NodeDamage(GridCoord.get(x, y, z), damage));
+        GridNode node = new GridNode(null, GridCoord.get(x, y, z));
+        node.setDamage(damage);
+    	mDamage.add(node);
     }
 
     /**
@@ -89,10 +95,10 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
     }
 
     /**
-     * Returns a List of DamageEntry objects that describe the damage data
+     * Returns a List of GridNode objects that describe the damage data
      * encoded in this packet.
      */
-    public List<NodeDamage> getDamage() {
+    public List<GridNode> getDamage() {
         return mDamage;
     }
 
@@ -106,14 +112,14 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
-		writer.writeByte((byte) (mRequested ? 1 : 0));
+		writer.writeByte((byte) (mFullUpdate ? 1 : 0));
 
-		for (NodeDamage damageEntry : mDamage) {
-			GridCoord coord = damageEntry.getCoord();
+		for (GridNode node : mDamage) {
+			GridCoord coord = node.getCoord();
 			writer	.writeByte((byte) coord.x())
 					.writeByte((byte) coord.y())
 					.writeByte((byte) coord.z())
-					.writeFloat(damageEntry.getDamage());
+					.writeFloat(node.getDamage());
 		}
 
 		writer.writeByte(END_GRID_MARKER);
@@ -140,8 +146,8 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
 		if (mDamage.isEmpty()) {
 			b.append("\n\tnone");
 		} else {
-			for (NodeDamage damageEntry : mDamage) {
-				b.append("\n\t").append(damageEntry);
+			for (GridNode node : mDamage) {
+				b.append("\n\t").append(node.getCoord()).append('=').append(node.getDamage());
 			}
 		}
 

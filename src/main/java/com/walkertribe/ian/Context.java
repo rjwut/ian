@@ -1,8 +1,8 @@
 package com.walkertribe.ian;
 
 import com.walkertribe.ian.model.Model;
+import com.walkertribe.ian.util.Grid;
 import com.walkertribe.ian.vesseldata.VesselData;
-import com.walkertribe.ian.vesseldata.VesselInternals;
 
 /**
  * Interface for classes which can return Artemis resources.
@@ -22,8 +22,8 @@ public interface Context {
 	public Model getModel(String dxsPaths);
 
 	/**
-	 * Given the path to an .snt file, returns a VesselInternals object that
-	 * describes the node grid stored in that file.
+	 * Given the path to an .snt file, returns a Grid object that describes the
+	 * node nodes stored in that file. Grids returned by this method are locked.
 	 */
-	public VesselInternals getInternals(String sntPath);
+	public Grid getGrid(String sntPath);
 }

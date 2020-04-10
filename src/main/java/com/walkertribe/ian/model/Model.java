@@ -13,7 +13,44 @@ import com.walkertribe.ian.util.Matrix;
  * @author rjwut
  */
 public class Model {
-	private static final float EPSILON = 0.00000001f;
+
+    /**
+     * Rotates, scales and translates a point cloud, then returns a Map describing the resulting
+     * locations of all given Points in 3D space. Each point is declared as an array containing
+     * three doubles: x, y, z.
+     */
+    public static Map<String, double[]> transformPoints(Map<String, Point> points, RenderParams config) {
+        Map<String, double[]> pointMap = new HashMap<String, double[]>();
+        List<Matrix> matrices = new LinkedList<Matrix>();
+
+        if (!withinEpsilon(config.mScale, 1.0)) {
+            matrices.add(Matrix.buildScaleMatrix(config.mScale));
+        }
+
+        if (!withinEpsilon(config.mRotateX, 0)) {
+            matrices.add(Matrix.buildRotateXMatrix(config.mRotateX));
+        }
+
+        if (!withinEpsilon(config.mRotateY, 0)) {
+            matrices.add(Matrix.buildRotateYMatrix(config.mRotateY));
+        }
+
+        if (!withinEpsilon(config.mRotateZ, 0)) {
+            matrices.add(Matrix.buildRotateZMatrix(config.mRotateZ));
+        }
+
+        for (Map.Entry<String, Point> entry : points.entrySet()) {
+            double[] point = entry.getValue().applyMatrices(matrices);
+            point[0] += config.mOffsetX;
+            point[1] += config.mOffsetY;
+            point[2] += config.mOffsetZ;
+            pointMap.put(entry.getKey(), point);
+        }
+
+        return pointMap;
+    }
+
+    private static final float EPSILON = 0.00000001f;
 
 	/**
 	 * Returns true if the given double values are close enough to each other to
@@ -25,7 +62,7 @@ public class Model {
 
 	private String dxsPaths;
 	private double maxRadius = 0;
-	private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
+	private Map<String, Point> pointMap = new HashMap<String, Point>();
 	private List<Poly> polys = new LinkedList<Poly>();
 
 	public Model(String dxsPaths) {
@@ -33,14 +70,14 @@ public class Model {
 	}
 
 	/**
-	 * Adds the given Vertexes and Polys to this Model.
+	 * Adds the given Points and Polys to this Model.
 	 */
-	public void add(Map<String, Vertex> v, List<Poly> p) {
-		vertexMap.putAll(v);
+	public void add(Map<String, Point> v, List<Poly> p) {
+		pointMap.putAll(v);
 		polys.addAll(p);
 
-		for (Vertex vertex : v.values()) {
-			maxRadius = Math.max(maxRadius, vertex.r());
+		for (Point point : v.values()) {
+			maxRadius = Math.max(maxRadius, point.r());
 		}
 	}
 
@@ -54,7 +91,7 @@ public class Model {
 
 	/**
 	 * Returns the size of this Model. This is distance from the origin to the
-	 * Model's furthest Vertex.
+	 * Model's furthest Point.
 	 */
 	public double getSize() {
 		return maxRadius;
@@ -69,11 +106,11 @@ public class Model {
 	}
 
 	/**
-	 * Returns a copy of the Vertex Map contained in this model. Vertices are
+	 * Returns a copy of the Point Map contained in this model. Vertices are
 	 * mapped by their IDs.
 	 */
-	public Map<String, Vertex> getVertexMap() {
-		return new HashMap<String, Vertex>(vertexMap);
+	public Map<String, Point> getPointMap() {
+		return new HashMap<String, Point>(pointMap);
 	}
 
 	/**
@@ -84,39 +121,12 @@ public class Model {
 	}
 
 	/**
-	 * Rotates, scales and translates the Model, then returns a Map describing
-	 * the resulting locations of all the vertices in 3D space. Each point is
-	 * declared as an array containing three doubles: x, y, z.
+	 * Rotates, scales and translates the Model, then returns a Map describing the resulting
+	 * locations of all the Model's points in 3D space. Each point is declared as an array
+	 * containing three doubles: x, y, z.
 	 */
-	public Map<String, double[]> transformVertices(RenderParams config) {
-		Map<String, double[]> pointMap = new HashMap<String, double[]>();
-		List<Matrix> matrices = new LinkedList<Matrix>();
-
-		if (!withinEpsilon(config.mScale, 1.0)) {
-			matrices.add(Matrix.buildScaleMatrix(config.mScale));
-		}
-
-		if (!withinEpsilon(config.mRotateX, 0)) {
-			matrices.add(Matrix.buildRotateXMatrix(config.mRotateX));
-		}
-
-		if (!withinEpsilon(config.mRotateY, 0)) {
-			matrices.add(Matrix.buildRotateYMatrix(config.mRotateY));
-		}
-
-		if (!withinEpsilon(config.mRotateZ, 0)) {
-			matrices.add(Matrix.buildRotateZMatrix(config.mRotateZ));
-		}
-
-		for (Map.Entry<String, Vertex> entry : vertexMap.entrySet()) {
-			double[] point = entry.getValue().applyMatrices(matrices);
-			point[0] += config.mOffsetX;
-			point[1] += config.mOffsetY;
-			point[2] += config.mOffsetZ;
-			pointMap.put(entry.getKey(), point);
-		}
-
-		return pointMap;
+	public Map<String, double[]> transformPoints(RenderParams config) {
+	    return transformPoints(pointMap, config);
 	}
 
 	@Override

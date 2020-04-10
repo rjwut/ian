@@ -1,7 +1,9 @@
 package com.walkertribe.ian.util;
 
+import java.util.Iterator;
+
 /**
- * An engineering grid coordinate.
+ * An engineering nodes coordinate.
  * @author rjwut
  */
 public final class GridCoord implements Comparable<GridCoord> {
@@ -11,6 +13,17 @@ public final class GridCoord implements Comparable<GridCoord> {
     public static final int LENGTH = MAX_X * MAX_Y * MAX_Z;
 
     private static final GridCoord[] COORDS = new GridCoord[LENGTH];
+
+    static {
+        for (int x = 0; x < MAX_X; x++) {
+            for (int y = 0; y < MAX_Y; y++) {
+                for (int z = 0; z < MAX_Z; z++) {
+                    GridCoord coord = new GridCoord(x, y, z);
+                    COORDS[coord.index] = coord;
+                }
+            }
+        }
+    }
 
     /**
      * Computes the index value for the given coordinates.
@@ -29,15 +42,26 @@ public final class GridCoord implements Comparable<GridCoord> {
      * Returns the GridCoord object that corresponds to the given coordinates.
      */
     public static GridCoord get(int x, int y, int z) {
-        int i = computeIndex(x, y, z);
-        GridCoord coord = COORDS[i];
+        return COORDS[computeIndex(x, y, z)];
+    }
 
-        if (coord == null) {
-            coord = new GridCoord(x, y, z);
-            COORDS[i] = coord;
-        }
+    /**
+     * Returns an Iterator for all GridCoords.
+     */
+    public static Iterator<GridCoord> iterator() {
+        return new Iterator<GridCoord>() {
+            private int i = 0;
 
-        return coord;
+            @Override
+            public boolean hasNext() {
+                return i < LENGTH;
+            }
+
+            @Override
+            public GridCoord next() {
+                return COORDS[i++];
+            }
+        };
     }
 
     protected int x;
@@ -80,7 +104,10 @@ public final class GridCoord implements Comparable<GridCoord> {
         return index;
     }
 
-    public boolean equals(int x, int y, int z) {
+    /**
+     * Returns true if this object is located at the given coordinates.
+     */
+    public boolean at(int x, int y, int z) {
         return this.x == x && this.y == y && this.z == z;
     }
 
