@@ -36,16 +36,16 @@ public final class Util {
 	/**
 	 * Reverses splitSpaceDelimited().
 	 */
-	public static String joinSpaceDelimited(Collection<String> strings) {
+	public static String joinSpaceDelimited(Collection<?> objects) {
 		StringBuilder b = new StringBuilder();
 		boolean first = true;
 
-		for (String string : strings) {
+		for (Object object : objects) {
 			if (!first) {
 				b.append(' ');
 			}
 
-			b.append(string);
+			b.append(object);
 			first = false;
 		}
 

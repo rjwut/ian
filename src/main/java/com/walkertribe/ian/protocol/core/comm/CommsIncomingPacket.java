@@ -55,8 +55,8 @@ public class CommsIncomingPacket extends BaseArtemisPacket {
     /**
      * A String identifying the sender. This may not correspond to the name of
      * a game entity. For example, some messages from bases or friendly ships
-     * have additional detail after the entity's name ("DS3 TSN Base"). Messages
-     * in scripted scenarios can have any String for the sender.
+     * have additional detail after the entity's name ("DS3 TSN Deep Space
+     * Base"). Messages in scripted scenarios can have any String for the sender.
      */
     public CharSequence getFrom() {
         return mFrom;
@@ -78,6 +78,8 @@ public class CommsIncomingPacket extends BaseArtemisPacket {
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append("from ").append(mFrom).append(": ").append(getMessage());
+		b.append("from ").append(mFrom)
+		.append(" [").append(Util.joinSpaceDelimited(mFilters))
+		.append("]: ").append(getMessage());
 	}
 }
