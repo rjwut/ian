@@ -196,6 +196,11 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
     @Override
+    public BoolState getVisibility(int side) {
+        return BoolState.TRUE;
+    }
+
+    @Override
     public float distance(ArtemisObject obj) {
     	if (!hasPosition() || !obj.hasPosition()) {
     		throw new IllegalStateException("Can't compute distance if both objects don't have a position");

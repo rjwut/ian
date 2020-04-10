@@ -5,6 +5,7 @@ import java.util.SortedMap;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.model.Model;
+import com.walkertribe.ian.util.BoolState;
 
 /**
  * <p>
@@ -144,6 +145,12 @@ public interface ArtemisObject {
      * hasPosition() will still return true if x and z are defined.
      */
     public abstract boolean hasPosition();
+
+    /**
+     * Returns a BoolState indicating whether this object is visible to ships
+     * on the give side.
+     */
+    public BoolState getVisibility(int side);
 
     /**
      * Returns the distance between this object and the given object. This

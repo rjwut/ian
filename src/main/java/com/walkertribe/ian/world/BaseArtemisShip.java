@@ -121,8 +121,13 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
      * Returns whether this ship is visible to the given side on map screens.
      * Unspecified: UNKNOWN
      */
+    @Override
     public BoolState getVisibility(int side) {
-    	return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
+        if (getSide() == side && side != -1) {
+            return BoolState.TRUE; // ships are always visible to their own side
+        }
+
+        return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
     }
 
     /**
