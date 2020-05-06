@@ -14,7 +14,7 @@ ffffffffff1f // bit field
 0000003f     // rudder = 0.5
 0000803f     // top speed = 1
 0000803f     // turn rate = 1
-00           // auto beams = on
+01           // auto beams = on
 00           // warp = 0
 00007a44     // energy = 1000
 

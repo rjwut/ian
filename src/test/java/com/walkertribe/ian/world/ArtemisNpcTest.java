@@ -82,7 +82,6 @@ public class ArtemisNpcTest {
 		obj1.setScanLevelBits(2, 2);
 		obj1.setSpecialBits(0x05);
 		obj1.setSpecialStateBits(0x01);
-		obj1.setEnemy(BoolState.TRUE);
 		obj1.setSurrendered(BoolState.TRUE);
 		obj1.setFleetNumber((byte) 2);
 
@@ -207,7 +206,6 @@ public class ArtemisNpcTest {
 			}
 		}
 
-		Assert.assertEquals(enemy, npc.isEnemy());
 		Assert.assertEquals(surrendered, npc.isSurrendered());
 		Assert.assertEquals(fleetNumber, npc.getFleetNumber());
 

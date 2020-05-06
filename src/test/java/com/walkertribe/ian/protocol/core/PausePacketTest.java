@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
-import com.walkertribe.ian.util.BoolState;
 
 public class PausePacketTest extends AbstractPacketTester<PausePacket> {
 	@Test
@@ -17,13 +16,13 @@ public class PausePacketTest extends AbstractPacketTester<PausePacket> {
 
 	@Test
 	public void testConstruct() {
-		Assert.assertEquals(BoolState.TRUE, new PausePacket(true).getPaused());
-		Assert.assertEquals(BoolState.FALSE, new PausePacket(false).getPaused());
+		Assert.assertTrue(new PausePacket(true).isPaused());
+		Assert.assertFalse(new PausePacket(false).isPaused());
 	}
 
 	@Override
 	protected void testPackets(List<PausePacket> packets) {
-		Assert.assertEquals(BoolState.TRUE, packets.get(0).getPaused());
-		Assert.assertEquals(BoolState.FALSE, packets.get(1).getPaused());
+		Assert.assertTrue(packets.get(0).isPaused());
+		Assert.assertFalse(packets.get(1).isPaused());
 	}
 }

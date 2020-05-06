@@ -16,4 +16,4 @@ c4d23fb8 // BeamFiredPacket
 0000803f // impact X = 1
 00000040 // impact Y = 2
 00004040 // impact Z = 3
-01000000 // targeting mode = manual
+00000000 // targeting mode = manual

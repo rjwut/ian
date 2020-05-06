@@ -21,6 +21,7 @@ import com.walkertribe.ian.vesseldata.VesselDataTest;
 import com.walkertribe.ian.world.ArtemisBase;
 import com.walkertribe.ian.world.ArtemisNebula;
 import com.walkertribe.ian.world.ArtemisNpc;
+import com.walkertribe.ian.world.ArtemisPlayer;
 
 public class CommsOutgoingPacketTest extends AbstractPacketTester<CommsOutgoingPacket> {
 	private static Context ctx;
@@ -42,42 +43,48 @@ public class CommsOutgoingPacketTest extends AbstractPacketTester<CommsOutgoingP
 
 	@Test
 	public void testConstruct() {
-		new CommsOutgoingPacket(new ArtemisBase(1), BaseMessage.BUILD_EMPS, ctx);
+	    ArtemisPlayer player = new ArtemisPlayer(0);
+		new CommsOutgoingPacket(player, new ArtemisBase(1), BaseMessage.BUILD_EMPS, ctx);
 		ArtemisNpc npc = new ArtemisNpc(1);
 		npc.setVessel(ctx.getVesselData().getVessel(1500));
-		new CommsOutgoingPacket(npc, OtherMessage.GO_DEFEND, 2, ctx);
+		new CommsOutgoingPacket(player, npc, OtherMessage.GO_DEFEND, 2, ctx);
 	}
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRequiresSender() {
+        new CommsOutgoingPacket(null, new ArtemisBase(0), BaseMessage.BUILD_EMPS, ctx);
+    }
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testRequiresRecipient() {
-		new CommsOutgoingPacket(null, BaseMessage.BUILD_EMPS, ctx);
+		new CommsOutgoingPacket(new ArtemisPlayer(1), null, BaseMessage.BUILD_EMPS, ctx);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testRequiresMessage() {
-		new CommsOutgoingPacket(new ArtemisBase(1), null, ctx);
+		new CommsOutgoingPacket(new ArtemisPlayer(0), new ArtemisBase(1), null, ctx);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidRecipient() {
-		new CommsOutgoingPacket(new ArtemisNebula(1), BaseMessage.BUILD_EMPS, ctx);
+		new CommsOutgoingPacket(new ArtemisPlayer(0), new ArtemisNebula(1), BaseMessage.BUILD_EMPS, ctx);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testIncompatibleMessage() {
-		new CommsOutgoingPacket(new ArtemisBase(1), EnemyMessage.WILL_YOU_SURRENDER, ctx);
+		new CommsOutgoingPacket(new ArtemisPlayer(0), new ArtemisBase(1), EnemyMessage.WILL_YOU_SURRENDER, ctx);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testRequiresArgument() {
 		ArtemisNpc npc = new ArtemisNpc(1);
 		npc.setVessel(ctx.getVesselData().getVessel(1500));
-		new CommsOutgoingPacket(npc, OtherMessage.GO_DEFEND, ctx);
+		new CommsOutgoingPacket(new ArtemisPlayer(0), npc, OtherMessage.GO_DEFEND, ctx);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDoesNotAcceptArgument() {
-		new CommsOutgoingPacket(new ArtemisBase(1), BaseMessage.BUILD_EMPS, 2, ctx);
+		new CommsOutgoingPacket(new ArtemisPlayer(0), new ArtemisBase(1), BaseMessage.BUILD_EMPS, 2, ctx);
 	}
 
 	@Override
