@@ -8,7 +8,7 @@ import com.walkertribe.ian.vesseldata.Vessel;
  * negative.
  * @author dhleong
  */
-public interface ArtemisShielded extends ArtemisObject {
+public interface ArtemisShielded extends ArtemisOrientable {
     /**
      * Identifies the type of ship this is. This corresponds to the uniqueID
      * attribute of vessel elements in vesselData.xml.
