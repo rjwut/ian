@@ -1,5 +1,7 @@
 package com.walkertribe.ian.world;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -75,6 +77,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     private CharSequence mArtemisClass;
     private CharSequence mIntelLevel1;
     private CharSequence mIntelLevel2;
+    private List<Tag> mTags = new LinkedList<>();
     private SortedMap<String, byte[]> unknownProps;
 
     public BaseArtemisObject(int objId) {
@@ -101,6 +104,11 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     @Override
     public CharSequence getName() {
         return mName;
+    }
+
+    @Override
+    public String getNameString() {
+        return mName != null ? mName.toString() : null;
     }
 
     public void setName(CharSequence name) {
@@ -165,6 +173,30 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
     /**
+     * Returns the number of times this object can be scanned by one side.
+     */
+    public int getMaxScans() {
+        return 0;
+    }
+
+    /**
+     * Returns the scan level for this object for the indicated side. In other words, this is the
+     * number of times this object has been scanned by that side. Objects which are not scannable
+     * always return 1.
+     * Unspecified: -1
+     */
+    public int getScanLevel(int side) {
+        return 1;
+    }
+
+    /**
+     * Sets the scan level for this object for the indicated side.
+     */
+    public void setScanLevel(int side, int scanLevel) {
+        throw new UnsupportedOperationException("Can't scan this object");
+    }
+
+    /**
      * The level 1 scan intel for this object.
      * Unspecified: null
      */
@@ -173,6 +205,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     	return mIntelLevel1;
     }
 
+    @Override
     public void setIntelLevel1(CharSequence intelLevel1) {
     	mIntelLevel1 = intelLevel1;
     }
@@ -186,8 +219,24 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     	return mIntelLevel2;
     }
 
+    @Override
     public void setIntelLevel2(CharSequence intelLevel2) {
     	mIntelLevel2 = intelLevel2;
+    }
+
+    @Override
+    public boolean isTagged() {
+        return !mTags.isEmpty();
+    }
+
+    @Override
+    public List<Tag> getTags() {
+        return new LinkedList<>(mTags);
+    }
+
+    @Override
+    public void addTag(Tag tag) {
+        mTags.add(tag);
     }
 
     @Override

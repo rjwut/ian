@@ -22,7 +22,7 @@ public class CreatureParser extends AbstractObjectParser {
     	ROLL,
     	CREATURE_TYPE,
 
-    	UNK_2_1,
+    	SCAN,
     	UNK_2_2,
     	UNK_2_3,
     	UNK_2_4,
@@ -60,7 +60,10 @@ public class CreatureParser extends AbstractObjectParser {
             creature.setCreatureType(CreatureType.values()[reader.readInt()]);
         }
 
-        reader.readObjectUnknown(Bit.UNK_2_1, 4);
+        if (reader.has(Bit.SCAN)) {
+            creature.setScanBits(reader.readInt(Bit.SCAN, 0));
+        }
+
         reader.readObjectUnknown(Bit.UNK_2_2, 4);
         reader.readObjectUnknown(Bit.UNK_2_3, 4);
         reader.readObjectUnknown(Bit.UNK_2_4, 4);
@@ -92,8 +95,13 @@ public class CreatureParser extends AbstractObjectParser {
 			writer.writeInt(Bit.CREATURE_TYPE, creatureType.ordinal(), -1);
 		}
 
-		writer	.writeUnknown(Bit.UNK_2_1)
-				.writeUnknown(Bit.UNK_2_2)
+		Integer scanBits = creature.getScanBits();
+
+		if (scanBits != null) {
+		    writer.writeInt(Bit.SCAN, scanBits, 1);
+		}
+
+		writer	.writeUnknown(Bit.UNK_2_2)
 				.writeUnknown(Bit.UNK_2_3)
 				.writeUnknown(Bit.UNK_2_4)
 				.writeUnknown(Bit.UNK_2_5)

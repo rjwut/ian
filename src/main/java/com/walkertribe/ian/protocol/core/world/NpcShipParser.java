@@ -19,7 +19,7 @@ public class NpcShipParser extends AbstractObjectParser {
 		RUDDER,
 		MAX_IMPULSE,
 		MAX_TURN_RATE,
-		IS_ENEMY,
+		UNK_1_6,
 		SHIP_TYPE,
 		X,
 
@@ -108,7 +108,9 @@ public class NpcShipParser extends AbstractObjectParser {
         obj.setSteering(reader.readFloat(Bit.RUDDER));
         obj.setTopSpeed(reader.readFloat(Bit.MAX_IMPULSE));
         obj.setTurnRate(reader.readFloat(Bit.MAX_TURN_RATE));
-        obj.setEnemy(reader.readBool(Bit.IS_ENEMY, 4));
+
+        reader.readObjectUnknown(Bit.UNK_1_6, 4);
+
         obj.setHullId(reader.readInt(Bit.SHIP_TYPE, -1));
         obj.setX(reader.readFloat(Bit.X));
         obj.setY(reader.readFloat(Bit.Y));
@@ -153,7 +155,7 @@ public class NpcShipParser extends AbstractObjectParser {
         obj.setTargetX(reader.readFloat(Bit.TARGET_X));
         obj.setTargetY(reader.readFloat(Bit.TARGET_Y));
         obj.setTargetZ(reader.readFloat(Bit.TARGET_Z));
-        obj.setTagged(reader.readBool(Bit.TAGGED, 1));
+        obj.setNpcTagged(reader.readBool(Bit.TAGGED, 1));
 
         reader.readObjectUnknown(Bit.UNK_5_4, 1);
 
@@ -178,7 +180,7 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeFloat(Bit.RUDDER, npc.getSteering())
 				.writeFloat(Bit.MAX_IMPULSE, npc.getTopSpeed())
 				.writeFloat(Bit.MAX_TURN_RATE, npc.getTurnRate())
-				.writeBool(Bit.IS_ENEMY, npc.isEnemy(), 4)
+				.writeUnknown(Bit.UNK_1_6)
 				.writeInt(Bit.SHIP_TYPE, npc.getHullId(), -1)
 				.writeFloat(Bit.X, npc.getX())
 				.writeFloat(Bit.Y, npc.getY())
@@ -223,7 +225,7 @@ public class NpcShipParser extends AbstractObjectParser {
 				.writeFloat(Bit.TARGET_X, npc.getTargetX())
 				.writeFloat(Bit.TARGET_Y, npc.getTargetY())
 				.writeFloat(Bit.TARGET_Z, npc.getTargetZ())
-				.writeBool(Bit.TAGGED, npc.isTagged(), 1)
+				.writeBool(Bit.TAGGED, npc.isNpcTagged(), 1)
 				.writeUnknown(Bit.UNK_5_4);
 
 		for (ShipSystem sys : ShipSystem.values()) {

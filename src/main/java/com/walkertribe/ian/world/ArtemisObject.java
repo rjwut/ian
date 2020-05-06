@@ -1,5 +1,6 @@
 package com.walkertribe.ian.world;
 
+import java.util.List;
 import java.util.SortedMap;
 
 import com.walkertribe.ian.Context;
@@ -89,6 +90,12 @@ public interface ArtemisObject {
     public CharSequence getName();
 
     /**
+     * The object's name as a String.
+     * Unspecified: null
+     */
+    public String getNameString();
+
+    /**
 	 * The object's position along the X-axis.
 	 * Unspecified: Float.NaN
 	 */
@@ -125,6 +132,20 @@ public interface ArtemisObject {
     public void setArtemisClass(CharSequence artemisClass);
 
     /**
+     * Returns the number of times this object can be scanned by one side.
+     */
+    public int getMaxScans();
+
+    /**
+     * Returns the scan level for this object for the indicated side. In other words, this is the
+     * number of times this object has been scanned by that side. Objects which are not scannable
+     * always return 1. Objects which belong to the same side as the given side always return the
+     * maximum scan level.
+     * Unspecified: -1
+     */
+    public int getScanLevel(int side);
+
+    /**
      * The level 1 scan intel for this object.
      * Unspecified: null
      */
@@ -139,6 +160,21 @@ public interface ArtemisObject {
     public void setIntelLevel2(CharSequence intelLevel2);
 
     /**
+     * Returns true if this object has been tagged.
+     */
+    public boolean isTagged();
+
+    /**
+     * The Tags which have been applied to this object. Tags come from TagPackets.
+     */
+    public List<Tag> getTags();
+
+    /**
+     * Adds a Tag to this object.
+     */
+    public void addTag(Tag tag);
+
+    /**
      * Returns true if this object's coordinates are specified. Note that
      * objects which start out at y=0 and have never deviated from it will have
      * an undefined y property. If y is undefined, 0 will be assumed and
@@ -148,7 +184,7 @@ public interface ArtemisObject {
 
     /**
      * Returns a BoolState indicating whether this object is visible to ships
-     * on the give side.
+     * on the given side.
      */
     public BoolState getVisibility(int side);
 
