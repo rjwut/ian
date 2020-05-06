@@ -24,7 +24,7 @@ import com.walkertribe.ian.world.ArtemisPlayer;
  */
 public class Grid implements Iterable<GridNode> {
     private boolean locked;
-    private List<GridNode> nodes = new ArrayList<>(GridCoord.LENGTH);
+    private List<GridNode> nodes;
     private List<DamconTeam> damcons = new ArrayList<>();
     private byte shipIndex;
     private Context ctx;
@@ -35,20 +35,18 @@ public class Grid implements Iterable<GridNode> {
      * Constructor for a Grid with all empty GridNodes and no state data.
      */
     public Grid() {
-        for (Iterator<GridCoord> iter = GridCoord.iterator(); iter.hasNext(); ) {
-            nodes.add(new GridNode(this, iter.next()));
-        }
+        initEmptyGrid();
     }
 
     /**
-     * Creates a new Grid that contains a copy of the given Grid's nodes. If storeDamage is true,
-     * any damage information stored in the original is copied to the clone, and nodes that have no
-     * damage information in the original will have the copy set to 0 damage. This is particularly
-     * useful for creating an unlocked copy of a locked Grid. If copyDamcons is true, any
-     * information about DAMCON teams is also copied.
+     * Creates a new Grid that contains a copy of the given Grid's nodes. If clearDamage is false,
+     * any damage information stored in the original is copied to the clone, otherwise, the clone
+     * will have no damage information. If copyDamcons is true, any information about DAMCON teams
+     * is also copied. This constructor is particularly useful to create an unlocked copy of a
+     * locked Grid.
      */
-    public Grid(Grid original, boolean storeDamage, boolean copyDamcons) {
-        copyNodes(original, storeDamage);
+    public Grid(Grid original, boolean clearDamage, boolean copyDamcons) {
+        copyNodes(original, clearDamage);
 
         if (copyDamcons) {
             copyDamcons(original);
@@ -92,12 +90,14 @@ public class Grid implements Iterable<GridNode> {
         if (hullId == -1) {
             hullId = player.getHullId();
 
-            if (hullId != -1) {
+            if (hullId != -1 && ctx != null) {
                 // The hull ID was specified; get the infrastructure
                 Vessel vessel = ctx.getVesselData().getVessel(hullId);
 
                 if (vessel != null) {
-                    copyNodes(vessel.getGrid(), true);
+                    synchronized (this) {
+                        copyNodes(vessel.getGrid(), false);
+                    }
                 }
             }
         }
@@ -109,6 +109,12 @@ public class Grid implements Iterable<GridNode> {
     @Listener
     public void onUpdate(EngGridUpdatePacket pkt) {
         synchronized (this) {
+            if (pkt.isFullUpdate()) {
+                for (GridNode node : nodes) {
+                    node.setDamage(0);
+                }
+            }
+
             for (GridNode dmg : pkt.getDamage()) {
                 GridCoord coord = dmg.getCoord();
                 GridNode node = getNode(coord);
@@ -143,8 +149,8 @@ public class Grid implements Iterable<GridNode> {
     }
 
     /**
-     * Sets a GridNode in the nodes. This will throw an IllegalArgumentException if the give GridNode
-     * is null and an IllegalStateException if the Grid is locked.
+     * Sets a GridNode in the nodes. This will throw an IllegalArgumentException if the given
+     * GridNode is null and an IllegalStateException if the Grid is locked.
      */
     public void setNode(GridNode node) {
         if (node == null) {
@@ -274,6 +280,19 @@ public class Grid implements Iterable<GridNode> {
     }
 
     /**
+     * Resets the current Grid to have no data.
+     */
+    public void clear() {
+        synchronized (this) {
+            assertUnlocked();
+            shipId = -1;
+            hullId = -1;
+            initEmptyGrid();
+            damcons.clear();
+        }
+    }
+
+    /**
      * Make this Grid read-only. Once a Grid is locked, any attempt to modify it will throw an
      * IllegalStateException.
      */
@@ -293,16 +312,34 @@ public class Grid implements Iterable<GridNode> {
     }
 
     /**
-     * Populates this Grid with a copy of the given Grid's nodes. If storeDamage is true, all nodes
-     * will have a damage value, either any non-zero value that was stored on the original, or zero
-     * if the original did not have a damage value.
+     * Populates the Grid with a new set of empty GridNodes.
      */
-    private void copyNodes(Grid original, boolean storeDamage) {
+    private void initEmptyGrid() {
+        nodes = new ArrayList<>(GridCoord.LENGTH);
+
+        for (Iterator<GridCoord> iter = GridCoord.iterator(); iter.hasNext(); ) {
+            nodes.add(new GridNode(this, iter.next()));
+        }
+    }
+
+    /**
+     * Populates this Grid with a copy of the given Grid's nodes. If clearDamage is false, any
+     * existing damage values in this Grid will be retained; otherwise, they'll be cleared.
+     */
+    private void copyNodes(Grid original, boolean clearDamage) {
         for (GridNode node : original) {
             GridNode newNode = new GridNode(this, node);
 
-            if (storeDamage) {
-                newNode.setDamage(Math.max(node.getDamage(), 0));
+            if (!clearDamage) {
+                GridNode oldNode = nodes.get(node.coord.index);
+
+                if (oldNode != null) {
+                    float damage = oldNode.getDamage();
+
+                    if (damage >= 0) {
+                        newNode.setDamage(damage);
+                    }
+                }
             }
 
             setNode(newNode);
