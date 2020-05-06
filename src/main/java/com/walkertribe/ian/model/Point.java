@@ -48,7 +48,7 @@ public class Point {
 	    return new Point(
                 (other.x - x) * fraction + x,
                 (other.y - y) * fraction + y,
-                (other.z - z) * fraction + z
+                -((other.z - z) * fraction + z)
         );
 	}
 
