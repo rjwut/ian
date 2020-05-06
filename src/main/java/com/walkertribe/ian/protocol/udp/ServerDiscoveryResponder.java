@@ -45,7 +45,7 @@ public class ServerDiscoveryResponder implements Runnable {
 			throw new IOException("No suitable network interface found");
 		}
 
-		init(addr.getIp(), addr.getHostName());
+		init(addr.getIp(), System.getProperty("user.name"));
 	}
 
 	/**
