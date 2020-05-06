@@ -8,6 +8,13 @@ package com.walkertribe.ian.enums;
  * @author rjwut
  */
 public enum TargetingMode {
-	AUTO,
-	MANUAL
+    MANUAL,
+	AUTO;
+
+    /**
+     * Returns AUTO if isAuto is true, MANUAL otherwise.
+     */
+    public static TargetingMode get(boolean isAuto) {
+        return isAuto ? AUTO : MANUAL;
+    }
 }
