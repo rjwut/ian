@@ -52,6 +52,7 @@ class HeartbeatManager {
         long elapsed = System.currentTimeMillis() - fromTime;
 
         if (elapsed >= HEARTBEAT_TIMEOUT_MS) {
+            mLost = true;
             iface.dispatch(new HeartbeatLostEvent());
         }
     }
