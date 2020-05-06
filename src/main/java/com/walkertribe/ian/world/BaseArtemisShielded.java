@@ -1,6 +1,8 @@
 package com.walkertribe.ian.world;
 
 import java.util.SortedMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.model.Model;
@@ -11,6 +13,21 @@ import com.walkertribe.ian.vesseldata.Vessel;
  */
 public abstract class BaseArtemisShielded extends BaseArtemisOrientable
 		implements ArtemisShielded {
+    private static final Pattern CALLSIGN_PATTERN = Pattern.compile("[A-Z]+\\d+");
+
+    /**
+     * Given the name of a contact, returns its callsign (e.g. V14) if it has one. Otherwise,
+     * returns the contact's full name.
+     */
+    public static String extractCallsign(CharSequence name) {
+        if (name != null) {
+            Matcher matcher = CALLSIGN_PATTERN.matcher(name.toString());
+            return matcher.find() ? matcher.group() : name.toString();
+        }
+
+        return null;
+    }
+
     private int mHullId = -1;
     private float mShieldsFront = Float.NaN;
     private float mShieldsRear = Float.NaN;
@@ -29,7 +46,7 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
 
     @Override
     public Vessel getVessel(Context ctx) {
-   		return mHullId != -1 ? ctx.getVesselData().getVessel(mHullId) : null;
+   		return mHullId != -1 && ctx != null ? ctx.getVesselData().getVessel(mHullId) : null;
     }
 
     @Override
@@ -93,10 +110,12 @@ public abstract class BaseArtemisShielded extends BaseArtemisOrientable
         mShieldsRearMax = shieldsRearMax;
     }
 
+    @Override
     public byte getSide() {
         return mSide;
     }
 
+    @Override
     public void setSide(byte side) {
         mSide = side;
     }
