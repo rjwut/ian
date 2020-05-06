@@ -66,8 +66,10 @@ public class EngGridUpdatePacket extends BaseArtemisPacket {
     }
 
     /**
-     * Returns true if this update contains all nodes nodes and DAMCON teams, or false if it just
-     * has updates.
+     * Returns true if this update contains all damaged nodes and DAMCON teams, or false if it just
+     * has updates. In other words, if this returns true, you may assume that any nodes not
+     * mentioned in this packet have no damage, and that all DAMCON teams are mentioned in this
+     * packet.
      */
     public boolean isFullUpdate() {
     	return mFullUpdate;
