@@ -989,7 +989,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
         if (plr.mDockingBase != -1) {
             mDockingBase = plr.mDockingBase;
-        } else if (plr.getImpulse() != -1 || plr.mWarp != -1) {
+        } else if (plr.getImpulse() > 0 || plr.mWarp > 0) {
         	mDockingBase = 0;
         }
 
