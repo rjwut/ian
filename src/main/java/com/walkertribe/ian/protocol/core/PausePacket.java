@@ -24,18 +24,18 @@ public class PausePacket extends SimpleEventPacket {
         mPaused = reader.readBool(4);
     }
 
-    public BoolState getPaused() {
-        return mPaused;
+    public boolean isPaused() {
+        return mPaused.getBooleanValue();
     }
 
 	@Override
 	protected void writePayload(PacketWriter writer) {
 		super.writePayload(writer);
-		writer.writeInt(BoolState.safeValue(mPaused) ? 1 : 0);
+		writer.writeBool(mPaused, 4);
 	}
 
 	@Override
 	protected void appendPacketDetail(StringBuilder b) {
-		b.append(BoolState.safeValue(mPaused) ? "PAUSED" : "RUNNING");
+		b.append(mPaused.getBooleanValue() ? "PAUSED" : "RUNNING");
 	}
 }
