@@ -51,7 +51,7 @@ public class BeamFiredPacket extends BaseArtemisPacket {
 		mImpactX = reader.readFloat();
 		mImpactY = reader.readFloat();
 		mImpactZ = reader.readFloat();
-		mTargetingMode = TargetingMode.get(reader.readInt() == 0);
+		mTargetingMode = TargetingMode.get(reader.readInt() != 0);
 	}
 
 	/**
