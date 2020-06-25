@@ -5,7 +5,7 @@ package com.walkertribe.ian.enums;
  * @author rjwut
  */
 public enum OrdnanceType {
-	HOMING("trp", "Homing"),
+	TORPEDO("trp", "Torpedo"),
 	NUKE("nuk", "Nuke"),
 	MINE("min", "Mine"),
 	EMP("emp", "EMP"),

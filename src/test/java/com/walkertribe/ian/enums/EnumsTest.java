@@ -292,7 +292,7 @@ public class EnumsTest {
 
 	@Test
 	public void testOrdnanceTypeToString() {
-		Assert.assertEquals("Homing", OrdnanceType.HOMING.toString());
+		Assert.assertEquals("Torpedo", OrdnanceType.TORPEDO.toString());
 		Assert.assertEquals("Nuke", OrdnanceType.NUKE.toString());
 		Assert.assertEquals("Mine", OrdnanceType.MINE.toString());
 		Assert.assertEquals("EMP", OrdnanceType.EMP.toString());
