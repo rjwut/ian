@@ -1,10 +1,12 @@
 package com.walkertribe.ian.world;
 
+import java.util.List;
 import java.util.SortedMap;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.ObjectType;
 import com.walkertribe.ian.model.Model;
+import com.walkertribe.ian.util.BoolState;
 
 /**
  * <p>
@@ -88,6 +90,12 @@ public interface ArtemisObject {
     public CharSequence getName();
 
     /**
+     * The object's name as a String.
+     * Unspecified: null
+     */
+    public String getNameString();
+
+    /**
 	 * The object's position along the X-axis.
 	 * Unspecified: Float.NaN
 	 */
@@ -124,6 +132,20 @@ public interface ArtemisObject {
     public void setArtemisClass(CharSequence artemisClass);
 
     /**
+     * Returns the number of times this object can be scanned by one side.
+     */
+    public int getMaxScans();
+
+    /**
+     * Returns the scan level for this object for the indicated side. In other words, this is the
+     * number of times this object has been scanned by that side. Objects which are not scannable
+     * always return 1. Objects which belong to the same side as the given side always return the
+     * maximum scan level.
+     * Unspecified: -1
+     */
+    public int getScanLevel(int side);
+
+    /**
      * The level 1 scan intel for this object.
      * Unspecified: null
      */
@@ -138,20 +160,47 @@ public interface ArtemisObject {
     public void setIntelLevel2(CharSequence intelLevel2);
 
     /**
+     * Returns true if this object has been tagged.
+     */
+    public boolean isTagged();
+
+    /**
+     * The Tags which have been applied to this object. Tags come from TagPackets.
+     */
+    public List<Tag> getTags();
+
+    /**
+     * Adds a Tag to this object.
+     */
+    public void addTag(Tag tag);
+
+    /**
      * Returns true if this object's coordinates are specified. Note that
      * objects which start out at y=0 and have never deviated from it will have
-     * an undefined y property. This, this method will return true even if only
-     * x and z are defined.
+     * an undefined y property. If y is undefined, 0 will be assumed and
+     * hasPosition() will still return true if x and z are defined.
      */
     public abstract boolean hasPosition();
 
     /**
+     * Returns a BoolState indicating whether this object is visible to ships
+     * on the given side.
+     */
+    public BoolState getVisibility(int side);
+
+    /**
      * Returns the distance between this object and the given object. This
      * method will throw a RuntimeException if either object's hasPosition()
-     * would return false. If the y coordinate for an object is undefined, 0 is
+     * would return false. If the Y coordinate for an object is undefined, 0 is
      * assumed.
      */
     public abstract float distance(ArtemisObject obj);
+
+    /**
+     * Same as distance(ArtemisObject), but ignores the Y-axis, giving the
+     * distance between the objects from the top-down perspective.
+     */
+    public abstract float distanceIgnoreY(ArtemisObject obj);
 
     /**
      * Returns the Model object for this ArtemisObject, using the given
@@ -171,6 +220,13 @@ public interface ArtemisObject {
      */
     public SortedMap<String, byte[]> getUnknownProps();
     public void setUnknownProps(SortedMap<String, byte[]> unknownProps);
+
+    /**
+     * Returns the byte array for the named unknown property, identified by its byte and bit
+     * numbers in the property bit field. Both of these numbers are 1-based.
+     */
+    public byte[] getUnknownProp(int byteNumber, int bitNumber);
+    public void setUnknownProp(int byteNumber, int bitNumber, byte[] bytes);
 
     /**
      * Updates this object's properties to match any updates provided by the

@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.TestContext;
-import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.TestUtil;
 import com.walkertribe.ian.util.Util;
 import com.walkertribe.ian.vesseldata.Faction;
@@ -134,28 +133,29 @@ public class EnumsTest {
 
 	@Test
 	public void testCommsRecipientType() {
+	    ArtemisPlayer player = new ArtemisPlayer(1);
+	    player.setSide((byte) 1);
 		Assert.assertEquals(
 				CommsRecipientType.BASE,
-				CommsRecipientType.fromObject(new ArtemisBase(0), null)
+				CommsRecipientType.fromObject(player, new ArtemisBase(0), null)
 		);
-		ArtemisNpc npc = new ArtemisNpc(0);
-		npc.setEnemy(BoolState.TRUE);
-		Assert.assertEquals(
-				CommsRecipientType.ENEMY,
-				CommsRecipientType.fromObject(npc, null)
-		);
-		npc = new ArtemisNpc(0);
-		npc.setEnemy(BoolState.FALSE);
+		ArtemisNpc npc = new ArtemisNpc(2);
+        npc.setSide((byte) 1);
 		Assert.assertEquals(
 				CommsRecipientType.OTHER,
-				CommsRecipientType.fromObject(npc, null)
+				CommsRecipientType.fromObject(player, npc, null)
+		);
+        npc.setSide((byte) 2);
+		Assert.assertEquals(
+				CommsRecipientType.ENEMY,
+				CommsRecipientType.fromObject(player, npc, null)
 		);
 		Assert.assertEquals(
 				CommsRecipientType.PLAYER,
-				CommsRecipientType.fromObject(new ArtemisPlayer(0), null)
+				CommsRecipientType.fromObject(player, new ArtemisPlayer(0), null)
 		);
 		Assert.assertNull(
-				CommsRecipientType.fromObject(new ArtemisCreature(0), null)
+				CommsRecipientType.fromObject(player, new ArtemisCreature(0), null)
 		);
 	}
 
@@ -175,17 +175,18 @@ public class EnumsTest {
 	@Test
 	public void testCommsRecipientTypeRequiringContext() {
 	    Context ctx = buildContext();
+	    ArtemisPlayer player = new ArtemisPlayer(1);
 		ArtemisNpc npc = new ArtemisNpc(0);
 		npc.setVessel(findNpcVessel(ctx, false));
 		Assert.assertEquals(
 				CommsRecipientType.ENEMY,
-				CommsRecipientType.fromObject(npc, ctx)
+				CommsRecipientType.fromObject(player, npc, ctx)
 		);
 		npc = new ArtemisNpc(0);
 		npc.setVessel(findNpcVessel(ctx, true));
 		Assert.assertEquals(
 				CommsRecipientType.OTHER,
-				CommsRecipientType.fromObject(npc, ctx)
+				CommsRecipientType.fromObject(player, npc, ctx)
 		);
 	}
 
@@ -291,7 +292,7 @@ public class EnumsTest {
 
 	@Test
 	public void testOrdnanceTypeToString() {
-		Assert.assertEquals("Homing", OrdnanceType.HOMING.toString());
+		Assert.assertEquals("Torpedo", OrdnanceType.TORPEDO.toString());
 		Assert.assertEquals("Nuke", OrdnanceType.NUKE.toString());
 		Assert.assertEquals("Mine", OrdnanceType.MINE.toString());
 		Assert.assertEquals("EMP", OrdnanceType.EMP.toString());

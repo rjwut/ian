@@ -1,5 +1,7 @@
 package com.walkertribe.ian.iface;
 
+import java.util.Collection;
+
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.ArtemisPacket;
 import com.walkertribe.ian.protocol.Protocol;
@@ -11,7 +13,7 @@ import com.walkertribe.ian.util.Version;
  * receive packets.
  */
 public interface ArtemisNetworkInterface {
-	public static final Version MIN_VERSION = new Version("2.7");
+	public static final Version MIN_VERSION = new Version("2.7.5");
 	public static final Version MAX_VERSION_EXCLUSIVE = new Version("2.8");
 
 	/**
@@ -41,6 +43,13 @@ public interface ArtemisNetworkInterface {
     public void addListener(Object listener);
 
     /**
+     * Sets whether heartbeat packets should be sent to the remote machine automatically. Defaults
+     * to true. Set this to false if you pass this object to another interface's proxyTo() method
+     * and don't capture heartbeat packets in any of your listeners.
+     */
+    public void setAutoSendHeartbeat(boolean autoSendHeartbeat);
+
+    /**
      * Opens the send/receive streams to the remote machine.
      */
     public void start();
@@ -55,6 +64,11 @@ public interface ArtemisNetworkInterface {
      * Enqueues a packet to be transmitted to the remote machine.
      */
     public void send(ArtemisPacket pkt);
+
+    /**
+     * Enqueues a Collection of packets to be transmitted to the remote machine.
+     */
+    public void send(Collection<? extends ArtemisPacket> pkt);
 
     /**
      * Requests that the interface finish what it is doing and close the
@@ -79,4 +93,11 @@ public interface ArtemisNetworkInterface {
      * types.
      */
     public void proxyTo(ArtemisNetworkInterface iface);
+
+    /**
+     * Dispatches the given Object to listeners. The Object in question should
+     * be a ConnectionEvent, ArtemisPacket, or ArtemisObject (or any of their
+     * subtypes).
+     */
+    public void dispatch(Object obj);
 }

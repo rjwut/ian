@@ -7,9 +7,8 @@ import org.junit.Test;
 
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
-import com.walkertribe.ian.protocol.core.eng.EngGridUpdatePacket.DamconStatus;
-import com.walkertribe.ian.protocol.core.eng.EngGridUpdatePacket.GridDamage;
 import com.walkertribe.ian.util.GridCoord;
+import com.walkertribe.ian.util.GridNode;
 import com.walkertribe.ian.util.TestUtil;
 
 public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdatePacket> {
@@ -23,7 +22,7 @@ public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdateP
 		EngGridUpdatePacket pkt = new EngGridUpdatePacket(false);
 		pkt.toString();
 		pkt.addDamageUpdate(0, 0, 0, 0.5f);
-		pkt.addDamconUpdate(1, 3, 0, 0, 0, 0, 0, 0, 1.0f);
+		pkt.addDamconUpdate((byte) 1, 3, 0, 0, 0, 0, 0, 0, 1.0f);
 	}
 
 	@Override
@@ -31,60 +30,44 @@ public class EngGridUpdatePacketTest extends AbstractPacketTester<EngGridUpdateP
 		boolean requested = true;
 
 		for (EngGridUpdatePacket pkt : packets) {
-			Assert.assertEquals(requested, pkt.isRequested());
-			List<EngGridUpdatePacket.GridDamage> damages = pkt.getDamage();
-			Assert.assertEquals(2, damages.size());
-			EngGridUpdatePacket.GridDamage damage = damages.get(0);
-			GridCoord coord = damage.getCoord();
-			Assert.assertEquals(0, coord.getX());
-			Assert.assertEquals(0, coord.getY());
-			Assert.assertEquals(0, coord.getZ());
-			Assert.assertEquals(0.0f, damage.getDamage(), EPSILON);
-			damage = damages.get(1);
-			coord = damage.getCoord();
-			Assert.assertEquals(1, coord.getX());
-			Assert.assertEquals(-1, coord.getY());
-			Assert.assertEquals(1, coord.getZ());
-			Assert.assertEquals(0.7f, damage.getDamage(), EPSILON);
-			List<EngGridUpdatePacket.DamconStatus> statuses = pkt.getDamcons();
+			Assert.assertEquals(requested, pkt.isFullUpdate());
+			List<GridNode> damageEntries = pkt.getDamage();
+			Assert.assertEquals(2, damageEntries.size());
+			GridNode node = damageEntries.get(0);
+			GridCoord coord = node.getCoord();
+			Assert.assertEquals(0, coord.x());
+			Assert.assertEquals(0, coord.y());
+			Assert.assertEquals(0, coord.z());
+			Assert.assertEquals(0.0f, node.getDamage(), EPSILON);
+			node = damageEntries.get(1);
+			coord = node.getCoord();
+			Assert.assertEquals(1, coord.x());
+			Assert.assertEquals(1, coord.y());
+			Assert.assertEquals(1, coord.z());
+			Assert.assertEquals(0.7f, node.getDamage(), EPSILON);
+			List<DamconTeam> statuses = pkt.getDamcons();
 			Assert.assertEquals(1, statuses.size());
-			EngGridUpdatePacket.DamconStatus status = statuses.get(0);
-			Assert.assertEquals(0, status.getTeamNumber());
+			DamconTeam status = statuses.get(0);
+			Assert.assertEquals(0, status.getId());
 			Assert.assertEquals(3, status.getMembers());
 			Assert.assertEquals(0.3f, status.getProgress(), EPSILON);
-			coord = status.getPosition();
-			Assert.assertEquals(3, coord.getX());
-			Assert.assertEquals(4, coord.getY());
-			Assert.assertEquals(0, coord.getZ());
+			coord = status.getLocation();
+			Assert.assertEquals(3, coord.x());
+			Assert.assertEquals(1, coord.y());
+			Assert.assertEquals(7, coord.z());
 			coord = status.getGoal();
-			Assert.assertEquals(4, coord.getX());
-			Assert.assertEquals(7, coord.getY());
-			Assert.assertEquals(-1, coord.getZ());
+			Assert.assertEquals(4, coord.x());
+			Assert.assertEquals(1, coord.y());
+			Assert.assertEquals(7, coord.z());
 			requested = false;
 		}
 	}
 
 	@Test
 	public void testGridDamageEqualsAndHashCode() {
-		GridDamage dmg0 = new GridDamage(GridCoord.getInstance(0, 0, 0), 0.5f);
-		GridDamage dmg1 = new GridDamage(GridCoord.getInstance(0, 0, 0), 0.5f);
-		GridDamage dmg2 = new GridDamage(GridCoord.getInstance(0, 0, 1), 0.5f);
+	    GridNode dmg0 = new GridNode(null, GridCoord.get(0, 0, 0));
+	    GridNode dmg1 = new GridNode(null, GridCoord.get(0, 0, 0));
+	    GridNode dmg2 = new GridNode(null, GridCoord.get(0, 0, 1));
 		TestUtil.testEqualsAndHashCode(dmg0, dmg1, dmg2);
-	}
-
-	@Test
-	public void testDamconStatusUpdateFrom() {
-		DamconStatus status0 = new DamconStatus(0, 3, 1, 1, 1, 0, 0, 0, 0.0f);
-		Assert.assertEquals("Team #0 (3): [0,0,0] => [1,1,1] (0.0)", status0.toString());
-		DamconStatus status1 = new DamconStatus(0, 2, 2, 2, 2, 1, 1, 1, 0.5f);
-		Assert.assertEquals("Team #0 (2): [1,1,1] => [2,2,2] (0.5)", status1.toString());
-		status0.updateFrom(status1);
-		Assert.assertEquals("Team #0 (2): [1,1,1] => [2,2,2] (0.5)", status0.toString());
-		status1 = new DamconStatus(0, 2, 2, 2, 2, 1, 1, 1, 0);
-		status0.updateFrom(status1);
-		Assert.assertEquals("Team #0 (2): [2,2,2] => [2,2,2] (0.0)", status0.toString());
-		status1 = new DamconStatus(0, 2, 2, 2, 2, 1, 1, 1, 0);
-		status0.updateFrom(status1);
-		Assert.assertEquals("Team #0 (2): [1,1,1] => [2,2,2] (0.0)", status0.toString());
 	}
 }

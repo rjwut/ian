@@ -38,7 +38,16 @@ public class WeaponPort extends VesselPoint {
 		return cycleTime;
 	}
 
+	/**
+	 * The maximum range of the weapon port.
+	 */
 	public int getRange() {
 		return range;
+	}
+
+	@Override
+	public String toString() {
+	    return super.toString() + " Dmg: " + damage + " PlayerDmg: " + playerDamage + " Cycle: " +
+	            cycleTime + " Range: " + range;
 	}
 }

@@ -8,19 +8,19 @@ import org.junit.Test;
 import com.walkertribe.ian.enums.Origin;
 import com.walkertribe.ian.protocol.AbstractPacketTester;
 
-public class HeartbeatPacketTest extends AbstractPacketTester<HeartbeatPacket> {
+public class ServerHeartbeatPacketTest extends AbstractPacketTester<ServerHeartbeatPacket> {
 	@Test
 	public void test() {
-		execute("core/HeartbeatPacket.txt", Origin.SERVER, 1);
+		execute("core/ServerHeartbeatPacket.txt", Origin.SERVER, 1);
 	}
 
 	@Test
 	public void testConstruct() {
-		new HeartbeatPacket();
+		new ServerHeartbeatPacket();
 	}
 
 	@Override
-	protected void testPackets(List<HeartbeatPacket> packets) {
+	protected void testPackets(List<ServerHeartbeatPacket> packets) {
 		Assert.assertNotNull(packets.get(0));
 	}
 }

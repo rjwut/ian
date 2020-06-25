@@ -15,19 +15,17 @@ public class ArtemisPacketExceptionTest {
 	// Done separately to make SpotBugs happy.
 	@Test(expected = ArtemisPacketException.class)
 	public void testConstructCause() throws ArtemisPacketException {
-		throw new ArtemisPacketException(new RuntimeException());
+		throw new ArtemisPacketException(new RuntimeException(), true);
 	}
 
 	@Test
 	public void testRest() {
-		ArtemisPacketException ex = new ArtemisPacketException("test", Origin.SERVER);
-		Assert.assertEquals(Origin.SERVER, ex.getOrigin());
-		ex = new ArtemisPacketException(new RuntimeException(), Origin.SERVER, 47);
-		Assert.assertEquals(Origin.SERVER, ex.getOrigin());
-		Assert.assertEquals(47, ex.getPacketType());
-		ex = new ArtemisPacketException(new RuntimeException(), Origin.SERVER, 47, new byte[] { 47 });
+		ArtemisPacketException ex = new ArtemisPacketException(
+		        new RuntimeException(), Origin.SERVER, 47, new byte[] { 47 }, true
+		);
 		Assert.assertEquals(Origin.SERVER, ex.getOrigin());
 		Assert.assertEquals(47, ex.getPacketType());
 		Assert.assertArrayEquals(new byte[] { 47 }, ex.getPayload());
+		Assert.assertTrue(ex.isFatal());
 	}
 }

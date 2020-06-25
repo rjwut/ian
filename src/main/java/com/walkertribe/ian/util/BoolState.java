@@ -89,6 +89,14 @@ public class BoolState {
     }
 
     /**
+     * Returns trueValue if this BoolState is true, falseValue if it is false, and unknownValue
+     * if it is unknown.
+     */
+    public <T> T toValue(T trueValue, T falseValue, T unknownValue) {
+        return boolValue == Boolean.TRUE ? trueValue : (boolValue == Boolean.FALSE ? falseValue : unknownValue);
+    }
+
+    /**
      * Returns a byte array encoding the boolean value represented by this
      * BoolState, expressed in the indicated number of bytes. If this BoolState
      * contains a byte array representing the original value as it was read

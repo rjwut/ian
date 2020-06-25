@@ -9,6 +9,7 @@ import java.util.Set;
 import com.walkertribe.ian.Context;
 import com.walkertribe.ian.enums.OrdnanceType;
 import com.walkertribe.ian.model.Model;
+import com.walkertribe.ian.util.Grid;
 
 /**
  * Corresponds to the &lt;vessel&gt; element in vesselData.xml. Note that this
@@ -24,7 +25,7 @@ public class Vessel {
 	private Set<String> attributes;
 	List<Art> artList = new ArrayList<Art>();
 	private String dxsPaths;
-	String internalDataFile;
+	String sntFile;
 	float scale;
 	int pushRadius;
 	int foreShields;
@@ -150,20 +151,19 @@ public class Vessel {
 	}
 
 	/**
-	 * Returns the filename of the internal data (.snt) file for this Vessel,
-	 * if any.
+	 * Returns the filename of the nodes (.snt) file for this Vessel, if any.
 	 */
-	public String getInternalDataFile() {
-		return internalDataFile;
+	public String getSntFile() {
+		return sntFile;
 	}
 
 	/**
-	 * Returns the VesselInternals for this Vessel. If the .snt file has not
-	 * already been loaded and parsed, this will cause that to happen onw, and
+	 * Returns the systems Grid for this Vessel. If the .snt file has not
+	 * already been loaded and parsed, this will cause that to happen nw, and
 	 * cache the data for later re-use.
 	 */
-	public VesselInternals getInternals() {
-		return internalDataFile != null ? ctx.getInternals(internalDataFile) : null;
+	public Grid getGrid() {
+		return sntFile != null ? ctx.getGrid(sntFile) : null;
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class Vessel {
 	 * Vessel's torpedo tubes.
 	 */
 	public VesselPoint[] getTorepedoTubes() {
-		return torpedoTubes.toArray(new BeamPort[torpedoTubes.size()]);
+		return torpedoTubes.toArray(new VesselPoint[torpedoTubes.size()]);
 	}
 
 	/**
@@ -362,5 +362,10 @@ public class Vessel {
 	 */
 	public VesselPoint[] getManeuverPoints() {
 		return maneuverPoints.toArray(new VesselPoint[maneuverPoints.size()]);
+	}
+
+	@Override
+	public String toString() {
+	    return "#" + id + ": " + name;
 	}
 }

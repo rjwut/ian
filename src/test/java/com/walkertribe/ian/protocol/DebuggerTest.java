@@ -28,7 +28,9 @@ public class DebuggerTest {
 
 	private void exerciseDebugger(Debugger debugger) {
 		debugger.onPacketParseException(new ArtemisPacketException("test"));
-		debugger.onPacketParseException(new ArtemisPacketException(new RuntimeException("test"), Origin.SERVER, 0, new byte[] {}));
+		debugger.onPacketParseException(new ArtemisPacketException(
+		        new RuntimeException("test"), Origin.SERVER, 0, new byte[] {}, true
+		));
 		debugger.onPacketWriteException(new PausePacket(true), new RuntimeException("test"));
 		debugger.onRecvPacketBytes(Origin.SERVER, 0, new byte[] {});
 		debugger.onRecvParsedPacket(new PausePacket(true));

@@ -30,15 +30,6 @@ public class BeamFiredPacketTest extends AbstractPacketTester<BeamFiredPacket> {
 		pkt.setImpactZ(3);
 		pkt.setTargetingMode(TargetingMode.MANUAL);
 		test(pkt);
-
-		pkt = new BeamFiredPacket(0);
-		pkt.setBeamPortIndex(0);
-		pkt.setOrigin(new ArtemisPlayer(2));
-		pkt.setTarget(new ArtemisNpc(3));
-		pkt.setImpactX(1);
-		pkt.setImpactY(2);
-		pkt.setImpactZ(3);
-		pkt.setTargetingMode(TargetingMode.AUTO);
 	}
 
 	@Override

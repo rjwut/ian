@@ -1,0 +1,6 @@
+efbeadde          // header
+1c000000          // packet length = 28
+02000000          // origin = client
+00000000          // padding
+08000000          // remaining length = 8
+3c1d824c 24000000 // ClientHeartbeatPacket

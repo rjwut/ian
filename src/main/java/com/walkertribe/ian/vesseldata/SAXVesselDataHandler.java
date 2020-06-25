@@ -229,7 +229,7 @@ public class SAXVesselDataHandler extends DefaultHandler {
 	private class InternalDataParser implements Parser{
 		@Override
 		public void parse(Attributes attrs) {
-			vessel.internalDataFile = attrs.getValue("file");
+			vessel.sntFile = attrs.getValue("file");
 		}
 	}
 

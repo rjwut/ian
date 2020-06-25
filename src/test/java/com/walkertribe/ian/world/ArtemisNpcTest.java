@@ -82,7 +82,6 @@ public class ArtemisNpcTest {
 		obj1.setScanLevelBits(2, 2);
 		obj1.setSpecialBits(0x05);
 		obj1.setSpecialStateBits(0x01);
-		obj1.setEnemy(BoolState.TRUE);
 		obj1.setSurrendered(BoolState.TRUE);
 		obj1.setFleetNumber((byte) 2);
 
@@ -166,10 +165,11 @@ public class ArtemisNpcTest {
 			float shieldsFrontMax, float shieldsRearMax, float[] shieldFreqs, float steering, float topSpeed,
 			float turnRate, float impulse, Integer scanLevel1, Integer scanLevel2, int special, int specialState,
 			BoolState enemy, BoolState surrendered, byte fleetNumber, float[] sysDamage) {
-		ArtemisShieldedTest.assertShielded(npc, id, type, name, x, y, z, hullId, shieldsFront, shieldsRear);
+		ArtemisShieldedTest.assertShielded(npc, id, type, name, x, y, z, hullId, shieldsFront,
+		        shieldsRear, shieldsFrontMax, shieldsRearMax);
 		ArtemisOrientableTest.assertOrientable(npc, heading, pitch, roll);
-		BaseArtemisShipTest.assertShip(npc, velocity, shieldsFrontMax, shieldsRearMax, shieldFreqs, steering, topSpeed,
-				turnRate, impulse);
+		BaseArtemisShipTest.assertShip(npc, velocity, shieldFreqs, steering, topSpeed, turnRate,
+		        impulse);
 		Assert.assertEquals(scanLevel1, npc.getScanLevelBits(1));
 		Assert.assertEquals(scanLevel2, npc.getScanLevelBits(2));
 		Assert.assertEquals(special, npc.getSpecialBits());
@@ -206,7 +206,6 @@ public class ArtemisNpcTest {
 			}
 		}
 
-		Assert.assertEquals(enemy, npc.isEnemy());
 		Assert.assertEquals(surrendered, npc.isSurrendered());
 		Assert.assertEquals(fleetNumber, npc.getFleetNumber());
 

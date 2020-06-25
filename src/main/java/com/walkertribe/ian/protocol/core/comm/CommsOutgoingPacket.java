@@ -10,6 +10,7 @@ import com.walkertribe.ian.protocol.BaseArtemisPacket;
 import com.walkertribe.ian.protocol.Packet;
 import com.walkertribe.ian.protocol.core.CorePacketType;
 import com.walkertribe.ian.world.ArtemisObject;
+import com.walkertribe.ian.world.ArtemisPlayer;
 
 /**
  * Sends a message to another entity.
@@ -30,9 +31,9 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
      * CommMessage which requires an argument, an IllegalArgumentException will
      * be thrown.
      */
-    public CommsOutgoingPacket(ArtemisObject target, CommsMessage msg,
+    public CommsOutgoingPacket(ArtemisPlayer sender, ArtemisObject recipient, CommsMessage msg,
     		Context ctx) {
-        this(target, msg, NO_ARG, ctx);
+        this(sender, recipient, msg, NO_ARG, ctx);
     }
     
     /**
@@ -44,8 +45,12 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
      * will be thrown if you provide an argument to a message which doesn't
      * accept one, or use NO_ARG with a message which requires one.
      */
-    public CommsOutgoingPacket(ArtemisObject recipient, CommsMessage msg,
+    public CommsOutgoingPacket(ArtemisPlayer sender, ArtemisObject recipient, CommsMessage msg,
             int arg, Context ctx) {
+        if (sender == null) {
+            throw new IllegalArgumentException("You must provide a sender");
+        }
+
         if (recipient == null) {
         	throw new IllegalArgumentException("You must provide a recipient");
         }
@@ -54,7 +59,7 @@ public class CommsOutgoingPacket extends BaseArtemisPacket {
         	throw new IllegalArgumentException("You must provide a message");
         }
 
-        mRecipientType = CommsRecipientType.fromObject(recipient, ctx);
+        mRecipientType = CommsRecipientType.fromObject(sender, recipient, ctx);
 
     	if (mRecipientType == null) {
     		throw new IllegalArgumentException("Recipient cannot receive messages");

@@ -14,13 +14,14 @@ import com.walkertribe.ian.protocol.ArtemisPacketException;
 import com.walkertribe.ian.protocol.Protocol;
 import com.walkertribe.ian.protocol.UnknownPacket;
 import com.walkertribe.ian.protocol.UnparsedPacket;
-import com.walkertribe.ian.protocol.core.CorePacketType;
+import com.walkertribe.ian.protocol.core.ClientHeartbeatPacket;
+import com.walkertribe.ian.protocol.core.ServerHeartbeatPacket;
 import com.walkertribe.ian.protocol.core.setup.VersionPacket;
+import com.walkertribe.ian.protocol.core.setup.WelcomePacket;
 import com.walkertribe.ian.protocol.core.world.ObjectUpdatePacket;
 import com.walkertribe.ian.util.BitField;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.util.ByteArrayReader;
-import com.walkertribe.ian.util.JamCrc;
 import com.walkertribe.ian.util.TextUtil;
 import com.walkertribe.ian.util.Version;
 
@@ -31,12 +32,13 @@ import com.walkertribe.ian.util.Version;
  * @author rjwut
  */
 public class PacketReader {
-	private static final Set<Integer> REQUIRED_PACKET_TYPES = new HashSet<Integer>();
+    private static final Set<Class<? extends ArtemisPacket>> REQUIRED_PACKET_TYPES = new HashSet<>();
 
 	static {
-		REQUIRED_PACKET_TYPES.add(JamCrc.compute(CorePacketType.PLAIN_TEXT_GREETING));
-		REQUIRED_PACKET_TYPES.add(JamCrc.compute(CorePacketType.CONNECTED));
-		REQUIRED_PACKET_TYPES.add(JamCrc.compute(CorePacketType.HEARTBEAT));
+		REQUIRED_PACKET_TYPES.add(WelcomePacket.class);
+		REQUIRED_PACKET_TYPES.add(VersionPacket.class);
+        REQUIRED_PACKET_TYPES.add(ServerHeartbeatPacket.class);
+        REQUIRED_PACKET_TYPES.add(ClientHeartbeatPacket.class);
 	}
 
 	private Origin requiredOrigin;
@@ -101,64 +103,59 @@ public class PacketReader {
 			);
 		}
 
-		// connection type
+		// Read the rest of the packet
 		final int originValue = readIntFromStream();
 		final Origin origin = Origin.fromInt(originValue);
+        final int padding = readIntFromStream();
+        final int remainingBytes = readIntFromStream();
+        final int packetType = readIntFromStream();
+        final int remaining = len - 24;
+        byte[] payloadBytes = new byte[remaining];
 
+        try {
+            ByteArrayReader.readBytes(in, remaining, payloadBytes);
+        } catch (InterruptedException ex) {
+            throw new ArtemisPacketException(ex, origin, packetType, payloadBytes, true);
+        } catch (IOException ex) {
+            throw new ArtemisPacketException(ex, origin, packetType, payloadBytes, true);
+        }
+
+        debugger.onRecvPacketBytes(origin, packetType, payloadBytes);
+
+        // Check preamble fields for issues
 		if (origin == null) {
 			throw new ArtemisPacketException(
-					"Unknown origin: " + originValue
+					"Unknown origin: " + originValue,
+					null, packetType, payloadBytes, true
 			);
 		}
 
 		if (requiredOrigin != null && origin != requiredOrigin) {
 			throw new ArtemisPacketException(
-					"Origin mismatch: expected " + requiredOrigin + ", got " + origin
+					"Origin mismatch: expected " + requiredOrigin + ", got " + origin,
+					origin, packetType, payloadBytes, true
 			);
 		}
 
 		// padding
-		final int padding = readIntFromStream();
-
 		if (padding != 0) {
 			throw new ArtemisPacketException(
 					"No empty padding after connection type?",
-					origin
+					origin, packetType, payloadBytes, false
 			);
 		}
 
 		// remaining bytes
-		final int remainingBytes = readIntFromStream();
 		final int expectedRemainingBytes = len - 20;
 
 		if (remainingBytes != expectedRemainingBytes) {
 			throw new ArtemisPacketException(
 					"Packet length discrepancy: total length = " + len +
 					"; expected " + expectedRemainingBytes +
-					" for remaining bytes field, but got " +
-					remainingBytes,
-					origin
+					" for remaining bytes field, but got " + remainingBytes,
+					origin, packetType, payloadBytes, false
 			);
 		}
-
-		// packet type
-		final int packetType = readIntFromStream();
-
-		// payload
-		// The preamble was 24 bytes (6 ints), so the payload size is the size
-		// of the whole packet minus 24 bytes.
-		final int remaining = len - 24;
-		byte[] payloadBytes = new byte[remaining];
-
-		try {
-			ByteArrayReader.readBytes(in, remaining, payloadBytes);
-		} catch (InterruptedException ex) {
-			throw new ArtemisPacketException(ex, origin, packetType);
-		} catch (IOException ex) {
-			throw new ArtemisPacketException(ex, origin, packetType);
-		}
-
-		debugger.onRecvPacketBytes(origin, packetType, payloadBytes);
 
 		// Find the PacketFactory that knows how to handle this packet type
 		byte subtype = remaining > 0 ? payloadBytes[0] : 0x00;
@@ -194,7 +191,7 @@ public class PacketReader {
 
 		// IAN wants certain packet types even if the code consuming IAN isn't
 		// interested in them.
-		boolean required = REQUIRED_PACKET_TYPES.contains(Integer.valueOf(packetType));
+		boolean required = REQUIRED_PACKET_TYPES.contains(factoryClass);
 		payload = new ByteArrayReader(payloadBytes);
 
 		if (required || result.isInteresting()) {
@@ -207,7 +204,9 @@ public class PacketReader {
 					result.setException(ex);
 					ex.appendParsingDetails(origin, packetType, payloadBytes);
 				} catch (RuntimeException ex) {
-					result.setException(new ArtemisPacketException(ex, origin, packetType, payloadBytes));
+					result.setException(
+					    new ArtemisPacketException(ex, origin, packetType, payloadBytes, false)
+					);
 				}
 
 				ArtemisPacketException parseException = result.getException();
@@ -597,9 +596,9 @@ public class PacketReader {
 			ByteArrayReader.readBytes(in, 4, intBuffer);
 			return ByteArrayReader.readInt(intBuffer, 0);
 		} catch (InterruptedException ex) {
-			throw new ArtemisPacketException(ex);
+			throw new ArtemisPacketException(ex, true);
 		} catch (IOException ex) {
-			throw new ArtemisPacketException(ex);
+			throw new ArtemisPacketException(ex, true);
 		}
 	}
 }

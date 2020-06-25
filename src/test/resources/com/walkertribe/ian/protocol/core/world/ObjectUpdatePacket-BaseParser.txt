@@ -9,7 +9,7 @@ f93d8080 // ObjectUpdatePacket
 ff3f     // bit field
 04000000 44 00 53 00 31 00 00 00 // name = DS1
 00003c42 // shields = 47.0
-00000000 // aft shields = 0.0 (ignored)
+0000a042 // max shields = 80.0
 00000000 // index = 0
 e8030000 // vessel ID = 1000
 0000803f // x = 1.0

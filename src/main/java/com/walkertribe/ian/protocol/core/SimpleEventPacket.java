@@ -22,7 +22,7 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte PLAYER_SHIP_DAMAGE   = 0x05;
     	public static final byte END_GAME             = 0x06;
     	public static final byte CLOAK_DECLOAK        = 0x07;
-    	public static final byte UNKNOWN_08           = 0x08;
+    	public static final byte TENSION              = 0x08;
     	public static final byte SKYBOX               = 0x09;
     	public static final byte GAME_MESSAGE         = 0x0a;
     	public static final byte AUTO_DAMCON          = 0x0b;
@@ -39,7 +39,7 @@ public abstract class SimpleEventPacket extends BaseArtemisPacket {
     	public static final byte UNKNOWN_16           = 0x16;
     	public static final byte SINGLE_SEAT_LAUNCHED = 0x17;
     	public static final byte SINGLE_SEAT_DAMAGE   = 0x18;
-    	public static final byte UNKNOWN_19           = 0x19;
+    	public static final byte BIOMECH_STANCE       = 0x19;
     	public static final byte DOCKED               = 0x1a;
     	public static final byte SMOKE                = 0x1b;
     	public static final byte SINGLE_SEAT_TEXT     = 0x1c;

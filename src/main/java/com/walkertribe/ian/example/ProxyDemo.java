@@ -146,6 +146,8 @@ public class ProxyDemo implements Runnable {
             client.addListener(this); // we're only listening to client packets
             server.proxyTo(client);
             client.proxyTo(server);
+            server.setAutoSendHeartbeat(false);
+            client.setAutoSendHeartbeat(false);
             server.start();
             client.start();
         }

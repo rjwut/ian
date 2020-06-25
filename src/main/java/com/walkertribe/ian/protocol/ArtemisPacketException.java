@@ -15,38 +15,22 @@ public class ArtemisPacketException extends Exception {
     private Origin origin;
     private int packetType;
     private byte[] payload;
+    private boolean fatal;
 
     /**
      * @param string A description of the problem
      */
     public ArtemisPacketException(String string) {
         super(string);
+        fatal = true;
     }
 
     /**
      * @param t The exception that caused ArtemisPacketException to be thrown
      */
-    public ArtemisPacketException(Throwable t) {
+    public ArtemisPacketException(Throwable t, boolean fatal) {
         super(t);
-    }
-
-    /**
-     * @param string A description of the problem
-     * @param origin The packet's Origin
-     */
-    public ArtemisPacketException(String string, Origin origin) {
-    	super(string);
-    	this.origin = origin;
-    }
-
-    /**
-     * @param t The exception that caused ArtemisPacketException to be thrown
-     * @param origin The packet's Origin
-     * @param packetType The packet's type value
-     */
-    public ArtemisPacketException(Throwable t, Origin origin,
-    		int packetType) {
-        this(t, origin, packetType, null);
+        this.fatal = fatal;
     }
 
     /**
@@ -55,9 +39,23 @@ public class ArtemisPacketException extends Exception {
      * @param packetType The packet's type value
      * @param payload The packet's payload bytes
      */
-    public ArtemisPacketException(Throwable t, Origin origin,
-    		int packetType, byte[] payload) {
+    public ArtemisPacketException(Throwable t, Origin origin, int packetType, byte[] payload,
+            boolean fatal) {
         super(t);
+        this.fatal = true;
+        appendParsingDetails(origin, packetType, payload);
+    }
+
+    /**
+     * @param string A description of the problem
+     * @param origin The packet's Origin
+     * @param packetType The packet's type value
+     * @param payload The packet's payload bytes
+     */
+    public ArtemisPacketException(String string, Origin origin, int packetType, byte[] payload,
+            boolean fatal) {
+        super(string);
+        this.fatal = true;
         appendParsingDetails(origin, packetType, payload);
     }
 
@@ -83,6 +81,13 @@ public class ArtemisPacketException extends Exception {
     }
 
     /**
+     * Returns true if the exception is fatal.
+     */
+    public boolean isFatal() {
+        return fatal;
+    }
+
+    /**
      * Adds the Origin, packet type and payload to this exception.
      */
     public void appendParsingDetails(Origin origin, int packetType, byte[] payload) {
@@ -105,6 +110,12 @@ public class ArtemisPacketException extends Exception {
 		err.println(origin + ": " + TextUtil.intToHex(packetType) + " " +
 				(payload == null ? "" : TextUtil.byteArrayToHexString(payload))
 		);
+    }
+
+    @Override
+    public void printStackTrace(PrintStream s) {
+        printPacketDump(s);
+        super.printStackTrace(s);
     }
 
     /**

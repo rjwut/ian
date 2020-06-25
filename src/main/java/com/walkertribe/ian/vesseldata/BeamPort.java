@@ -15,4 +15,9 @@ public class BeamPort extends WeaponPort {
 	public float getArcWidth() {
 		return arcWidth;
 	}
+
+	@Override
+	public String toString() {
+	    return super.toString() + " Arc: " + arcWidth;
+	}
 }

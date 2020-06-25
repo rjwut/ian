@@ -1,5 +1,7 @@
 package com.walkertribe.ian.world;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -75,6 +77,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     private CharSequence mArtemisClass;
     private CharSequence mIntelLevel1;
     private CharSequence mIntelLevel2;
+    private List<Tag> mTags = new LinkedList<>();
     private SortedMap<String, byte[]> unknownProps;
 
     public BaseArtemisObject(int objId) {
@@ -101,6 +104,11 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     @Override
     public CharSequence getName() {
         return mName;
+    }
+
+    @Override
+    public String getNameString() {
+        return mName != null ? mName.toString() : null;
     }
 
     public void setName(CharSequence name) {
@@ -165,6 +173,30 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
     /**
+     * Returns the number of times this object can be scanned by one side.
+     */
+    public int getMaxScans() {
+        return 0;
+    }
+
+    /**
+     * Returns the scan level for this object for the indicated side. In other words, this is the
+     * number of times this object has been scanned by that side. Objects which are not scannable
+     * always return 1.
+     * Unspecified: -1
+     */
+    public int getScanLevel(int side) {
+        return 1;
+    }
+
+    /**
+     * Sets the scan level for this object for the indicated side.
+     */
+    public void setScanLevel(int side, int scanLevel) {
+        throw new UnsupportedOperationException("Can't scan this object");
+    }
+
+    /**
      * The level 1 scan intel for this object.
      * Unspecified: null
      */
@@ -173,6 +205,7 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     	return mIntelLevel1;
     }
 
+    @Override
     public void setIntelLevel1(CharSequence intelLevel1) {
     	mIntelLevel1 = intelLevel1;
     }
@@ -186,8 +219,24 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     	return mIntelLevel2;
     }
 
+    @Override
     public void setIntelLevel2(CharSequence intelLevel2) {
     	mIntelLevel2 = intelLevel2;
+    }
+
+    @Override
+    public boolean isTagged() {
+        return !mTags.isEmpty();
+    }
+
+    @Override
+    public List<Tag> getTags() {
+        return new LinkedList<>(mTags);
+    }
+
+    @Override
+    public void addTag(Tag tag) {
+        mTags.add(tag);
     }
 
     @Override
@@ -196,9 +245,14 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     }
 
     @Override
+    public BoolState getVisibility(int side) {
+        return BoolState.TRUE;
+    }
+
+    @Override
     public float distance(ArtemisObject obj) {
     	if (!hasPosition() || !obj.hasPosition()) {
-    		throw new RuntimeException("Can't compute distance if both objects don't have a position");
+    		throw new IllegalStateException("Can't compute distance if both objects don't have a position");
     	}
 
     	float y0 = obj.getY();
@@ -208,6 +262,17 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     	float dY = y0 - y1;
     	float dZ = obj.getZ() - mZ;
     	return (float) Math.sqrt(dX * dX + dY * dY + dZ * dZ);
+    }
+
+    @Override
+    public float distanceIgnoreY(ArtemisObject obj) {
+        if (!hasPosition() || !obj.hasPosition()) {
+            throw new IllegalStateException("Can't compute distance if both objects don't have a position");
+        }
+
+        float dX = obj.getX() - mX;
+        float dZ = obj.getZ() - mZ;
+        return (float) Math.sqrt(dX * dX + dZ * dZ);
     }
 
     @Override
@@ -278,6 +343,20 @@ public abstract class BaseArtemisObject implements ArtemisObject {
     @Override
     public final void setUnknownProps(SortedMap<String, byte[]> unknownProps) {
     	this.unknownProps = unknownProps;
+    }
+
+    @Override
+    public final byte[] getUnknownProp(int byteNumber, int bitNumber) {
+        return unknownProps != null ? unknownProps.get("UNK_" + byteNumber + "_" + bitNumber) : null;
+    }
+
+    @Override
+    public final void setUnknownProp(int byteNumber, int bitNumber, byte[] bytes) {
+        if (unknownProps == null) {
+            unknownProps = new TreeMap<>();
+        }
+
+        unknownProps.put("UNK_" + byteNumber + "_" + bitNumber, bytes);
     }
 
     @Override

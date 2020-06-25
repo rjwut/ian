@@ -44,14 +44,20 @@ public class VesselData {
 	}
 
 	/**
-	 * Returns the Faction represented by the given ID.
+	 * Returns the Faction represented by the given faction ID. Note that if the server and client
+	 * vesselData.xml files are not identical, one may specify a faction ID that the other doesn't
+	 * have, which would result in this method returning null. Your code should handle this scenario
+	 * gracefully.
 	 */
 	public Faction getFaction(int id) {
 		return factions.get(id);
 	}
 
 	/**
-	 * Returns the Vessel represented by the given ID.
+	 * Returns the Vessel represented by the given hull ID, or null if no Vessel has this ID. Note
+	 * that if the server and client vesselData.xml files are not identical, one may specify a hull
+	 * ID that the other doesn't have, which would result in this method returning null. Your code
+	 * should handle this scenario gracefully.
 	 */
 	public Vessel getVessel(int id) {
 		return vessels.get(Integer.valueOf(id));
@@ -65,10 +71,24 @@ public class VesselData {
 	}
 
 	/**
+	 * Returns a List containing all the Factions.
+	 */
+	public List<Faction> getFactions() {
+	    return new ArrayList<>(factions);
+	}
+
+	/**
 	 * Iterates all the Vessels in this object.
 	 */
 	public Iterator<Vessel> vesselIterator() {
 		return vessels.values().iterator();
+	}
+
+	/**
+	 * Returns a list of all the Vessels.
+	 */
+	public List<Vessel> getVessels() {
+	    return new ArrayList<>(vessels.values());
 	}
 
 	/**
@@ -91,13 +111,13 @@ public class VesselData {
 	}
 
 	/**
-	 * Preloads all of the VesselInternals objects into memory. If you do not
-	 * call this method, then each VesselInternals object will be loaded into
-	 * memory on demand instead.
+	 * Preloads all of the system Grid objects into memory. If you do not call
+	 * this method, then each Grid object will be loaded into memory on demand
+	 * instead.
 	 */
-	public void preloadInternals() {
+	public void preloadGrids() {
 		for (Vessel vessel : vessels.values()) {
-			vessel.getInternals();
+			vessel.getGrid();
 		}
 	}
 }

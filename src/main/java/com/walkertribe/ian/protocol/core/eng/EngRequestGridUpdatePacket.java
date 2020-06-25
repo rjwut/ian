@@ -8,7 +8,7 @@ import com.walkertribe.ian.protocol.core.ValueIntPacket;
 import com.walkertribe.ian.protocol.core.ValueIntPacket.SubType;
 
 /**
- * Can be sent by the client to request a full update to the engineering grid.
+ * Can be sent by the client to request a full update to the engineering nodes.
  * The server will respond with an EngGridUpdatePacket.
  */
 @Packet(origin = Origin.CLIENT, type = CorePacketType.VALUE_INT, subtype = SubType.REQUEST_ENG_GRID_UPDATE)

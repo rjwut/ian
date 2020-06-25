@@ -5,24 +5,26 @@ package com.walkertribe.ian.enums;
  * @author rjwut
  */
 public enum AnomalyType {
-	HIDENS_POWER_CELL(Upgrade.HIDENS_POWER_CELL),
-	VIGORANIUM_NODULE(Upgrade.VIGORANIUM_NODULE),
-	CETROCITE_HEATSINKS(Upgrade.CETROCITE_HEATSINKS),
-	LATERAL_ARRAY(Upgrade.LATERAL_ARRAY),
-	TAURON_FOCUSERS(Upgrade.TAURON_FOCUSERS),
-	INFUSION_P_COILS(Upgrade.INFUSION_P_COILS),
-	CARPACTION_COILS(Upgrade.CARPACTION_COILS),
-	SECRET_CODE_CASE(Upgrade.SECRET_CODE_CASE),
-	BEACON,
-	SPACE_JUNK;
+	HIDENS_POWER_CELL("HiDens Power Cell", Upgrade.HIDENS_POWER_CELL),
+	VIGORANIUM_NODULE("Vigoranium Nodule", Upgrade.VIGORANIUM_NODULE),
+	CETROCITE_HEATSINKS("Cetrocite Crystal", Upgrade.CETROCITE_HEATSINKS),
+	LATERAL_ARRAY("Lateral Array", Upgrade.LATERAL_ARRAY),
+	TAURON_FOCUSERS("Tauron Focusers", Upgrade.TAURON_FOCUSERS),
+	INFUSION_P_COILS("Infusion P-Coils", Upgrade.INFUSION_P_COILS),
+	CARPACTION_COILS("Carapaction Coils", Upgrade.CARPACTION_COILS),
+	SECRET_CODE_CASE("Secret Code Case", Upgrade.SECRET_CODE_CASE),
+	BEACON("Beacon"),
+	SPACE_JUNK("Space Junk");
 
+    private String name;
 	private Upgrade mUpgrade;
 
-	private AnomalyType() {
-		// for beacons and space junk
+	private AnomalyType(String name) {
+	    this.name = name;
 	}
 
-	private AnomalyType(Upgrade upgrade) {
+	private AnomalyType(String name, Upgrade upgrade) {
+	    this(name);
 		mUpgrade = upgrade;
 	}
 
@@ -32,5 +34,10 @@ public enum AnomalyType {
 	 */
 	public Upgrade getUpgrade() {
 		return mUpgrade;
+	}
+
+	@Override
+	public String toString() {
+	    return name;
 	}
 }

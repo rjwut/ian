@@ -38,7 +38,6 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     private Integer[] mScanLevels = new Integer[MAX_SCAN_LEVEL];
     private int mSpecial = -1, mSpecialState = -1;
-    private BoolState mEnemy = BoolState.UNKNOWN;
     private BoolState mSurrendered = BoolState.UNKNOWN;
     private byte mFleetNumber = Byte.MIN_VALUE;
     private float mTargetX = Float.NaN;
@@ -49,28 +48,23 @@ public class ArtemisNpc extends BaseArtemisShip {
 
     public ArtemisNpc(int objId) {
         super(objId);
+        init();
+    }
 
+    public ArtemisNpc(int objId, Vessel vessel) {
+        super(objId, vessel);
+        init();
+    }
+
+    private void init() {
         for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-        	mSysDamage[i] = Float.NaN;
+            mSysDamage[i] = Float.NaN;
         }
     }
 
     @Override
     public ObjectType getType() {
         return ObjectType.NPC_SHIP;
-    }
-
-    /**
-     * Returns BoolState.TRUE if this ship is an enemy, BoolState.FALSE if it's
-     * friendly. Note that this only works in Solo mode.
-     * Unspecified: BoolState.UNKNOWN
-     */
-    public BoolState isEnemy() {
-    	return mEnemy;
-    }
-
-    public void setEnemy(BoolState enemy) {
-    	mEnemy = enemy;
     }
 
     /**
@@ -196,13 +190,22 @@ public class ArtemisNpc extends BaseArtemisShip {
         mSpecialState = special;
     }
 
-    /**
-     * Returns the scan level for this ship for the indicated side: 0 = not scanned, 1 = scanned
-     * once, 2 = scanned twice.
-     * Unspecified: -1
-     */
+    @Override
+    public int getMaxScans() {
+        return MAX_SCAN_LEVEL;
+    }
+
+    @Override
     public int getScanLevel(int side) {
-    	int scanLevel = 0;
+        if (side == -1) {
+            return -1;
+        }
+
+        if (getSide() == side) {
+            return MAX_SCAN_LEVEL; // don't need to scan objects on the same side
+        }
+
+        int scanLevel = 0;
     	int bit = 1 << side;
 
     	for (Integer level : mScanLevels) {
@@ -220,9 +223,7 @@ public class ArtemisNpc extends BaseArtemisShip {
     	return scanLevel;
     }
 
-    /**
-     * Sets the scan level for this ship for the indicated side.
-     */
+    @Override
     public void setScanLevel(int side, int scanLevel) {
     	if (scanLevel == -1) {
     		return;
@@ -300,11 +301,11 @@ public class ArtemisNpc extends BaseArtemisShip {
      * Is the NPC tagged?
      * Unspecified: UNKNOWN
      */
-    public BoolState isTagged() {
+    public BoolState isNpcTagged() {
     	return mTagged;
     }
 
-    public void setTagged(BoolState tagged) {
+    public void setNpcTagged(BoolState tagged) {
     	mTagged = tagged;
     }
 
@@ -328,11 +329,6 @@ public class ArtemisNpc extends BaseArtemisShip {
         // it SHOULD be an ArtemisNpc
         if (npc instanceof ArtemisNpc) {
             ArtemisNpc cast = (ArtemisNpc) npc;
-            BoolState enemy = cast.isEnemy();
-
-            if (BoolState.isKnown(enemy)) {
-            	mEnemy = enemy;
-            }
 
             BoolState surrendered = cast.isSurrendered();
 
@@ -408,7 +404,6 @@ public class ArtemisNpc extends BaseArtemisShip {
     		props.put("Specials active", str.length() > 0 ? str : "NONE");
     	}
 
-    	putProp(props, "Is enemy", mEnemy);
     	putProp(props, "Surrendered", mSurrendered);
     	putProp(props, "Fleet number", mFleetNumber, Byte.MIN_VALUE);
     	putProp(props, "Target X", mTargetX);

@@ -28,6 +28,11 @@ public class ArtemisAnomaly extends BaseArtemisObject {
 		return ObjectType.ANOMALY;
 	}
 
+	@Override
+	public int getMaxScans() {
+	    return 1;
+	}
+
 	/**
 	 * Whether the given side has scanned this anomaly.
 	 * Unspecified: UNKNOWN
@@ -48,8 +53,22 @@ public class ArtemisAnomaly extends BaseArtemisObject {
 			mScan = 0;
 		}
 
-		mScan |= 1 << side;
+		if (scanned) {
+	        mScan |= 1 << side;
+		} else {
+	        mScan &= ~(1 << side);
+		}
 	}
+
+    @Override
+    public int getScanLevel(int side) {
+        return isScanned(side).toValue(1, 0, -1);
+    }
+
+    @Override
+    public void setScanLevel(int side, int scanLevel) {
+        setScanned(side, scanLevel != 0);
+    }
 
 	/**
 	 * Returns the raw scan bits.

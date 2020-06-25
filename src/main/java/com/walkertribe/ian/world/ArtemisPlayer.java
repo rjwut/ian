@@ -18,6 +18,7 @@ import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.enums.TargetingMode;
 import com.walkertribe.ian.enums.TubeState;
 import com.walkertribe.ian.enums.Upgrade;
+import com.walkertribe.ian.protocol.core.setup.Ship;
 import com.walkertribe.ian.util.BoolState;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.vesseldata.VesselAttribute;
@@ -145,20 +146,34 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
     public ArtemisPlayer(int objId) {
         super(objId);
+        init();
+    }
 
+    /**
+     * Handy shortcut for creating a new ArtemisPlayer from a Ship created during game setup.
+     */
+    public ArtemisPlayer(int objId, Ship ship, Context ctx) {
+        super(objId, ship.getVessel(ctx));
+        init();
+        setName(ship.getName());
+        setAccentColor(ship.getAccentColor());
+        setDriveType(ship.getDrive());
+    }
+
+    private void init() {
         // pre-fill
         Arrays.fill(mTorpedos, -1);
 
         for (int i = 0; i < Artemis.SYSTEM_COUNT; i++) {
-        	mSystems[i] = new SystemStatus();
+            mSystems[i] = new SystemStatus();
         }
 
         for (int i = 0; i < Artemis.MAX_TUBES; i++) {
-        	mTubes[i] = new Tube();
+            mTubes[i] = new Tube();
         }
 
         for (Upgrade upgrade : Upgrade.activation()) {
-        	mUpgrades.put(upgrade, new UpgradeStatus());
+            mUpgrades.put(upgrade, new UpgradeStatus());
         }
     }
 
@@ -312,12 +327,14 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
-     * Get the ID of the base at which we're docking. Note that this property is
-     * only updated in a packet when the docking process commences; undocking
-     * does not update this property. However, if an existing ArtemisPlayer
-     * object is docked, is updated by another one, and the update has the ship
-     * engaging impulse or warp drive, this property will be set to 0 to
-     * indicate that the ship has undocked.
+     * Get the ID of the base at which we're docking. This property is set when
+     * a base latches onto the player ship with its tractor beam; DockedPacket
+     * is sent when docking is complete and resupply commences, watch for the
+     * DockedPacket. Note that this property is only updated in a packet when
+     * the docking process commences; undocking does not update this property.
+     * However, if an existing ArtemisPlayer object is docked, is updated by
+     * another one, and the update has the ship engaging impulse or warp drive,
+     * this property will be set to 0 to indicate that the ship has undocked.
      * Unspecified: -1
      */
     public int getDockingBase() {
@@ -974,7 +991,7 @@ public class ArtemisPlayer extends BaseArtemisShip {
 
         if (plr.mDockingBase != -1) {
             mDockingBase = plr.mDockingBase;
-        } else if (plr.getImpulse() != -1 || plr.mWarp != -1) {
+        } else if (plr.getImpulse() > 0 || plr.mWarp > 0) {
         	mDockingBase = 0;
         }
 

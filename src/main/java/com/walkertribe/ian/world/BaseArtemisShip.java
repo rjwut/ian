@@ -4,20 +4,18 @@ import java.util.SortedMap;
 
 import com.walkertribe.ian.enums.BeamFrequency;
 import com.walkertribe.ian.util.BoolState;
+import com.walkertribe.ian.vesseldata.Vessel;
 
 /**
  * Base implementation for ships (player or NPC).
  */
 public abstract class BaseArtemisShip extends BaseArtemisShielded {
     private float mVelocity = Float.NaN;
-    private float mShieldsFrontMax = Float.NaN;
-    private float mShieldsRearMax = Float.NaN;
     private final float[] mShieldFreqs = new float[5];
     private float mSteering = Float.NaN;
     private float mTopSpeed = Float.NaN;
     private float mTurnRate = Float.NaN;
     private float mImpulse = Float.NaN;
-    private byte mSide = -1;
     private Integer mVisibility;
 
     public BaseArtemisShip(int objId) {
@@ -25,6 +23,22 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 
         for (int i = 0; i < 5; i++) {
         	mShieldFreqs[i] = Float.NaN;
+        }
+    }
+
+    public BaseArtemisShip(int objId, Vessel vessel) {
+        this(objId);
+
+        if (vessel != null) {
+            setVessel(vessel);
+            setArtemisClass(vessel.getName());
+            setRace(vessel.getFaction().getName());
+            setShieldsFront(vessel.getForeShields());
+            setShieldsFrontMax(vessel.getForeShields());
+            setShieldsRear(vessel.getAftShields());
+            setShieldsRearMax(vessel.getAftShields());
+            setTopSpeed(vessel.getTopSpeed());
+            setTurnRate(vessel.getTurnRate());
         }
     }
 
@@ -78,30 +92,6 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     }
 
     /**
-     * The maximum strength of the forward shield.
-     * Unspecified: Float.NaN
-     */
-    public float getShieldsFrontMax() {
-        return mShieldsFrontMax;
-    }
-
-    public void setShieldsFrontMax(float shieldsFrontMax) {
-        this.mShieldsFrontMax = shieldsFrontMax;
-    }
-    
-    /**
-     * The maximum strength of the aft shield.
-     * Unspecified: Float.NaN
-     */
-    public float getShieldsRearMax() {
-        return mShieldsRearMax;
-    }
-
-    public void setShieldsRearMax(float shieldsRearMax) {
-        this.mShieldsRearMax = shieldsRearMax;
-    }
-
-    /**
      * A value between 0 and 1 indicating the shields' resistance to the given
      * BeamFrequency. Higher values indicate that the shields are more resistant
      * to that frequency.
@@ -128,22 +118,16 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     }
 
     /**
-     * The side this ship is on. There is no side 0. Biomechs are side 30.
-     */
-    public byte getSide() {
-    	return mSide;
-    }
-
-    public void setSide(byte side) {
-    	mSide = side;
-    }
-
-    /**
      * Returns whether this ship is visible to the given side on map screens.
      * Unspecified: UNKNOWN
      */
+    @Override
     public BoolState getVisibility(int side) {
-    	return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
+        if (getSide() == side && side != -1) {
+            return BoolState.TRUE; // ships are always visible to their own side
+        }
+
+        return mVisibility == null ? BoolState.UNKNOWN : BoolState.from((mVisibility & (1 << side)) == 1);
     }
 
     /**
@@ -193,21 +177,9 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
             if (!Float.isNaN(ship.mTurnRate)) {
                 mTurnRate = ship.mTurnRate;
             }
-            
-            if (!Float.isNaN(ship.mShieldsFrontMax)) {
-                mShieldsFrontMax = ship.mShieldsFrontMax;
-            }
-
-            if (!Float.isNaN(ship.mShieldsRearMax)) {
-                mShieldsRearMax = ship.mShieldsRearMax;
-            }
 
             if (!Float.isNaN(ship.mImpulse)) {
             	mImpulse = ship.mImpulse;
-            }
-
-            if (ship.mSide != -1) {
-            	mSide = ship.mSide;
             }
 
             for (int i = 0; i < mShieldFreqs.length; i++) {
@@ -224,8 +196,6 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 	public void appendObjectProps(SortedMap<String, Object> props) {
     	super.appendObjectProps(props);
     	putProp(props, "Velocity", mVelocity);
-    	putProp(props, "Shields: fore max", mShieldsFrontMax);
-    	putProp(props, "Shields: aft max", mShieldsRearMax);
     	BeamFrequency[] freqs = BeamFrequency.values();
 
     	for (int i = 0; i < mShieldFreqs.length; i++) {
@@ -236,7 +206,6 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
     	putProp(props, "Top speed", mTopSpeed);
     	putProp(props, "Turn rate", mTurnRate);
     	putProp(props, "Impulse", mImpulse);
-    	putProp(props, "Side", mSide, -1);
     }
 
     /**
@@ -249,13 +218,10 @@ public abstract class BaseArtemisShip extends BaseArtemisShielded {
 
     	if (
     			!Float.isNaN(mVelocity) ||
-    			!Float.isNaN(mShieldsFrontMax) ||
-    			!Float.isNaN(mShieldsRearMax) ||
     			!Float.isNaN(mSteering) ||
     			!Float.isNaN(mTopSpeed) ||
     			!Float.isNaN(mTurnRate) ||
-    			!Float.isNaN(mImpulse) ||
-    			mSide != -1
+    			!Float.isNaN(mImpulse)
     	) {
     		return true;
     	}

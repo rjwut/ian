@@ -13,11 +13,14 @@ public class ArtemisShieldedTest {
 		Assert.assertTrue(Float.isNaN(obj.getShieldsRear()));
 	}
 
-	public static void assertShielded(ArtemisShielded obj, int id, ObjectType type, String name, float x, float y,
-			float z, int hullId, float shieldsFront, float shieldsRear) {
+	public static void assertShielded(ArtemisShielded obj, int id, ObjectType type, String name,
+	        float x, float y, float z, int hullId, float shieldsFront, float shieldsRear,
+	        float shieldsFrontMax, float shieldsRearMax) {
 		ArtemisObjectTest.assertObject(obj, id, type, name, x, y, z);
 		Assert.assertEquals(hullId, obj.getHullId());
 		Assert.assertEquals(shieldsFront, obj.getShieldsFront(), TestUtil.EPSILON);
 		Assert.assertEquals(shieldsRear, obj.getShieldsRear(), TestUtil.EPSILON);
+		Assert.assertEquals(shieldsFrontMax, obj.getShieldsFrontMax(), TestUtil.EPSILON);
+		Assert.assertEquals(shieldsRearMax, obj.getShieldsRearMax(), TestUtil.EPSILON);
 	}
 }

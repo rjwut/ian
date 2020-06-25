@@ -115,13 +115,11 @@ public class ArtemisPlayerTest {
 		// state = LOADING, contents = HOMING
 		player = new ArtemisPlayer(47);
 		player.setTubeState(0, TubeState.LOADING);
-		player.setTubeContents(0, OrdnanceType.HOMING);
+		player.setTubeContents(0, OrdnanceType.TORPEDO);
 		props = new TreeMap<String, Object>();
 		player.appendObjectProps(props);
-		Assert.assertEquals("HOMING", props.get("Tube 0 contents"));
+		Assert.assertEquals("TORPEDO", props.get("Tube 0 contents"));
 	}
-
-	// PLAYER DATA
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testWarpTooLow() {
@@ -254,14 +252,14 @@ public class ArtemisPlayerTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testWeapSetContentsBeforeState() {
-		new ArtemisPlayer(47).setTubeContents(0, OrdnanceType.HOMING);
+		new ArtemisPlayer(47).setTubeContents(0, OrdnanceType.TORPEDO);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testWeapSetUnloadedTubeContents() {
 		ArtemisPlayer player = new ArtemisPlayer(47);
 		player.setTubeState(0, TubeState.UNLOADED);
-		player.setTubeContents(0, OrdnanceType.HOMING);
+		player.setTubeContents(0, OrdnanceType.TORPEDO);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

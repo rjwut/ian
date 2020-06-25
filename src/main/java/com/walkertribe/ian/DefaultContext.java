@@ -1,7 +1,9 @@
 package com.walkertribe.ian;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +17,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.walkertribe.ian.enums.ShipSystem;
 import com.walkertribe.ian.model.Model;
 import com.walkertribe.ian.model.SAXModelHandler;
+import com.walkertribe.ian.util.ByteArrayReader;
+import com.walkertribe.ian.util.Grid;
+import com.walkertribe.ian.util.GridCoord;
+import com.walkertribe.ian.util.GridNode;
 import com.walkertribe.ian.vesseldata.SAXVesselDataHandler;
 import com.walkertribe.ian.vesseldata.VesselData;
-import com.walkertribe.ian.vesseldata.VesselInternals;
 
 /**
  * Context implementation that loads resources from a path using a provided
@@ -27,10 +33,15 @@ import com.walkertribe.ian.vesseldata.VesselInternals;
  * @author rjwut
  */
 public class DefaultContext implements Context {
+    private static final int EMPTY_NODE_VALUE = -2;
+    private static final int HALLWAY_NODE_VALUE = -1;
+    private static final int BLOCK_SIZE = 32;
+    private static final byte[] RESERVED = new byte[16];
+
 	private PathResolver pathResolver;
 	private VesselData vesselData;
 	private Map<String, Model> modelMap = new HashMap<String, Model>();
-	private Map<String, VesselInternals> internalsMap = new HashMap<String, VesselInternals>();
+	private Map<String, Grid> gridMap = new HashMap<String, Grid>();
 
 	/**
 	 * Creates a new Context using the given PathResolver.
@@ -82,20 +93,55 @@ public class DefaultContext implements Context {
 	}
 
 	/**
-	 * Given the path to an .snt file, returns a VesselInternals object that
-	 * describes the node grid stored in that file. The VesselInternals will be
-	 * cached in this object, and the cached VesselInternals will be used for
+	 * Given the path to an .snt file, returns a Grid object that describes the node nodes stored in
+	 * that file. The Grid will be cached in this object, and the cached Grid will be used for
 	 * subsequent requests for the same .snt file.
 	 */
-	public VesselInternals getInternals(String sntPath) {
-		VesselInternals internals = internalsMap.get(sntPath);
+	public Grid getGrid(String sntPath) {
+		Grid grid = gridMap.get(sntPath);
 
-		if (internals == null) {
-			internals = loadInternals(sntPath);
-			internalsMap.put(sntPath, internals);
+		if (grid == null) {
+			grid = readSnt(sntPath);
+			gridMap.put(sntPath, grid);
 		}
 
-		return internals;
+		return grid;
+	}
+
+	/**
+	 * Outputs the given Grid as an .snt file. An IllegalStateException will be thrown if any node
+	 * is encountered which doesn't contain the required information.
+	 */
+	public void writeSnt(Grid grid, OutputStream out) throws IOException {
+	    final byte[] buffer = new byte[4];
+
+	    for (int x = 0; x < GridCoord.MAX_X; x++) {
+            for (int y = 0; y < GridCoord.MAX_X; y++) {
+                for (int z = 0; z < GridCoord.MAX_X; z++) {
+                    GridCoord coord = GridCoord.get(x, y, z);
+                    writeFloat(buffer, out, coord.x());
+                    writeFloat(buffer, out, coord.y());
+                    writeFloat(buffer, out, coord.z());
+                    GridNode node = grid.getNode(coord);
+                    int type;
+
+                    if (node == null || !node.isAccessible()) {
+                        type = EMPTY_NODE_VALUE;
+                    } else {
+                        ShipSystem system = node.getSystem();
+
+                        if (system == null) {
+                            type = HALLWAY_NODE_VALUE;
+                        } else {
+                            type = system.ordinal();
+                        }
+                    }
+
+                    writeInt(buffer, out, type);
+                    out.write(RESERVED);
+                }
+            }
+        }
 	}
 
 	/**
@@ -125,14 +171,55 @@ public class DefaultContext implements Context {
 	}
 
 	/**
-	 * Creates and returns a VesselInternals object loaded from the indicated
-	 * .snt file.
+	 * Creates and returns a Grid object loaded from the indicated .snt file.
 	 */
-	private VesselInternals loadInternals(String sntPath) {
+	private Grid readSnt(String sntPath) {
 		InputStream in = null;
 
 		try {
-			return new VesselInternals(pathResolver.get(sntPath));
+		    in = pathResolver.get(sntPath);
+
+		    if (!(in instanceof BufferedInputStream)) {
+	            in = new BufferedInputStream(in);
+	        }
+
+		    byte[] buffer = new byte[BLOCK_SIZE];
+		    final ShipSystem[] systems = ShipSystem.values();
+		    Grid grid = new Grid();
+
+	        try {
+	            for (int x = 0; x < GridCoord.MAX_X; x++) {
+	                for (int y = 0; y < GridCoord.MAX_Y; y++) {
+	                    for (int z = 0; z < GridCoord.MAX_Z; z++) {
+	                        GridCoord coords = GridCoord.get(x, y, z);
+	                        ByteArrayReader.readBytes(in, BLOCK_SIZE, buffer);
+	                        ByteArrayReader reader = new ByteArrayReader(buffer);
+	                        float shipX = reader.readFloat();
+	                        float shipY = reader.readFloat();
+	                        float shipZ = reader.readFloat();
+	                        int type = reader.readInt();
+	                        GridNode node;
+
+	                        if (type == EMPTY_NODE_VALUE) {
+	                            node = new GridNode(grid, coords, shipX, shipY, shipZ, false);
+	                        } else if (type == HALLWAY_NODE_VALUE) {
+                                node = new GridNode(grid, coords, shipX, shipY, shipZ, true);
+	                        } else {
+                                node = new GridNode(grid, coords, shipX, shipY, shipZ, systems[type]);
+	                        }
+
+	                        grid.setNode(node);
+	                    }
+	                }
+	            }
+
+	            grid.lock();
+	            return grid;
+	        } catch (InterruptedException ex) {
+	            throw new RuntimeException(ex);
+	        } catch (IOException ex) {
+	            throw new RuntimeException(ex);
+	        }
 		} catch (MalformedURLException ex) {
 			throw new RuntimeException(ex);
 		} catch (IOException ex) {
@@ -168,4 +255,22 @@ public class DefaultContext implements Context {
 			throw new RuntimeException(ex);
 		}
 	}
+
+    /**
+     * Writes a float value to the given OutputStream.
+     */
+    private static void writeFloat(byte[] buffer, OutputStream out, float v) throws IOException {
+        writeInt(buffer, out, Float.floatToRawIntBits(v));
+    }
+
+    /**
+     * Writes an int value to the given OutputStream.
+     */
+    private static void writeInt(byte[] buffer, OutputStream out, int v) throws IOException {
+        buffer[0] = (byte) (0xff & v);
+        buffer[1] = (byte) (0xff & (v >> 8));
+        buffer[2] = (byte) (0xff & (v >> 16));
+        buffer[3] = (byte) (0xff & (v >> 24));
+        out.write(buffer, 0, 4);
+    }
 }

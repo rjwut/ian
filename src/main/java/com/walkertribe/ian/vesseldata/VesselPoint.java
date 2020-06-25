@@ -29,4 +29,9 @@ public class VesselPoint {
 	public float getZ() {
 		return z;
 	}
+
+	@Override
+	public String toString() {
+	    return "[" + x + "," + y + "," + z + "]";
+	}
 }

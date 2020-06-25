@@ -12,16 +12,16 @@ public class ArtemisBaseTest {
 		ArtemisBase obj1 = new ArtemisBase(47);
 		obj1.setName("DS1");
 		obj1.setShieldsFront(47.0f);
-		obj1.setShieldsRear(0.0f);
+		obj1.setShieldsFrontMax(80.0f);
 		obj1.setHullId(1000);
 		obj1.setX(1.0f);
 		obj1.setY(2.0f);
 		obj1.setZ(3.0f);
-		assertBase(obj1, 47, "DS1", 47.0f, 0.0f, 1000, 1.0f, 2.0f, 3.0f);
+		assertBase(obj1, 47, "DS1", 47.0f, 80.0f, 1000, 1.0f, 2.0f, 3.0f);
 		obj1.updateFrom(obj0);
-		assertBase(obj1, 47, "DS1", 47.0f, 0.0f, 1000, 1.0f, 2.0f, 3.0f);
+		assertBase(obj1, 47, "DS1", 47.0f, 80.0f, 1000, 1.0f, 2.0f, 3.0f);
 		obj0.updateFrom(obj1);
-		assertBase(obj0, 47, "DS1", 47.0f, 0.0f, 1000, 1.0f, 2.0f, 3.0f);
+		assertBase(obj0, 47, "DS1", 47.0f, 80.0f, 1000, 1.0f, 2.0f, 3.0f);
 		obj0.updateFrom(new ArtemisAnomaly(48));
 	}
 
@@ -29,8 +29,9 @@ public class ArtemisBaseTest {
 		ArtemisShieldedTest.assertUnknownShielded(base, id, ObjectType.BASE);
 	}
 
-	public static void assertBase(ArtemisBase base, int id, String name, float shieldsFront, float shieldsRear,
-			int hullId, float x, float y, float z) {
-		ArtemisShieldedTest.assertShielded(base, id, ObjectType.BASE, name, x, y, z, hullId, shieldsFront, shieldsRear);
+	public static void assertBase(ArtemisBase base, int id, String name, float shields,
+	        float shieldsMax, int hullId, float x, float y, float z) {
+		ArtemisShieldedTest.assertShielded(base, id, ObjectType.BASE, name, x, y, z, hullId,
+		        shields, Float.NaN, shieldsMax, Float.NaN);
 	}
 }

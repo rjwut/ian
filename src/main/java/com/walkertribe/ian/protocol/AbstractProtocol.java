@@ -130,7 +130,7 @@ public abstract class AbstractProtocol implements Protocol {
 			try {
 				return constructor.newInstance(reader);
 			} catch (InvocationTargetException ex) {
-				throw new ArtemisPacketException(ex.getCause());
+				throw new ArtemisPacketException(ex.getCause(), false);
 			} catch (ReflectiveOperationException ex) {
 				throw new RuntimeException(ex);
 			}

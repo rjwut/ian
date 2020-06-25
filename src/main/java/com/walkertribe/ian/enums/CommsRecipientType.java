@@ -1,13 +1,14 @@
 package com.walkertribe.ian.enums;
 
 import com.walkertribe.ian.Context;
-import com.walkertribe.ian.util.BoolState;
+import com.walkertribe.ian.vesseldata.Faction;
 import com.walkertribe.ian.vesseldata.Vessel;
 import com.walkertribe.ian.world.ArtemisNpc;
 import com.walkertribe.ian.world.ArtemisObject;
+import com.walkertribe.ian.world.ArtemisPlayer;
 
 /**
- * The types of ArtemisObjects to which players can send COMMs messages. 
+ * The types of ArtemisObjects to which players can send COMMs messages.
  * @author rjwut
  */
 public enum CommsRecipientType {
@@ -49,12 +50,17 @@ public enum CommsRecipientType {
 	};
 
 	/**
-	 * Returns the CommsRecipientType that corresponds to the given
-	 * ArtemisObject; or null if the object in question cannot receive COMMs
-	 * messages.
+	 * Returns the CommsRecipientType that corresponds to the given ArtemisObject;
+	 * or null if the object in question cannot receive COMMs messages. In the
+	 * case of an NPC, the CommsRecipient type might be ENEMY or OTHER; which one
+	 * is determined by checking to see if they are on the same side as the
+	 * player. In the rare case that one or both of the sides are unknown, it will
+	 * fall back on using the Context to retrieve the NPC's faction and checking
+	 * see if it has the ENEMY attribute. If neither method works, fromObject()
+	 * throw an IllegalStateException.
 	 */
-	public static CommsRecipientType fromObject(ArtemisObject obj, Context ctx) {
-		ObjectType type = obj.getType();
+	public static CommsRecipientType fromObject(ArtemisPlayer sender, ArtemisObject recipient, Context ctx) {
+		ObjectType type = recipient.getType();
 
 		switch (type) {
 		case PLAYER_SHIP:
@@ -62,14 +68,24 @@ public enum CommsRecipientType {
 		case BASE:
 			return BASE;
 		case NPC_SHIP:
-			ArtemisNpc npc = (ArtemisNpc) obj;
-			Vessel vessel = npc.getVessel(ctx);
-			boolean enemy;
+			ArtemisNpc npc = (ArtemisNpc) recipient;
+			Boolean enemy = null;
+			byte senderSide = sender.getSide();
+			byte recipientSide = npc.getSide();
 
-			if (vessel != null) {
-				enemy = vessel.getFaction().is(FactionAttribute.ENEMY);
-			} else {
-				enemy = BoolState.safeValue(npc.isEnemy());
+			if (senderSide != -1 && recipientSide != -1) {
+			    enemy = senderSide != recipientSide;
+			} else if (ctx != null) {
+	            Vessel vessel = npc.getVessel(ctx);
+	            Faction faction = vessel.getFaction();
+
+	            if (faction != null) {
+	                enemy = faction.is(FactionAttribute.ENEMY);
+	            }
+			}
+
+			if (enemy == null) {
+			    throw new IllegalStateException("Cannot determine if recipient is enemy");
 			}
 
 			return enemy ? ENEMY : OTHER;

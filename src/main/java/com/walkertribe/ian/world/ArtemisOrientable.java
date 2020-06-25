@@ -6,7 +6,7 @@ package com.walkertribe.ian.world;
  * implement this interface have them exposed in the Artemis protocol.
  * @author rjwut
  */
-public interface ArtemisOrientable {
+public interface ArtemisOrientable extends ArtemisObject {
     /**
      * The direction the object is facing on the X-Z plane. This is expressed as
      * a value from negative pi to pi. A value of pi corresponds to a heading of
