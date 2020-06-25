@@ -327,10 +327,16 @@ public class Grid implements Iterable<GridNode> {
      * existing damage values in this Grid will be retained; otherwise, they'll be cleared.
      */
     private void copyNodes(Grid original, boolean clearDamage) {
+        boolean wasPopulated = nodes != null;
+
+        if (!wasPopulated) {
+            nodes = new ArrayList<GridNode>();
+        }
+
         for (GridNode node : original) {
             GridNode newNode = new GridNode(this, node);
 
-            if (!clearDamage) {
+            if (!clearDamage && wasPopulated) {
                 GridNode oldNode = nodes.get(node.coord.index);
 
                 if (oldNode != null) {
