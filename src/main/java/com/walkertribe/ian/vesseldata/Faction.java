@@ -64,4 +64,9 @@ public class Faction {
 	public Taunt[] getTaunts() {
 		return taunts.toArray(new Taunt[taunts.size()]);
 	}
+
+	@Override
+	public String toString() {
+	    return "#" + id + ": " + name;
+	}
 }

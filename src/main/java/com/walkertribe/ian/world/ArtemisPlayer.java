@@ -327,12 +327,14 @@ public class ArtemisPlayer extends BaseArtemisShip {
     }
 
     /**
-     * Get the ID of the base at which we're docking. Note that this property is
-     * only updated in a packet when the docking process commences; undocking
-     * does not update this property. However, if an existing ArtemisPlayer
-     * object is docked, is updated by another one, and the update has the ship
-     * engaging impulse or warp drive, this property will be set to 0 to
-     * indicate that the ship has undocked.
+     * Get the ID of the base at which we're docking. This property is set when
+     * a base latches onto the player ship with its tractor beam; DockedPacket
+     * is sent when docking is complete and resupply commences, watch for the
+     * DockedPacket. Note that this property is only updated in a packet when
+     * the docking process commences; undocking does not update this property.
+     * However, if an existing ArtemisPlayer object is docked, is updated by
+     * another one, and the update has the ship engaging impulse or warp drive,
+     * this property will be set to 0 to indicate that the ship has undocked.
      * Unspecified: -1
      */
     public int getDockingBase() {

@@ -363,4 +363,9 @@ public class Vessel {
 	public VesselPoint[] getManeuverPoints() {
 		return maneuverPoints.toArray(new VesselPoint[maneuverPoints.size()]);
 	}
+
+	@Override
+	public String toString() {
+	    return "#" + id + ": " + name;
+	}
 }

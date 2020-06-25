@@ -10,7 +10,9 @@ import com.walkertribe.ian.protocol.core.SimpleEventPacket.SubType;
 import com.walkertribe.ian.world.ArtemisPlayer;
 
 /**
- * Sent when a player ship docks.
+ * Sent when a player ship docks. Specifically, this is when the base has finished drawing in the
+ * ship with its tractor beam and resupply commences. To detect when a base has grabbed a ship with
+ * its tractor beam, check ArtemisPlayer.getDockingBase().
  * @author rjwut
  */
 @Packet(origin = Origin.SERVER, type = CorePacketType.SIMPLE_EVENT, subtype = SubType.DOCKED)
