@@ -1,12 +1,12 @@
-Interface for *Artemis* Networking (IAN)
-========================================
+# Interface for _Artemis_ Networking (IAN)
+
 [![Build Status](https://secure.travis-ci.org/rjwut/ian.svg)](http://travis-ci.org/rjwut/ian)
 
-**IAN** is an unofficial Java library for communicating with [*Artemis Spaceship Bridge Simulator*](https://artemisspaceshipbridge.com/) servers and clients.
+**IAN** is an unofficial Java library for communicating with [_Artemis Spaceship Bridge Simulator_](https://artemisspaceshipbridge.com/) servers and clients.
 
-IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). It currently supports *Artemis* versions 2.7.5. If you need Java library support for previous versions of *Artemis*, please see the version table below:
+IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/ArtClientLib). As of this writing (7 Oct 2022), it supports _Artemis_ versions 2.7.5 and later. If you need Java library support for previous versions of _Artemis_, please see the version table below:
 
-*Artemis* | IAN/ArtClientLib
+_Artemis_ | IAN/ArtClientLib
 ---: | ---
 2.7.0-4 | [IAN 3.4.0](https://github.com/rjwut/ian/releases/tag/v3.4.0)
 2.4.0 | [IAN 3.2.1](https://github.com/rjwut/ian/releases/tag/v3.2.1)
@@ -18,27 +18,28 @@ IAN is a heavily revamped version of [ArtClientLib](https://github.com/rjwut/Art
 
 Note, however, that these previous versions will be missing various bug fixes and enhancements found in the latest version.
 
-This library was originally developed by Daniel Leong and released on GitHub with permission of the developer of *Artemis*, Thom Robertson.
+This library was originally developed by Daniel Leong and released on GitHub with permission of the developer of _Artemis_, Thom Robertson.
 
-## Things to Know Before Using This Library ##
+## Things to Know Before Using This Library
 
 **IAN is an unofficial library.** Thom Robertson and Incandescent Workshop are not involved with its development and do not provide support for it. Please don't bother them with questions about it.
 
-**Stuff might not work.** There is no official public documentation of the *Artemis* protocol. A library such as IAN is made possible through reverse engineering, requiring careful observation of *Artemis* network traffic and experimentation to learn how game data is formatted. IAN is a very good implementation of the *Artemis* protocol, but under these circumstances it is next to impossible to guarantee that it is 100% accurate. Also, new *Artemis* releases are likely to break this library until a contributor can figure out what changes were made and update things accordingly.
+**Stuff might not work.** There is no official public documentation of the _Artemis_ protocol. A library such as IAN is made possible through reverse engineering, requiring careful observation of _Artemis_ network traffic and experimentation to learn how game data is formatted. IAN is a very good implementation of the _Artemis_ protocol, but under these circumstances it is next to impossible to guarantee that it is 100% accurate. Also, new _Artemis_ releases are likely to break this library until a contributor can figure out what changes were made and update things accordingly.
 
 **There is no official support.** [Bug reports and feature requests](https://github.com/rjwut/ian/issues) are welcome, and I'm happy to try to answer questions. However, IAN is developed in my spare time, and as such, I can't guarantee support for it. I can't make any promises to address your requests, bug reports or questions in a timely fashion.
 
 **Use at your own risk.** This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; not even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-**Don't pirate *Artemis*.** IAN is intended to allow you to enhance your *Artemis* experience with custom behavior. However, using custom *Artemis* software does not release you from the obligation to license the original *Artemis* software. If you are playing *Artemis* without a license, either with stock or custom software, you are engaging in software piracy and inhibiting the future development of *Artemis*. If you don't have a license, please support Thom by purchasing one now.
+**Don't pirate _Artemis_.** IAN is intended to allow you to enhance your _Artemis_ experience with custom behavior. However, using custom _Artemis_ software does not release you from the obligation to license the original _Artemis_ software. If you are playing _Artemis_ without a license, either with stock or custom software, you are engaging in software piracy and inhibiting the future development of _Artemis_. If you don't have a license, please support Thom by purchasing one now.
 
 **I'd love to see what you do with it!** If you make something cool from this, I'd love to know. Crediting this library would be appreciated, as would sharing any improvements you make, to potentially include upstream contributions in the form of pull requests.
 
 **You can help make IAN better.** There are several ways that you can assist in IAN's development. See IAN's [contribution guidelines](https://github.com/rjwut/ian/blob/master/CONTRIBUTING.md) for details.
 
-## Using IAN ##
+## Using IAN
 
-### Examples ###
+### Examples
+
 The `com.walkertribe.ian.example` package contains some simple demonstration classes to help you see how to use IAN:
 
 * `AnnounceServerDemo`: Shows how to respond to server discovery requests from clients so that you can make your server or proxy discoverable on the LAN.
@@ -46,8 +47,9 @@ The `com.walkertribe.ian.example` package contains some simple demonstration cla
 * `FindServersDemo`: Shows how to discover servers on the LAN.
 * `ProxyDemo`: Simple proxy that suppresses toggling red alert by any client that connects through it.
 
-### Discovering *Artemis* Servers on the LAN ###
-See `FindServersDemo` for example code.
+### Discovering _Artemis_ Servers on the LAN
+
+> See `FindServersDemo` for example code.
 
 1. **Implement the `ServerDiscoveryRequester.Listener` interface.** This object will be notified whenever a server is discovered and when the discovery wait time ends.
 
@@ -57,10 +59,11 @@ See `FindServersDemo` for example code.
 
 4. **Reuse the `ServerDiscoveryRequester` as needed.** The `ServerDiscoveryRequester` will only send a single request, when the `Thread` first starts. If you want to continually poll for servers, wait for the `ServerDiscoveryRequester` to stop, then spin up another `Thread` with the same requester object.
 
-### Connecting to an *Artemis* Server ###
-See `ClientDemo` for example code.
+### Connecting to an _Artemis_ Server
 
-1. **Instantiate an object which implements `ArtemisNetworkInterface`.** This object is responsible for managing the connection to the *Artemis* server. If you have a `Server` object from a `ServerDiscoveryRequester` (see the previous section), you can just invoke `connect()` on the `Server`, which will return an `ArtemisNetworkInterface`. Otherwise, you must construct a `ThreadedArtemisNetworkInterface` object (which implements `ArtemisNetworkInterface`).  You must provide the constructor with the host/IP address and port to which it should connect. (By default, *Artemis* servers listen for connections on port 2010, but this can be changed in *Artemis*'s `artemis.ini` file.) On construction, it will attempt to connect, throwing an `IOException` if it fails.
+> See `ClientDemo` for example code.
+
+1. **Instantiate an object which implements `ArtemisNetworkInterface`.** This object is responsible for managing the connection to the _Artemis_ server. If you have a `Server` object from a `ServerDiscoveryRequester` (see the previous section), you can just invoke `connect()` on the `Server`, which will return an `ArtemisNetworkInterface`. Otherwise, you must construct a `ThreadedArtemisNetworkInterface` object (which implements `ArtemisNetworkInterface`).  You must provide the constructor with the host/IP address and port to which it should connect. (By default, _Artemis_ servers listen for connections on port 2010, but this can be changed in _Artemis_'s `artemis.ini` file.) On construction, it will attempt to connect, throwing an `IOException` if it fails.
 
 2. **Add event listeners.** Next, you must add one or more event listeners to the `ArtemisNetworkInterface` via the `addListener()` method. Event listeners are objects which contain methods marked with the `@Listener` annotation. IAN will notify these listeners when certain events occur. See the **Event Listeners** section below for more details.
 
@@ -81,19 +84,21 @@ See `ClientDemo` for example code.
 
 5. **Disconnect.** To disconnect from the Artemis server, invoke the `ArtemisNetworkInterface.stop()` method. Make sure you do this so that the send and receive threads will be terminated; otherwise, your application won't stop.
 
-### Accepting an *Artemis* Client Connection ###
+### Accepting an _Artemis_ Client Connection
+
 1. **Listen for a client connection.** Open a `ServerSocket` on the desired port, then call `accept()` on it to listen for a connecting client. The `accept()` method will block until a client connects or it times out, and return a `Socket` object when the client connects. You can set the timeout by calling `ServerSocket.setSoTimeout()`; passing in `0` will cause it to wait indefinitely for a connection.
 
 2. **Wrap the client `Socket` in a `ThreadedArtemisNetworkInterface` object.** `ThreadedArtemisNetworkInterface` has a constructor that accepts a `Socket` and an `Origin` (`CLIENT` in this case). The resulting object will be responsible for managing the connection to the client.
 
-3. **Use the `ArtemisNetworkInterface` the same way you do with clients.** You can now add listeners, start the interface, send packets to the client, and disconnect just as you do when connected to a server. See "Connecting to an *Artemis* Server" above, starting at step 2.
+3. **Use the `ArtemisNetworkInterface` the same way you do with clients.** You can now add listeners, start the interface, send packets to the client, and disconnect just as you do when connected to a server. See "Connecting to an _Artemis_ Server" above, starting at step 2.
 
-### Creating an *Artemis* Proxy Server ###
-*See `ProxyDemo` for example code.*
+### Creating an _Artemis_ Proxy Server
 
-1. **Listen for client connections.** See "Accepting an *Artemis* Client Connection" above.
+> See `ProxyDemo` for example code.
 
-2. **When you receive a connection, connect to the *Artemis* server for which you are proxying.** This is done exactly the same way as you would for creating an *Artemis* client, as documented in "Connecting to an *Artemis* Server". You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
+1. **Listen for client connections.** See "Accepting an _Artemis_ Client Connection" above.
+
+2. **When you receive a connection, connect to the _Artemis_ server for which you are proxying.** This is done exactly the same way as you would for creating an _Artemis_ client, as documented in "Connecting to an _Artemis_ Server". You now have two `ArtemisNetworkInterface`s: one for the client and one for the server.
 
 3. **Pass through all packets.** The `proxyTo()` method on `ArtemisNetworkInterface` creates a "pass through" connection between two connections of opposite origin types. Any packet that is not caught by a listener method will be passed through automatically. Note that `proxyTo()` only creates connection in one direction; to pass through packets both ways, each connection will need to call `proxyTo()` on the other.
 
@@ -105,8 +110,9 @@ See `ClientDemo` for example code.
 
 7. **When one side disconnects, close the connection to the other side.** Listen for the `DisconnectEvent` from both sides. When you receive it from one side, invoke `ArtemisNetworkInterface.stop()` on the other connection (or both connections, if that's easier; calling `stop()` on an already closed connection has no effect).
 
-### Make Your *Artemis* Server Discoverable on the LAN ###
-*See `AnnounceServerDemo` for example code.*
+### Make Your _Artemis_ Server Discoverable on the LAN
+
+> See `AnnounceServerDemo` for example code.
 
 1. **Construct a `ServerDiscoveryResponder`.** You can either determine the IP and host name to announce yourself (in which case, it's up to you to ensure they are correct), or you can use the no-arg constructor and allow IAN to attempt to select the appropriate network interface to use. Only active, non-loopback interfaces where the address corresponds to an [IPv4 private network](https://en.wikipedia.org/wiki/Private_network) will be considered. If no suitable interface is found, an `IOException` will be thrown with the message "No suitable network interface found." Those that meet these criteria will be sorted, first by whether or not it is a wifi interface (with non-wifi preferred), then by class (A, B, then C). The most preferred interface will be selected.
 
@@ -114,7 +120,8 @@ See `ClientDemo` for example code.
 
 3. **Invoke `stop()` when you are no longer accepting client connections.** You don't want to continue to announce your server's presence to the LAN if you're not accepting client connections anymore. Calling `stop()` on the `ServerDiscoveryResponder` will cause it to shut down the `Thread` so that it will stop responding to requests.
 
-### Event Listeners ###
+### Event Listeners
+
 To make your application react to events, you must write one or more event listeners and register them with your `ThreadedArtemisNetworkInterface` object via the `addListener()` method. An event listener can be any `Object` which has one or more methods marked with the `@Listener` annotation. A listener method must be `public`, return `void`, and have exactly one argument. The type of that argument indicates what sort of events will cause the method to be invoked:
 
 * `ConnectionEvent`: Events related to IAN's connection with the remote machine or its heartbeat.
@@ -129,7 +136,8 @@ It's also likely that you'll want to know when the connection to the remote mach
 
 Artemis servers and clients send occasional heartbeat packets as a way of letting remote machines know they're still alive. The `ThreadedArtemisNetworkInterface` will raise a `HeartbeatLostEvent` when a heartbeat packet has not been received recently. If afterwards a heartbeat packet is received, a `HeartbeatRegainedEvent` will be raised.
 
-### `ArtemisObject` Instances and Handling Updates ###
+### `ArtemisObject` Instances and Handling Updates
+
 The `ArtemisObject` interface is implemented by objects which represent game world objects (ships, bases, creatures, asteroids, torpedoes, black holes, etc.). The server will frequently send `ObjectUpdatePacket`s that contain these objects.
 
 `ArtemisObject`s have properties which are exposed with getters and setters. The properties which are available will vary depending on the object's type. In order to save network bandwidth, the server will usually send only the properties of an object that have changed since the last update rather than the entire state of the object. Therefore, these properties may be unspecified.
@@ -147,52 +155,60 @@ For `byte` or `int`, `-1` is used to mean "unspecified" unless `-1` is a valid v
 
 The `ArtemisObject.updateFrom()` method copies the specified properties from one object to another. This allows you to keep an object current as you recieve updates: simply pass the updated object to the original object's `updateFrom()` method and will have the updates applied to it. If you wish to maintain updated status for the entire game world, the `World` class handles this for you. Simply instantiate one and register it as a listener with your `ArtemisNetworkInterface`. As the simulation runs, you can use the various `get*()` methods to retrieve game state.
 
-### The Ship System Grid ###
+### The Ship System Grid
+
 Apart from world objects, another common state you may want to track would be a ship's system grid. There are two distinct parts to the grid:
 
-- Infrastructure data: physical locations of nodes and what ship systems are located there
-- Current state: damage, status of DAMCON teams
+* Infrastructure data: physical locations of nodes and what ship systems are located there
+* Current state: damage, status of DAMCON teams
 
 The grid consists of a 5 × 5 × 10 matrix of nodes overlaid on the ship. A node can be a ship system, a hallway, or empty (typically because it falls outside the ship). DAMCON teams can move between any two adjacent non-empty nodes in the grid.
 
 Each node has two sets of coordinates:
-- Grid coordinate: Its location in the 5 × 5 × 10 matrix described above. These coordinate values are `int`s.
-- Physical coordinate: Its physical location relative to the center of the ship. These coordinate values are `float`s.
 
-The `Grid` class is used to track system grid information, and it can store either or both of the kinds of data mentioned above. When you have a `Vessel` object (described in "Locating *Artemis* Resources" below), you can retrieve the infrastructure grid from it by calling `getGrid()`. The `Grid` class also has `@Listener` methods that will update it with damage and DAMCON information as the simulation runs when you register it with the `ArtemisNetworkInterface`.
+* Grid coordinate: Its location in the 5 × 5 × 10 matrix described above. These coordinate values are `int`s.
+* Physical coordinate: Its physical location relative to the center of the ship. These coordinate values are `float`s.
+
+The `Grid` class is used to track system grid information, and it can store either or both of the kinds of data mentioned above. When you have a `Vessel` object (described in "Locating _Artemis_ Resources" below), you can retrieve the infrastructure grid from it by calling `getGrid()`. The `Grid` class also has `@Listener` methods that will update it with damage and DAMCON information as the simulation runs when you register it with the `ArtemisNetworkInterface`.
 
 Note that `Grid` objects you retrieve from `Vessel`s are "locked", meaning they cannot be modified. (This is because data read from `vesselData.xml` data is cached for reuse.) If you want to use a `Grid` from a `Vessel`to start tracking state, you will need to clone the `Grid` and work from the clone. `Grid` has a constructor that does this for you.
 
-#### Node Accessors ####
+#### Node Accessors
+
 There are several ways to retrieve node data from a `Grid`:
 
-- To access an individual node, you will need a `GridCoord`. These are statically cached; you can retrieve one by calling `GridCoord.get(x, y, z)`, passing in its grid coordinates. Once you have the `GridCoord` object, retrieve its corresponding node by passing it to `Grid.get(GridCoord)`.
-- `Grid` implements `Iterable<GridNode>`, so you can iterate it to visit all the `GridNodes` in the `Grid`.
-- You can also invoke `getAllNodes()` to return a `List` of all the nodes.
-- You likely are really only interested in the accessible nodes; `getAccessibleNodes()` will provide those.
-- If you would like the nodes grouped by the `ShipSystem` they contain, call `groupNodesBySystem()`, which will return a `Map<ShipSystem, List<GridNode>>`. Note that empty and hallway nodes are omitted from the returned `Map`.
+* To access an individual node, you will need a `GridCoord`. These are statically cached; you can retrieve one by calling `GridCoord.get(x, y, z)`, passing in its grid coordinates. Once you have the `GridCoord` object, retrieve its corresponding node by passing it to `Grid.get(GridCoord)`.
+* `Grid` implements `Iterable<GridNode>`, so you can iterate it to visit all the `GridNodes` in the `Grid`.
+* You can also invoke `getAllNodes()` to return a `List` of all the nodes.
+* You likely are really only interested in the accessible nodes; `getAccessibleNodes()` will provide those.
+* If you would like the nodes grouped by the `ShipSystem` they contain, call `groupNodesBySystem()`, which will return a `Map<ShipSystem, List<GridNode>>`. Note that empty and hallway nodes are omitted from the returned `Map`.
 
-#### Node Mutators ####
+#### Node Mutators
+
 Unless you use one of the constructors that prepoplate the `Grid`, a new `Grid` starts out with all 250 nodes being empty. If the `Grid` is not locked, you can replace any node with a new `GridNode` with whatever infrastructure data you specify. You do this by calling `Grid.set(GridNode)`. To copy all the node data from one `Grid` to another, use `copyNodes(Grid, boolean)`.
 
-#### DAMCON Team Accessors ####
+#### DAMCON Team Accessors
+
 To retrieve an individual DAMCON team, call `getDamcon(byte)`, passing in the team's ID. To get a new `List` of all DAMCON teams, call `getAllDamconTeams()`.
 
-#### DAMCON Team Mutators ####
+#### DAMCON Team Mutators
+
 To update a DAMCON team, construct a `DamconTeam` with the new data, then pass it to `setDamcon(DamconTeam)`. To copy all DAMCON team data from one `Grid` into another, call `copyDamcons(Grid)`. Note that these methods will fail if the `Grid` is locked.
 
-#### `Point` Cloud ####
+#### `Point` Cloud
+
 When rendering a 3D image of the `Grid`, you will need to be able to get the locations of all nodes and DAMCON teams so that you can easily transform them prior to rendering. The `toPointCloud()` method does this, returning a `Map<String, Point>` containing the `Point`s for all non-empty nodes and DAMCON teams. Then you can retrieve a `Point` by providing its key:
 
-- `Point`s corresponding to `GridNode`s have keys in `'[x,y,z]'` format, like this: `'[1,5,7]'`.
-- `Point`s for DAMCON teams have keys in `'DAMCON n'`, format, like this: `'DAMCON 1'`
+* `Point`s corresponding to `GridNode`s have keys in `'[x,y,z]'` format, like this: `'[1,5,7]'`.
+* `Point`s for DAMCON teams have keys in `'DAMCON n'`, format, like this: `'DAMCON 1'`
 
 It's particularly useful to pass this into `Model.transformPoints()`, allowing you to apply a transformation to them so that you can render them on top of a transformed `Model`. This lets you render a 3D ship with the system grid overlaid on top.
 
-### Locating *Artemis* Resources ###
-Some operations require data which is obtained from *Artemis* resource files. There are three major classes of resource data IAN can make use of:
+### Locating _Artemis_ Resources
 
-IAN class | *Artemis* files | Contents
+Some operations require data which is obtained from _Artemis_ resource files. There are three major classes of resource data IAN can make use of:
+
+IAN class | _Artemis_ files | Contents
 --- | --- | ---
 `VesselData` | `dat/vesselData.xml` | `Faction`s and `Vessel`s
 `Model` | `dat/*.dxs` | 3D mesh
@@ -200,21 +216,22 @@ IAN class | *Artemis* files | Contents
 
 All three of these resource types are optional: as long as you don't need the particular functionality that is dependent on these resource files, IAN can run without them. Note that incompatibilities may result if the remote machine's version of the resource data differs from IAN's.
 
-IAN provides several interfaces and classes that can help you with reading *Artemis* resource data:
+IAN provides several interfaces and classes that can help you with reading _Artemis_ resource data:
 
-* `Context`: An interface for classes which can provide instances of `VesselData`, `Model` and `Grid` to IAN. Any method that requires data from *Artemis* resource files will ask for an object which implements `Context`.
+* `Context`: An interface for classes which can provide instances of `VesselData`, `Model` and `Grid` to IAN. Any method that requires data from _Artemis_ resource files will ask for an object which implements `Context`.
 
-* `DefaultContext`: An implementation of `Context` which can parse *Artemis* resource data from an `InputStream` and cache the results for future use. It delegates the creation of the `InputStream` to a `PathResolver`.
+* `DefaultContext`: An implementation of `Context` which can parse _Artemis_ resource data from an `InputStream` and cache the results for future use. It delegates the creation of the `InputStream` to a `PathResolver`.
 
-* `PathResolver`: An interface for classes which can provide an `InputStream` that corresponds to an *Artemis* resource path.
+* `PathResolver`: An interface for classes which can provide an `InputStream` that corresponds to an _Artemis_ resource path.
 
-* `FilePathResolver`: A `PathResolver` implementation that loads resources from the file system relative to a particular directory. You would typically point this at the *Artemis* install directory, but at most IAN will only look for `dat/vesselData.xml`, `dat/*.dxs`, and `dat/*.snt`; any other files will be ignored.
+* `FilePathResolver`: A `PathResolver` implementation that loads resources from the file system relative to a particular directory. You would typically point this at the _Artemis_ install directory, but at most IAN will only look for `dat/vesselData.xml`, `dat/*.dxs`, and `dat/*.snt`; any other files will be ignored.
 
 * `ClasspathResolver`: A `PathResolver` implementation that loads resources from the classpath relative to a specific class. This allows you to bundle the needed resources inside your JAR.
 
-You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load *Artemis* resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise code that uses a `Context`.)
+You can provide your own implementations of `Context` or `PathResolver` if the out-of-the-box implementations do not serve your purpose. For example, you could create a custom `PathResolver` implementation that could load _Artemis_ resource data from a remote server. Or you can create a custom `Context` implementation that builds the data from scratch instead of parsing it from an `InputStream`. (In fact, that's exactly what the testing code does to exercise code that uses a `Context`.)
 
-### Reading `vesselData.xml` ###
+### Reading `vesselData.xml`
+
 The `vesselData.xml` file contains information about the game's factions and vessels. The `ArtemisShielded` interface includes a `getVessel(Context)` method which will return a `Vessel` object. The `ArtemisBase`, `ArtemisNpc`, and `ArtemisPlayer` classes implement this interface. `Vessel` has a `getFaction()` method which will return the `Faction` corresponding to that `Vessel`.
 
 `Faction` and `Vessel` data can also be retrieved directly from the `VesselData` object, which you can get by calling `Context.getVesselData()`. You can then invoke `getFaction(int)` or `getVessel(int)` to retrieve the `Faction` or `Vessel` with the corresponding ID. You can also iterate all the available `Faction`s or `Vessel`s with the `factionIterator()` and `vesselIterator()` methods.
@@ -223,12 +240,14 @@ The `vesselData.xml` file contains information about the game's factions and ves
 
 Note that whenever you attempt to get a reference to a single `Faction` or `Vessel`, IAN may return `null`. This occurs when the `VesselData` contains no `Faction` or `Vessel` that corresponds to the given ID. This may occur when the remote machine's `vesselData.xml` file doesn't match yours. You should make sure that your code handles this scenario gracefully.
 
-## Acknowledgements ##
-Thanks to Thom Robertson and Incandescent Workshop for creating *Artemis*, and for so graciously tolerating the community's desire to tinker with their baby.
+## Acknowledgements 
 
-Daniel Leong ([@dhleong](https://github.com/dhleong)) created the original version of ArtClientLib and did a lot of the difficult, thankless gruntwork of reverse engineering the *Artemis* protocol.
+Thanks to Thom Robertson and Incandescent Workshop for creating _Artemis_, and for so graciously tolerating the community's desire to tinker with their baby.
+
+Daniel Leong ([@dhleong](https://github.com/dhleong)) created the original version of ArtClientLib and did a lot of the difficult, thankless gruntwork of reverse engineering the _Artemis_ protocol.
 
 Various GitHub users have contributed to IAN by helping to discover and document the protocol, creating pull requests to implement features or bug fixes, or issuing bug reports. Their help is very much appreciated. They are, in alphabetical order:
+
 * [@abrindam](https://github.com/abrindam)
 * [@briandurney](https://github.com/briandurney)
 * [@chrivers](https://github.com/chrivers)

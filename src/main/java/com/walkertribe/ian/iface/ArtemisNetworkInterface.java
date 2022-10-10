@@ -14,7 +14,6 @@ import com.walkertribe.ian.util.Version;
  */
 public interface ArtemisNetworkInterface {
 	public static final Version MIN_VERSION = new Version("2.7.5");
-	public static final Version MAX_VERSION_EXCLUSIVE = new Version("2.8");
 
 	/**
      * Returns the Origin of the packets this interface can receive. An

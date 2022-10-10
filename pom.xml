@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.walkertribe</groupId>
 	<artifactId>ian</artifactId>
-	<version>3.5.0</version>
+	<version>3.5.1</version>
 	<name>Interface for Artemis Networking (IAN)</name>
 	<description>UNOFFICIAL Java library for communicating with Artemis Spaceship Bridge Simulator servers and clients.</description>
 	<url>https://github.com/rjwut/ian</url>
@@ -19,10 +19,6 @@
 		<system>GitHub</system>
 		<url>https://github.com/rjwut/ian/issues</url>
 	</issueManagement>
-	<ciManagement>
-		<system>travis</system>
-		<url>https://travis-ci.org/rjwut/ian</url>
-	</ciManagement>
 	<scm>
 		<url>https://github.com/rjwut/ian</url>
 		<connection>scm:git:git://github.com/rjwut/ian.git</connection>
